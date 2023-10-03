@@ -3,8 +3,6 @@ const style = `
 <style>
     div.p-2.bd-highlight button i {
         padding-right: 4px;
-        position: absolute;
-        left: 16%;
     }
 
     .container-print {
@@ -168,7 +166,6 @@ if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioN
 
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.as') {
 
-document.querySelector("#UpdatePanel > main > div.d-flex.bd-highlight.position-relative").classList.add('position-relative');
     const elementoInsert = document.querySelector("#frmConsultaMiodani > main > div.row > div > div > div.card-table > div.form-inline");
     elementoInsert.classList.add('container-print');
     elementoInsert.children[0].classList.remove('col')
