@@ -1,0 +1,35 @@
+{
+    "manifest_version": 3,
+    "name": "Print Orion",
+    "version": "1.0",
+    "description": "Imprime un pedido de la lista de envio. y La paguina de Inventario por Bodega",
+    "permissions": ["scripting", "activeTab"],
+    "icons": {
+      "16": "images/print16.png",
+      "32": "images/print32.png",
+      "48": "images/print48.png",
+      "128": "images/print128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx",
+          "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"
+        ],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "defaul_icon" :  {
+        "16": "images/print16.png",
+        "32": "images/print32.png",
+        "48": "images/print48.png",
+        "128": "images/print128.png"
+      }
+    },
+    "background": {
+      "service_worker": "background.js"
+    }
+  }
+  

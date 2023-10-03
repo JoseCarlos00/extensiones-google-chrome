@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Mi Extensión",
+    "version": "1.0",
+    "description": "Una extensión para Google Chrome",
+    "permissions": [
+      "activeTab"
+    ],
+    "icons": {
+        "48": "icon48.png", 
+        "128": "icon128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
+  
