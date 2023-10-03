@@ -162,6 +162,9 @@ if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioN
 
     //Evento
     document.querySelector('#printButtonEnvio').addEventListener('click', envioPrint)
+
+     // Titulo envio  => "Envio # 12679"
+     document.querySelector("#UpdatePanel > main > div.d-flex.bd-highlight > div.flex-grow-1.bd-highlight").style='padding-right: calc(88.22px + 0.5rem*2 + 0.5rem);';
 }
 
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.as') {
