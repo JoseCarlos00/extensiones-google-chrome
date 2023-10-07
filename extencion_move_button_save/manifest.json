@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "name": "Mover Boton Save",
+    "version": "1.0",
+    "description": "Mover boton save para generar Olas",
+    "permissions": ["scripting", "activeTab"],
+    "icons": {
+      "16": "images/broom16.png",
+      "32": "images/broom32.png",
+      "48": "images/broom48.png",
+      "128": "images/broom128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "https://wms.fantasiasmiguel.com.mx/scale/trans/newwave?excludeFromNavTrail=Y"
+        ],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "defaul_icon" :  {
+        "16": "images/broom16.png",
+        "32": "images/broom32.png",
+        "48": "images/broom48.png",
+        "128": "images/broom128.png"
+      }
+    }
+  }
+  
