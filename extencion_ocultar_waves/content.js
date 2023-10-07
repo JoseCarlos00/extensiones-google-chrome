@@ -10,6 +10,8 @@ function inicio() {
 
         if (DATA_ID !== autoActiva) {
             tr.style = "opacity: 0; display: none;"
+        } else {
+            tr.firstChild.style = "padding: 1rem;"
         }
 
     })

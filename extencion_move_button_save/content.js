@@ -1,4 +1,22 @@
 function inicio() {
+    const tbody = document.querySelector("#WaveFlowGrid > tbody").childNodes;
+
+    const autoActiva = "1155736963";
+    const sinRabasto = "1265266259";
+    const express = "2168485273";
+    const nacionalizacion = "655614933";
+
+
+    tbody.forEach(tr => {
+        const DATA_ID = tr.getAttribute('data-id');
+
+        if (DATA_ID !== autoActiva && DATA_ID !== sinRabasto && DATA_ID !== express && DATA_ID !== nacionalizacion) {
+            tr.style = "opacity: 0; display: none;"
+        } else {
+            tr.firstChild.style = "padding: 1rem;"
+        }
+
+    })
 
     // Reducir spaciado
     document.querySelector("#GridPlaceHolder").style = "min-height: 20px;"
