@@ -104,17 +104,20 @@ document.getElementById("stopButton").addEventListener("click", () => clearInter
 
 // Observar Nodo
 function observarCambiosEnNodo(nodoObservado, opciones) {
+    console.log('Observar Nodo');
     const observador = new MutationObserver(function(mutationsList, observer) {
         mutationsList.forEach(function(mutation) {
             if (mutation.type === 'childList') 
             {
                 // Verificar si se han añadido nodos nuevos
-                const nodosAñadidos = Array.from(mutation.addedNodes);
-                nodosAñadidos.forEach(function(nodo) {
+                const nodosAnadidos = Array.from(mutation.addedNodes);
+                nodosAnadidos.forEach(function(nodo) {
+                    console.log('nodosAnadidos:', nodo);
                     // Aquí puedes manejar los cambios que ocurran en el nodo observado
-                    const texto = nodo.children[3].innerText;
+                    const texto = nodo.children[2].innerText;
+                    console.log(texto);
                     const expresionRegular = /^356-C-/;
-                    if (expresionRegular.test(texto) && texto !== '356-C-222-69571') {
+                    if (expresionRegular.test(texto) && texto !== '356-C-444-69692') {
                         var notification = new Notification("¡Pedido Nuevo", {
                             icon: "https://bnz06pap003files.storage.live.com/y4m7GAiqY4cGkglOpeEDWUI_01n3gHFX2arSd5eCzwm8pfMmqvd4eAJPOHwtxbyHx42qa4YauXYsb0vqOQIEULk27T8LFS0L1teyIWNBPhnLgpUs4vqRix-KVdaAIRF1t_mnZAiQ8NEcZ8ljECB_SGT0AyYRKbOQ8tLRac52N4MaWIoWfc-M-MGj0wC8osVeLGYZmK7jOCPaRwJ7ou5-uvDb2En_v2CLYcWISHCp2ozGyE?encodeFailures=1&width=48&height=48",
                             body: `Tienes el pedido: ${texto} pendiente`
