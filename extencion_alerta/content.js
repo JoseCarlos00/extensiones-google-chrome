@@ -104,7 +104,6 @@ document.getElementById("stopButton").addEventListener("click", () => clearInter
 
 // Observar Nodo
 function observarCambiosEnNodo(nodoObservado, opciones) {
-    console.log('Observar Nodo');
     const observador = new MutationObserver(function(mutationsList, observer) {
         mutationsList.forEach(function(mutation) {
             if (mutation.type === 'childList') 
@@ -115,7 +114,6 @@ function observarCambiosEnNodo(nodoObservado, opciones) {
                     console.log('nodosAnadidos:', nodo);
                     // Aquí puedes manejar los cambios que ocurran en el nodo observado
                     const texto = nodo.children[2].innerText;
-                    console.log(texto);
                     const expresionRegular = /^356-C-/;
                     if (expresionRegular.test(texto) && texto !== '356-C-444-69692') {
                         var notification = new Notification("¡Pedido Nuevo", {
