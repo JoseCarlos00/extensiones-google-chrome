@@ -36,6 +36,10 @@ function inicio() {
         background-color: #b494bd;
         height: 35px !important;
     }
+
+    & a#NewWaveActionSave:active {
+        height: 35px !important;
+    }
 </style>
 `
 
