@@ -63,10 +63,11 @@ function envioPrint() {
     document.querySelector("#UpdatePanel > main > div.d-flex.bd-highlight > div:nth-child(1) > a > button").style = 'color: black !important; border: 1px solid black;'
     //Btn Crear Nuevo
     document.querySelector("#UpdatePanel > main > div.d-flex.bd-highlight > div:nth-child(2) > a > button").style = 'color: black !important; border: 1px solid black;'
-
     /*Btn Imprimir */
     document.querySelector('#printButtonEnvio').style = 'color: black !important; border: 1px solid black;'
-
+    /*Btn Imprimir */
+    document.querySelector('#workUnitButton').style = 'color: black !important; border: 1px solid black;'
+    
     //footer 
     document.querySelector("#gvEnvio_ctl00_ctl03_ctl01_PageSizeComboBox > table > tbody").style = 'color: black !important; border: 1px solid black;'
     document.querySelector("#frmEnvio > div:nth-child(59)").style = 'display: none;';
