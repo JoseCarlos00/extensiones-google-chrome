@@ -2,8 +2,10 @@ const menuNav = document.querySelector("#ScreenGroupMenu12068");
 const head = document.querySelector('head');
 
 const excepciones = [
-    '356-C-444-69692',
-    '356-C-444-69725'
+    '356-C-444-69754',
+    '356-C-222-69746',
+    '356-C-222-69748',
+    '356-C-222-69757'
 ]
 
 const html = `
