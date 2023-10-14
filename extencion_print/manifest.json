@@ -13,8 +13,8 @@
     "content_scripts": [
       {
         "matches": [
-          "http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx",
-          "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"
+          "http://fmorion.dnsalias.com/orion/paginas/Medidas/Inventario*",
+          "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio*"
         ],
         "js": ["content.js"]
       }
