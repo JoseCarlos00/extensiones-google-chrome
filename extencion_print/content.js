@@ -30,6 +30,7 @@ function envioPrint() {
   //Cuerpo - Lista
   document.querySelector('#gvEnvio_ctl00 > tbody').style = 'color: black; font-weight: bold;';
 
+
   //Informacion de Envio
   document.querySelector('#btnInformacion').style = 'color: black; font-weight: bold;';
   document.querySelector('#btnInformacion > i').style = 'color: black;';
@@ -78,7 +79,7 @@ function envioPrint() {
   /*Btn Imprimir */
   document.querySelector('#printButtonEnvio').style =
     'color: black !important; border: 1px solid black;';
-  /*Btn Imprimir */
+  /*Btn Work Unit */
   document.querySelector('#workUnitButton').style =
     'color: black !important; border: 1px solid black;';
 
@@ -87,7 +88,7 @@ function envioPrint() {
     'color: black !important; border: 1px solid black;';
   document.querySelector('#frmEnvio > div:nth-child(59)').style = 'display: none;';
 
-  //Envio Numero
+  //Envio Numero, nombre y fecha
   const numEnvio = document.querySelector('#txtFolioId').textContent;
   const parametroURL = `
     <td style=" color: black; padding-left: 20px; border-right: 1px solid transparent;">
@@ -99,7 +100,7 @@ function envioPrint() {
     </td>
     `;
 
-  //Insertar el nombre de la persona que hace el envio
+  //Insertar el nombre de la persona que hace el envio y fecha
   document
     .querySelector(
       '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1)'
@@ -116,7 +117,7 @@ function envioPrint() {
 
   document.querySelector(
     '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td'
-  ).style.borderRight = ' 1px solid transparent';
+  ).style.borderRight = ' 1px solid transparent'; // Border | Entre el evio y la persona generada
 
   document.querySelector(
     '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td > span'
