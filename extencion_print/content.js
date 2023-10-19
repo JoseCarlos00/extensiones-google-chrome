@@ -89,17 +89,22 @@ function envioPrint() {
 
   //Envio Numero
   const numEnvio = document.querySelector('#txtFolioId').textContent;
-  const generadoPor = `
-    <td style=" color: black; padding-left: 20px;">
-        Generado Por: <strong>${getParamsURL()}</strong>
-    </td>`;
+  const parametroURL = `
+    <td style=" color: black; padding-left: 20px; border-right: 1px solid transparent;">
+        Generado: <strong>${getParamsURL()[0]}</strong>
+    </td>
+
+    <td style=" color: black; padding-left: 20px; border-right: 1px solid transparent;">
+        <i>${getParamsURL()[1]}</i>
+    </td>
+    `;
 
   //Insertar el nombre de la persona que hace el envio
   document
     .querySelector(
       '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1)'
     )
-    .insertAdjacentHTML('beforeend', generadoPor);
+    .insertAdjacentHTML('beforeend', parametroURL);
 
   document.querySelector(
     '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table'
@@ -110,8 +115,16 @@ function envioPrint() {
   ).textContent = numEnvio; // En la impresion ponemos en el footer el No. Envio
 
   document.querySelector(
+    '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td'
+  ).style.borderRight = ' 1px solid transparent';
+
+  document.querySelector(
     '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td > span'
   ).style = 'color: black; borde: none;'; // Ocultamos la tabla de Impresion con datos del envio
+  
+  // Contenedor de Footer de Impresion
+  document.querySelector("#UpdatePanel > div.t-container.t-container-static").style.width = 'fit-content';
+  document.querySelector("#UpdatePanel > div.t-container.t-container-static > div > div").classList.remove('t-col');
 
   // Ocultar Tabla footer
   document.querySelector('#divImpresionRepCotizacion > table > tbody > tr:nth-child(3)').style =
@@ -181,7 +194,8 @@ function workUnitInsert() {
     'afterbegin',
     `<div style="position: absolute; right: 100px; top: 286px; font-size: 34px;">
             Work Unit: <spam style='font-weight: bold; font-size: 38px'>  ${work_unit} </spam>
-        </div>`
+      </div>
+      `
   );
 }
 // END
@@ -192,10 +206,12 @@ function listEnvios(params) {
 
   filaPedidos.forEach(tr => {
     const GENERADO_POR = tr.children[9].innerText;
+    const FECHA_ENVIO = tr.children[5].innerText
     let href = tr.children[2].children[0].getAttribute('href');
 
     tr.children[2].children[0].setAttribute('target', '_blank');
-    href += `&userEnvio=${GENERADO_POR}`;
+    href += `&userEnvio=${GENERADO_POR}&fechaEnvio=${FECHA_ENVIO}`;
+    
 
     tr.children[2].children[0].setAttribute('href', href);
   });
@@ -203,11 +219,18 @@ function listEnvios(params) {
 //end
 
 /** Obtener Datos de la URL */
+/**
+ *  getParamsURL( )[ 0 ] Acceder a un parametro en especifico
+ * @returns Array con los parametros de la URL
+ */
 function getParamsURL() {
   const urlString = window.location.href; // Obtener la URL actual
   const url = new URL(urlString); // Crear un objeto URL
   const parametros = url.searchParams; // Obtener los parámetros de la URL
-  const parametro = parametros.get('userEnvio'); // Acceder a los valores de los parámetros
+
+  let parametro = [] 
+  parametro.push(parametros.get('userEnvio'));
+  parametro.push(parametros.get('fechaEnvio'));
 
   return parametro;
 }
