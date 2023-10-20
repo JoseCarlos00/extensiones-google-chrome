@@ -1,18 +1,20 @@
 function inicio() {
   window.addEventListener('keydown', event => {
+    console.log(event);
     // Verifica si se presionó Ctrl (Control) y Shift al mismo tiempo
     if (event.ctrlKey && event.shiftKey) {
-      if (event.key === 'f') {
-        const menuFillter =
-          document.querySelector(
-            '#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav > li.navsearch.visible-sm.visible-md.visible-lg > a'
-          ) ?? false;
+      if (event.key === 'F') {
+        console.log(event);
+        const menuFilter =
+          document.querySelector('li.navsearch.visible-sm.visible-md.visible-lg > a') ?? false;
 
-        if (menuFillter) menuFillter.click();
+        if (menuFilter) {
+          menuFilter.click();
+        }
       }
     }
 
-    /**Menu  principal  Ctrl + m*/
+    /**Menu principal Ctrl + m*/
     if (event.ctrlKey && event.key === 'm') {
       const menuCanvas = document.querySelector('#menutoggle') ?? false;
 
