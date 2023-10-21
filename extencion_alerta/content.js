@@ -13,7 +13,7 @@ const excepciones = [
   '356-C-222-69834',
   '356-C-444-69837',
   '356-C-444-69868',
-  '356-C-222-69895'
+  '356-C-222-69895',
 ];
 
 const html = `
@@ -69,8 +69,11 @@ const style = `
     background-color: #f3f7fe;
     box-shadow: 0 0 0 5px #3b83f65f;
    color: #3b82f6;
-    
-  }  
+  } 
+  
+  #startButton:active, #stopButton:active {
+    background-color: #ffffffad;
+  }
 </style>  
 `;
 
