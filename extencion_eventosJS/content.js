@@ -14,7 +14,7 @@ function inicio() {
       }
     }
 
-    /**Menu principal Ctrl + m*/
+    /** Menu principal Ctrl + m*/
     if (event.ctrlKey && event.key === 'm') {
       const menuCanvas = document.querySelector('#menutoggle') ?? false;
 
@@ -31,6 +31,13 @@ function inicio() {
         );
       }
     }
+
+    /** Boton play Alt + p */
+
+    if (event.altKey && event.key === 'p') {
+      document.querySelector("#InsightMenuApply").click();
+    }
+
   });
 }
 

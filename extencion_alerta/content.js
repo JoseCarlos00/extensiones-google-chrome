@@ -1,20 +1,7 @@
 const menuNav = document.querySelector('#ScreenGroupMenu12068');
 const head = document.querySelector('head');
 
-const excepciones = [
-  '356-C-444-69754',
-  '356-C-222-69746',
-  '356-C-222-69748',
-  '356-C-222-69757',
-  '356-C-222-69778',
-  '356-C-444-69775',
-  '356-C-222-69795',
-  '356-C-222-69798',
-  '356-C-222-69834',
-  '356-C-444-69837',
-  '356-C-444-69868',
-  '356-C-222-69895',
-];
+const excepciones = ['356-C-444-69931', '356-C-222-69949', '356-C-222-69973'];
 
 const html = `
 <div class="timer">
