@@ -35,9 +35,8 @@ function inicio() {
     /** Boton play Alt + p */
 
     if (event.altKey && event.key === 'p') {
-      document.querySelector("#InsightMenuApply").click();
+      document.querySelector('#InsightMenuApply').click();
     }
-
   });
 }
 
