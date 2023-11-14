@@ -1,15 +1,16 @@
 const menuNav = document.querySelector('#ScreenGroupMenu12068');
 const head = document.querySelector('head');
 
-const excepciones = ['356-C-444-69931', '356-C-222-69949', '356-C-222-69973'];
+const excepciones = ['356-C-444-70178', '356-C-444-70176', '356-C-444-70230', '356-C-222-70256', '356-C-444-70261', '356-C-222-70323', '356-C-444-70354'];
 
 const html = `
 <div class="timer">
-    <span id="minutes">03</span>:<span id="seconds">00</span> 
+    <span id="minutes">01</span>:<span id="seconds">30</span> 
 </div>
 <button id="startButton">START</button>
 <button id="stopButton">STOP</button>
 `;
+
 
 const style = `
 <style>
@@ -93,13 +94,13 @@ document.querySelector('.btn-exepciones').addEventListener('click', () => {
 
 /**  Temporizador */
 let timer;
-let minutes = 3;
-let seconds = 0;
+let minutes = 1;
+let seconds = 30;
 
 function startTimer() {
   clearInterval(timer);
-  minutes = 3;
-  seconds = 0;
+  minutes = 1;
+  seconds = 30;
   updateTimerDisplay();
 
   timer = setInterval(function () {

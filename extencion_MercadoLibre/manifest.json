@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "name": "Mercado Libre",
+    "version": "1.0",
+    "description": "Crea cuadros de texto para las unidades de trabajo",
+    "permissions": ["scripting", "activeTab"],
+    "icons": {
+      "16": "images/click16.png",
+      "32": "images/click32.png",
+      "48": "images/click48.png",
+      "128": "images/click128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "http://fmorion.dnsalias.com/orion/paginas/AppServicios/MercadoLibreIm.aspx?PedidoNum=*"
+        ],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "defaul_icon" :  {
+        "16": "images/click16.png",
+        "32": "images/click32.png",
+        "48": "images/click48.png",
+        "128": "images/click128.png"
+      }
+    }
+  }
+  
