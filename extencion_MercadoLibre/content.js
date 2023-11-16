@@ -17,6 +17,13 @@
       font-size: 34px;
       font-weight: bold;
     }
+
+    .next-button {
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: -40px
+    }
     </style>
     `
     );
@@ -24,7 +31,7 @@
     const textarea = `
       <div class="textarea-container">
         <textarea class="textarea" spellcheck="false" data-ms-editor="true"></textarea>
-        <button class="next-button">Siguiente</button>
+        <button class="next-button">Sig</button>
       </div>`;
 
     const divFather = document.querySelectorAll(
@@ -40,29 +47,40 @@
       document.querySelectorAll('.textarea').forEach(text => {
         text.style.border = 'none';
       });
+
+      document.querySelectorAll('.next-button').forEach(btn => {
+        btn.style.display = 'none';
+      });
     }
 
     function despuesDeImprimir() {
       document.querySelectorAll('.textarea').forEach(text => {
         text.style.border = '1px solid #000';
       });
-    }
 
-    function moveToNextTextarea(event) {
-      const currentTextarea = event.target.previousElementSibling;
-      const nextTextarea =
-        currentTextarea.parentElement.nextElementSibling.querySelector('.textarea');
-
-      if (nextTextarea) {
-        nextTextarea.focus();
-      }
+      document.querySelectorAll('.next-button').forEach(btn => {
+        btn.style.display = 'block';
+      });
     }
 
     window.addEventListener('beforeprint', antesDeImprimir);
     window.addEventListener('afterprint', despuesDeImprimir);
 
-    document.querySelectorAll('.next-button').forEach(button => {
-      button.addEventListener('click', moveToNextTextarea);
+    // Selecciona todos los botones "Sig"
+    const nextButtons = document.querySelectorAll('.next-button');
+
+    // Agrega un controlador de eventos clic a cada boton "Sig"
+    nextButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        // Encuentra todos los elementos de area de texto
+        const textareas = document.querySelectorAll('.textarea');
+
+        // Verifica si hay mas areas de texto despues del actual
+        if (index < textareas.length - 1) {
+          // Tambien puedes enfocar automaticamente el siguiente area de texto si es necesario
+          textareas[index + 1].focus();
+        }
+      });
     });
   }
 
