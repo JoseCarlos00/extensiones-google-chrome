@@ -49,6 +49,10 @@
       .container-numPedidos {
         display: none;
       }
+
+      body > deepl-input-controller {
+        display: none;
+      }
     }
     </style>
     `
@@ -111,7 +115,7 @@
         '.col.text-center.inv_heading.position-relative h3:nth-child(1) span:nth-child(2)'
       ).length;
 
-      document.querySelector('body').insertAdjacentHTML('afterend', pedidosContainer);
+      document.querySelector('body').insertAdjacentHTML('beforeend', pedidosContainer);
 
       document.querySelector(' p.container-numPedidos > span.numPedidos').innerHTML = numPedidos;
       console.log('Num pedidos:', numPedidos);
