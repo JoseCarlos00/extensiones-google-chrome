@@ -158,21 +158,24 @@ function content() {
 
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Delete' || (event.ctrlKey && event.key === 'v')) {
-      if (indiceContenedor < contenedores.length) {
-        const contenidoActual = contenedores[indiceContenedor];
-        copiar(contenidoActual);
+      if (indiceContenedor <= contenedores.length) {
+        const contenidoActual = contenedores[indiceContenedor] ?? '';
         console.log('copiar:', contenidoActual);
+        copiar(contenidoActual);
+
+        indiceContenedor++;
 
         /** Actualizar Contadores */
         countRestante.innerHTML = countRestanteValue--;
         countActual.innerHTML = countActualValue++;
-        // END
-
-        indiceContenedor++;
-      } else {
-        copiar('');
       }
     }
+  });
+
+  document.addEventListener('paste', () => {
+    setTimeout(() => {
+      puerta.focus();
+    }, 800);
   });
 }
 
