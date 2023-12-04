@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Mover Surtido 1.0",
+    "version": "1.0",
+    "description": "Agiliza el mover surtido, y pone automáticamente la palabra ETIQUETADO",
+    "permissions": [
+      "activeTab", "scripting"
+    ],
+    "icons": {
+        "48": "icon48.png", 
+        "128": "icon128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?UseContainerIdOnWorkInstruction=True" ,"https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?VALIDATE=Y"],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
+  

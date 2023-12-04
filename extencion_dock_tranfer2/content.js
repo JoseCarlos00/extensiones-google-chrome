@@ -130,10 +130,7 @@ function content() {
 
   function enviar() {
     if (btnTranfer.disabled === false && puerta.value !== '') {
-      // puerta.focus();
       btnTranfer.click();
-
-      puerta.value = '';
       btnTranfer.setAttribute('disabled', true);
     }
   }
@@ -157,7 +154,9 @@ function content() {
   countTotal.innerHTML = countTotalValue;
 
   document.addEventListener('keydown', function (event) {
-    if (event.key === 'Delete' || (event.ctrlKey && event.key === 'v')) {
+    // console.log('key:', event.key);
+    if ((event.ctrlKey && event.key === 'v') || event.key === 'Delete') {
+      console.log('EVENTO1');
       if (indiceContenedor <= contenedores.length) {
         const contenidoActual = contenedores[indiceContenedor] ?? '';
         console.log('copiar:', contenidoActual);
@@ -170,12 +169,16 @@ function content() {
         countActual.innerHTML = countActualValue++;
       }
     }
+
+    if (event.key === 'Escape') {
+      puerta.value = '';
+    }
   });
 
   document.addEventListener('paste', () => {
     setTimeout(() => {
       puerta.focus();
-    }, 800);
+    }, 250);
   });
 }
 
