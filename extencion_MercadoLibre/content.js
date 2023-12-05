@@ -149,7 +149,8 @@
       // Procesar cada linea
       lineas.forEach(linea => {
         // Extraer el work unit y el numero de pedido
-        const match = linea.match(/(\w+)\s+(4172-ML-111-(\d+))/);
+        // const match = linea.match(/(\w+)\s+(4172-ML-111-(\d+))/);
+        const match = linea.match(/(\w+|\d+)\s*,?\s*(4172-ML-111-(\d+))/);
 
         if (match) {
           const workUnit = match[1];
@@ -164,6 +165,7 @@
             datos[numeroPedido] = [workUnit];
           }
         }
+        console.log('datos:', datos);
       });
 
       // Limpiar el campo de texto
@@ -183,7 +185,6 @@
       pedidosElementos.forEach(pedidoElemento => {
         // Obten el numero de pedido de cada elemento
         const numeroPedido = pedidoElemento.textContent.trim().replace('Pedido #', '');
-        console.log(`erp_oreder LIKE ${numeroPedido} OR`);
 
         // Obten el elemento del textarea correspondiente al numero de pedido actual
         const textareaElemento = pedidoElemento.closest('.inv_heading').querySelector('.textarea');
