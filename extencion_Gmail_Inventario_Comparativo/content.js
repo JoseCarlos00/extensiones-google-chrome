@@ -1,4 +1,15 @@
 (function () {
+  function comparativo() {
+    const tdbody =
+      document.querySelector(
+        'body > div > div > table.message > tbody > tr:nth-child(3) > td > table > tbody > tr > td > div > font > div > table > tbody > tr > td > table > tbody'
+      ) ?? undefined;
+
+    if (tdbody) {
+      inicio();
+    }
+  }
+
   function inicio() {
     document.querySelector('head').insertAdjacentHTML(
       'beforeend',
@@ -330,11 +341,20 @@
       // Procesar cada linea
       lineas.forEach(linea => {
         // Modificar la expresion regular para manejar el nuevo formato
-        const match = linea.match(/^(\d+-\d+-\d+)\s+(.*)/);
+        // const match = linea.match(/^(\d+-\d+-\d+)(.*)/);
+        const match = linea.match(/^(\d+-\d+-\d+)(.*)[,]?(.*)/);
 
         if (match) {
           const item = match[1];
-          const ubicaciones = match[2].split(/\s+/).filter(Boolean); // Filtrar elementos vacios
+
+          const texto1 = match[2];
+
+          // Eliminar las comas de texto1 y texto2
+          const texto1SinComas = texto1.replace(/,/g, '');
+
+          // Convertir el texto2 sin comas en un array de ubicaciones
+          // const ubicaciones = match[2].split(/\s+/).filter(Boolean); // Filtrar elementos vacios
+          const ubicaciones = texto1SinComas.split(/\s+/).filter(Boolean); // Filtrar elementos vacíos
 
           // Verificar si el item ya existe en el objeto datos
           if (datos[item]) {
@@ -345,6 +365,7 @@
             datos[item] = ubicaciones;
           }
         }
+        console.log('datos:', datos);
       });
 
       // Limpiar el campo de texto
@@ -360,12 +381,10 @@
       tdbody.childNodes.forEach((tr, index) => {
         const item = tr.children[1].innerText;
         const ubicacion = tr.children[6];
-        console.log(ubicacion);
 
         if (index > 0) {
           // Verifica si el item existe en el objeto datos
           if (item in datos) {
-            console.log(item);
             // Inserta las ubicaciones en fila
             ubicacion.innerHTML = datos[item];
           }
@@ -377,5 +396,5 @@
     window.addEventListener('afterprint', despuesDeImprimir);
   }
 
-  window.addEventListener('load', inicio);
+  window.addEventListener('load', comparativo);
 })();
