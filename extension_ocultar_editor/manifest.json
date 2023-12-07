@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Print Orion",
+    "name": "Extension ortografia",
     "version": "1.0",
-    "description": "Imprime un pedido de la lista de envio. y La paguina de Inventario por Bodega",
+    "description": "Elimna el elemento insertado de la extencion de ortografia de Microsoft",
     "permissions": ["scripting", "activeTab"],
     "icons": {
       "16": "images/print16.png",
@@ -12,10 +12,7 @@
     },
     "content_scripts": [
       {
-        "matches": [
-          "http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx",
-          "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"
-        ],
+        "matches": ["<all_urls>"],
         "js": ["content.js"]
       }
     ],
