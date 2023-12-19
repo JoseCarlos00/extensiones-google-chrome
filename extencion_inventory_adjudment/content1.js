@@ -52,11 +52,11 @@ function inicio() {
 
   function content() {
     // Objeto para almacenar los datos
+    const datos = {};
 
     document.querySelector('#registraUbicaciones').addEventListener('click', registrarDatos);
 
     function registrarDatos() {
-      const datos = {};
       const ubicaciones = document.getElementById('ubicaciones').value;
 
       if (ubicaciones) {
@@ -85,16 +85,15 @@ function inicio() {
         });
 
         console.log('datos:', datos);
-
         // Limpiar el campo de texto
         document.getElementById('ubicaciones').value = '';
 
         // Insertar datos
-        insertarDatos(datos);
+        insertarDatos();
       }
     } // End Ubicaciones
 
-    function insertarDatos(datos) {
+    function insertarDatos() {
       // Obtener las claves (números de artículo) del objeto datos
       const items = Object.keys(datos);
 
@@ -118,39 +117,10 @@ function inicio() {
       form1.location.value = primeraUbicacion.ubicacion;
 
       // Simular una operación asincrónica, por ejemplo, un temporizador
-      delete datos[primerItem];
       setTimeout(function () {
         console.log('insertarDatos completado exitosamente');
-        if (chrome.storage) {
-          // Tu código que utiliza chrome.storage aquí
-          // Guardar los datos en el almacenamiento local
-          chrome.storage.local.set({ datosGuardados: datos }, function () {
-            console.log('Datos guardados en el almacenamiento local.');
-          });
-        } else {
-          console.error('chrome.storage no está disponible.');
-        }
-
         form1.submit();
       }, 2000);
-    }
-
-    // Verificar si hay datos almacenados al cargar la página
-    if (chrome.storage) {
-      // Tu código que utiliza chrome.storage aquí
-      chrome.storage.local.get('datosGuardados', function (result) {
-        const datosGuardados = result.datosGuardados;
-        const datosGuardadosNum = datosGuardados.length ?? 0;
-
-        if (datosGuardados) {
-          console.log('Se encontraron datos guardados:', datosGuardadosNum, datosGuardados);
-          insertarDatos(datosGuardados);
-        } else {
-          console.log('No se encontraron datos guardados.');
-        }
-      });
-    } else {
-      console.error('chrome.storage no está disponible.');
     }
   }
 }
