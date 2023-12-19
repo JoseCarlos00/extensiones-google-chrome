@@ -130,7 +130,7 @@ function content() {
 
   function enviar() {
     if (btnTranfer.disabled === false && puerta.value !== '') {
-      btnTranfer.click();
+      if (puerta.value == 'LIMPIEZA') btnTranfer.click();
       btnTranfer.setAttribute('disabled', true);
     }
   }
@@ -153,29 +153,35 @@ function content() {
   countActual.innerHTML = countActualValue;
   countTotal.innerHTML = countTotalValue;
 
+  function copiando() {
+    if (indiceContenedor <= contenedores.length) {
+      const contenidoActual = contenedores[indiceContenedor] ?? '';
+      console.log('copiar:', contenidoActual);
+      copiar(contenidoActual);
+
+      indiceContenedor++;
+
+      /** Actualizar Contadores */
+      countRestante.innerHTML = countRestanteValue--;
+      countActual.innerHTML = countActualValue++;
+    }
+  }
+
   document.addEventListener('keydown', function (event) {
     // console.log('key:', event.key);
-    if ((event.ctrlKey && event.key === 'v') || event.key === 'Delete') {
-      console.log('EVENTO1');
-      if (indiceContenedor <= contenedores.length) {
-        const contenidoActual = contenedores[indiceContenedor] ?? '';
-        console.log('copiar:', contenidoActual);
-        copiar(contenidoActual);
-
-        indiceContenedor++;
-
-        /** Actualizar Contadores */
-        countRestante.innerHTML = countRestanteValue--;
-        countActual.innerHTML = countActualValue++;
-      }
+    if (event.key === 'Delete') {
+      // console.log('EVENTO1');
+      copiando();
     }
 
     if (event.key === 'Escape') {
       puerta.value = '';
+      btnTranfer.setAttribute('disabled', true);
     }
   });
 
   document.addEventListener('paste', () => {
+    copiando();
     setTimeout(() => {
       puerta.focus();
     }, 250);

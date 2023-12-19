@@ -11,7 +11,11 @@
       document.querySelector('#bOK').click();
     }
 
-    if (href === 'https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?VALIDATE=Y') {
+    if (
+      href === 'https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?VALIDATE=Y' ||
+      href ===
+        'https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?UseContainerIdOnWorkInstruction=True'
+    ) {
       document.querySelector('#bOK').click();
     }
   }
