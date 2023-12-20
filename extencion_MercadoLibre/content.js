@@ -4,6 +4,25 @@
       'beforeend',
       `
     <style>
+    #registroForm {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+      gap: 8px;
+      margin-left: 16px;
+
+      & button {
+        align-self: center;
+        width: 90px;
+        height: 36px;
+      }
+
+      & label {
+        margin: 0;
+        padding-top: 4px;
+      }
+    }
+
     .textarea-container{
       position: absolute;
       right: 0;
@@ -24,8 +43,10 @@
       cursor: pointer;
       position: absolute;
       top: 0;
-      right: -40px
+      right: -40px;
+      padding: 5px 5px !important;
     }
+
 
     .container-numPedidos {
       position: absolute;
@@ -36,6 +57,38 @@
         font-weight: bold;
       }
     }
+
+    .button {
+      display: flex;
+      ustify-content: space-around;
+      align-items: center;
+      padding: 10px 15px;
+      gap: 15px;
+      background-color: #007ACC;
+      outline: 3px #007ACC solid;
+      outline-offset: -3px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: 400ms;
+    }
+    
+    .button .text {
+      color: white;
+      font-weight: 700;
+      font-size: 1em;
+      transition: 400ms;
+      margin: 0;
+    }
+    
+    .button:hover {
+      background-color: transparent;
+    }
+    
+    .button:hover .text {
+      color: #007ACC;
+    }
+    
 
     @media print {
       #registroForm {
@@ -61,7 +114,7 @@
     const textarea = `
       <div class="textarea-container">
         <textarea class="textarea" spellcheck="false" data-ms-editor="true"></textarea>
-        <button class="next-button">Sig</button>
+        <button class="next-button button"><spam class="text">Sig</sapm></button>
       </div>`;
 
     const divFather = document.querySelectorAll(
@@ -120,19 +173,22 @@
       document.querySelector(' p.container-numPedidos > span.numPedidos').innerHTML = numPedidos;
       console.log('Num pedidos:', numPedidos);
     }
+
     contarPedidos();
 
     /** Ingresar tareas */
     const formulario = `
-  <form id="registroForm">
-  <label for="workPedido">Work Unit y Pedido:</label>
-  <textarea id="workPedido" 
-  placeholder="
-  30385321  4172-ML-111-54101" 
-  name="workPedido" rows="4" cols="50" required="" spellcheck="false"></textarea>
+      <form id="registroForm">
+      <label for="workPedido">Work Unit y Pedido:</label>
+      <textarea id="workPedido" 
+      placeholder="
+      30385321  4172-ML-111-54101" 
+      name="workPedido" rows="4" cols="50" required="" spellcheck="false"></textarea>
 
-  <button id="registrarPedidos" type="button">Registrar</button>
-  </form>`;
+      <button class="button" id="registrarPedidos" type="submit">
+        <spam class="text">Registrar</spam>
+        </button>
+      </form>`;
 
     document.querySelector('body').insertAdjacentHTML('afterbegin', formulario);
 

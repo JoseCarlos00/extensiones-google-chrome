@@ -1,13 +1,15 @@
 (() => {
-    document.querySelector('head').insertAdjacentHTML('beforeend', 
+  document.querySelector('head').insertAdjacentHTML(
+    'beforeend',
     `
     <style>
+        
         @media print {
             body > deepl-input-controller {
-                display: none;
+              display: none;
             }
-        }
+          }
     </style>
-    `)
-})()
-
+    `
+  );
+})();
