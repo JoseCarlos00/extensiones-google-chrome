@@ -204,7 +204,7 @@ function workUnitInsert() {
 // END
 
 /** Lista de Envios */
-function listEnvios(params) {
+function listEnvios() {
   const filaPedidos = document.querySelectorAll('#gvEnvioListas_ctl00 > tbody tr');
 
   filaPedidos.forEach(tr => {
@@ -216,6 +216,11 @@ function listEnvios(params) {
     href += `&userEnvio=${GENERADO_POR}&fechaEnvio=${FECHA_ENVIO}`;
 
     tr.children[2].children[0].setAttribute('href', href);
+  });
+
+  const btnBuscar = document.querySelector('#btnBuscar') ?? undefined;
+  btnBuscar.addEventListener('click', () => {
+    setTimeout(listEnvios, 2000);
   });
 }
 //end
@@ -360,7 +365,7 @@ if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega
 }
 
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Envios/EnviosListas.aspx') {
-  listEnvios();
+  setTimeout(listEnvios, 2000);
 }
 
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN') {
