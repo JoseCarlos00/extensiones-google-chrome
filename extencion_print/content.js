@@ -30,7 +30,6 @@ function envioPrint() {
   //Cuerpo - Lista
   document.querySelector('#gvEnvio_ctl00 > tbody').style = 'color: black; font-weight: bold;';
 
-
   //Informacion de Envio
   document.querySelector('#btnInformacion').style = 'color: black; font-weight: bold;';
   document.querySelector('#btnInformacion > i').style = 'color: black;';
@@ -122,10 +121,13 @@ function envioPrint() {
   document.querySelector(
     '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td > span'
   ).style = 'color: black; borde: none;'; // Ocultamos la tabla de Impresion con datos del envio
-  
+
   // Contenedor de Footer de Impresion
-  document.querySelector("#UpdatePanel > div.t-container.t-container-static").style.width = 'fit-content';
-  document.querySelector("#UpdatePanel > div.t-container.t-container-static > div > div").classList.remove('t-col');
+  document.querySelector('#UpdatePanel > div.t-container.t-container-static').style.width =
+    'fit-content';
+  document
+    .querySelector('#UpdatePanel > div.t-container.t-container-static > div > div')
+    .classList.remove('t-col');
 
   // Ocultar Tabla footer
   document.querySelector('#divImpresionRepCotizacion > table > tbody > tr:nth-child(3)').style =
@@ -189,7 +191,7 @@ function inventoryNPrint() {
 function workUnitInsert() {
   const body = document.querySelector('body');
 
-  let work_unit = prompt().trim();
+  let work_unit = prompt().trim() ?? '';
 
   body.insertAdjacentHTML(
     'afterbegin',
@@ -207,12 +209,11 @@ function listEnvios(params) {
 
   filaPedidos.forEach(tr => {
     const GENERADO_POR = tr.children[9].innerText;
-    const FECHA_ENVIO = tr.children[5].innerText
+    const FECHA_ENVIO = tr.children[5].innerText;
     let href = tr.children[2].children[0].getAttribute('href');
 
     tr.children[2].children[0].setAttribute('target', '_blank');
     href += `&userEnvio=${GENERADO_POR}&fechaEnvio=${FECHA_ENVIO}`;
-    
 
     tr.children[2].children[0].setAttribute('href', href);
   });
@@ -228,10 +229,12 @@ function getParamsURL() {
   const urlString = window.location.href; // Obtener la URL actual
   const url = new URL(urlString); // Crear un objeto URL
   const parametros = url.searchParams; // Obtener los parámetros de la URL
+  const userEnvio = parametros.get('userEnvio') ?? '';
+  const fechaEnvio = parametros.get('fechaEnvio') ?? '';
 
-  let parametro = [] 
-  parametro.push(parametros.get('userEnvio'));
-  parametro.push(parametros.get('fechaEnvio'));
+  let parametro = [];
+  parametro.push(userEnvio);
+  parametro.push(fechaEnvio);
 
   return parametro;
 }
@@ -257,6 +260,7 @@ function envioItem() {
   //Evento
   document.querySelector('#printButtonEnvio').addEventListener('click', envioPrint);
   document.querySelector('#workUnitButton').addEventListener('click', workUnitInsert);
+  window.addEventListener('beforeprint', envioPrint);
 
   // Titulo envio  => "Envio # 12679"
   document.querySelector(
@@ -283,6 +287,7 @@ function inventarioBodega() {
 
   //Evento
   document.querySelector('#printButtonInventory').addEventListener('click', inventoryPrint);
+  window.addEventListener('beforeprint', inventoryPrint);
 }
 // END
 
@@ -305,6 +310,7 @@ function inventarioBodegaN() {
 
   //Evento
   document.querySelector('#printButtonInventory').addEventListener('click', inventoryNPrint);
+  window.addEventListener('beforeprint', inventoryNPrint);
 }
 // END
 
