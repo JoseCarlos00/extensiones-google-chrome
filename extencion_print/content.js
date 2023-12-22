@@ -220,7 +220,7 @@ function listEnvios() {
 
   const btnBuscar = document.querySelector('#btnBuscar') ?? undefined;
   btnBuscar.addEventListener('click', () => {
-    setTimeout(listEnvios, 2000);
+    setTimeout(listEnvios, 1500);
   });
 }
 //end
@@ -365,7 +365,7 @@ if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega
 }
 
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Envios/EnviosListas.aspx') {
-  setTimeout(listEnvios, 2000);
+  setTimeout(listEnvios, 1500);
 }
 
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN') {
