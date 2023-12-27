@@ -26,12 +26,24 @@ function inicio() {
       gap: 16px;
 
       & button {
-      align-self: center;
-       width: 70px;
-       cursor: pointer;
+        align-self: center;
+        width: 90px;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 10px;
+        text-align: center;
+        background-color: #0dd406;
+      }
+
+      & button:hover {
+        background: #0dd406d6;
+      }
+      
+      & button:active {
+        background: #0dd406bf;
       }
     }
-    
+
     .contadores-container {
       position: fixed;
       bottom: 0;
