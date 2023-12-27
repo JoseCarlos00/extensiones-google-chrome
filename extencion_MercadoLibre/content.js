@@ -211,6 +211,7 @@
         if (match) {
           const workUnit = match[1];
           const numeroPedido = match[3];
+          // console.log('numPedido', numeroPedido);
 
           // Verificar si el numero de pedido ya existe en el objeto datos
           if (datos[numeroPedido]) {
@@ -224,7 +225,6 @@
             datos[numeroPedido] = [workUnit];
           }
         }
-        console.log('datos:', datos);
       });
 
       // Limpiar el campo de texto
