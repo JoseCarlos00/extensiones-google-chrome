@@ -185,7 +185,7 @@
       30385321  4172-ML-111-54101" 
       name="workPedido" rows="4" cols="50" required="" spellcheck="false"></textarea>
 
-      <button class="button" id="registrarPedidos" type="submit">
+      <button class="button" id="registrarPedidos" type="button">
         <spam class="text">Registrar</spam>
         </button>
       </form>`;
@@ -214,8 +214,13 @@
 
           // Verificar si el numero de pedido ya existe en el objeto datos
           if (datos[numeroPedido]) {
-            // Si existe, agregar el work unit a la lista existente
-            datos[numeroPedido].push(workUnit);
+            
+            // Verificar si el workUnit no está duplicado en la lista
+            if (!datos[numeroPedido].includes(workUnit)) {
+              // Si no está duplicado, agregar el workUnit a la lista existente
+              datos[numeroPedido].push(workUnit);
+            }
+
           } else {
             // Si no existe, crear una nueva lista con el work unit
             datos[numeroPedido] = [workUnit];
