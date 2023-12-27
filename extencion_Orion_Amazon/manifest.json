@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "name": "Amazon",
+    "version": "1.0",
+    "description": "Agrega saltos de paginas y estilos a las imagenes (guias)",
+    "permissions": ["scripting", "activeTab"],
+    "icons": {
+      "16": "images/amz16.png",
+      "32": "images/amz32.png",
+      "48": "images/amz48.png",
+      "128": "images/amz128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "http://fmorion.dnsalias.com/orion/paginas/AppServicios/ImprAmazon.aspx?PedidoNum=*"
+        ],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "defaul_icon" :  {
+        "16": "images/amz16.png",
+        "32": "images/amz32.png",
+        "48": "images/amz48.png",
+        "128": "images/amz128.png"
+      }
+    }
+  }
+  
