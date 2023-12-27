@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Amazon 1",
+    "name": "Amazon Gmail",
     "version": "1.0",
     "description": "Modifica el hancho del contenido y lo hace editable",
     "permissions": ["scripting", "activeTab"],

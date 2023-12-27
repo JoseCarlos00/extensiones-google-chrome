@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Amazon",
+    "name": "Amazon Orion",
     "version": "1.0",
     "description": "Agrega saltos de paginas y estilos a las imagenes (guias)",
     "permissions": ["scripting", "activeTab"],
