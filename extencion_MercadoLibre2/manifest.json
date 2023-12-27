@@ -1,14 +1,14 @@
 {
     "manifest_version": 3,
-    "name": "Mercado Libre 2",
+    "name": "Mercado Libre 2 Move IMG",
     "version": "1.0",
-    "description": "Recortar guia para que salga en una sola hoja",
+    "description": "Mueve la guia al final del pedido y recorta la utlma imagen",
     "permissions": ["scripting", "activeTab"],
     "icons": {
-      "16": "images/move16.png",
-      "32": "images/move32.png",
-      "48": "images/move48.png",
-      "128": "images/move128.png"
+      "16": "images/ml16.png",
+      "32": "images/ml32.png",
+      "48": "images/ml48.png",
+      "128": "images/ml128.png"
     },
     "content_scripts": [
       {
@@ -21,10 +21,10 @@
     "action": {
       "default_popup": "popup.html",
       "defaul_icon" :  {
-        "16": "images/move16.png",
-        "32": "images/move32.png",
-        "48": "images/move48.png",
-        "128": "images/move128.png"
+        "16": "images/ml16.png",
+        "32": "images/ml32.png",
+        "48": "images/ml48.png",
+        "128": "images/ml128.png"
       }
     }
   }

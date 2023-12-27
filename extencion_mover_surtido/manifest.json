@@ -7,8 +7,10 @@
       "activeTab", "scripting"
     ],
     "icons": {
-        "48": "icon48.png", 
-        "128": "icon128.png"
+      "16": "images/touch16.png",
+      "32": "images/touch32.png",
+      "48": "images/touch48.png",
+      "128": "images/touch128.png"
     },
     "content_scripts": [
       {
@@ -19,7 +21,13 @@
       }
     ],
     "action": {
-      "default_popup": "popup.html"
+      "default_popup": "popup.html",
+      "defaul_icon" :  {
+        "16": "images/touch16.png",
+        "32": "images/touch32.png",
+        "48": "images/touch48.png",
+        "128": "images/touch128.png"
+      }
     }
   }
   

@@ -5,10 +5,10 @@
     "description": "Inventory adjustment automatic",
     "permissions": ["scripting", "activeTab", "storage"],
     "icons": {
-      "16": "images/broom16.png",
-      "32": "images/broom32.png",
-      "48": "images/broom48.png",
-      "128": "images/broom128.png"
+      "16": "images/inventory16.png",
+      "32": "images/inventory32.png",
+      "48": "images/inventory48.png",
+      "128": "images/inventory128.png"
     },
     "content_scripts": [
       {
@@ -21,10 +21,10 @@
     "action": {
       "default_popup": "popup.html",
       "defaul_icon" :  {
-        "16": "images/broom16.png",
-        "32": "images/broom32.png",
-        "48": "images/broom48.png",
-        "128": "images/broom128.png"
+        "16": "images/inventory16.png",
+        "32": "images/inventory32.png",
+        "48": "images/inventory48.png",
+        "128": "images/inventory128.png"
       }
     }
   }

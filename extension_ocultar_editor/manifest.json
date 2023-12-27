@@ -5,10 +5,10 @@
     "description": "Elimna el elemento insertado de la extencion de ortografia de Microsoft",
     "permissions": ["scripting", "activeTab"],
     "icons": {
-      "16": "images/print16.png",
-      "32": "images/print32.png",
-      "48": "images/print48.png",
-      "128": "images/print128.png"
+      "16": "images/editor16.png",
+      "32": "images/editor32.png",
+      "48": "images/editor48.png",
+      "128": "images/editor128.png"
     },
     "content_scripts": [
       {
@@ -19,10 +19,10 @@
     "action": {
       "default_popup": "popup.html",
       "defaul_icon" :  {
-        "16": "images/print16.png",
-        "32": "images/print32.png",
-        "48": "images/print48.png",
-        "128": "images/print128.png"
+        "16": "images/editor16.png",
+        "32": "images/editor32.png",
+        "48": "images/editor48.png",
+        "128": "images/editor128.png"
       }
     },
     "background": {
