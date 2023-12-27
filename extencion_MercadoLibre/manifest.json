@@ -15,7 +15,7 @@
         "matches": [
           "http://fmorion.dnsalias.com/orion/paginas/AppServicios/MercadoLibreIm.aspx?PedidoNum=*"
         ],
-        "js": ["content.js", "xlsx.mini.min.js"],
+        "js": ["content.js", "popup.js", "xlsx.mini.min.js"],
         "run_at": "document_end"
       }
     ],

@@ -32,9 +32,21 @@ function inicio() {
       }
     }
     
+    .contadores-container {
+      position: fixed;
+      bottom: 0;
+      width: 200px;
+      font-size: 1.12rem;
+
+      spam {
+        font-weight: bold;
+      }
+    }
     </style>
     `
     );
+
+    const body = document.querySelector('body');
 
     /** Insertar Ubicaciones */
     const formulario = `
@@ -42,11 +54,21 @@ function inicio() {
         <label for="ubicaciones">Item, Qty y Ubicacion:</label>
         <textarea id="ubicaciones" name="ubicaciones" rows="4" cols="50" required placeholder="8264-10104-10618   1pz    1-25-02-AA-01"></textarea>
         
-        
-        <button id="registraUbicaciones" type="submit">Registrar</button>
+        <button id="registraUbicaciones" type="button">Registrar</button>
       </form>`;
-    document.querySelector('body').insertAdjacentHTML('afterbegin', formulario);
 
+    body.insertAdjacentHTML('afterbegin', formulario);
+
+    // Insetar Contador
+    const contadores = `
+      <div class="contadores-container">
+        <p>
+        Restantes:<spam id="countRestante">0</spam>
+        </p>
+      </div>
+      `;
+
+    body.insertAdjacentHTML('beforeend', contadores);
     content();
   }
 
@@ -83,8 +105,6 @@ function inicio() {
             }
           }
         });
-
-        console.log('datos:', datos);
 
         // Limpiar el campo de texto
         document.getElementById('ubicaciones').value = '';
@@ -135,15 +155,21 @@ function inicio() {
       }, 2000);
     }
 
+    function contador(value) {
+      const countRestante = document.querySelector('#countRestante');
+      countRestante.innerHTML = `${value}`;
+    }
+
     // Verificar si hay datos almacenados al cargar la página
     if (chrome.storage) {
       // Tu código que utiliza chrome.storage aquí
       chrome.storage.local.get('datosGuardados', function (result) {
         const datosGuardados = result.datosGuardados;
-        const datosGuardadosNum = datosGuardados.length ?? 0;
+        const datosGuardadosNum = Object.keys(datosGuardados).length;
 
         if (datosGuardados) {
           console.log('Se encontraron datos guardados:', datosGuardadosNum, datosGuardados);
+          contador(datosGuardadosNum);
           insertarDatos(datosGuardados);
         } else {
           console.log('No se encontraron datos guardados.');

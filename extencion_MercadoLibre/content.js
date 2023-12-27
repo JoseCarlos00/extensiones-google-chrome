@@ -214,13 +214,11 @@
 
           // Verificar si el numero de pedido ya existe en el objeto datos
           if (datos[numeroPedido]) {
-            
             // Verificar si el workUnit no está duplicado en la lista
             if (!datos[numeroPedido].includes(workUnit)) {
               // Si no está duplicado, agregar el workUnit a la lista existente
               datos[numeroPedido].push(workUnit);
             }
-
           } else {
             // Si no existe, crear una nueva lista con el work unit
             datos[numeroPedido] = [workUnit];
