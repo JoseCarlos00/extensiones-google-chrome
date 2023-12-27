@@ -265,7 +265,7 @@ function envioItem() {
   //Evento
   document.querySelector('#printButtonEnvio').addEventListener('click', envioPrint);
   document.querySelector('#workUnitButton').addEventListener('click', workUnitInsert);
-  window.addEventListener('beforeprint', envioPrint);
+  window.addEventListener('beforeprint', envioPrint, { once: true });
 
   // Titulo envio  => "Envio # 12679"
   document.querySelector(
@@ -292,7 +292,7 @@ function inventarioBodega() {
 
   //Evento
   document.querySelector('#printButtonInventory').addEventListener('click', inventoryPrint);
-  window.addEventListener('beforeprint', inventoryPrint);
+  window.addEventListener('beforeprint', inventoryPrint, { once: true });
 }
 // END
 
@@ -315,7 +315,7 @@ function inventarioBodegaN() {
 
   //Evento
   document.querySelector('#printButtonInventory').addEventListener('click', inventoryNPrint);
-  window.addEventListener('beforeprint', inventoryNPrint);
+  window.addEventListener('beforeprint', inventoryNPrint, { once: true });
 }
 // END
 
