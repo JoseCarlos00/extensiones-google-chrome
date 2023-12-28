@@ -62,5 +62,5 @@ typings/
 
 
 .vscode
-*.rar
+# *.rar
 *.ziz
