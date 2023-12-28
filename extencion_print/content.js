@@ -149,6 +149,7 @@ function envioPrint() {
 }
 
 function inventoryPrint() {
+  document.querySelector('body > div.grid-container').style.minHeight = 0;
   // thead --> Encabezados
   const thead = document.querySelectorAll('#gvInventario_ctl00 > thead > tr > th');
   thead.forEach(th => {
@@ -169,6 +170,7 @@ function inventoryPrint() {
 }
 
 function inventoryNPrint() {
+  document.querySelector('body > div.grid-container').style.minHeight = 0;
   // thead --> Encabezados
   const thead = document.querySelectorAll('#gvInventario_ctl00 > thead > tr > th');
   thead.forEach(th => {
