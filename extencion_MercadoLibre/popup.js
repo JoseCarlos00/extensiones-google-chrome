@@ -18,208 +18,279 @@
     `;
 
     document.querySelector('head').insertAdjacentHTML('beforeend', style);
-    document.querySelector('body').insertAdjacentHTML('afterbegin', input);
 
-    var fileInput = document.getElementById('fileInput');
+    // Función para insertar el HTML si el elemento con la clase '.conatiner-principal' existe
+    function insertarHTMLSiExiste() {
+      const containerPrincipalElement = document.querySelector('.conatiner-principal') ?? undefined;
 
-    fileInput.addEventListener('change', function (e) {
-      const file = e.target.files[0];
-
-      if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          const data = e.target.result;
-
-          if (!data) return;
-
-          // Verificar la extensión del archivo para determinar el tipo de parseo
-          const extension = file.name.split('.').pop().toLowerCase();
-
-          if (extension === 'xlsx') {
-            extensionXLSX(data);
-          } else if (extension === 'xls') {
-            extensionXLS(file);
-          } else {
-            console.log('Formato de archivo no compatible');
-          }
-        };
-
-        reader.readAsArrayBuffer(file);
-      }
-    });
-
-    // Objeto para almacenar los datos
-    const datos = {};
-
-    function registrarDatosXLSX(excelData) {
-      // Iterar sobre las filas de excelData
-      for (let i = 1; i < excelData.length; i++) {
-        const workUnit = String(excelData[i][0]);
-        const pedido = String(excelData[i][7]);
-        const numeroPedido = pedido.split('-').pop();
-
-        // Verificar si el numero de pedido ya existe en el objeto datos
-        if (datos[numeroPedido]) {
-          // Verificar si el workUnit no está duplicado en la lista
-          if (!datos[numeroPedido].includes(workUnit)) {
-            // Si no está duplicado, agregar el workUnit a la lista existente
-            datos[numeroPedido].push(workUnit);
-          }
-        } else {
-          // Si no existe, crear una nueva lista con el work unit
-          datos[numeroPedido] = [workUnit];
-        }
-      }
-
-      const datosLength = Object.keys(datos).length;
-
-      if (datosLength > 0) {
-        console.log('datos:', datos, datosLength);
-        document.querySelector('#insertar').addEventListener('click', insertarWorkUnit);
+      if (containerPrincipalElement) {
+        containerPrincipalElement.insertAdjacentHTML('afterbegin', input);
+        clearInterval(intervalID); // Detener la comprobación después de insertar el HTML
       }
     }
 
-    function registrarDatosXLS(excelData) {
-      const WU = 'UNIDAD DE TRABAJO';
-      const PED = 'ID DEL PEDIDO';
+    function promesa() {
+      setTimeout(() => {
+        const intervalID = setInterval(insertarHTMLSiExiste, 1000);
 
-      for (let i = 0; i < excelData.length; i++) {
-        const element = excelData[i];
-        const workUnit = String(excelData[i][WU]);
-        const pedido = String(excelData[i][PED]);
-        const numeroPedido = pedido.split('-').pop();
-
-        // Verificar si el numero de pedido ya existe en el objeto datos
-        if (datos[numeroPedido]) {
-          // Verificar si el workUnit no está duplicado en la lista
-          if (!datos[numeroPedido].includes(workUnit)) {
-            // Si no está duplicado, agregar el workUnit a la lista existente
-            datos[numeroPedido].push(workUnit);
-          }
-        } else {
-          // Si no existe, crear una nueva lista con el work unit
-          datos[numeroPedido] = [workUnit];
-        }
-      }
-
-      const datosLength = Object.keys(datos).length;
-
-      if (datosLength > 0) {
-        console.log('datos:', datos, datosLength);
-        document.querySelector('#insertar').addEventListener('click', insertarWorkUnit);
-      }
+        // Detener la comprobación después de 10 segundos (5000 milisegundos)
+        setTimeout(() => {
+          clearInterval(intervalID);
+          console.log('La comprobación ha terminado después de 5 segundos.');
+        }, 5000);
+      }, 2500);
     }
 
-    function insertarWorkUnit() {
-      // Obten todos los elementos que contienen numeros de pedido
-      const pedidosElementos = document.querySelectorAll(
-        '.col.text-center.inv_heading.position-relative h3:nth-child(1) span:nth-child(2)'
-      );
+    function contenido() {}
 
-      // Itera sobre cada elemento de numero de pedido
-      pedidosElementos.forEach(pedidoElemento => {
-        // Obten el numero de pedido de cada elemento
-        const numeroPedido = pedidoElemento.textContent.trim().replace('Pedido #', '');
+    promesa().then(contenido);
 
-        // Obten el elemento del textarea correspondiente al numero de pedido actual
-        const textareaElemento = pedidoElemento.closest('.inv_heading').querySelector('.textarea');
+    function waitForElement(selector, timeout) {
+      return new Promise((resolve, reject) => {
+        const intervalId = setInterval(() => {
+          const element = document.querySelector(selector);
+          if (element) {
+            clearInterval(intervalId);
+            resolve(element);
+          }
+        }, 1000);
 
-        // Verifica si el numero de pedido existe en el objeto datos
-        if (numeroPedido in datos) {
-          // Inserta las unidades de trabajo en el textarea
-          textareaElemento.value = datos[numeroPedido].join('\n');
-        }
+        setTimeout(() => {
+          clearInterval(intervalId);
+          reject(new Error(`Elemento ${selector} no encontrado después de ${timeout} segundos`));
+        }, timeout);
       });
     }
 
-    function extensionXLSX(data) {
-      // Parsear el archivo Excel con SheetJS para archivos .xlsx
-      const workbook = XLSX.read(data, { type: 'binary' });
-      const sheet_name_list = workbook.SheetNames;
-      const sheet = workbook.Sheets[sheet_name_list[0]];
+    function insertarHTMLSiExiste() {
+      waitForElement('.conatiner-principal', 10000)
+        .then(containerPrincipalElement => {
+          containerPrincipalElement.insertAdjacentHTML('beforeend', input);
+        })
+        .catch(error => {
+          console.log(error.message);
+        });
+    }
 
-      // Obtener los datos como un array de objetos
-      const excelData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    async function contenido() {
+      try {
+        var fileInput = document.getElementById('fileInput');
 
-      // Ahora puedes trabajar con excelData, que contiene los datos del archivo Excel
-      const workUnitHeader = excelData[0][0] ?? '';
-      const pedidoHeader = excelData[0][7] ?? '';
-      const valuePedido = excelData[1][7] ?? '';
+        fileInput.addEventListener('change', function (e) {
+          const file = e.target.files[0];
 
-      console.log('wor:', workUnitHeader, ' ped:', pedidoHeader);
-      console.log('Value:', valuePedido);
-      console.log(excelData[0]);
+          if (file) {
+            const reader = new FileReader();
 
-      if (
-        workUnitHeader == 'Work unit' &&
-        pedidoHeader == 'Reference id' &&
-        valuePedido.includes('4172-ML-')
-      ) {
-        registrarDatosXLSX(excelData);
+            reader.onload = function (e) {
+              const data = e.target.result;
+
+              if (!data) return;
+
+              // Verificar la extensión del archivo para determinar el tipo de parseo
+              const extension = file.name.split('.').pop().toLowerCase();
+
+              if (extension === 'xlsx') {
+                extensionXLSX(data);
+              } else if (extension === 'xls') {
+                extensionXLS(file);
+              } else {
+                console.log('Formato de archivo no compatible');
+              }
+            };
+
+            reader.readAsArrayBuffer(file);
+          }
+        });
+
+        // Objeto para almacenar los datos
+        const datos = {};
+
+        function registrarDatosXLSX(excelData) {
+          // Iterar sobre las filas de excelData
+          for (let i = 1; i < excelData.length; i++) {
+            const workUnit = String(excelData[i][0]);
+            const pedido = String(excelData[i][7]);
+            const numeroPedido = pedido.split('-').pop();
+
+            // Verificar si el numero de pedido ya existe en el objeto datos
+            if (datos[numeroPedido]) {
+              // Verificar si el workUnit no está duplicado en la lista
+              if (!datos[numeroPedido].includes(workUnit)) {
+                // Si no está duplicado, agregar el workUnit a la lista existente
+                datos[numeroPedido].push(workUnit);
+              }
+            } else {
+              // Si no existe, crear una nueva lista con el work unit
+              datos[numeroPedido] = [workUnit];
+            }
+          }
+
+          const datosLength = Object.keys(datos).length;
+
+          if (datosLength > 0) {
+            console.log('datos:', datos, datosLength);
+            document.querySelector('#insertar').addEventListener('click', insertarWorkUnit);
+          }
+        }
+
+        function registrarDatosXLS(excelData) {
+          const WU = 'UNIDAD DE TRABAJO';
+          const PED = 'ID DEL PEDIDO';
+
+          for (let i = 0; i < excelData.length; i++) {
+            const element = excelData[i];
+            const workUnit = String(excelData[i][WU]);
+            const pedido = String(excelData[i][PED]);
+            const numeroPedido = pedido.split('-').pop();
+
+            // Verificar si el numero de pedido ya existe en el objeto datos
+            if (datos[numeroPedido]) {
+              // Verificar si el workUnit no está duplicado en la lista
+              if (!datos[numeroPedido].includes(workUnit)) {
+                // Si no está duplicado, agregar el workUnit a la lista existente
+                datos[numeroPedido].push(workUnit);
+              }
+            } else {
+              // Si no existe, crear una nueva lista con el work unit
+              datos[numeroPedido] = [workUnit];
+            }
+          }
+
+          const datosLength = Object.keys(datos).length;
+
+          if (datosLength > 0) {
+            console.log('datos:', datos, datosLength);
+            document.querySelector('#insertar').addEventListener('click', insertarWorkUnit);
+          }
+        }
+
+        function insertarWorkUnit() {
+          // Obten todos los elementos que contienen numeros de pedido
+          const pedidosElementos = document.querySelectorAll(
+            '.col.text-center.inv_heading.position-relative h3:nth-child(1) span:nth-child(2)'
+          );
+
+          // Itera sobre cada elemento de numero de pedido
+          pedidosElementos.forEach(pedidoElemento => {
+            // Obten el numero de pedido de cada elemento
+            const numeroPedido = pedidoElemento.textContent.trim().replace('Pedido #', '');
+
+            // Obten el elemento del textarea correspondiente al numero de pedido actual
+            const textareaElemento = pedidoElemento
+              .closest('.inv_heading')
+              .querySelector('.textarea');
+
+            // Verifica si el numero de pedido existe en el objeto datos
+            if (numeroPedido in datos) {
+              // Inserta las unidades de trabajo en el textarea
+              textareaElemento.value = datos[numeroPedido].join('\n');
+            }
+          });
+        }
+
+        function extensionXLSX(data) {
+          // Parsear el archivo Excel con SheetJS para archivos .xlsx
+          const workbook = XLSX.read(data, { type: 'binary' });
+          const sheet_name_list = workbook.SheetNames;
+          const sheet = workbook.Sheets[sheet_name_list[0]];
+
+          // Obtener los datos como un array de objetos
+          const excelData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+          // Ahora puedes trabajar con excelData, que contiene los datos del archivo Excel
+          const workUnitHeader = excelData[0][0] ?? '';
+          const pedidoHeader = excelData[0][7] ?? '';
+          const valuePedido = excelData[1][7] ?? '';
+
+          console.log('wor:', workUnitHeader, ' ped:', pedidoHeader);
+          console.log('Value:', valuePedido);
+          console.log(excelData[0]);
+
+          if (
+            workUnitHeader == 'Work unit' &&
+            pedidoHeader == 'Reference id' &&
+            valuePedido.includes('4172-ML-')
+          ) {
+            registrarDatosXLSX(excelData);
+          }
+        }
+
+        function extensionXLS(file) {
+          async function getData() {
+            /* Obtén el array buffer */
+            let libro;
+            try {
+              libro = await file.arrayBuffer();
+            } catch (e) {
+              console.log('Error:', e);
+              return;
+            }
+
+            // Convierte el ArrayBuffer en un array de bytes
+            const data = new Uint8Array(libro);
+
+            // Convierte el array de bytes en un libro de Excel
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            // Obtiene los datos de la primera hoja del libro
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const excelData = XLSX.utils.sheet_to_json(sheet);
+
+            return excelData;
+          }
+
+          async function content() {
+            const excelData = await getData();
+            /** Validar que sea una Hoja de trabajo Activo */
+            // console.log('Datos del archivo XLS:', typeof excelData, excelData);
+
+            if (Object.keys(excelData).length == 0) return;
+
+            // console.log('Dato 1:', typeof excelData[0], excelData[0]);
+
+            const excelData0 = Object.keys(excelData[0]) ?? '';
+
+            const filas = Object.keys(excelData);
+            // console.log('Filas:', filas);
+
+            const columna = excelData0;
+            // console.log('Columna: ', columna);
+
+            const valuePedido = excelData[0][columna[2]] ?? '';
+
+            console.log('Value:', valuePedido);
+
+            const workUnitHeader = columna[3] ?? '';
+            const pedidoHeader = columna[2] ?? '';
+            // console.log('wor:', workUnitHeader, ' ped:', pedidoHeader);
+
+            if (
+              pedidoHeader == 'ID DEL PEDIDO' &&
+              workUnitHeader == 'UNIDAD DE TRABAJO' &&
+              valuePedido.includes('4172-ML-')
+            ) {
+              registrarDatosXLS(excelData);
+            }
+          }
+
+          content();
+        }
+      } catch (error) {
+        console.log(error.message);
       }
     }
 
-    function extensionXLS(file) {
-      async function getData() {
-        /* Obtén el array buffer */
-        let libro;
-        try {
-          libro = await file.arrayBuffer();
-        } catch (e) {
-          console.log('Error:', e);
-          return;
-        }
-
-        // Convierte el ArrayBuffer en un array de bytes
-        const data = new Uint8Array(libro);
-
-        // Convierte el array de bytes en un libro de Excel
-        const workbook = XLSX.read(data, { type: 'array' });
-
-        // Obtiene los datos de la primera hoja del libro
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const excelData = XLSX.utils.sheet_to_json(sheet);
-
-        return excelData;
-      }
-
-      async function content() {
-        const excelData = await getData();
-        /** Validar que sea una Hoja de trabajo Activo */
-        // console.log('Datos del archivo XLS:', typeof excelData, excelData);
-
-        if (Object.keys(excelData).length == 0) return;
-
-        // console.log('Dato 1:', typeof excelData[0], excelData[0]);
-
-        const excelData0 = Object.keys(excelData[0]) ?? '';
-
-        const filas = Object.keys(excelData);
-        // console.log('Filas:', filas);
-
-        const columna = excelData0;
-        // console.log('Columna: ', columna);
-
-        const valuePedido = excelData[0][columna[2]] ?? '';
-
-        console.log('Value:', valuePedido);
-
-        const workUnitHeader = columna[3] ?? '';
-        const pedidoHeader = columna[2] ?? '';
-        // console.log('wor:', workUnitHeader, ' ped:', pedidoHeader);
-
-        if (
-          pedidoHeader == 'ID DEL PEDIDO' &&
-          workUnitHeader == 'UNIDAD DE TRABAJO' &&
-          valuePedido.includes('4172-ML-')
-        ) {
-          registrarDatosXLS(excelData);
-        }
-      }
-
-      content();
+    async function promesa() {
+      return new Promise(resolve => {
+        setTimeout(resolve, 2500);
+      });
     }
+
+    promesa().then(() => {
+      insertarHTMLSiExiste();
+      contenido();
+    });
   }
 
   window.addEventListener('load', inicio, { once: true });

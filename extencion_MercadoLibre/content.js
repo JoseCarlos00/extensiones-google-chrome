@@ -1,8 +1,7 @@
 (function () {
   function inicio() {
-    document.querySelector('head').insertAdjacentHTML(
-      'beforeend',
-      `
+    const head = document.querySelector('head');
+    const style = `
     <style>
     #registroForm {
       display: flex;
@@ -103,13 +102,17 @@
         display: none;
       }
 
+      .textarea-container {
+        display: none;
+      }
+
       body > deepl-input-controller {
         display: none;
       }
     }
     </style>
-    `
-    );
+    `;
+    head.insertAdjacentHTML('beforeend', style);
 
     const textarea = `
       <div class="textarea-container">
@@ -125,21 +128,6 @@
       div.classList.add('position-relative');
       div.insertAdjacentHTML('beforeend', textarea);
     });
-
-    function antesDeImprimir() {
-      document.querySelectorAll('.textarea').forEach(text => {
-        text.style.border = 'none';
-      });
-    }
-
-    function despuesDeImprimir() {
-      document.querySelectorAll('.textarea').forEach(text => {
-        text.style.border = '1px solid #000';
-      });
-    }
-
-    window.addEventListener('beforeprint', antesDeImprimir);
-    window.addEventListener('afterprint', despuesDeImprimir);
 
     // Selecciona todos los botones "Sig"
     const nextButtons = document.querySelectorAll('.next-button');
@@ -175,6 +163,7 @@
     }
 
     contarPedidos();
+    const containerPrincipal = `<div class="conatiner-principal"></div>`;
 
     /** Ingresar tareas */
     const formulario = `
@@ -190,7 +179,8 @@
         </button>
       </form>`;
 
-    document.querySelector('body').insertAdjacentHTML('afterbegin', formulario);
+    document.querySelector('body').insertAdjacentHTML('afterbegin', containerPrincipal);
+    document.querySelector('.conatiner-principal').insertAdjacentHTML('afterbegin', formulario);
 
     // Objeto para almacenar los datos
     const datos = {};
@@ -256,5 +246,5 @@
       });
     }
   }
-  window.addEventListener('load', inicio);
+  window.addEventListener('load', inicio, { once: true });
 })();
