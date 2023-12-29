@@ -24,8 +24,6 @@
           display: flex;
           align-items: center;
           justify-content: center;
-
-          
         }
         .file-upload-label input {
           display: none;
@@ -42,6 +40,14 @@
           border-radius: 40px;
           border: 2px dashed rgb(82, 82, 82);
           box-shadow: 0px 0px 200px -50px rgba(0, 0, 0, 0.719);
+          transition: border 0.3s ease-in-out;
+        }
+        /* Estilo de borde cuando se arrastra un archivo */
+        .container-file-upload-form.drag-over  .file-upload-label{
+          border: 2px solid #4CAF50;
+        }
+        .container-file-upload-form.drag-over  .file-upload-design{
+          opacity: 0.5;
         }
         .file-upload-design {
           display: flex;
@@ -157,13 +163,43 @@
 
     async function contenido() {
       try {
+        const container = document.querySelector('.container-file-upload-form');
         const fileInput = document.getElementById('fileInput');
 
         if (!fileInput) return;
 
-        fileInput.addEventListener('change', function (e) {
-          const file = e.target.files[0];
+        // Agregar evento de cambio para la carga de archivos
+        fileInput.addEventListener('change', handleFileInputChange);
 
+        // Agregar eventos para arrastrar y soltar
+        container.addEventListener('dragover', handleDragOver);
+        container.addEventListener('dragleave', handleDragLeave);
+        container.addEventListener('drop', handleDrop);
+
+        function handleFileInputChange(e) {
+          const file = e.target.files[0];
+          handleFile(file);
+        }
+
+        function handleDragOver(e) {
+          e.preventDefault();
+          container.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+          e.preventDefault();
+          container.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+          e.preventDefault();
+          container.classList.remove('drag-over');
+
+          const file = e.dataTransfer.files[0];
+          handleFile(file);
+        }
+
+        function handleFile(file) {
           if (file) {
             const reader = new FileReader();
 
@@ -186,7 +222,7 @@
 
             reader.readAsArrayBuffer(file);
           }
-        });
+        }
 
         // Objeto para almacenar los datos
         const datos = {};
