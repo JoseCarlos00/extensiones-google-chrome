@@ -109,6 +109,10 @@
       body > deepl-input-controller {
         display: none;
       }
+
+      .conatiner-principal {
+        display: none;
+      }
     }
     </style>
     `;
@@ -163,7 +167,7 @@
     }
 
     contarPedidos();
-    const containerPrincipal = `<div class="conatiner-principal"></div>`;
+    const containerPrincipal = `<div class="container-principal"></div>`;
 
     /** Ingresar tareas */
     const formulario = `
@@ -180,7 +184,7 @@
       </form>`;
 
     document.querySelector('body').insertAdjacentHTML('afterbegin', containerPrincipal);
-    document.querySelector('.conatiner-principal').insertAdjacentHTML('afterbegin', formulario);
+    document.querySelector('.container-principal').insertAdjacentHTML('afterbegin', formulario);
 
     // Objeto para almacenar los datos
     const datos = {};

@@ -2,6 +2,12 @@
   function inicio() {
     const style = `
       <style>
+      .container-principal {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+
         @media print {
           .file-input-container {
             display: none
@@ -19,36 +25,11 @@
 
     document.querySelector('head').insertAdjacentHTML('beforeend', style);
 
-    // Función para insertar el HTML si el elemento con la clase '.conatiner-principal' existe
-    function insertarHTMLSiExiste() {
-      const containerPrincipalElement = document.querySelector('.conatiner-principal') ?? undefined;
-
-      if (containerPrincipalElement) {
-        containerPrincipalElement.insertAdjacentHTML('afterbegin', input);
-        clearInterval(intervalID); // Detener la comprobación después de insertar el HTML
-      }
-    }
-
-    function promesa() {
-      setTimeout(() => {
-        const intervalID = setInterval(insertarHTMLSiExiste, 1000);
-
-        // Detener la comprobación después de 10 segundos (5000 milisegundos)
-        setTimeout(() => {
-          clearInterval(intervalID);
-          console.log('La comprobación ha terminado después de 5 segundos.');
-        }, 5000);
-      }, 2500);
-    }
-
-    function contenido() {}
-
-    promesa().then(contenido);
-
     function waitForElement(selector, timeout) {
       return new Promise((resolve, reject) => {
+        const element = document.querySelector(selector) ?? undefined;
+
         const intervalId = setInterval(() => {
-          const element = document.querySelector(selector);
           if (element) {
             clearInterval(intervalId);
             resolve(element);
@@ -57,24 +38,30 @@
 
         setTimeout(() => {
           clearInterval(intervalId);
-          reject(new Error(`Elemento ${selector} no encontrado después de ${timeout} segundos`));
+          const errorMessage = `Elemento ${selector} no encontrado después de ${timeout} segundos`;
+          if (!element) reject(errorMessage);
         }, timeout);
       });
     }
 
     function insertarHTMLSiExiste() {
-      waitForElement('.conatiner-principal', 10000)
-        .then(containerPrincipalElement => {
-          containerPrincipalElement.insertAdjacentHTML('beforeend', input);
-        })
-        .catch(error => {
-          console.log(error.message);
-        });
+      return new Promise(resolve => {
+        waitForElement('.container-principal', 5000)
+          .then(containerPrincipalElement => {
+            containerPrincipalElement.insertAdjacentHTML('beforeend', input);
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
     }
 
     async function contenido() {
       try {
-        var fileInput = document.getElementById('fileInput');
+        const fileInput = document.getElementById('fileInput');
+
+        if (!fileInput) return;
 
         fileInput.addEventListener('change', function (e) {
           const file = e.target.files[0];
@@ -283,14 +270,20 @@
 
     async function promesa() {
       return new Promise(resolve => {
-        setTimeout(resolve, 2500);
+        setTimeout(resolve, 1000);
       });
     }
 
-    promesa().then(() => {
-      insertarHTMLSiExiste();
-      contenido();
-    });
+    promesa()
+      .then(() => {
+        return insertarHTMLSiExiste();
+      })
+      .then(() => {
+        contenido(); // Llama a la función contenido después de insertar el HTML
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
   }
 
   window.addEventListener('load', inicio, { once: true });
