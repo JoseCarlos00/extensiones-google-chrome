@@ -47,7 +47,14 @@
           border: 2px solid #4CAF50;
         }
         .container-file-upload-form.drag-over  .file-upload-design{
-          opacity: 0.5;
+          opacity: 0.2;
+        }
+        .container-file-upload-form.drag-over::before {
+          content: "Suelta el archivo aquí";
+          position: absolute;
+          font-family: cursive;
+          font-size: 1.7rem;
+          padding: 0 8px 0 22px;
         }
         .file-upload-design {
           display: flex;
