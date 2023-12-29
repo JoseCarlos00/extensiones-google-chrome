@@ -12,7 +12,6 @@
 
       & button {
         align-self: center;
-        width: 90px;
         height: 36px;
       }
 
@@ -59,7 +58,7 @@
 
     .button {
       display: flex;
-      ustify-content: space-around;
+      justify-content: space-around;
       align-items: center;
       padding: 10px 15px;
       gap: 15px;
@@ -121,7 +120,7 @@
     const textarea = `
       <div class="textarea-container">
         <textarea class="textarea" spellcheck="false" data-ms-editor="true"></textarea>
-        <button class="next-button button"><spam class="text">Sig</sapm></button>
+        <button class="next-button button"><span class="text">Sig</span></button>
       </div>`;
 
     const divFather = document.querySelectorAll(
@@ -179,12 +178,12 @@
       name="workPedido" rows="4" cols="50" required="" spellcheck="false"></textarea>
 
       <button class="button" id="registrarPedidos" type="button">
-        <spam class="text">Registrar</spam>
+        <span class="text">Registrar</span>
         </button>
       </form>`;
 
     document.querySelector('body').insertAdjacentHTML('afterbegin', containerPrincipal);
-    document.querySelector('.container-principal').insertAdjacentHTML('afterbegin', formulario);
+    document.querySelector('.container-principal').insertAdjacentHTML('beforeend', formulario);
 
     // Objeto para almacenar los datos
     const datos = {};
