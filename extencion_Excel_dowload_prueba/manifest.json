@@ -13,7 +13,7 @@
     "content_scripts": [
       {
         "matches": [
-          "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"
+          "http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*"
         ],
         "js": ["content.js", "xlsx.full.min.js"]
       }
