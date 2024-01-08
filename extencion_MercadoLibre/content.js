@@ -102,7 +102,7 @@
       }
 
       .textarea-container {
-        display: none;
+        border: none
       }
 
       body > deepl-input-controller {

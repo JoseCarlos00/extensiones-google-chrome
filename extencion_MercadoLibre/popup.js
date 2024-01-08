@@ -258,7 +258,10 @@
 
           if (datosLength > 0) {
             console.log('datos:', datos, datosLength);
-            document.querySelector('#insertar').addEventListener('click', insertarWorkUnit);
+            document
+              .querySelector('#insertar')
+              .addEventListener('click', insertarWorkUnit, { once: true });
+            insertarWorkUnit();
           }
         }
 
@@ -289,7 +292,10 @@
 
           if (datosLength > 0) {
             console.log('datos:', datos, datosLength);
-            document.querySelector('#insertar').addEventListener('click', insertarWorkUnit);
+            document
+              .querySelector('#insertar')
+              .addEventListener('click', insertarWorkUnit, { once: true });
+            insertarWorkUnit();
           }
         }
 
