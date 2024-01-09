@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Inventory adjustment",
+    "name": "Inventory adjustment RF",
     "version": "1.0",
     "description": "Inventory adjustment automatic",
     "permissions": ["scripting", "activeTab", "storage"],
