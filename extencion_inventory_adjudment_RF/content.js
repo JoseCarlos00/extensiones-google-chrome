@@ -129,7 +129,7 @@ function inicio() {
     function insertarDatos(datos) {
       // Obtener las claves (números de artículo) del objeto datos
       const items = Object.keys(datos);
-
+      contador(items.length);
       // Verificar si hay datos para procesar
       if (items.length === 0) {
         console.log('No hay datos para insertar.');
@@ -164,7 +164,7 @@ function inicio() {
         }
 
         form1.submit();
-      }, 2000);
+      }, 1500);
     }
 
     function contador(value) {
