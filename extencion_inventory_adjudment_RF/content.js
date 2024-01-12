@@ -24,6 +24,7 @@ function inicio() {
       display: flex;
       flex-direction: column;
       gap: 16px;
+      width: 500px;
 
       & button {
         align-self: center;
@@ -64,7 +65,7 @@ function inicio() {
     const formulario = `
       <form id="registroForm">
         <label for="ubicaciones">Item, Qty y Ubicacion:</label>
-        <textarea id="ubicaciones" name="ubicaciones" rows="4" cols="50" required placeholder="8264-10104-10618   1pz    1-25-02-AA-01"></textarea>
+        <textarea id="ubicaciones" name="ubicaciones" rows="4" cols="50" required placeholder="8264-10104-10618   1pz    1-25-02-AA-01    FMA0002376952(Opcional)"></textarea>
         
         <button id="registraUbicaciones" type="button">Registrar</button>
       </form>`;
@@ -99,21 +100,22 @@ function inicio() {
 
         // Procesar cada línea
         lineas.forEach(linea => {
-          // Modificar la expresión regular para manejar el nuevo formato
-          const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)/);
+          const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
 
           if (match) {
             const item = match[1];
             const qty = match[2];
             const ubicacion = match[3];
+            const LP = match[4] ?? null;
+            console.log('lp:', LP);
 
             // Verificar si el item ya existe en el objeto datos
             if (datos[item]) {
               // Si existe, agregar la ubicación a la lista existente
-              datos[item].push({ qty, ubicacion });
+              datos[item].push({ qty, ubicacion, LP });
             } else {
               // Si no existe, crear una nueva lista con la ubicación
-              datos[item] = [{ qty, ubicacion }];
+              datos[item] = [{ qty, ubicacion, LP }];
             }
           }
         });
@@ -138,16 +140,17 @@ function inicio() {
 
       // Obtener el primer artículo del objeto datos
       const primerItem = items[0];
-      const ubicaciones = datos[primerItem];
+      const ubicaciones2 = datos[primerItem];
 
-      // Obtener la primera ubicación del primer artículo
-      const primeraUbicacion = ubicaciones[0];
+      // Obtener el primer Objeto del primer artículo, item,lp,qty y loc
+      const primeraUbicacion = ubicaciones2[0];
 
       // Asignar valores al formulario
       form1.item.value = primerItem;
       form1.company.value = 'FM';
       form1.quantity.value = primeraUbicacion.qty;
       form1.location.value = primeraUbicacion.ubicacion;
+      if (primeraUbicacion.LP) form1.RFLOGISTICSUNIT.value = primeraUbicacion.LP;
 
       // Simular una operación asincrónica, por ejemplo, un temporizador
       delete datos[primerItem];
@@ -164,7 +167,7 @@ function inicio() {
         }
 
         form1.submit();
-      }, 1500);
+      }, 1800);
     }
 
     function contador(value) {
