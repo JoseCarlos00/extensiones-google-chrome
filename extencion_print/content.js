@@ -16,6 +16,7 @@ document.querySelector('head').insertAdjacentHTML('beforeend', style);
 
 //  Envio
 function envioPrint() {
+  window.removeEventListener('beforeprint', envioPrint);
   //Cabecera
   let arreglo = document.querySelector('#gvEnvio_ctl00 > thead > tr').childNodes;
 
@@ -193,7 +194,8 @@ function inventoryNPrint() {
 function workUnitInsert() {
   const body = document.querySelector('body');
 
-  let work_unit = prompt().trim() ?? '';
+  let work_unit = prompt() ?? '';
+  if (work_unit) work_unit = work_unit.trim();
 
   body.insertAdjacentHTML(
     'afterbegin',
