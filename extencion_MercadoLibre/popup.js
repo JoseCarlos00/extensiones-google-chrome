@@ -53,8 +53,8 @@
           content: "Suelta el archivo aquí";
           position: absolute;
           font-family: cursive;
-          font-size: 1.7rem;
-          padding: 0 8px 0 22px;
+          font-size: 1.4rem;
+          padding: 0px 3px 14px 34px;
         }
         .file-upload-design {
           display: flex;
