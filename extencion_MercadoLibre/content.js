@@ -101,7 +101,7 @@
         display: none;
       }
 
-      .textarea-container {
+      .textarea {
         border: none
       }
 
