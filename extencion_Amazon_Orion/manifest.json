@@ -1,9 +1,9 @@
 {
     "manifest_version": 3,
-    "name": "Amazon Orion",
+    "name": "Amazon Orion 1",
     "version": "1.0",
-    "description": "Agrega saltos de paginas y estilos a las imagenes (guias)",
-    "permissions": ["scripting", "activeTab"],
+    "description": "Agrega funcionlidasess, como insetar unidades de trabajo por archivo",
+    "permissions": ["scripting", "activeTab", "storage"],
     "icons": {
       "16": "images/amz16.png",
       "32": "images/amz32.png",
@@ -15,7 +15,8 @@
         "matches": [
           "http://fmorion.dnsalias.com/orion/paginas/AppServicios/ImprAmazon.aspx?PedidoNum=*"
         ],
-        "js": ["content.js"]
+        "js": ["content.js", "popup.js", "xlsx.full.min.js"],
+        "run_at": "document_end"
       }
     ],
     "action": {

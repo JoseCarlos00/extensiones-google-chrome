@@ -12,6 +12,7 @@
         .container-file-upload-form {
           align-self: end;
           position: relative;
+          padding-left: 28px;
 
           display: flex;
           align-items: center;
@@ -257,7 +258,7 @@
           const datosLength = Object.keys(datos).length;
 
           if (datosLength > 0) {
-            console.log('datos:', datos, datosLength);
+            console.log('datos:', datosLength, datos);
             document
               .querySelector('#insertar')
               .addEventListener('click', insertarWorkUnit, { once: true });
@@ -291,7 +292,7 @@
           const datosLength = Object.keys(datos).length;
 
           if (datosLength > 0) {
-            console.log('datos:', datos, datosLength);
+            console.log('datos:', datosLength, datos);
             document
               .querySelector('#insertar')
               .addEventListener('click', insertarWorkUnit, { once: true });
