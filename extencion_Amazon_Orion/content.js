@@ -2,12 +2,13 @@
   function inicio() {}
   const style = `<style>
      .guia {
-    //   max-width: 1140px;
-    //   object-fit: cover;
-    //   object-position: left;
-      height: 1500px !important;
+        height: 1500px !important;
+        width: 1500px;  
      }
 
+     .container.inv-container {
+        overflow: hidden;
+     }
 
     .textarea-container{
      position: relative;
@@ -29,8 +30,8 @@
     .next-button {
       cursor: pointer;
       position: absolute;
-      top: 0;
-      right: -60px;
+      top: -28px;
+      right: -24px;
       padding: 3px 3px !important;
       font-size: 15px;
     }
