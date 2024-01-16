@@ -398,7 +398,7 @@
             if (
               pedidoHeader == 'ID DEL PEDIDO' &&
               workUnitHeader == 'UNIDAD DE TRABAJO' &&
-              valuePedido.includes('4172-ML-')
+              valuePedido.includes('5042-AMZL-')
             ) {
               registrarDatosXLS(excelData);
             }

@@ -8,7 +8,6 @@
       flex-direction: column;
       width: 400px;
       gap: 8px;
-      margin-left: 16px;
 
       & button {
         align-self: center;
@@ -42,7 +41,8 @@
       position: absolute;
       top: 0;
       right: -40px;
-      padding: 5px 5px !important;
+      padding: 3px 3px !important;
+      font-size: 15px;
     }
 
 
@@ -166,21 +166,22 @@
     }
 
     contarPedidos();
-    const containerPrincipal = `<div class="container-principal"></div>`;
+    const containerPrincipal = `<div class="container container-principal"></div>`;
 
     /** Ingresar tareas */
     const formulario = `
-      <form id="registroForm">
-      <label for="workPedido">Work Unit y Pedido:</label>
-      <textarea id="workPedido" 
-      placeholder="
-      30385321  4172-ML-111-54101" 
-      name="workPedido" rows="4" cols="50" required="" spellcheck="false"></textarea>
+      <div class="row">
+        <form class="col col-xl-6 col-md-6" id="registroForm">
+          <label for="workPedido">Work Unit y Pedido:</label>
+          <textarea id="workPedido" placeholder="
+          30385321  4172-ML-111-54101" name="workPedido" rows="4" cols="50" required="" spellcheck="false"></textarea>
 
-      <button class="button" id="registrarPedidos" type="button">
-        <span class="text">Registrar</span>
-        </button>
-      </form>`;
+          <button class="button" id="registrarPedidos" type="button">
+            <span class="text">Registrar</span>
+          </button>
+        </form>
+      </div>  
+    `;
 
     document.querySelector('body').insertAdjacentHTML('afterbegin', containerPrincipal);
     document.querySelector('.container-principal').insertAdjacentHTML('beforeend', formulario);
