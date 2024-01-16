@@ -110,9 +110,10 @@
         display: none;
       }
 
-      .conatiner-principal {
+      .container-principal {
         display: none;
       }
+      
     }
     </style>
     `;
@@ -157,7 +158,7 @@
 
       // Obten todos los elementos que contienen numeros de pedido
       const numPedidos = document.querySelectorAll(
-        '.col.text-center.inv_heading.position-relative h3:nth-child(1) span:nth-child(2)'
+        '.col.text-center.inv_heading h3:nth-child(1) span:nth-child(2)'
       ).length;
 
       document.querySelector('body').insertAdjacentHTML('beforeend', pedidosContainer);

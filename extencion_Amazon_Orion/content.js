@@ -9,16 +9,16 @@
 
 
     .textarea-container{
-      position: absolute;
-      right: 15px;
-      top: 24px;
+     position: relative;
+      right: 39px;
+      top: -65px;
       z-index: 10;
     }
     
     .textarea {
       resize: none;
       min-height: 206px;
-      height: 272px;
+      height: 230px;
       width: 200px;
       font-size: 24px;
       font-weight: bold;
@@ -28,8 +28,9 @@
       cursor: pointer;
       position: absolute;
       top: 0;
-      right: -40px;
-      padding: 5px 5px !important;
+      right: -60px;
+      padding: 3px 3px !important;
+      font-size: 15px;
     }
 
 
@@ -88,7 +89,7 @@
         border: none
       }
 
-      .conatiner-principal {
+      .container-principal {
         display: none;
       }
     }
@@ -109,10 +110,10 @@
   });
 
   const textarea = `
-      <div class="textarea-container">
-        <textarea class="textarea" spellcheck="false" data-ms-editor="true"></textarea>
-        <button class="next-button button"><span class="text">Sig</span></button>
-      </div>`;
+  <div class="col col-2 textarea-container">
+    <textarea class="textarea" spellcheck="false" data-ms-editor="true"></textarea>
+    <button class="next-button button"><span class="text">Sig</span></button>
+  </div>`;
 
   const divFather = document.querySelectorAll(
     'div.container.inv-container > .row .col.text-center.inv_heading'
@@ -147,7 +148,7 @@
 
     // Obten todos los elementos que contienen numeros de pedido
     const numPedidos = document.querySelectorAll(
-      '.col.text-center.inv_heading.position-relative > h3:nth-child(5)'
+      '.col.text-center.inv_heading > h3:nth-child(5)'
     ).length;
 
     document.querySelector('body').insertAdjacentHTML('beforeend', pedidosContainer);

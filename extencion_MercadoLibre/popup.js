@@ -3,6 +3,9 @@
     const style = `
       <style>
         .container-principal {
+          .row {
+            margin: 20px 0;
+          }
         }
 
         .container-file-upload-form {
