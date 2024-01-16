@@ -294,7 +294,7 @@
         function insertarWorkUnit() {
           // Obten todos los elementos que contienen numeros de pedido
           const pedidosElementos = document.querySelectorAll(
-            '.col.text-center.inv_heading.position-relative h3:nth-child(1) span:nth-child(2)'
+            '.col.text-center.inv_heading h3:nth-child(1) span:nth-child(2)'
           );
 
           // Itera sobre cada elemento de numero de pedido
@@ -304,7 +304,7 @@
 
             // Obten el elemento del textarea correspondiente al numero de pedido actual
             const textareaElemento = pedidoElemento
-              .closest('.inv_heading')
+              .closest('div.container.inv-container')
               .querySelector('.textarea');
 
             // Verifica si el numero de pedido existe en el objeto datos

@@ -21,13 +21,14 @@
     }
 
     .textarea-container{
-      position: absolute;
-      right: 0;
-      top: 72px;
+      position: relative;
+      right: 39px;
+      top: -65px;
       z-index: 10;
     }
     
     .textarea {
+      position: absolute;
       resize: none;
       min-height: 206px;
       height: 254px;
@@ -40,7 +41,7 @@
       cursor: pointer;
       position: absolute;
       top: 0;
-      right: -40px;
+      right: -60px;
       padding: 3px 3px !important;
       font-size: 15px;
     }
@@ -118,13 +119,13 @@
     head.insertAdjacentHTML('beforeend', style);
 
     const textarea = `
-      <div class="textarea-container">
+      <div class="col col-2 textarea-container">
         <textarea class="textarea" spellcheck="false" data-ms-editor="true"></textarea>
         <button class="next-button button"><span class="text">Sig</span></button>
       </div>`;
 
     const divFather = document.querySelectorAll(
-      'div.container.inv-container > .row .col.text-center.inv_heading'
+      'div.container.inv-container > div.row:nth-child(2)'
     );
 
     divFather.forEach(div => {
@@ -231,7 +232,7 @@
     function insertarWorkUnit() {
       // Obten todos los elementos que contienen numeros de pedido
       const pedidosElementos = document.querySelectorAll(
-        '.col.text-center.inv_heading.position-relative h3:nth-child(1) span:nth-child(2)'
+        '.col.text-center.inv_heading h3:nth-child(1) span:nth-child(2)'
       );
 
       // Itera sobre cada elemento de numero de pedido
@@ -240,7 +241,9 @@
         const numeroPedido = pedidoElemento.textContent.trim().replace('Pedido #', '');
 
         // Obten el elemento del textarea correspondiente al numero de pedido actual
-        const textareaElemento = pedidoElemento.closest('.inv_heading').querySelector('.textarea');
+        const textareaElemento = pedidoElemento
+          .closest('div.container.inv-container')
+          .querySelector('.textarea');
 
         // Verifica si el numero de pedido existe en el objeto datos
         if (numeroPedido in datos) {
