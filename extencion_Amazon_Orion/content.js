@@ -1,24 +1,26 @@
 (function () {
   function inicio() {}
   const style = `<style>
-    .guia {
-      width: 680px;
-      object-fit: cover;
-      object-position: left;
-    }
+     .guia {
+    //   max-width: 1140px;
+    //   object-fit: cover;
+    //   object-position: left;
+      height: 1500px !important;
+     }
 
 
     .textarea-container{
      position: relative;
       right: 39px;
-      top: -65px;
+      top: 28px;
       z-index: 10;
     }
     
     .textarea {
+      position: absolute;
       resize: none;
       min-height: 206px;
-      height: 230px;
+      height: 254px;
       width: 200px;
       font-size: 24px;
       font-weight: bold;
@@ -92,6 +94,11 @@
       .container-principal {
         display: none;
       }
+
+      body > div:nth-child(7) > div:nth-child(2) > div:nth-child(2) {
+        flex: 0 0 58.33333%;
+        max-width: 58.33333%;    
+    }
     }
   </style>
   `;
@@ -115,9 +122,7 @@
     <button class="next-button button"><span class="text">Sig</span></button>
   </div>`;
 
-  const divFather = document.querySelectorAll(
-    'div.container.inv-container > .row .col.text-center.inv_heading'
-  );
+  const divFather = document.querySelectorAll('div.container.inv-container > div.row:nth-child(1)');
 
   divFather.forEach(div => {
     div.classList.add('position-relative');

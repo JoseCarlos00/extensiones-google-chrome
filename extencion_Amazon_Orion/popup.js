@@ -107,7 +107,7 @@
     `;
 
     const input = `
-    <div class="container">
+    <div class="container container-principal">
         <div class="container-file-upload-form"">
             <form class="file-upload-form">
             <label for="fileInput" class="file-upload-label">
@@ -298,7 +298,7 @@
         function insertarWorkUnit() {
           // Obten todos los elementos que contienen numeros de pedido
           const pedidosElementos = document.querySelectorAll(
-            '.col.text-center.inv_heading.position-relative > h3:nth-child(5)'
+            '.col.text-center.inv_heading > h3:nth-child(5)'
           );
 
           // Itera sobre cada elemento de numero de pedido
@@ -307,9 +307,11 @@
             const numeroPedido = pedidoElemento.textContent.trim().replace('Pedido Orion # ', '');
 
             // Obten el elemento del textarea correspondiente al numero de pedido actual
-            const textareaElemento = pedidoElemento
-              .closest('.inv_heading')
-              .querySelector('.textarea');
+            const textareaElemento =
+              pedidoElemento.closest('.container.inv-container').querySelector('.textarea') ??
+              undefined;
+
+            if (!textareaElemento) return;
 
             // Verifica si el numero de pedido existe en el objeto datos
             if (numeroPedido in datos) {
