@@ -103,12 +103,13 @@ function inicio() {
           const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
 
           if (match) {
-            const item = match[1];
-            const qty = match[2];
-            const ubicacion = match[3];
+            const item = match[1] ?? null;
+            const qty = Number(match[2]) ?? null;
+            const ubicacion = match[3] ?? null;
             const LP = match[4] ?? null;
             console.log('lp:', LP);
 
+            if (!item || !qty || !ubicacion) return;
             // Verificar si el item ya existe en el objeto datos
             if (datos[item]) {
               // Si existe, agregar la ubicación a la lista existente
@@ -124,6 +125,7 @@ function inicio() {
         document.getElementById('ubicaciones').value = '';
 
         // Insertar datos
+        console.log(datos);
         insertarDatos(datos);
       }
     } // End Ubicaciones
