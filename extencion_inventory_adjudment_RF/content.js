@@ -125,7 +125,7 @@ function inicio() {
         document.getElementById('ubicaciones').value = '';
 
         // Insertar datos
-        console.log(datos);
+        // console.log(datos);
         insertarDatos(datos);
       }
     } // End Ubicaciones
