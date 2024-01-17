@@ -137,9 +137,11 @@ function inicio() {
         return;
       }
 
-      // Obtener la primera fila del objeto datos
-      const primerFila = datos[0];
+      // console.log('datos:', datos);
 
+      // Obtener la primera fila del objeto datos
+      const primerFila = datos[filas[0]];
+      // console.log('primerFila:', primerFila);
       // Asignar valores al formulario
       form1.item.value = primerFila.item;
       form1.company.value = 'FM';
@@ -148,7 +150,7 @@ function inicio() {
       if (primerFila.LP) form1.RFLOGISTICSUNIT.value = primerFila.LP;
 
       // Simular una operación asincrónica, por ejemplo, un temporizador
-      delete datos[0];
+      delete datos[filas[0]];
       setTimeout(function () {
         console.log('insertarDatos completado exitosamente');
         if (chrome.storage) {
