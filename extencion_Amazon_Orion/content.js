@@ -78,7 +78,7 @@
       color: #007ACC;
     }
     
-    .pleft {
+    .pd-left {
       padding-left: 15px;
     }
 
@@ -118,7 +118,7 @@
     const ultimaImagen = images[images.length - 1];
     const penultimaImagen = images[images.length - 2];
 
-    logoFM.classList.add('pleft');
+    logoFM.classList.add('pd-left');
     // ultimaImagen.classList.add('guia');
     // penultimaImagen.classList.add('guia');
   });
