@@ -107,7 +107,7 @@ function inicio() {
             const qty = Number(match[2]) ?? null;
             const ubicacion = match[3] ?? null;
             const LP = match[4] ?? null;
-            console.log('lp:', LP);
+            // console.log('lp:', LP);
 
             if (!item || !qty || !ubicacion) return;
             // Verificar si el item ya existe en el objeto datos
