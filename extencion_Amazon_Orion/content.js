@@ -78,6 +78,9 @@
       color: #007ACC;
     }
     
+    .pleft {
+      padding-left: 15px;
+    }
 
     @media print {
       .next-button {
@@ -110,9 +113,12 @@
 
   container.forEach(content => {
     const images = content.querySelectorAll('img');
+
+    const logoFM = images[0];
     const ultimaImagen = images[images.length - 1];
     const penultimaImagen = images[images.length - 2];
 
+    logoFM.classList.add('pleft');
     ultimaImagen.classList.add('guia');
     penultimaImagen.classList.add('guia');
   });

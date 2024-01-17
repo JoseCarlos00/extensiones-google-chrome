@@ -13,6 +13,7 @@
 
           display: flex;
           align-items: center;
+          padding-left: 0;
         }
 
         .file-upload-form {
