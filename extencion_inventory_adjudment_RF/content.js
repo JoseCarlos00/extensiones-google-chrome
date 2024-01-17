@@ -162,7 +162,7 @@ function inicio() {
         }
 
         form1.submit();
-      }, 1800);
+      }, 1500);
     }
 
     function contador(value) {
