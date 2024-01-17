@@ -119,8 +119,8 @@
     const penultimaImagen = images[images.length - 2];
 
     logoFM.classList.add('pleft');
-    ultimaImagen.classList.add('guia');
-    penultimaImagen.classList.add('guia');
+    // ultimaImagen.classList.add('guia');
+    // penultimaImagen.classList.add('guia');
   });
 
   const textarea = `

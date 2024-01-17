@@ -98,10 +98,12 @@ function inicio() {
         // Dividir el texto en líneas
         const lineas = ubicaciones.split('\n');
 
+        // Contador para asignar claves numéricas únicas
+        let contador = 0;
+
         // Procesar cada línea
         lineas.forEach(linea => {
           const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
-
           if (match) {
             const item = match[1] ?? null;
             const qty = Number(match[2]) ?? null;
@@ -110,14 +112,9 @@ function inicio() {
             // console.log('lp:', LP);
 
             if (!item || !qty || !ubicacion) return;
-            // Verificar si el item ya existe en el objeto datos
-            if (datos[item]) {
-              // Si existe, agregar la ubicación a la lista existente
-              datos[item].push({ qty, ubicacion, LP });
-            } else {
-              // Si no existe, crear una nueva lista con la ubicación
-              datos[item] = [{ qty, ubicacion, LP }];
-            }
+
+            // Agregar datos al objeto usando el contador como clave
+            datos[contador++] = { item, qty, ubicacion, LP };
           }
         });
 
@@ -132,30 +129,26 @@ function inicio() {
 
     function insertarDatos(datos) {
       // Obtener las claves (números de artículo) del objeto datos
-      const items = Object.keys(datos);
-      contador(items.length);
+      const filas = Object.keys(datos);
+      contador(filas.length);
       // Verificar si hay datos para procesar
-      if (items.length === 0) {
+      if (filas.length === 0) {
         console.log('No hay datos para insertar.');
         return;
       }
 
-      // Obtener el primer artículo del objeto datos
-      const primerItem = items[0];
-      const ubicaciones2 = datos[primerItem];
-
-      // Obtener el primer Objeto del primer artículo, item,lp,qty y loc
-      const primeraUbicacion = ubicaciones2[0];
+      // Obtener la primera fila del objeto datos
+      const primerFila = datos[0];
 
       // Asignar valores al formulario
-      form1.item.value = primerItem;
+      form1.item.value = primerFila.item;
       form1.company.value = 'FM';
-      form1.quantity.value = primeraUbicacion.qty;
-      form1.location.value = primeraUbicacion.ubicacion;
-      if (primeraUbicacion.LP) form1.RFLOGISTICSUNIT.value = primeraUbicacion.LP;
+      form1.quantity.value = primerFila.qty;
+      form1.location.value = primerFila.ubicacion;
+      if (primerFila.LP) form1.RFLOGISTICSUNIT.value = primerFila.LP;
 
       // Simular una operación asincrónica, por ejemplo, un temporizador
-      delete datos[primerItem];
+      delete datos[0];
       setTimeout(function () {
         console.log('insertarDatos completado exitosamente');
         if (chrome.storage) {
@@ -186,6 +179,7 @@ function inicio() {
 
         if (datosGuardados) {
           console.log('Se encontraron datos guardados:', datosGuardadosNum, datosGuardados);
+
           contador(datosGuardadosNum);
           insertarDatos(datosGuardados);
         } else {
