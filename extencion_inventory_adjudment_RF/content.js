@@ -12,7 +12,6 @@ function inicio() {
   }
 
   let stAdj = getAdjType(form1.adjType.selectedIndex) ?? undefined;
-
   if (stAdj == 'Ajuste Positivo') {
     /**Estilos */
     document.querySelector('head').insertAdjacentHTML(
@@ -193,4 +192,5 @@ function inicio() {
     }
   }
 }
-window.onload = inicio;
+
+window.addEventListener('load', inicio, { once: true });

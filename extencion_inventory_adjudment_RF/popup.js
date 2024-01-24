@@ -198,4 +198,5 @@ function inicio() {
     }
   }
 }
-window.onload = inicio;
+
+window.addEventListener('load', inicio, { once: true });
