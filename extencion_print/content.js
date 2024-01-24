@@ -195,15 +195,17 @@ function workUnitInsert() {
   const body = document.querySelector('body');
 
   let work_unit = prompt() ?? '';
-  if (work_unit) work_unit = work_unit.trim();
+  if (work_unit) {
+    work_unit = work_unit.trim();
 
-  body.insertAdjacentHTML(
-    'afterbegin',
-    `<div style="position: absolute; right: 100px; top: 286px; font-size: 34px;">
-            Work Unit: <spam style='font-weight: bold; font-size: 38px'>  ${work_unit} </spam>
-      </div>
-      `
-  );
+    body.insertAdjacentHTML(
+      'afterbegin',
+      `<div style="position: absolute; right: 100px; top: 286px; font-size: 34px;">
+              Work Unit: <spam style='font-weight: bold; font-size: 38px'>  ${work_unit} </spam>
+        </div>
+        `
+    );
+  }
 }
 // END
 
