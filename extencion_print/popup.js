@@ -204,7 +204,9 @@ function envioItem() {
   const envioInfo = document.querySelector('#lblnumenvio');
   envioInfo.style = '';
 
-  envioInfo.innerHTML = `Generado: <strong>${getParamsURL()[0]}</strong> ${getParamsURL()[1]}`;
+  if (getParamsURL()[0] !== '' ) {
+    envioInfo.innerHTML = `Generado: <strong>${getParamsURL()[0]}</strong> ${getParamsURL()[1]}`;
+  }
 
   // Contenedor  de Impresion
   document
