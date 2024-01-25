@@ -16,7 +16,7 @@
           "http://fmorion.dnsalias.com/orion/paginas/Medidas/Inventario*",
           "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio*"
         ],
-        "js": ["content.js"]
+        "js": ["content.js", "popup.js"]
       }
     ],
     "action": {
