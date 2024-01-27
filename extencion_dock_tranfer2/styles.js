@@ -4,6 +4,8 @@ const style1 = `
     position: absolute;
     width: 300px;
     left: 162px;
+
+    animation: entradaElemento 0.5s ease-in-out;
   }
 
   #countActual {
@@ -35,30 +37,25 @@ const style1 = `
   }
 
   .container-contenedores, .textarea {
-    transition: opacity 0.5s ease;
+    animation: entradaElemento 0.5s ease-in-out;
   }
 
   #wrapper {
     width: 294px;
   }
 
-  .container-button {
-    position: absolute;
-    right: 550px;
+  .animarTexto {
+    animation: entradaElemento 0.5s ease-in-out;
+  }
 
-    img {
-      width: 90px;
-      
-    }
+  @keyframes animacionTexto {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-    &::before {
-      //*  content: 'Presiona para Iniciar'; */
-      position: absolute;
-      bottom: -24px;
-      right: -56px;
-      font-size: 1.2rem;
-      width: 180px;
-    }
+  @keyframes entradaElemento {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style> 
 `;
@@ -87,6 +84,8 @@ const style2 = `
     width: 122px;
     align-self: center;
     margin-top: 16px;
+
+    animation: entradaElemento 0.5s ease-in-out;
   }
   
   .bnt-tranfer span {
@@ -125,31 +124,44 @@ const style2 = `
   .bnt-tranfer:active {
     opacity: .5;
   }
+
+  .bnt-tranfer:focus {
+    border: 2px solid #6800ff;
+  }
+
+  @keyframes entradaElemento {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
  `;
 
 const style3 = `
 <style>
   .container-button {
-    .btn-supr::before {
-      content: '';
-      width: 62px;
-      position: absolute;
-      height: 62px;
-      border: 1px solid #fff;
-      border-radius: 2px;
-      top: 6px;
-      right: 6px;
+    position: absolute;
+    right: 463px;
+
+    .btn-supr {
+      right: -69px;
     }
 
     .btn-supr::after {
-      content: ''
+      content: "Presiona 'Supr' para iniciar";
+      position: absolute;
+      bottom: -40px;
+      width: 213px;
+      color: #000;
+      font-size: 1.09rem;
+      left: -60px;
+      opacity: .8;
     }
 
-    .btn-supr {
+    .btn-tecla {
       width: 73px;
       height: 73px;
       font-size: 22px;
+      cursor: pointer;
       
       border: transparent;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
@@ -157,59 +169,167 @@ const style3 = `
       color: white;
       border-radius: 4px;
       position: relative;
+
+      opacity: 0;
+      transition: opacity 0.8s ease;
+
      }
      
-     .btn-supr:hover {
+     .btn-tecla:hover {
       background: #3b3b3b;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
      }
      
-     .btn-supr:active {
+     .btn-tecla:active, .btn-tecla:active + .btn-tecla {
       transform: translate(0em, 0.2em);
+      transform: scale(0.9);
      }
 
+     .btn-tecla::before {
+      content: '';
+      width: 53px;
+      position: absolute;
+      height: 54px;
+      border: 1px solid #fff;
+      border-radius: 2px;
+      top: 0.5rem;
+      right: 0.58rem;
+      z-index: 5;
+    }
+
+     .btn-ctrl {
+      left: -78px;
+     }
+
+     .btn-ctrl::after {
+      position: absolute;
+      content: "+";
+      color: #000;
+      font-size: 46px;
+      font-family: emoji;
+      right: -55px;
+      top: 10px;
+     }
 
      .tecla-guion {
-      
+        position: absolute;
+        width: 0.79rem;
+        height: 1px;
+        background-color: #fff;
+        z-index: 1;
      }
 
-     .tecla-guion::before {
-
+     .tecla-guion:nth-child(1) {
+        transform: rotate(45deg);
+        top: 0.25rem;
+        left: -0.05rem;
      }
 
-     .tecla-guion::after {
 
-     }
-
-     .tecla-guion:nth-child(1)::before {
-        content: '';
-     }
-
-     .tecla-guion:nth-child(1)::after {
-        content: '';
+     .tecla-guion:nth-child(2) {
+        transform: rotate(-45deg);
+        bottom: 5px;
+        left: -0.05rem;
      }
 
-     .tecla-guion:nth-child(2)::before {
-        content: '';
+     .tecla-guion:nth-child(3) {
+        transform: rotate(-45deg);
+        top: 4px;
+        right: -0.05rem;
+        width: 0.78rem;  
      }
 
-     .tecla-guion:nth-child(2)::after {
-        content: '';
-     }
-     .tecla-guion:nth-child(3)::before {
-        content: '';
-     }
-
-     .tecla-guion:nth-child(3)::after {
-        content: '';
-     }
-     .tecla-guion:nth-child(4)::before {
-        content: '';
-     }
-
-     .tecla-guion:nth-child(4)::after {
-        content: '';
+     .tecla-guion:nth-child(4) {
+        transform: rotate(45deg);
+        bottom: 5px;
+        right: -0.05rem;
      }
   }
+
+  @keyframes entradaElemento {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>  
+`;
+
+const style4 = `
+<style>
+  .containerEstadoActual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 16px;
+
+    margin-bottom: 44px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    &> div {
+      border: 1px solid #000;
+      padding: 0.3rem;
+
+      animation: entradaElemento 0.5s ease-in-out;
+    }
+
+    &> div:nth-child(2) {
+      position: relative;
+    }
+
+    &> div:nth-child(2)::before {
+      content: '';
+    }
+
+    .animarTexto {
+      animation: entradaElemento 0.5s ease-in-out;
+    }
+  }
+
+  .flecha {
+    width: 30px;
+    border: 1px solid #000;
+    position: absolute;
+    height: 60px;
+    top: -71px;
+    left: 50%;
+    transform: translate(-50%);
+
+    div:nth-child(1) {
+      position: absolute;
+      width: 60%;
+      height: 80%;
+      background-color: #000;
+      left: 50%;
+      transform: translate(-50%);
+    }
+
+    div:nth-child(2) {
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      bottom: 25%;
+      background-color: #000;  
+    }
+
+    div:nth-child(3) {
+
+    }
+
+    div:nth-child(4) {
+
+    }
+  }
+  
+  @keyframes animacionTexto {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes entradaElemento {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  
+</style>
 `;
