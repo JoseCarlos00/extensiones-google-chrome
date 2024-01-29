@@ -3,7 +3,7 @@
     "name": "Dock tranfer 2",
     "version": "1.0",
     "description": "Agrega la funcionalidad para hacer Dock tranfer dada una lista de contenedores",
-    "permissions": ["scripting", "activeTab"],
+    "permissions": ["scripting", "activeTab", "storage"],
     "icons": {
       "16": "images/list16.png",
       "32": "images/list32.png",

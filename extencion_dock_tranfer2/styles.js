@@ -279,10 +279,6 @@ const style4 = `
       position: relative;
     }
 
-    &> div:nth-child(2)::before {
-      content: '';
-    }
-
     &> div:nth-child(4) {
       position: relative;
       bottom: -8px; 
@@ -298,6 +294,10 @@ const style4 = `
 
     .animarTexto {
       animation: entradaElemento 0.5s ease-in-out;
+    }
+
+    .cambiarBorde {
+      animation: borderColor .2s ease-in-out !important
     }
   }
 
@@ -331,7 +331,6 @@ const style4 = `
       bottom: -22px;
       transform: scale(1.75);
     }
-
   }
 
 
@@ -340,11 +339,15 @@ const style4 = `
     to { transform: translateY(0); }
   }
 
+  @keyframes borderColor {
+    from { border-color: #2c2cda; }
+    to { border-color: #2c2cda; }
+  }
+
   @keyframes entradaElemento {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  
 </style>
 `;

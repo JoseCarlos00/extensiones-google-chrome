@@ -65,6 +65,18 @@ function insertarContenedores() {
   contenedores = textarea.value.trim().split('\n');
   textarea.value = '';
   console.log('contenedores:', contenedores);
+
+  console.log('insertarDatos completado exitosamente');
+  if (chrome.storage) {
+    // Tu código que utiliza chrome.storage aquí
+    // Guardar los datos en el almacenamiento local
+    chrome.storage.local.set({ contenedoresGuardados: contenedores }, function () {
+      console.log('Datos guardados en el almacenamiento local.');
+    });
+  } else {
+    console.error('chrome.storage no está disponible.');
+  }
+
   content();
 }
 
@@ -146,9 +158,8 @@ function content() {
       if (contenedores[indiceContenedor - 1])
         LPAnterior.innerHTML = contenedores[indiceContenedor - 1];
 
-      console.log('IndiceAntes:', indiceContenedor);
+      // console.log('IndiceAntes:', indiceContenedor);
       indiceContenedor++;
-      console.log('IndiceDespues:', indiceContenedor);
 
       const siguienteLP = contenedores[indiceContenedor] ?? 'Fin';
       LPSiguiente.innerHTML = siguienteLP;
@@ -166,13 +177,17 @@ function content() {
       // Elimina la clase de animación si ya estaba presente
       LPAnterior.classList.remove('animarTexto');
       LPActual.classList.remove('animarTexto');
+      LPActual.closest('.containerEstadoActual > div:nth-child(2)').classList.remove(
+        'cambiarBorde'
+      );
       LPSiguiente.classList.remove('animarTexto');
 
       // Espera un breve momento para que el cambio de texto se refleje en el DOM
       setTimeout(() => {
         // Agrega la clase de animación después de un breve retraso para que se aplique a la nueva versión del elemento
-        LPActual.classList.add('animarTexto');
         LPAnterior.classList.add('animarTexto');
+        LPActual.classList.add('animarTexto');
+        LPActual.closest('.containerEstadoActual > div:nth-child(2)').classList.add('cambiarBorde');
         LPSiguiente.classList.add('animarTexto');
 
         // countRestante.classList.add('animarTexto');
@@ -270,6 +285,23 @@ function irAContenedor() {
   if (nuevoIndice === '') return;
   indiceContenedor = nuevoIndice;
   copiando();
+}
+
+// Verificar si hay datos almacenados al cargar la página
+if (chrome.storage) {
+  // Tu código que utiliza chrome.storage aquí
+  chrome.storage.local.get('contenedoresGuardados', result => {
+    const datosGuardados = result.contenedoresGuardados ?? '';
+    const datosGuardadosNum = Object.keys(datosGuardados).length ?? 0;
+
+    if (datosGuardados) {
+      console.log('Se encontraron datos guardados:', datosGuardadosNum, datosGuardados);
+    } else {
+      console.log('No se encontraron datos guardados.');
+    }
+  });
+} else {
+  console.error('chrome.storage no está disponible.');
 }
 
 window.addEventListener('load', inicio, { once: true });
