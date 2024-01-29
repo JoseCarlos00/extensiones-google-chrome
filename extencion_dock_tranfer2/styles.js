@@ -48,11 +48,6 @@ const style1 = `
     animation: entradaElemento 0.5s ease-in-out;
   }
 
-  @keyframes animacionTexto {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   @keyframes entradaElemento {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -142,25 +137,10 @@ const style3 = `
     position: absolute;
     right: 463px;
 
-    .btn-supr {
-      right: -69px;
-    }
-
-    .btn-supr::after {
-      content: "Presiona 'Supr' para iniciar";
-      position: absolute;
-      bottom: -40px;
-      width: 213px;
-      color: #000;
-      font-size: 1.09rem;
-      left: -60px;
-      opacity: .8;
-    }
-
     .btn-tecla {
-      width: 73px;
-      height: 73px;
-      font-size: 22px;
+      width: 48px;
+      height: 48px;
+      font-size: 18px;
       cursor: pointer;
       
       border: transparent;
@@ -172,36 +152,53 @@ const style3 = `
 
       opacity: 0;
       transition: opacity 0.8s ease;
-
-     }
+    }
      
-     .btn-tecla:hover {
+    .btn-tecla:hover {
       background: #3b3b3b;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-     }
-     
-     .btn-tecla:active, .btn-tecla:active + .btn-tecla {
+    }
+    
+    .btn-tecla:active, .btn-tecla:active + .btn-tecla{
       transform: translate(0em, 0.2em);
       transform: scale(0.9);
-     }
+    }
 
-     .btn-tecla::before {
+    .btn-tecla::before {
       content: '';
-      width: 53px;
+      width: 36px;
+      height: 36px;
       position: absolute;
-      height: 54px;
       border: 1px solid #fff;
       border-radius: 2px;
-      top: 0.5rem;
-      right: 0.58rem;
+      background: #3b3b3b;
+      
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: 5;
     }
 
-     .btn-ctrl {
-      left: -78px;
-     }
+    .btn-supr {
+      right: -69px;
+    }
 
-     .btn-ctrl::after {
+    .btn-supr::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      width: 120px;
+      color: #000;
+      font-size: 1.00rem;
+      bottom: -50px;
+      left: -31px;
+      opacity: .7;
+    }
+
+    .btn-ctrl {
+      left: -78px;
+    }
+
+    .btn-ctrl::after {
       position: absolute;
       content: "+";
       color: #000;
@@ -209,41 +206,45 @@ const style3 = `
       font-family: emoji;
       right: -55px;
       top: 10px;
-     }
+    }
 
-     .tecla-guion {
-        position: absolute;
-        width: 0.79rem;
-        height: 1px;
-        background-color: #fff;
-        z-index: 1;
-     }
+    .btn-v::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -50px;
+      width: 213px;
+      color: #000;
+      font-size: 1.0rem;
+      left: -143px;
+      opacity: .7;
+    }
 
-     .tecla-guion:nth-child(1) {
-        transform: rotate(45deg);
-        top: 0.25rem;
-        left: -0.05rem;
-     }
+    .tecla-guion {
+      position: absolute;
+      width: 4.0rem;
+      height: 1px;
+      background-color: #fff;
+      z-index: 1;
+    }
+
+    .tecla-guion:nth-child(2) {
+      transform: rotate(45deg);
+      top: 1.5rem;
+      left: -8px;
+    }
 
 
-     .tecla-guion:nth-child(2) {
-        transform: rotate(-45deg);
-        bottom: 5px;
-        left: -0.05rem;
-     }
+    .tecla-guion:nth-child(3) {
+      transform: rotate(-45deg);
+      top: 1.5rem;
+      right: -8px;
+    }
 
-     .tecla-guion:nth-child(3) {
-        transform: rotate(-45deg);
-        top: 4px;
-        right: -0.05rem;
-        width: 0.78rem;  
-     }
-
-     .tecla-guion:nth-child(4) {
-        transform: rotate(45deg);
-        bottom: 5px;
-        right: -0.05rem;
-     }
+    .btn-tecla .text {
+      font-size: 15px;
+      z-index: 10;
+      position: relative;
+    }
   }
 
   @keyframes entradaElemento {
@@ -288,43 +289,43 @@ const style4 = `
 
   .flecha {
     width: 30px;
-    border: 1px solid #000;
     position: absolute;
-    height: 60px;
-    top: -71px;
+    height: 40px;
+    top: -50px;
     left: 50%;
     transform: translate(-50%);
+    
+    /** border: 1px solid #000; */
+
+    div {
+      animation: animacionFlecha .8s infinite ease-in-out;
+    }
 
     div:nth-child(1) {
-      position: absolute;
+      position: relative;
       width: 60%;
       height: 80%;
-      background-color: #000;
-      left: 50%;
-      transform: translate(-50%);
+      background-color: #747474;
+      left: calc(0.368rem);
     }
 
-    div:nth-child(2) {
+    div:nth-child(1)::before {
+      content: "";
       position: absolute;
-      width: 100%;
-      height: 1px;
-      bottom: 25%;
-      background-color: #000;  
+      border: 10px solid transparent;
+      border-top-color: #747474;
+      bottom: -22px;
+      transform: scale(1.75);
     }
 
-    div:nth-child(3) {
-
-    }
-
-    div:nth-child(4) {
-
-    }
   }
-  
-  @keyframes animacionTexto {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+
+
+  @keyframes animacionFlecha {
+    from { transform: translateY(-5px); }
+    to { transform: translateY(0); }
   }
+
   @keyframes entradaElemento {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }

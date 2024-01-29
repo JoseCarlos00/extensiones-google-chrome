@@ -27,27 +27,23 @@ function inicio() {
 
   const html2 = `
   <div class="container-button">
-    <button class="btn-tecla btn-supr">Supr
-      <div class="tecla-guion"></div>
-      <div class="tecla-guion"></div>
-      <div class="tecla-guion"></div>
-      <div class="tecla-guion"></div>
-    </button>
-
-    <button class="btn-tecla btn-ctrl">Ctrl
-      <div class="tecla-guion"></div>
-      <div class="tecla-guion"></div>
+    <button class="btn-tecla btn-supr" data-tooltip="Presiona 'Supr' para iniciar">
+      <div class="text">Supr</div>
       <div class="tecla-guion"></div>
       <div class="tecla-guion"></div>
     </button>
 
-    <button class="btn-tecla btn-v">V
-      <div class="tecla-guion"></div>
-      <div class="tecla-guion"></div>
+    <button class="btn-tecla btn-ctrl">
+      <div class="text">Ctrl</div>
       <div class="tecla-guion"></div>
       <div class="tecla-guion"></div>
     </button>
 
+    <button class="btn-tecla btn-v" data-tooltip="Presiona Ctrl + V para insertar un contenedor">
+      <div class="text">V</div>
+      <div class="tecla-guion"></div>
+      <div class="tecla-guion"></div>
+    </button>
  </div>
   `;
 
@@ -157,7 +153,7 @@ function content() {
       /** Actualizar Contadores */
       countRestante.innerHTML = countRestanteValue--;
       countActual.innerHTML = countActualValue++;
-      countRestante.classList.remove('animarTexto');
+      // countRestante.classList.remove('animarTexto');
       countActual.classList.remove('animarTexto');
 
       // Elimina la clase de animación si ya estaba presente
@@ -172,7 +168,7 @@ function content() {
         LPAnterior.classList.add('animarTexto');
         LPSiguiente.classList.add('animarTexto');
 
-        countRestante.classList.add('animarTexto');
+        // countRestante.classList.add('animarTexto');
         countActual.classList.add('animarTexto');
       }, 50);
     }
@@ -231,9 +227,6 @@ function insertarContadores() {
     <div>
       <span id="actual">Actual</span>
       <div class="flecha">
-        <div></div>
-        <div></div>
-        <div></div>
         <div></div>
       </div>
     </div>
