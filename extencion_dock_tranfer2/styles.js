@@ -267,9 +267,10 @@ const style4 = `
     bottom: 0;
     width: 100%;
 
-    &> div {
+   &>:is(div:nth-child(1), div:nth-child(2), div:nth-child(3)) {
       border: 1px solid #000;
       padding: 0.3rem;
+      cursor: pointer;
 
       animation: entradaElemento 0.5s ease-in-out;
     }
@@ -280,6 +281,19 @@ const style4 = `
 
     &> div:nth-child(2)::before {
       content: '';
+    }
+
+    &> div:nth-child(4) {
+      position: relative;
+      bottom: -8px; 
+
+      span {
+        font-size: 14px;
+        color: red;
+        font-weight: bold;
+        text-decoration-line: underline;
+        cursor: pointer;
+      }
     }
 
     .animarTexto {

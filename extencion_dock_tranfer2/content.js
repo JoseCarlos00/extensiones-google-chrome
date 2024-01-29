@@ -10,6 +10,8 @@ let LPAnterior = '';
 let LPActual = '';
 let LPSiguiente = '';
 
+let copiando = '';
+
 function inicio() {
   head.insertAdjacentHTML('beforeend', style1);
   head.insertAdjacentHTML('beforeend', style2);
@@ -125,23 +127,28 @@ function content() {
   countActual.innerHTML = countActualValue;
   countTotal.innerHTML = countTotalValue;
 
-  function copiando() {
+  copiando = () => {
     if (indiceContenedor <= contenedores.length) {
       const contenidoActual = contenedores[indiceContenedor] ?? '';
-      console.log('copiar:', contenidoActual);
-      copiar(contenidoActual);
+      console.log('contenidoActual:', contenidoActual);
+      setTimeout(() => {
+        copiar(contenidoActual);
+      }, 1000);
 
-      if (contenidoActual !== '') {
-        LPActual.innerHTML = contenidoActual;
-      } else {
+      if (contenidoActual === '') {
         LPActual.innerHTML = 'Fin';
         LPActual.style.color = 'transparent';
+      } else {
+        LPActual.style.color = '#000';
+        LPActual.innerHTML = contenidoActual;
       }
 
       if (contenedores[indiceContenedor - 1])
         LPAnterior.innerHTML = contenedores[indiceContenedor - 1];
 
+      console.log('IndiceAntes:', indiceContenedor);
       indiceContenedor++;
+      console.log('IndiceDespues:', indiceContenedor);
 
       const siguienteLP = contenedores[indiceContenedor] ?? 'Fin';
       LPSiguiente.innerHTML = siguienteLP;
@@ -151,8 +158,8 @@ function content() {
         console.log('Interval desactivado');
       }
       /** Actualizar Contadores */
-      countRestante.innerHTML = countRestanteValue--;
-      countActual.innerHTML = countActualValue++;
+      countRestante.innerHTML = countRestanteValue - (indiceContenedor - 1);
+      countActual.innerHTML = indiceContenedor - 1;
       // countRestante.classList.remove('animarTexto');
       countActual.classList.remove('animarTexto');
 
@@ -172,7 +179,7 @@ function content() {
         countActual.classList.add('animarTexto');
       }, 50);
     }
-  }
+  };
 
   document.addEventListener('keydown', function (event) {
     // console.log('key:', event.key);
@@ -235,6 +242,10 @@ function insertarContadores() {
     <span id="siguiente">Siguiente</span>
     </div>
 
+    <div>
+      <span id="irAIndice">Ir a</span>
+    </div>
+
   </div>
   `;
   body.insertAdjacentHTML('afterbegin', html1);
@@ -249,6 +260,16 @@ function estadoActual() {
   LPSiguiente = document.querySelector('#siguiente');
 
   LPSiguiente.innerHTML = contenedores[indiceContenedor];
+
+  document.querySelector('#irAIndice').addEventListener('click', irAContenedor);
+}
+
+function irAContenedor() {
+  nuevoIndice = Number(window.prompt()) ?? '';
+
+  if (nuevoIndice === '') return;
+  indiceContenedor = nuevoIndice;
+  copiando();
 }
 
 window.addEventListener('load', inicio, { once: true });
