@@ -19,6 +19,7 @@ const teclasHTML = `
       <div class="text">Supr</div>
       <div class="tecla-guion"></div>
       <div class="tecla-guion"></div>
+      <div class="ondas"></div>
     </button>
 
     <button class="btn-tecla btn-ctrl">
@@ -98,9 +99,16 @@ function estadoActual() {
       LPActual = document.querySelector('#actual');
       LPSiguiente = document.querySelector('#siguiente');
 
-      LPSiguiente.innerHTML = contenedores[indiceContenedor] ?? 'Siguiente';
-
       document.querySelector('#irAIndice').addEventListener('click', irAContenedor);
+
+      if (indiceContenedor <= Object.keys(contenedores).length) {
+        LPAnterior.innerHTML = contenedores[indiceContenedor - 1] ?? 'Anterior';
+
+        const contenidoActual = contenedores[indiceContenedor] ?? 'Actual';
+        console.log('contenidoActual:', contenidoActual);
+
+        LPSiguiente.innerHTML = contenedores[indiceContenedor] ?? 'Siguiente';
+      }
     })
     .catch(err => {
       console.log(err.message);
@@ -116,8 +124,41 @@ function irAContenedor() {
   copiando(contenedores);
 }
 
+function clearContenedores() {
+  if (chrome.storage) {
+    chrome.storage.local.remove('datosGuardados', function () {
+      console.log('Datos borrados correctamente.');
+    });
+
+    chrome.storage.local.remove('indiceContenedorChrome', function () {
+      console.log('Indice borrados correctamente.');
+    });
+
+    if (Object.keys(contenedores).length > 0) {
+      contenedores = {};
+      window.location.reload();
+    }
+  } else {
+    console.error('chrome.storage no está disponible.');
+  }
+}
+
 function load() {
   console.log('Popus.js');
+
+  const butonReference = document.querySelector('#wrapper > div.buttons');
+
+  const button = `<input id="buttonBorrar" type="button" value="Borrar" class="button">`;
+
+  butonReference.insertAdjacentHTML('beforeend', button);
+
+  promesa400()
+    .then(() => {
+      document.querySelector('#buttonBorrar').addEventListener('click', clearContenedores);
+    })
+    .catch(err => {
+      console.log(err.message);
+    });
 }
 
 window.addEventListener('load', load, { once: true });

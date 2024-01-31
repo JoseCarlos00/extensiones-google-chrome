@@ -52,6 +52,12 @@ const style1 = `
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* Otros estilos*/
+  .buttons {
+    input:nth-child(2) {
+      margin: 0 10px;    }
+  }
 </style> 
 `;
 
@@ -245,11 +251,35 @@ const style3 = `
       z-index: 10;
       position: relative;
     }
+
+    .ondas {
+      position: absolute;
+      width: 65px;
+      height: 65px;
+      left: 50%;
+
+      border-radius: 50%;
+      transform: translate(-50%, -65%);
+
+      animation: ondas 2.5s infinite;
+    }
   }
 
   @keyframes entradaElemento {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes ondas {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 0, 255, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 50px rgba(0, 0, 255, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 100px rgba(0, 0, 255, 0);
+    }
   }
 </style>  
 `;
@@ -275,7 +305,35 @@ const style4 = `
       animation: entradaElemento 0.5s ease-in-out;
     }
 
-    &> div:nth-child(2) {
+    &> div:nth-child(1) > span::before {
+      content: 'Anterior';
+      position: absolute;
+      bottom: -17px;
+      font-size: 12px;
+      left: 50%;
+      transform: translate(-50%);
+    }    
+
+    &> div:nth-child(2) > span::before {
+      content: 'Actual';
+      position: absolute;
+      bottom: -17px;
+      font-size: 12px;
+      left: 50%;
+      transform: translate(-50%);
+    }
+
+    &> div:nth-child(3) > span::before {
+      content: 'Siguiente';
+      position: absolute;
+      bottom: -17px;
+      font-size: 12px;
+      left: 50%;
+      transform: translate(-50%);
+    }
+
+
+    &> div {
       position: relative;
     }
 

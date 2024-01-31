@@ -113,15 +113,8 @@ function inicio() {
       // btnV.style.opacity = '0';
       copiando(contenedores);
 
-      if (LPActual.innerHTML === 'Fin') {
-        // clearInterval(intervaloEnviar);
-        console.log('Interval desactivado');
-        return;
-      }
-
       setTimeout(() => {
         puerta.focus();
-        // intervaloEnviar = setInterval(enviar, 500);
         tranferSubmit();
       }, 250);
     });
@@ -177,23 +170,17 @@ function copiando(dataContenedores) {
       LPActual.innerHTML = contenidoActual;
     }
 
-    if (dataContenedores[indiceContenedor - 1])
+    if (dataContenedores[indiceContenedor - 1]) {
       LPAnterior.innerHTML = dataContenedores[indiceContenedor - 1];
+    }
+
+    const siguienteLP = dataContenedores[indiceContenedor + 1] ?? 'Fin';
+    LPSiguiente.innerHTML = siguienteLP;
 
     // console.log('IndiceAntes:', indiceContenedor);
     saveIndiceContenedor();
     indiceContenedor++;
-    const siguienteLP = dataContenedores[indiceContenedor] ?? 'Fin';
-    LPSiguiente.innerHTML = siguienteLP;
 
-    if (contenidoActual === '') {
-      // clearInterval(intervaloEnviar);
-      console.log('Interval desactivado');
-
-      // chrome.storage.local.remove('contenedoresGuardados', function() {
-      //   console.log('Datos borrados correctamente.');
-      // });
-    }
     /** Actualizar Contadores */
     actualizarContadores();
   }
@@ -263,6 +250,13 @@ function tranferSubmit() {
   waitForActive(3000)
     .then(() => {
       console.log('Tranfer ok');
+      btnTranfer.click();
+
+      if (LPActual.innerHTML == 'Fin' && LPSiguiente.innerHTML == 'Fin') {
+        console.log('Es el ultimo LP');
+        // Llamar a la función alertaCanceladora para iniciar el proceso de Borrado
+        alertaCanceladora();
+      }
     })
     .catch(error => {
       reject(error.message);
@@ -275,6 +269,20 @@ async function copiar(textoCopy) {
     if (lp !== '') lp.focus();
   } catch (err) {
     console.error('Error al copiar al portapapeles:', err);
+  }
+}
+
+function alertaCanceladora() {
+  const tiempoEspera = 3000;
+
+  // Mostrar una alerta que permita al usuario cancelar la ejecución de la función
+  const confirmacion = confirm('¡Ya es el ultimo!\n¿Quieres borrar los datos de los contenedores?');
+  if (confirmacion) {
+    setTimeout(function () {
+      clearContenedores();
+    }, tiempoEspera);
+  } else {
+    console.log('La función no se ha ejecutado.');
   }
 }
 
