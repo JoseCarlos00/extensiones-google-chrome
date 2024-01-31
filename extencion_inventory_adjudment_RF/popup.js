@@ -26,6 +26,8 @@ function inicio() {
       gap: 16px;
       width: 650px;
 
+      animation: entradaElemento 0.5s ease-in-out;
+
       & button {
         align-self: center;
         width: 90px;
@@ -51,9 +53,16 @@ function inicio() {
       width: 200px;
       font-size: 1.12rem;
 
+      animation: entradaElemento 0.5s ease-in-out;
+
       spam {
         font-weight: bold;
       }
+    }
+
+    @keyframes entradaElemento {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     </style>
     `
