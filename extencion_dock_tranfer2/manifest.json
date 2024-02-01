@@ -15,7 +15,8 @@
         "matches": [
           "https://wms.fantasiasmiguel.com.mx/RF/ImmediateDockTransfer.aspx*"
         ],
-        "js": ["content.js","popup.js", "styles.js"]
+        "js": ["content.js","popup.js", "styles.js"],
+        "css": ["styles.css"]
       }
     ],
     "action": {

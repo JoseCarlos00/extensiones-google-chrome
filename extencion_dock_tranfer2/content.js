@@ -27,10 +27,10 @@ function inicio() {
   puerta = document.querySelector('#txtBoxDestLoc');
   lp = document.querySelector('#txtBoxContainerId');
 
-  head.insertAdjacentHTML('beforeend', style1);
-  head.insertAdjacentHTML('beforeend', style2);
-  head.insertAdjacentHTML('beforeend', style3);
-  head.insertAdjacentHTML('beforeend', style4);
+  // head.insertAdjacentHTML('beforeend', style1);
+  // head.insertAdjacentHTML('beforeend', style2);
+  // head.insertAdjacentHTML('beforeend', style3);
+  // head.insertAdjacentHTML('beforeend', style4);
 
   body.insertAdjacentHTML('afterbegin', contenedoresHTML);
   body.insertAdjacentHTML('afterbegin', teclasHTML);
