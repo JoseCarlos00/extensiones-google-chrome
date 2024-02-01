@@ -59,6 +59,7 @@ const styleInventory = `
         gap: 12px;
         padding-left: 15px;
     }
+    
 </style>
 `;
 

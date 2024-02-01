@@ -93,32 +93,68 @@ const styleEnvio = `
     padding-right: 4px;
   }
 
+  .container-work-unit {
+    position: absolute;
+    right: 100px;
+    top: 286px;
+    font-size: 34px;
+    z-index: 10;
+  }
+  .work-unit {
+    animation: entradaElemento 0.5s ease-in-out;
 
+    span {
+      font-weight: bold;
+      font-size: 38px;
+    }
+
+    .animarTexto {
+      animation: entradaElemento 0.5s ease-in-out;
+    }
+  }
+
+  @keyframes entradaElemento {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
+`;
+
+const divContainer = `<div class="container-work-unit"></div>`;
+
+const workUnitHTML = `
+  <div class="work-unit" >
+   Work Unit: <span id="workUnit">WorkUnit</span>
+  </div>
 `;
 
 /** Work Unit */
 function workUnitInsert() {
-  const body = document.querySelector('body');
-  const WORK_UNIT = document.querySelector('#workUnit') ?? undefined;
+  const workUnitContainer = document.querySelector('body > .container-work-unit') ?? undefined;
+  const workUnitElement =
+    document.querySelector('body > .container-work-unit > .work-unit') ?? undefined;
 
-  let workUnit = prompt() ?? '';
+  let workUnitText = prompt() ?? '';
 
-  if (WORK_UNIT) {
-    WORK_UNIT.innerText = workUnit;
-    return;
+  if (workUnitElement && workUnitText) {
+    document.querySelector('#workUnit').classList.remove('animarTexto');
+    setTimeout(() => {
+      document.querySelector('#workUnit').classList.add('animarTexto');
+    }, 50);
+    insertWorkUnit();
+  } else if (workUnitElement && !workUnitText) {
+    workUnitContainer.replaceChildren();
+  } else if (!workUnitElement && workUnitText) {
+    workUnitContainer.insertAdjacentHTML('beforeend', workUnitHTML);
+    insertWorkUnit();
   }
 
-  if (workUnit) {
-    workUnit = workUnit.trim();
-
-    body.insertAdjacentHTML(
-      'afterbegin',
-      `<div style="position: absolute; right: 100px; top: 286px; font-size: 34px;">
-              Work Unit: <spam id="workUnit" style='font-weight: bold; font-size: 38px'>  ${workUnit} </spam>
-        </div>
-        `
-    );
+  function insertWorkUnit() {
+    if (workUnitText) {
+      workUnitText = workUnitText.trim();
+      document.querySelector('#workUnit').innerHTML = workUnitText;
+      return;
+    }
   }
 }
 // END
@@ -185,6 +221,9 @@ function envioItem() {
 
   elementoInsert.insertAdjacentHTML('afterend', button);
 
+  // Container de  Work Unit
+  document.querySelector('body').insertAdjacentHTML('afterbegin', divContainer);
+
   //Evento
   document.querySelector('#printButtonEnvio').addEventListener('click', () => window.print());
   document.querySelector('#workUnitButton').addEventListener('click', workUnitInsert);
@@ -204,7 +243,7 @@ function envioItem() {
   const envioInfo = document.querySelector('#lblnumenvio');
   envioInfo.style = '';
 
-  if (getParamsURL()[0] !== '' ) {
+  if (getParamsURL()[0] !== '') {
     envioInfo.innerHTML = `Generado: <strong>${getParamsURL()[0]}</strong> ${getParamsURL()[1]}`;
   }
 
