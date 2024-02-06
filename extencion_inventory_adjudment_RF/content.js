@@ -227,10 +227,16 @@ function inicio() {
 
         if (datosAdjustment) {
           const datosAdjustmentNum = Object.keys(datosAdjustment).length;
+
+          if (datosAdjustmentNum > 0) {
+            document.querySelector('#ubicaciones').setAttribute('disabled', true);
+          document.querySelector('#registraUbicaciones').setAttribute('disabled', true);
+
           console.log('Se encontraron datos guardados:', datosAdjustmentNum, datosAdjustment);
 
           contador(datosAdjustmentNum);
           insertarDatos(datosAdjustment);
+          }
         } else {
           console.log('No se encontraron datos guardados.');
         }

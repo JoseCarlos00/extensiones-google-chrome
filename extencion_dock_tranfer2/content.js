@@ -52,6 +52,9 @@ function inicio() {
       // const datosGuardadoslength = Object.keys(datosGuardados).length;
 
       if (datosGuardados) {
+        document.querySelector('.bnt-tranfer').setAttribute('disabled', true);
+        document.querySelector('#containers').setAttribute('disabled', true);
+        
         contenedores = datosGuardados;
         console.log(
           'Se encontraron datos guardados:',

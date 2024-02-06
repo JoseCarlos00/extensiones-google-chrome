@@ -234,10 +234,16 @@ function content() {
 
       if (datosTranferManual) {
         const datosTranferManualNum = Object.keys(datosTranferManual).length;
+
+        if (datosTranferManualNum > 0) {
+          document.querySelector('#ubicaciones').setAttribute('disabled', true);
+        document.querySelector('#registraUbicaciones').setAttribute('disabled', true);
+
         console.log('Se encontraron datos guardados:', datosTranferManualNum, datosTranferManual);
 
         contador(datosTranferManualNum);
         insertarDatos(datosTranferManual);
+        }
       } else {
         console.log('No se encontraron datos guardados.');
       }

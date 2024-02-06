@@ -42,7 +42,7 @@
 }
 
 #wrapper {
-  width: 294px;
+  width: 294px !important;
 }
 
 .animarTexto {
@@ -52,7 +52,7 @@
 /* Otros estilos*/
 .buttons {
   input:nth-child(2) {
-    margin: 0 10px;
+    margin: 0 8px !important;
   }
 }
 
@@ -122,6 +122,11 @@
 .bnt-tranfer:focus {
   border: 2px solid #6800ff;
 }
+
+.bnt-tranfer:disabled {
+  opacity: 0.7;
+}
+
 
 .container-button {
   position: absolute;
