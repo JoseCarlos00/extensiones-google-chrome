@@ -62,6 +62,7 @@ function inicio() {
 
       spam {
         font-weight: bold;
+        padding-left: 4px;
       }
     }
 
@@ -237,12 +238,12 @@ function content() {
 
         if (datosTranferManualNum > 0) {
           document.querySelector('#ubicaciones').setAttribute('disabled', true);
-        document.querySelector('#registraUbicaciones').setAttribute('disabled', true);
+          document.querySelector('#registraUbicaciones').setAttribute('disabled', true);
 
-        console.log('Se encontraron datos guardados:', datosTranferManualNum, datosTranferManual);
+          console.log('Se encontraron datos guardados:', datosTranferManualNum, datosTranferManual);
 
-        contador(datosTranferManualNum);
-        insertarDatos(datosTranferManual);
+          contador(datosTranferManualNum);
+          insertarDatos(datosTranferManual);
         }
       } else {
         console.log('No se encontraron datos guardados.');

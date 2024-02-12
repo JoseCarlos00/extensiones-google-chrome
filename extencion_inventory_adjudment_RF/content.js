@@ -63,6 +63,7 @@ function inicio() {
 
       spam {
         font-weight: bold;
+        padding-left: 4px;
       }
     }
 
@@ -230,12 +231,12 @@ function inicio() {
 
           if (datosAdjustmentNum > 0) {
             document.querySelector('#ubicaciones').setAttribute('disabled', true);
-          document.querySelector('#registraUbicaciones').setAttribute('disabled', true);
+            document.querySelector('#registraUbicaciones').setAttribute('disabled', true);
 
-          console.log('Se encontraron datos guardados:', datosAdjustmentNum, datosAdjustment);
+            console.log('Se encontraron datos guardados:', datosAdjustmentNum, datosAdjustment);
 
-          contador(datosAdjustmentNum);
-          insertarDatos(datosAdjustment);
+            contador(datosAdjustmentNum);
+            insertarDatos(datosAdjustment);
           }
         } else {
           console.log('No se encontraron datos guardados.');

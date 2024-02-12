@@ -13,10 +13,9 @@
     "content_scripts": [
       {
         "matches": [
-          "http://fmorion.dnsalias.com/orion/paginas/Medidas/Inventario*",
-          "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio*"
+          "http://fmorion.dnsalias.com/*"
         ],
-        "js": ["content.js", "popup.js"]
+        "js": ["content.js", "popup.js", "favicon.js"]
       }
     ],
     "action": {

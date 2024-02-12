@@ -226,16 +226,14 @@ function actualizarContadores() {
 }
 
 function tranferSubmit() {
-  if (btnTranfer !== '' || puerta !== '') return;
 
   function waitForActive(timeout) {
+    console.log('waitForActive1');
     return new Promise((resolve, reject) => {
       const intervalId = setInterval(() => {
         if (btnTranfer.disabled === false && puerta.value !== '') {
           // clearInterval(intervaloEnviar);
-          if (puerta.value == 'LIMPIEZA') btnTranfer.click();
-          btnTranfer.setAttribute('disabled', true);
-
+          if (puerta.value == 'LIMPIEZA') 
           clearInterval(intervalId);
           resolve();
         }
@@ -245,15 +243,16 @@ function tranferSubmit() {
       setTimeout(() => {
         clearInterval(intervalId);
         const errorMessage = `No Se activo del botton de 'Tranfer' después de ${timeout} segundos`;
-        if (!element) reject(errorMessage);
+        if (document.querySelector("#buttonSubmit").disabled) reject(errorMessage);
       }, timeout);
     });
   }
 
-  waitForActive(3000)
+  waitForActive(4000)
     .then(() => {
       console.log('Tranfer ok');
       btnTranfer.click();
+      btnTranfer.setAttribute('disabled', true);
 
       if (LPActual.innerHTML == 'Fin' && LPSiguiente.innerHTML == 'Fin') {
         console.log('Es el ultimo LP');
