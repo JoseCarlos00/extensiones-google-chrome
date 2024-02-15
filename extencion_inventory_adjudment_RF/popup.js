@@ -1,5 +1,6 @@
 function inicio() {
   let pause = true;
+
   function getAdjType(iIndex) {
     if (iIndex == 0) return 'Ajuste Negativo';
     if (iIndex == 1) return 'Ajuste Negativo LPN';
@@ -126,8 +127,9 @@ function inicio() {
     content();
     document.getElementById('cancelar').addEventListener('click', alertaCanceladora);
   }
-}
 
+
+  
 function content() {
   // Objeto para almacenar los datos
 
@@ -286,5 +288,7 @@ function alertaCanceladora() {
     console.log('La función no se ha ejecutado.');
   }
 }
+}
+
 
 window.addEventListener('load', inicio, { once: true });
