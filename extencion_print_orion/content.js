@@ -1,6 +1,11 @@
 let ruta = window.location.href;
 ruta = ruta.slice(0, 69);
 
+const NOMBRE = document.querySelector('#lblNombreUsuario') ?? undefined;
+if (NOMBRE && NOMBRE.innerHTML.includes('Octavio')) {
+  NOMBRE.innerHTML = 'Octavio Ameneyro';
+}
+
 const styleInventory = `
 <style>
     @media print {
