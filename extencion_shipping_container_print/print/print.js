@@ -28,6 +28,13 @@
       document.querySelector('#ListPaneDataGrid_SHIPMENT_ID').style.width = '100px';
       document.querySelector('#ListPaneDataGrid_PARENT_CONTAINER_ID').style = 'width: 150px';
       document.querySelector('#ListPaneDataGrid_QUANTITY').style.width = '80px';
+
+      //Mostrar tablas
+      document.querySelector('#ListPaneDataGrid_SHIPMENT_ID').style.display = 'table-cell';
+      document.querySelector('#ListPaneDataGrid_PARENT_CONTAINER_ID').style.display = 'table-cell';
+      document.querySelector('#ListPaneDataGrid_QUANTITY').style.display = 'table-cell';
+      document.querySelector('#ListPaneDataGrid_ITEM').style.display = 'table-cell';
+      document.querySelector('#ListPaneDataGrid_ITEM_DESC').style.display = 'table-cell';
     }
   }
 
