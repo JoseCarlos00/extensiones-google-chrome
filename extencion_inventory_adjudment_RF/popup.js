@@ -148,14 +148,16 @@ function content() {
 
       // Procesar cada línea
       lineas.forEach(linea => {
-        const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/);
+        // const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/);
+        const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)(?:\s+(\S+))?/
+        );
 
         if (match) {
           const item = match[1] ?? null;
           const qty = Number(match[2]) ?? null;
           const fromLoc = match[3] ?? null;
           const toLoc = match[4] ?? null;
-          const LP = match[5] ?? null;
+          const LP = match[5] ?? null; // Ahora LP puede ser null si no está presente en la cadena
           // console.log('lp:', LP);
           // console.log('match', match);
 
