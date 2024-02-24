@@ -284,6 +284,11 @@ function envioItem() {
 // Condicionales
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Envios/EnviosListas.aspx') {
   setTimeout(listEnvios, 1500);
+  const btnBuscar = document.querySelector('#btnBuscar') ?? null;
+
+  if (btnBuscar) {
+    btnBuscar.addEventListener('click', listEnvios);
+  }
 }
 
 if (ruta === 'http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=') {
