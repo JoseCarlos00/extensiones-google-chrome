@@ -3,7 +3,7 @@
     "name": "Alerta Mariano",
     "version": "1.0",
     "description": "Alerta de un Pedido de Cliente Marino Nuevo",
-    "permissions": ["scripting", "activeTab"],
+    "permissions": ["scripting", "activeTab", "tabs", "storage"],
     "icons": {
       "16": "images/bell16.png",
       "32": "images/bell32.png",
@@ -15,7 +15,8 @@
         "matches": [
           "https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"
         ],
-        "js": ["content.js"]
+        "js": ["content.js", "popup.js"],
+        "css": ["style.css"]
       }
     ],
     "action": {
@@ -29,6 +30,17 @@
     },
     "background": {
       "service_worker": "background.js"
-    }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["content.js", "style.css"],
+        "matches": ["<all_urls>"]
+      }
+    ],
+    "content_security_policy": {
+      "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", "'inline-speculation-rules'", "http://localhost:* http://127.0.0.1:*"],
+      "object-src": "'self'"
+  }
+    
   }
   

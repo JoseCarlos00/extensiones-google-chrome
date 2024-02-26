@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "Detalles de tiendas",
+    "version": "1.0",
+    "description": "Agrega detalles de tiendas",
+    "permissions": ["scripting", "activeTab", "storage"],
+    "icons": {
+      "16": "images/list16.png",
+      "32": "images/list32.png",
+      "48": "images/list48.png",
+      "128": "images/list128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"
+        ],
+        "js": ["content.js"],
+        "css": ["style.css"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "defaul_icon" :  {
+        "16": "images/list16.png",
+        "32": "images/list32.png",
+        "48": "images/list48.png",
+        "128": "images/list128.png"
+      }
+    }
+  }
+  

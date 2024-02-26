@@ -1,0 +1,90 @@
+.timer {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+}
+
+#startButton {
+  font-family: monospace;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 100px;
+  height: 45px;
+  transition: 0.3s;
+
+  position: absolute;
+  top: 0;
+  left: 42%;
+}
+
+#stopButton {
+  font-family: monospace;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 100px;
+  height: 45px;
+  transition: 0.3s;
+
+  position: absolute;
+  top: 0;
+  left: 36%;
+}
+
+#startButton:hover,
+#stopButton:hover {
+  background-color: #f3f7fe;
+  box-shadow: 0 0 0 5px #3b83f65f;
+  color: #3b82f6;
+}
+
+#startButton:active,
+#stopButton:active {
+  background-color: #ffffffad;
+}
+
+.menubutton {
+  position: relative;
+}
+
+.btn-exepciones,
+.btn-borrar {
+  overflow: initial;
+}
+
+.btn-exepciones::after,
+.btn-borrar::after {
+  content: attr(data-tooltip);
+  position: absolute;
+
+  font-size: 1.04rem;
+  top: -12px;
+  width: max-content;
+  left: 50%;
+  transform: translate(-50%);
+
+  z-index: 1050;
+  visibility: hidden;
+  transition: all 0.5s;
+  opacity: 0;
+
+  background-color: black;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.btn-exepciones:hover::after,
+.btn-borrar:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+#topNavigationBar {
+  z-index: 0;
+}

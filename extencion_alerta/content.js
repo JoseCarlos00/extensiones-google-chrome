@@ -2,141 +2,55 @@ function inicio() {
   const menuNav = document.querySelector('#ScreenGroupMenu12068');
   const head = document.querySelector('head');
 
-  const excepciones = [
-    '356-C-444-70178',
-    '356-C-444-70176',
-    '356-C-444-70230',
-    '356-C-222-70256',
-    '356-C-444-70261',
-    '356-C-222-70323',
-    '356-C-444-70354',
-  ];
+  let excepcionesArray = ['356-C-444-70178', '356-C-444-70176'];
 
-  // const html = `
-  // <div class="timer">
-  //     <span id="minutes">01</span>:<span id="seconds">30</span>
-  // </div>
-  // <button id="startButton">START</button>
-  // <button id="stopButton">STOP</button>
-  // `;
-
-  const style = `
-<style>
-.timer {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    font-size: 36px;
-    font-weight: bold;
-    color: white;
-}
-
-#startButton {
-    font-family: monospace;
-    background-color: #3b82f6;
-   color: #fff;
-    border: none;
-    border-radius: 8px;
-    width: 100px;
-    height: 45px;
-    transition: .3s;
-
-    position: absolute;
-    top: 0;
-    left: 42%;
-  }
-
-  #stopButton {
-    font-family: monospace;
-    background-color: #3b82f6;
-   color: #fff;
-    border: none;
-    border-radius: 8px;
-    width: 100px;
-    height: 45px;
-    transition: .3s;
-
-    position: absolute;
-    top: 0;
-    left: 36%;
-  }
-  
-  #startButton:hover, #stopButton:hover {
-    background-color: #f3f7fe;
-    box-shadow: 0 0 0 5px #3b83f65f;
-   color: #3b82f6;
-  } 
-  
-  #startButton:active, #stopButton:active {
-    background-color: #ffffffad;
-  }
-</style>  
-`;
-
-  const iconoExepciones = `
+  const iconos = `
 <li class="pull-left menubutton ">
-    <a id="InsightMenuActionCollapse"  class="fa-plus fa-solid far groupByCollapse menuicon btn-exepciones" href="#" role="button">
+    <a data-tooltip="Agregar exepciones" class="fa-plus fa-solid far groupByCollapse menuicon btn-exepciones" href="#" role="button">
+    </a>
+</li>
+<li class="pull-left menubutton ">
+    <a data-tooltip="Borrar exepciones" class="fa-trash fa-solid far groupByCollapse menuicon btn-borrar" href="#" role="button">
     </a>
 </li>
 `;
+
+  document.querySelector('#InsightMenu > li:nth-child(15)').insertAdjacentHTML('afterend', iconos);
+
+  /** Agregar y borrar exepciones */
   document
-    .querySelector('#InsightMenu > li:nth-child(15)')
-    .insertAdjacentHTML('afterend', iconoExepciones);
+    .querySelector('#InsightMenu .btn-exepciones')
+    .addEventListener('click', insertarExcepciones);
+  document.querySelector('#InsightMenu .btn-borrar').addEventListener('click', borrarExcepciones);
 
-  // menuNav.insertAdjacentHTML('beforeend', html);
-  head.insertAdjacentHTML('beforeend', style);
+  function insertarExcepciones() {
+    let pedidoExexption = prompt();
 
-  /** Agregar exepciones */
-  document.querySelector('.btn-exepciones').addEventListener('click', () => {
-    const pedidoExexption = prompt().trim();
+    if (pedidoExexption) {
+      pedidoExexption = pedidoExexption.trim();
+    }
     const expresionRegular = /^356-C-/;
 
     if (expresionRegular.test(pedidoExexption)) {
-      excepciones.push(pedidoExexption);
+      excepcionesArray.push(pedidoExexption);
+
+      if (chrome.storage) {
+        chrome.storage.local.set({ excepcionesArrayChrome: excepcionesArray }, () => {
+          console.log('Datos guardados en el almacenamiento local.');
+        });
+      } else {
+        console.error('chrome.storage no está disponible.');
+      }
     } else {
       alert('Ingrese un pedido Valido');
     }
-  });
+  }
+
+  function borrarExcepciones() {
+    console.log('Borrar Excepciones');
+  }
 
   //END
-
-  // /**  Temporizador */
-  // let timer;
-  // let minutes = 1;
-  // let seconds = 30;
-
-  // function startTimer() {
-  //   clearInterval(timer);
-  //   minutes = 1;
-  //   seconds = 30;
-  //   updateTimerDisplay();
-
-  //   timer = setInterval(function () {
-  //     if (minutes === 0 && seconds === 0) {
-  //       startTimer();
-  //       document.querySelector('#InsightMenuApply').click();
-  //     } else {
-  //       if (seconds === 0) {
-  //         minutes--;
-  //         seconds = 59;
-  //       } else {
-  //         seconds--;
-  //       }
-  //       updateTimerDisplay();
-  //     }
-  //   }, 1000);
-  // }
-
-  // function updateTimerDisplay() {
-  //   const minutesDisplay = String(minutes).padStart(2, '0');
-  //   const secondsDisplay = String(seconds).padStart(2, '0');
-  //   document.getElementById('minutes').textContent = minutesDisplay;
-  //   document.getElementById('seconds').textContent = secondsDisplay;
-  // }
-
-  // document.getElementById('startButton').addEventListener('click', startTimer);
-  // document.getElementById('stopButton').addEventListener('click', () => clearInterval(timer));
-  // // End Timer
 
   /**  Observar Nodo */
   function observarCambiosEnNodo(nodoObservado, opciones) {
@@ -157,7 +71,7 @@ function inicio() {
 
             let textoNoEnExcepciones = true;
 
-            for (const excepcion of excepciones) {
+            for (const excepcion of excepcionesArray) {
               if (texto === excepcion) {
                 textoNoEnExcepciones = false;
                 break;
@@ -183,6 +97,22 @@ function inicio() {
 
   observarCambiosEnNodo(nodoAObservar, opcionesDeObservacion);
   // End Observar nodo
+
+  // Verificar si hay datos almacenados al cargar la página
+  if (chrome.storage) {
+    chrome.storage.local.get('excepcionesArrayChrome', result => {
+      const arrayExcepciones = result.excepcionesArrayChrome;
+
+      if (arrayExcepciones) {
+        console.log(arrayExcepciones);
+        excepcionesArray = arrayExcepciones;
+      } else {
+        console.log('No se encontraron datos guardados.');
+      }
+    });
+  } else {
+    console.error('chrome.storage no está disponible.');
+  }
 }
 
 window.addEventListener('load', inicio);

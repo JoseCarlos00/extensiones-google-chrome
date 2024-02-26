@@ -1,0 +1,14 @@
+.ScreenGroupPanel .detailpaneheaderrowcolumn {
+  padding-top: 6px;
+}
+
+#ScreenControlHyperlink36456 {
+  label {
+    display: none;
+  }
+
+  a {
+    margin-top: -1px;
+    margin-bottom: 8px;
+  }
+}
