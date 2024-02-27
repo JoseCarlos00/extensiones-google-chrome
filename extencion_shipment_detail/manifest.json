@@ -13,8 +13,7 @@
     "content_scripts": [
       {
         "matches": [
-          "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"
-        ],
+          "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
         "js": ["content.js"],
         "css": ["style.css"]
       }
