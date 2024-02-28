@@ -1,31 +1,49 @@
 {
-    "manifest_version": 3,
-    "name": "Detalles de tiendas",
-    "version": "1.0",
-    "description": "Agrega detalles de tiendas",
-    "permissions": ["scripting", "activeTab", "storage"],
-    "icons": {
-      "16": "images/list16.png",
-      "32": "images/list32.png",
-      "48": "images/list48.png",
-      "128": "images/list128.png"
+  "manifest_version": 3,
+  "name": "Detalles de tiendas",
+  "version": "1.0",
+  "description": "Agrega detalles de tiendas",
+  "permissions": ["scripting", "activeTab", "storage", "tabs"],
+  "icons": {
+    "16": "images/clipBoar16.png",
+    "32": "images/clipBoar32.png",
+    "48": "images/clipBoar48.png",
+    "128": "images/clipBoar128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*",
+    "https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"
+      ],
+      "js": ["content.js"],
+      "css": ["style.css"]
     },
-    "content_scripts": [
-      {
-        "matches": [
-          "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
-        "js": ["content.js"],
-        "css": ["style.css"]
-      }
-    ],
-    "action": {
-      "default_popup": "popup.html",
-      "defaul_icon" :  {
-        "16": "images/list16.png",
-        "32": "images/list32.png",
-        "48": "images/list48.png",
-        "128": "images/list128.png"
-      }
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"
+      ],
+      "js": ["contentScript.js"]
     }
+    
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon" :  {
+      "16": "images/clipBoar16.png",
+      "32": "images/clipBoar32.png",
+      "48": "images/clipBoar48.png",
+      "128": "images/clipBoar128.png"
+    }
+  },
+  "content_security_policy": {
+    "script-src": ["'self'", "'unsafe-inline'"],
+    "object-src": "'self'"
   }
-  
+}
