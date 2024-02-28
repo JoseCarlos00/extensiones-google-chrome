@@ -2,7 +2,7 @@ console.log('[contentScript.js] 1');
 // Contenido del contentScript.js en la segunda pestaña
 // Este script se ejecuta en la segunda pestaña
 
-function inicio() {
+function content() {
   const panelStatus = document.querySelector('#sidebar-wrapper > ul > li:nth-child(7) > a');
 
   if (panelStatus) {
@@ -44,7 +44,18 @@ function inicio() {
     chrome.runtime.sendMessage({ action: 'datos_desde_segunda_pestaña', datos: datos });
 
     setTimeout(window.close, 50);
-  }, 150);
+  }, 100);
+}
+
+function inicio() {
+  console.log('Inicio de la segunda pestaña');
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const activeParam = urlParams.get('active');
+
+  if (activeParam) {
+    content();
+  }
 }
 
 window.addEventListener('load', inicio);

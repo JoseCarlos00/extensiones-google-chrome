@@ -1,3 +1,8 @@
+// Variables de estado
+
+let lastSelectedId = null;
+let pedirMasDetalles = false;
+
 function inicio() {
   console.log('Shipment Detail');
 
@@ -9,10 +14,18 @@ function inicio() {
   if (!tbody && !panelDetail) return;
 
   tbody.addEventListener('click', e => {
-    const tr = e.target.closest('tr[data-id]') ?? null;
+    const tr = e.target.closest('tr[data-id]');
     // console.log('e.target:', tr);
 
-    extraerDatosDeTr(tr);
+    if (tr) {
+      const trDataId = tr.getAttribute('data-id');
+
+      if (lastSelectedId !== trDataId) {
+        console.log('Nuevo elemento seleccionado:');
+        lastSelectedId = trDataId;
+      }
+    }
+    extraerDatosDeTr(tr, true);
   });
 
   panelDetail.insertAdjacentHTML('afterbegin', htmlShipmentId);
@@ -21,26 +34,36 @@ function inicio() {
   panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentLineNum);
   panelDetail.insertAdjacentHTML('beforeend', htmlDateCreate);
   panelDetail.insertAdjacentHTML('beforeend', htmlWaveNumber);
+  panelDetail.insertAdjacentHTML('beforeend', htmlVerMas);
 
   observacion(tbody);
 }
 
 function pedirDatosdelPedido() {
+  console.log('[pedirDatosdelPedido]');
+  pedirMasDetalles = true;
+  waitFordata();
   let pedido = '';
+  const queryParams = `?active=active`;
   const internalNumElement = document.querySelector(
     '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_SHIPMENT_NUM"]'
   );
   if (internalNumElement) {
-    pedido = internalNumElement.innerHTML;
+    pedido = internalNumElement.innerHTML + queryParams;
 
-    chrome.runtime.sendMessage({
-      action: 'some_action',
-      url: `https://wms.fantasiasmiguel.com.mx/scale/details/shipment/${pedido}`,
-    });
+    chrome.runtime.sendMessage(
+      {
+        action: 'some_action',
+        url: `https://wms.fantasiasmiguel.com.mx/scale/details/shipment/${pedido}`,
+      },
+      response => {
+        console.log('Respuesta del fondo:', response);
+      }
+    );
   }
 }
 
-function extraerDatosDeTr(tr) {
+function extraerDatosDeTr(tr, isClick) {
   console.log('[extraerDatosDeTr]');
 
   // Obtener elementos del DOM
@@ -63,6 +86,7 @@ function extraerDatosDeTr(tr) {
 
   // Llamar a insertarInfo con los datos extraídos
   insertarInfo({
+    isClick,
     shipmentIDText,
     internalShipmentNumText,
     internalShipmentLineNumText,
@@ -78,7 +102,7 @@ function observacion(tbody) {
 
     if (mutationsList[0]) {
       const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]') ?? null;
-      extraerDatosDeTr(trSelected);
+      extraerDatosDeTr(trSelected, false);
     }
   }
 
@@ -101,6 +125,7 @@ function insertarInfo(info) {
   limpiarPaneldeDetalles();
 
   const {
+    isClick,
     shipmentIDText: shipmentId,
     internalShipmentNumText: internalNum,
     internalShipmentLineNumText: internalLineNum,
@@ -112,6 +137,8 @@ function insertarInfo(info) {
   const internalNumElement = document.querySelector('#DetailPaneHeaderInternalShipmetNum');
   const internalNumLineElement = document.querySelector('#DetailPaneHeaderInternalNum');
 
+  const verMasElement = document.querySelector('#verMasInfomacion');
+
   // Insertar tienda si el elemento del cliente existe y hay un ID de envío
   customerElement && shipmentId && insertarTienda(customerElement, shipmentId);
 
@@ -120,8 +147,16 @@ function insertarInfo(info) {
   internalNumElement && (internalNumElement.innerHTML = internalNum);
   internalNumLineElement && (internalNumLineElement.innerHTML = internalLineNum);
 
-  // Llamar a pedirDatosdelPedido
-  pedirDatosdelPedido();
+  if (verMasElement) {
+    verMasElement.innerHTML = 'Ver mas info..';
+
+    verMasElement.addEventListener('click', pedirDatosdelPedido, { once: true });
+  }
+
+  // Llamar a pedirDatosdelPedido si es por el evento click
+  if (isClick) {
+    // pedirDatosdelPedido();
+  }
 }
 
 function insertarTienda(element, shipmentId) {
@@ -155,44 +190,50 @@ function limpiarPaneldeDetalles() {
 }
 
 const htmlShipmentId = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderShiptmenID"
     id="DetailPaneHeaderShiptmenID" style="color: #4f93e4 !important; font-weight: bold";></label>
 </div>
 `;
 
 const htmlCustomer = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderCustomer"
     id="DetailPaneHeaderCustomer"></label>
 </div>
 `;
 
 const htmlInternalShipmentNum = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderInternalShipmetNum"
     id="DetailPaneHeaderInternalShipmetNum"></label>
 </div>
 `;
 
 const htmlInternalShipmentLineNum = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderInternalNum"
     id="DetailPaneHeaderInternalNum"></label>
 </div>
 `;
 
 const htmlWaveNumber = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderWaveNumber"
     id="DetailPaneHeaderWaveNumber"></label>
 </div>
 `;
 
 const htmlDateCreate = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderDateCreate"
     id="DetailPaneHeaderDateCreate"></label>
+</div>
+`;
+
+const htmlVerMas = `
+<div id="ScreenControlHyperlink36456" class="ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row">
+  <a class="detailpaneheaderlabel ScreenControlHyperlink" id="verMasInfomacion" href="#"  role="buttton"style="cursor: auto; pointer-events: auto;"></a>
 </div>
 `;
 
@@ -243,6 +284,25 @@ const tiendas = {
   4346: 'Yuc-Campestre',
   364: 'Yuc-Merida',
 };
+
+function waitFordata() {
+  const text = '1346-863-28886...';
+
+  // Obtener elementos del DOM
+  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
+  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
+
+  if (dateCreateElement) {
+    dateCreateElement.innerHTML = text;
+    dateCreateElement.classList.add('wait');
+  }
+
+  if (waveNumberElement) {
+    waveNumberElement.innerHTML = text;
+    waveNumberElement.classList.add('wait');
+  }
+}
+
 function actualizarInterfaz(datos) {
   const { date, internalShipmentNumber, waveNumber } = datos;
 
@@ -266,9 +326,19 @@ function actualizarInterfaz(datos) {
   if (internalNumElement?.innerHTML == internalShipmentNumber) {
     console.log('Internal Element2:', internalNumElement.innerHTML);
     // Actualizar elementos de la interfaz si los elementos existen
-    dateCreateElement && (dateCreateElement.innerHTML = date);
-    waveNumberElement && (waveNumberElement.innerHTML = `Wave: ${waveNumber}`);
+
+    if (dateCreateElement) {
+      dateCreateElement.innerHTML = date;
+      dateCreateElement.classList.remove('wait');
+    }
+
+    if (waveNumberElement) {
+      waveNumberElement.innerHTML = `Wave: ${waveNumber}`;
+      waveNumberElement.classList.remove('wait');
+    }
   }
+
+  pedirMasDetalles = false;
 }
 
 // Escuchar los mensajes enviados desde el script de fondo
@@ -280,4 +350,24 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     actualizarInterfaz(datos);
   }
 });
+
+// Escuchar el evento beforeunload para evitar que el usuario cierre la pestaña o cambie de página
+window.addEventListener('beforeunload', function (event) {
+  if (pedirMasDetalles) {
+    const confirmationMessage =
+      'Hay cambios sin grabar. ¿Estás seguro de que quieres cerrar esta página?';
+    event.returnValue = confirmationMessage;
+    return confirmationMessage;
+  }
+});
+
+// Manejador del evento visibilitychange
+function handleVisibilityChange() {
+  if (document.visibilityState === 'hidden' && pedirMasDetalles) {
+    alert('Hay cambios sin grabar. Por favor, mantén esta pestaña activa.');
+  }
+}
+
+// Escuchar el evento visibilitychange
+document.addEventListener('visibilitychange', handleVisibilityChange);
 window.addEventListener('load', inicio, { once: true });
