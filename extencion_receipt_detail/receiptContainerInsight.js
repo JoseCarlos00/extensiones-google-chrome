@@ -54,11 +54,15 @@ function pedirDatosdeContainerDetail() {
   let receipt = '';
   const queryParams = `?active=active`;
 
-  const internalContainerNumElement = document.querySelector(
-    '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_REC_CONT_NUM"]'
-  );
+  const internalContainerNumElement =
+    document.querySelector(
+      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_REC_CONT_NUM"]'
+    ) ?? null;
+
+  console.log(internalContainerNumElement?.innerHTML);
 
   if (internalContainerNumElement) {
+    waitFordataContainerDetail();
     receipt = internalContainerNumElement.innerHTML + queryParams;
 
     chrome.runtime.sendMessage(
@@ -70,6 +74,9 @@ function pedirDatosdeContainerDetail() {
         console.log('Respuesta del fondo:', response);
       }
     );
+  } else {
+    alert('No se encontró el Internal Container Numbrer, por favor active la columna.');
+    console.log('No se encontró el Internal Container Numbrer');
   }
 }
 
@@ -79,11 +86,15 @@ function pedirDatosdeReceiptDetail() {
   let receipt = '';
   const queryParams = `?active=active`;
 
-  const internalReceiptNumElement = document.querySelector(
-    '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_RECEIPT_NUM"]'
-  );
+  const internalReceiptNumElement =
+    document.querySelector(
+      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_RECEIPT_NUM"]'
+    ) ?? null;
+
+  console.log(internalReceiptNumElement?.innerHTML);
 
   if (internalReceiptNumElement) {
+    waitFordataReceiptDetail();
     receipt = internalReceiptNumElement.innerHTML + queryParams;
 
     chrome.runtime.sendMessage(
@@ -95,6 +106,9 @@ function pedirDatosdeReceiptDetail() {
         console.log('Respuesta del fondo:', response);
       }
     );
+  } else {
+    alert('No se encontró el Internal receipt number, por favor active la columna.');
+    console.log('No se encontró el Internal receipt number');
   }
 }
 
@@ -121,7 +135,7 @@ function observacion(tbody) {
 
     if (mutationsList[0]) {
       const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]') ?? null;
-      extraerDatosDeTr(trSelected, false);
+      extraerDatosDeTr(trSelected);
     }
   }
 
@@ -161,7 +175,6 @@ function insertarInfo(info) {
 
 function solicitarDatosExternos() {
   pedirMasDetalles = true;
-  waitFordata();
   pedirDatosdeContainerDetail();
   pedirDatosdeReceiptDetail();
 }
@@ -226,7 +239,8 @@ const htmlTrailerId = `
 </div>
 `;
 
-function waitFordata() {
+function waitFordataContainerDetail() {
+  console.log('wait: container detail');
   const text = '1346-863-28886...';
 
   // Obtener elementos del DOM
@@ -234,7 +248,6 @@ function waitFordata() {
   const receiptDateElement = document.querySelector('#DetailPaneHeaderReceiptDate');
   const checkInElement = document.querySelector('#DetailPaneHeaderCheckIn');
   const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp');
-  const trailerIdElement = document.querySelector('#DetailPaneHeaderTrailerId');
 
   if (parentElement) {
     parentElement.innerHTML = text;
@@ -255,6 +268,13 @@ function waitFordata() {
     userStampElement.innerHTML = text;
     userStampElement.classList.add('wait');
   }
+}
+
+function waitFordataReceiptDetail(params) {
+  console.log('wait: recept deatail');
+  const text = '1346-863-28886...';
+
+  const trailerIdElement = document.querySelector('#DetailPaneHeaderTrailerId');
 
   if (trailerIdElement) {
     trailerIdElement.innerHTML = text;
