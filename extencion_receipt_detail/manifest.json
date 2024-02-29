@@ -1,0 +1,64 @@
+{
+  "manifest_version": 3,
+  "name": "Detalles de recibos",
+  "version": "1.0",
+  "description": "Agrega detalles de recibos",
+  "permissions": ["scripting", "activeTab", "tabs"],
+  "icons": {
+    "16": "images/container16.png",
+    "32": "images/container32.png",
+    "48": "images/container48.png",
+    "128": "images/container128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://wms.fantasiasmiguel.com.mx/scale/insights/2779*",
+    "https://wms.fantasiasmiguel.com.mx/scale/insights/2780*",
+    "https://wms.fantasiasmiguel.com.mx/scale/details/receipt/*",
+    "https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"
+      ],
+      "js": ["receiptContainerInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"
+      ],
+      "js": ["containerDetail.js"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"
+      ],
+      "js": ["receiptLineInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/receipt/*"
+      ],
+      "js": ["receiptDetail.js"]
+    }
+    
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon" :  {
+      "16": "images/container16.png",
+      "32": "images/container32.png",
+      "48": "images/container48.png",
+      "128": "images/container128.png"
+    }
+  },
+  "content_security_policy": {
+    "script-src": ["'self'", "'unsafe-inline'"],
+    "object-src": "'self'"
+  }
+}
