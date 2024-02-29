@@ -1,6 +1,4 @@
-console.log('[contentScript.js] 1');
-// Contenido del contentScript.js en la segunda pestaña
-// Este script se ejecuta en la segunda pestaña
+console.log('[shipmentDetail.js]');
 
 function content() {
   const panelStatus = document.querySelector('#sidebar-wrapper > ul > li:nth-child(7) > a');
@@ -19,15 +17,15 @@ function content() {
     const internalNUmberElement = document.querySelector(
       '#ReferenceInfoInternalShipmentNumValueEditingInput'
     );
+
     const waveNumberElement = document.querySelector('#ReferenceInfoWaveNumberValueEditingInput');
 
-    if (dateElemet) date = dateElemet.value;
+    dateElemet && (date = dateElemet.value);
+
     if (internalNUmberElement) {
-      // Limpiar el número interno antes de asignarlo
       internalShipmentNumber = internalNUmberElement.value.replace(/\D/g, '');
     }
     if (waveNumberElement) {
-      // Limpiar el número de onda antes de asignarlo
       waveNumber = waveNumberElement.value.replace(/\D/g, '');
     }
 
@@ -41,15 +39,13 @@ function content() {
     console.log(datos);
 
     // Enviar los datos al script de fondo
-    chrome.runtime.sendMessage({ action: 'datos_desde_segunda_pestaña', datos: datos });
+    chrome.runtime.sendMessage({ action: 'datos_desde_shipment_detail', datos: datos });
 
     setTimeout(window.close, 50);
   }, 100);
 }
 
 function inicio() {
-  console.log('Inicio de la segunda pestaña');
-
   const urlParams = new URLSearchParams(window.location.search);
   const activeParam = urlParams.get('active');
 

@@ -6,7 +6,15 @@ function inicio() {
 
   const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
 
-  if (!tbody && !panelDetail) return;
+  if (!tbody) {
+    console.log('El elemento tbody no existe.');
+    return;
+  }
+
+  if (!panelDetail) {
+    console.log('El elemento panelDetail no existe.');
+    return;
+  }
 
   tbody.addEventListener('click', e => {
     const tr = e.target.closest('tr[data-id]');

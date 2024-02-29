@@ -1,16 +1,20 @@
-// Variables de estado
-let lastSelectedId = null;
-let pedirMasDetalles = false;
+console.log('Shipment line insight');
 
 function inicio() {
-  console.log('Shipment Detail');
-
   const panelDetail =
     document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1066') ?? null;
 
   const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
 
-  if (!tbody && !panelDetail) return;
+  if (!tbody) {
+    console.log('El elemento tbody no existe.');
+    return;
+  }
+
+  if (!panelDetail) {
+    console.log('El elemento panelDetail no existe.');
+    return;
+  }
 
   panelDetail.insertAdjacentHTML('afterbegin', htmlShipmentId);
   panelDetail.insertAdjacentHTML('beforeend', htmlCustomer);
@@ -40,14 +44,17 @@ function inicio() {
 
 function pedirDatosdelPedido() {
   console.log('[pedirDatosdelPedido]');
-  pedirMasDetalles = true;
-  waitFordata();
+
   let pedido = '';
   const queryParams = `?active=active`;
+
   const internalNumElement = document.querySelector(
     '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_SHIPMENT_NUM"]'
   );
+
   if (internalNumElement) {
+    pedirMasDetalles = true;
+    waitFordata();
     pedido = internalNumElement.innerHTML + queryParams;
 
     chrome.runtime.sendMessage(
@@ -59,10 +66,13 @@ function pedirDatosdelPedido() {
         console.log('Respuesta del fondo:', response);
       }
     );
+  } else {
+    alert('No se encontró el Internal shipment  Number, por favor active la columna.');
+    console.log('No se encontró el Internal shipment  Number');
   }
 }
 
-function extraerDatosDeTr(tr, isClick) {
+function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
 
   // Obtener elementos del DOM
@@ -85,7 +95,6 @@ function extraerDatosDeTr(tr, isClick) {
 
   // Llamar a insertarInfo con los datos extraídos
   insertarInfo({
-    isClick,
     shipmentIDText,
     internalShipmentNumText,
     internalShipmentLineNumText,
@@ -150,11 +159,6 @@ function insertarInfo(info) {
     verMasElement.innerHTML = 'Ver mas info..';
 
     verMasElement.addEventListener('click', pedirDatosdelPedido, { once: true });
-  }
-
-  // Llamar a pedirDatosdelPedido si es por el evento click
-  if (isClick) {
-    // pedirDatosdelPedido();
   }
 }
 
@@ -227,12 +231,6 @@ const htmlDateCreate = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderDateCreate"
     id="DetailPaneHeaderDateCreate"></label>
-</div>
-`;
-
-const htmlVerMas = `
-<div id="ScreenControlHyperlink36456" class="ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row">
-  <a class="detailpaneheaderlabel ScreenControlHyperlink" id="verMasInfomacion" href="#"  role="buttton"style="cursor: auto; pointer-events: auto;"></a>
 </div>
 `;
 
@@ -342,31 +340,12 @@ function actualizarInterfaz(datos) {
 
 // Escuchar los mensajes enviados desde el script de fondo
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === 'actualizar_datos') {
+  if (message.action === 'actualizar_datos_de_shipment_detail') {
     // Actualizar la interfaz de usuario con los datos recibidos
-    var datos = message.datos;
+    const datos = message.datos;
     // console.log('Datos:', datos);
     actualizarInterfaz(datos);
   }
 });
 
-// Escuchar el evento beforeunload para evitar que el usuario cierre la pestaña o cambie de página
-window.addEventListener('beforeunload', function (event) {
-  if (pedirMasDetalles) {
-    const confirmationMessage =
-      'Hay cambios sin grabar. ¿Estás seguro de que quieres cerrar esta página?';
-    event.returnValue = confirmationMessage;
-    return confirmationMessage;
-  }
-});
-
-// Manejador del evento visibilitychange
-function handleVisibilityChange() {
-  if (document.visibilityState === 'hidden' && pedirMasDetalles) {
-    alert('Hay cambios sin grabar. Por favor, mantén esta pestaña activa.');
-  }
-}
-
-// Escuchar el evento visibilitychange
-document.addEventListener('visibilitychange', handleVisibilityChange);
 window.addEventListener('load', inicio, { once: true });

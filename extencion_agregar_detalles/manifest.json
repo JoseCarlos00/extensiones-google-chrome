@@ -1,0 +1,67 @@
+{
+  "manifest_version": 3,
+  "name": "Detalles Scale",
+  "version": "1.0",
+  "description": "Agrega detalles a[Shipment line insight] - [Transaction history] - [Wave insight] - [Inventory insight] - [Work insight]",
+  "permissions": ["scripting", "activeTab", "storage", "tabs"],
+  "icons": {
+    "16": "images/clipBoar16.png",
+    "32": "images/clipBoar32.png",
+    "48": "images/clipBoar48.png",
+    "128": "images/clipBoar128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://wms.fantasiasmiguel.com.mx/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"
+      ],
+      "js": ["shipment_detail/shipmentLineInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css", "shipment_detail/style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"
+      ],
+      "js": ["shipment_detail/shipmentDetail.js"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"
+      ],
+      "js" : ["transaction_history/transactionHistory.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"
+      ],
+      "js": ["inventory_insight/inventoryInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"
+      ],
+      "js": ["inventory_insight/inventoryDetail.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon" :  {
+      "16": "images/clipBoar16.png",
+      "32": "images/clipBoar32.png",
+      "48": "images/clipBoar48.png",
+      "128": "images/clipBoar128.png"
+    }
+  },
+  "content_security_policy": {
+    "script-src": ["'self'", "'unsafe-inline'"],
+    "object-src": "'self'"
+  }
+}

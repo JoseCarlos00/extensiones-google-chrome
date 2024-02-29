@@ -21,7 +21,15 @@ function inicio() {
 
   const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
 
-  if (!tbody && !panelDetail) return;
+  if (!tbody) {
+    console.log('El elemento tbody no existe.');
+    return;
+  }
+
+  if (!panelDetail) {
+    console.log('El elemento panelDetail no existe.');
+    return;
+  }
 
   tbody.addEventListener('click', e => {
     const tr = e.target.closest('tr[data-id]');
@@ -62,6 +70,7 @@ function pedirDatosdeContainerDetail() {
   console.log(internalContainerNumElement?.innerHTML);
 
   if (internalContainerNumElement) {
+    pedirMasDetalles = true;
     waitFordataContainerDetail();
     receipt = internalContainerNumElement.innerHTML + queryParams;
 
@@ -75,8 +84,8 @@ function pedirDatosdeContainerDetail() {
       }
     );
   } else {
-    alert('No se encontró el Internal Container Numbrer, por favor active la columna.');
-    console.log('No se encontró el Internal Container Numbrer');
+    alert('No se encontró el Internal Container Number, por favor active la columna.');
+    console.log('No se encontró el Internal Container Number');
   }
 }
 
@@ -94,6 +103,7 @@ function pedirDatosdeReceiptDetail() {
   console.log(internalReceiptNumElement?.innerHTML);
 
   if (internalReceiptNumElement) {
+    pedirMasDetalles = true;
     waitFordataReceiptDetail();
     receipt = internalReceiptNumElement.innerHTML + queryParams;
 
@@ -107,8 +117,8 @@ function pedirDatosdeReceiptDetail() {
       }
     );
   } else {
-    alert('No se encontró el Internal receipt number, por favor active la columna.');
-    console.log('No se encontró el Internal receipt number');
+    alert('No se encontró el Internal Receipt Number, por favor active la columna.');
+    console.log('No se encontró el Internal Receipt Number');
   }
 }
 
@@ -270,7 +280,7 @@ function waitFordataContainerDetail() {
   }
 }
 
-function waitFordataReceiptDetail(params) {
+function waitFordataReceiptDetail() {
   console.log('wait: recept deatail');
   const text = '1346-863-28886...';
 
@@ -332,12 +342,12 @@ function actualizarReceiptDetail(datos) {
 // Escuchar los mensajes enviados desde el script de fondo
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.action === 'actualizar_datos_container') {
-    var datos = message.datos;
+    const datos = message.datos;
     actualizarContainerDetail(datos);
   }
 
   if (message.action === 'actualizar_datos_receipt') {
-    var datos = message.datos;
+    const datos = message.datos;
     actualizarReceiptDetail(datos);
   }
 });
