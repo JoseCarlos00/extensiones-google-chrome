@@ -1,4 +1,3 @@
-// Este script se ejecuta en segundo plano
 console.log('[background.js]');
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -7,13 +6,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     chrome.tabs.create({ url: message.url, active: false });
     // Enviar respuesta al script de contenido
     sendResponse({ status: 'OK' });
-  }
-});
-
-// Escuchar los mensajes enviados desde container detail
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  console.log('[Container Detail GET]');
-  if (message.action === 'datos_desde_container_detail') {
+  } else if (message.action === 'datos_desde_container_detail') {
+    console.log('[Container Detail GET]');
     // Almacenar los datos recibidos
     const datosDesdeContainerDetail = message.datos;
 
@@ -27,13 +21,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         datos: datosDesdeContainerDetail,
       });
     });
-  }
-});
-
-// Escuchar los mensajes enviados desde receip detail
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  console.log('[Receipt Detail GET]');
-  if (message.action === 'datos_desde_receipt_detail') {
+  } else if (message.action === 'datos_desde_receipt_detail') {
+    console.log('[Receipt Detail GET]');
     // Almacenar los datos recibidos
     const datosDesdeReceiptDetail = message.datos;
 
