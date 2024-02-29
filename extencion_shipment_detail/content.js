@@ -1,5 +1,4 @@
 // Variables de estado
-
 let lastSelectedId = null;
 let pedirMasDetalles = false;
 
@@ -12,6 +11,14 @@ function inicio() {
   const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
 
   if (!tbody && !panelDetail) return;
+
+  panelDetail.insertAdjacentHTML('afterbegin', htmlShipmentId);
+  panelDetail.insertAdjacentHTML('beforeend', htmlCustomer);
+  panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentNum);
+  panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentLineNum);
+  panelDetail.insertAdjacentHTML('beforeend', htmlDateCreate);
+  panelDetail.insertAdjacentHTML('beforeend', htmlWaveNumber);
+  panelDetail.insertAdjacentHTML('beforeend', htmlVerMas);
 
   tbody.addEventListener('click', e => {
     const tr = e.target.closest('tr[data-id]');
@@ -27,14 +34,6 @@ function inicio() {
     }
     extraerDatosDeTr(tr, true);
   });
-
-  panelDetail.insertAdjacentHTML('afterbegin', htmlShipmentId);
-  panelDetail.insertAdjacentHTML('beforeend', htmlCustomer);
-  panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentNum);
-  panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentLineNum);
-  panelDetail.insertAdjacentHTML('beforeend', htmlDateCreate);
-  panelDetail.insertAdjacentHTML('beforeend', htmlWaveNumber);
-  panelDetail.insertAdjacentHTML('beforeend', htmlVerMas);
 
   observacion(tbody);
 }
