@@ -1,7 +1,6 @@
 console.log('Shipping container insight');
 
 function inicio() {
-
   console.log('[Container detail]');
   const tbody = document.querySelector('#ListPaneDataGrid > tbody');
 
@@ -90,8 +89,6 @@ function extraerDatosDeTr(tr) {
   const internalContainerNumElement =
     tr.querySelector('[aria-describedby="ListPaneDataGrid_INTERNAL_CONTAINER_NUM"]') ?? null;
 
-  if (containerIdElement) containerIDText = containerIdElement.innerText;
-
   // Inner text
   const containerId = containerIdElement ? containerIdElement.innerText : '';
   const shipmentId = shipmentIdElement ? shipmentIdElement.innerText : '';
@@ -178,7 +175,7 @@ function limpiarPaneldeDetalles() {
 
 function pedirDatosdeShippingContainerDetail() {
   console.log('[pedirDatosdeShippingContainerDetail]');
-  pedirMasDetalles = true;
+
   let receipt = '';
   const queryParams = `?active=active`;
 
@@ -187,9 +184,8 @@ function pedirDatosdeShippingContainerDetail() {
       '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_CONTAINER_NUM"]'
     ) ?? null;
 
-  console.log(internalContainerNumElement?.innerHTML);
-
   if (internalContainerNumElement) {
+    pedirMasDetalles = true;
     waitFordata();
     receipt = internalContainerNumElement.innerHTML + queryParams;
 
@@ -263,7 +259,6 @@ const htmlUserStamp = `
     id="DetailPaneHeaderUserStamp"></label>
 </div>
 `;
-
 
 function actualizarInterfaz(datos) {
   console.log('[Actualizar Interfaz]');

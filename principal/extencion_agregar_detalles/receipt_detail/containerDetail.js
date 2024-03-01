@@ -1,4 +1,12 @@
-console.log('[Container Detail]');
+function inicio() {
+  console.log('[Container Detail]');
+  const urlParams = new URLSearchParams(window.location.search);
+  const activeParam = urlParams.get('active');
+
+  if (activeParam) {
+    content();
+  }
+}
 
 function content() {
   const referenceInfo = document.querySelector('#sidebar-wrapper > ul > li:nth-child(8) > a');
@@ -48,19 +56,10 @@ function content() {
     console.log(datos);
 
     // Enviar los datos al script de fondo
-    chrome.runtime.sendMessage({ action: 'datos_desde_container_detail', datos: datos });
+    chrome.runtime.sendMessage({ action: 'datos_desde_receipt_container_detail', datos: datos });
 
     setTimeout(window.close, 50);
   }, 250);
-}
-
-function inicio() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const activeParam = urlParams.get('active');
-
-  if (activeParam) {
-    content();
-  }
 }
 
 window.addEventListener('load', inicio);

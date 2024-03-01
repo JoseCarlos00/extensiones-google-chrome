@@ -1,4 +1,12 @@
-console.log('[shipmentDetail.js]');
+function inicio() {
+  console.log('[shipmentDetail.js]');
+  const urlParams = new URLSearchParams(window.location.search);
+  const activeParam = urlParams.get('active');
+
+  if (activeParam) {
+    content();
+  }
+}
 
 function content() {
   const panelStatus = document.querySelector('#sidebar-wrapper > ul > li:nth-child(7) > a');
@@ -43,15 +51,6 @@ function content() {
 
     setTimeout(window.close, 50);
   }, 100);
-}
-
-function inicio() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const activeParam = urlParams.get('active');
-
-  if (activeParam) {
-    content();
-  }
 }
 
 window.addEventListener('load', inicio);

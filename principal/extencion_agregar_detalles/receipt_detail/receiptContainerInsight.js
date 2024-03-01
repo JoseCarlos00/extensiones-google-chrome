@@ -80,7 +80,7 @@ function pedirDatosdeContainerDetail() {
         url: `https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/${receipt}`,
       },
       response => {
-        console.log('Respuesta del fondo:', response);
+        console.log('Respuesta de background.js:', response);
       }
     );
   } else {
@@ -341,12 +341,12 @@ function actualizarReceiptDetail(datos) {
 
 // Escuchar los mensajes enviados desde el script de fondo
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === 'actualizar_datos_container') {
+  if (message.action === 'actualizar_datos_de_receipt_container_detail') {
     const datos = message.datos;
     actualizarContainerDetail(datos);
   }
 
-  if (message.action === 'actualizar_datos_receipt') {
+  if (message.action === 'actualizar_datos_de_receipt_detail') {
     const datos = message.datos;
     actualizarReceiptDetail(datos);
   }

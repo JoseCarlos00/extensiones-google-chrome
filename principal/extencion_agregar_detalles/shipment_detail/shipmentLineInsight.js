@@ -63,7 +63,7 @@ function pedirDatosdelPedido() {
         url: `https://wms.fantasiasmiguel.com.mx/scale/details/shipment/${pedido}`,
       },
       response => {
-        console.log('Respuesta del fondo:', response);
+        console.log('de background.js:', response);
       }
     );
   } else {

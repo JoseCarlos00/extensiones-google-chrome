@@ -81,6 +81,26 @@
         "https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"
       ],
       "js": ["shipping_container/containerDetail.js"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"
+      ],
+      "js": ["wave_insight/waveInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/*"
+      ],
+      "js": ["wave_insight/waveDetail.js"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"
+      ],
+      "js": ["work_insight/workInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
     }
   ],
   "action": {

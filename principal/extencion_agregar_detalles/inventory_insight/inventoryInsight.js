@@ -167,9 +167,10 @@ function solicitarDatosExternos() {
   );
 
   if (internalLocationInvElement) {
-    console.log('Se encontró el Internal Location Inv:', internalLocationInvElement.innerHTML);
-    if (internalLocationInvElement.innerHTML === '-1') {
-      alert('Internal Number: -1');
+    const internalNumberInnerrHTML = internalLocationInvElement.innerHTML;
+    console.log('Se encontró el Internal Location Inv:', internalNumberInnerrHTML);
+    if (internalNumberInnerrHTML === '-1' || internalNumberInnerrHTML === '0') {
+      alert(`Internal Number: ${internalNumberInnerrHTML}`);
       return;
     }
 
@@ -183,7 +184,7 @@ function solicitarDatosExternos() {
         url: `https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=${internalLocationInv}`,
       },
       response => {
-        console.log('Respuesta del fondo:', response);
+        console.log('Respuesta de background.js:', response);
       }
     );
   } else {
@@ -194,7 +195,7 @@ function solicitarDatosExternos() {
 
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
-  const receiptDateTimeElement = document.querySelector('#DetailPaneHeaderReceiptId');
+  const receiptDateTimeElement = document.querySelector('#DetailPaneHeaderReceiptDateTime');
   const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp');
   const dateTimeStampElement = document.querySelector('#DetailPaneHeaderDateTimeStamp');
   const allocationElement = document.querySelector('#DetailPaneHeaderAllocation');
@@ -290,7 +291,7 @@ function waitFordata() {
 
   // Definir los selectores de los elementos
   const selectors = [
-    '#DetailPaneHeaderReceiptId',
+    '#DetailPaneHeaderReceiptDateTime',
     '#DetailPaneHeaderUserStamp',
     '#DetailPaneHeaderDateTimeStamp',
     '#DetailPaneHeaderAllocation',
@@ -316,7 +317,7 @@ function actualizarInterfaz(datos) {
     datos;
 
   const elementsToUpdate = {
-    '#DetailPaneHeaderReceiptId': receivedDateTime,
+    '#DetailPaneHeaderReceiptDateTime': receivedDateTime,
     '#DetailPaneHeaderUserStamp': userStamp,
     '#DetailPaneHeaderDateTimeStamp': dateTimeStamp,
     '#DetailPaneHeaderAllocation': allocation,
