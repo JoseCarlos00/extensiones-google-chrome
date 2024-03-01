@@ -210,7 +210,7 @@ function limpiarPaneldeDetalles() {
 const htmlReceiptId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderReceiptId"
-    id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold";></label>
+    id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold;"></label>
 </div>
 `;
 

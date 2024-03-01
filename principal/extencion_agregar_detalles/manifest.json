@@ -101,6 +101,16 @@
       ],
       "js": ["work_insight/workInsight.js", "funcionesGlobales.js"],
       "css": ["style.css"]
+    },
+    {
+      "matches":[
+        "https://wms.fantasiasmiguel.com.mx/scale/details/workinstruction/*"
+      ],
+      "js":["work_insight/workDetail.js"]
+    },
+    {
+      "matches":["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error=MSG_SECURITYVIOLATION*"],
+      "js": ["errrorSegurity.js"]
     }
   ],
   "action": {

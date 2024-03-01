@@ -73,6 +73,7 @@ function observacion(tbody) {
 
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
+  if (!tr) return;
 
   const containerIdElement =
     tr.querySelector('[aria-describedby="ListPaneDataGrid_CONTAINER_ID"]') ?? null;
@@ -225,13 +226,13 @@ function waitFordata() {
 const htmlParentContainerId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderParenContainerId"
-    id="DetailPaneHeaderParenContainerId" style="color: #4f93e4 !important; font-weight: bold"></label>
+    id="DetailPaneHeaderParenContainerId" style="color: #4f93e4 !important; font-weight: bold;"></label>
 </div>`;
 
 const htmlShipmentId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderShipmentID"
-    id="DetailPaneHeaderShipmentID" style="color: #4f93e4 !important; font-weight: bold"></label>
+    id="DetailPaneHeaderShipmentID" style="color: #4f93e4 !important; font-weight: bold;"></label>
 </div>`;
 
 const htmlInternalShipmentNum = `

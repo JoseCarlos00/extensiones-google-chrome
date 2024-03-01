@@ -2,6 +2,7 @@ console.log('[FuncionesGlobales.js]');
 // Variables de estado
 let lastSelectedId = null;
 let pedirMasDetalles = false;
+let isColumnExist = false;
 
 // Escuchar el evento beforeunload para evitar que el usuario cierre la pestaña o cambie de página
 window.addEventListener('beforeunload', function (event) {

@@ -8,10 +8,9 @@ console.log('[transactionHistory.js]');
 
 function inicio() {
   const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
-  
+
   const panelDetail =
     document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1076') ?? null;
-
 
   if (!tbody) {
     console.log('El elemento tbody no existe.');
@@ -47,6 +46,7 @@ function inicio() {
 
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
+  if (!tr) return;
 
   // Obtener elementos del DOM
   const workUnitElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_WorkUnit"]');

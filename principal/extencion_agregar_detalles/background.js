@@ -126,15 +126,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         console.error('No se encontraron pestañas activas.');
       }
     });
-  }
-  //
-  // END
-});
-
-/*
-else if (message.action === 'datos_desde_wave_detail') {
-    console.log('[Shipping Container detail GET]');
-    const datosDesdeWaveDetail = message.datos;
+  } else if (message.action === 'datos_desde_workinstruction_detail') {
+    console.log('[workinstruction Detail GET]');
+    const datosDesdeWorkinstructionDetail = message.datos;
 
     // Obtener el ID de la primera pestaña
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -144,8 +138,56 @@ else if (message.action === 'datos_desde_wave_detail') {
 
         // Enviar los datos a la primera pestaña
         chrome.tabs.sendMessage(primeraPestanaID, {
-          action: 'actualizar_datos_de_wave_detail',
-          datos: datosDesdeWaveDetail,
+          action: 'actualizar_datos_de_workinstruction_detail',
+          datos: datosDesdeWorkinstructionDetail,
+        });
+      } else {
+        console.error('No se encontraron pestañas activas.');
+      }
+    });
+  } else if (message.action === 'datos_no_encontrados_desde_detail') {
+    console.log('[datos no encontrados GET]');
+
+    // Obtener el ID de la primera pestaña
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      // Verificar si hay pestañas activas
+
+      const datos = { message: 'Datos no encontrados' };
+
+      if (tabs.length > 0) {
+        const primeraPestanaID = tabs[0].id;
+
+        // Enviar los datos a la primera pestaña
+        chrome.tabs.sendMessage(primeraPestanaID, {
+          action: 'datos_no_encontrados',
+          datos: datos,
+        });
+      } else {
+        console.error('No se encontraron pestañas activas.');
+      }
+    });
+  }
+  //
+  // END
+});
+
+/*
+
+
+else if (message.action === 'datos_desde_workinstruction_detail') {
+    console.log('[workinstruction Detail GET]');
+    const datosDesdeWorkinstructionDetail = message.datos;
+
+    // Obtener el ID de la primera pestaña
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      // Verificar si hay pestañas activas
+      if (tabs.length > 0) {
+        const primeraPestanaID = tabs[0].id;
+
+        // Enviar los datos a la primera pestaña
+        chrome.tabs.sendMessage(primeraPestanaID, {
+          action: 'actualizar_datos_de_workinstruction_detail',
+          datos: datosDesdeWorkinstructionDetail,
         });
       } else {
         console.error('No se encontraron pestañas activas.');

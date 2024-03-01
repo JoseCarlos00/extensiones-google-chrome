@@ -38,6 +38,7 @@ function inicio() {
 
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
+  if (!tr) return;
 
   // Obtener elementos del DOM
   const receiptElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_RECEIPT_ID"]');
@@ -101,7 +102,7 @@ function insertarInfo(info) {
 const htmlReceiptId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderReceiptId"
-    id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold";></label>
+    id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold;"></label>
 </div>
 `;
 window.addEventListener('load', inicio, { once: true });

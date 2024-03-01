@@ -80,6 +80,7 @@ function observacion(tbody) {
 
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
+  if (!tr) return;
 
   const flowElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_WAVE_FLOW"]') ?? null;
 
