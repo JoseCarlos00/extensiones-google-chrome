@@ -1,14 +1,11 @@
-// Variables de estado
-let lastSelectedId = null;
-let pedirMasDetalles = false;
+console.log('Shipping container insight');
 
 function inicio() {
-  console.log('Shipping container insight');
 
   console.log('[Container detail]');
   const tbody = document.querySelector('#ListPaneDataGrid > tbody');
 
-  const containerDetail =
+  const panelDetail =
     document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1068') ?? null;
 
   if (!tbody) {
@@ -21,12 +18,14 @@ function inicio() {
     return;
   }
 
-  containerDetail.insertAdjacentHTML('beforeend', htmlShipmentId);
-  containerDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentNum);
-  containerDetail.insertAdjacentHTML('beforeend', htmlInternalContainerNum);
-  containerDetail.insertAdjacentHTML('beforeend', htmlUserStamp);
-  containerDetail.insertAdjacentHTML('beforeend', htmlDateCreate);
-  containerDetail.insertAdjacentHTML('beforeend', htmlVerMas);
+  panelDetail.insertAdjacentHTML('beforeend', htmlShipmentId);
+  panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentNum);
+  panelDetail.insertAdjacentHTML('beforeend', htmlInternalContainerNum);
+  panelDetail.insertAdjacentHTML('beforeend', htmlUserStamp);
+  panelDetail.insertAdjacentHTML('beforeend', htmlDateCreate);
+
+  // Funciones Globales
+  panelDetail.insertAdjacentHTML('beforeend', htmlVerMas);
 
   tbody.addEventListener('click', e => {
     const tr = e.target.closest('tr[data-id]');
@@ -265,11 +264,6 @@ const htmlUserStamp = `
 </div>
 `;
 
-const htmlVerMas = `
-<div id="ScreenControlHyperlink36456" class="ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row">
-  <a class="detailpaneheaderlabel ScreenControlHyperlink" id="verMasInfomacion" href="#"  role="buttton"style="cursor: auto; pointer-events: auto;"></a>
-</div>
-`;
 
 function actualizarInterfaz(datos) {
   console.log('[Actualizar Interfaz]');
@@ -295,7 +289,7 @@ function actualizarInterfaz(datos) {
 
 // Escuchar los mensajes enviados desde el script de fondo
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === 'actualizar_datos') {
+  if (message.action === 'actualizar_datos_shipping_container') {
     const datos = message.datos;
     actualizarInterfaz(datos);
   }

@@ -33,7 +33,7 @@ function content() {
     console.log(datos);
 
     // Enviar los datos al script de fondo
-    chrome.runtime.sendMessage({ action: 'container_detail', datos: datos });
+    chrome.runtime.sendMessage({ action: 'datos_desde_shipping_container_detail', datos: datos });
 
     setTimeout(window.close, 50);
   }, 100);

@@ -82,6 +82,25 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         console.error('No se encontraron pestañas activas.');
       }
     });
+  } else if (message.action === 'datos_desde_shipping_container_detail') {
+    console.log('[Shipping Container detail GET]');
+    const datosDesdeContainerDetail = message.datos;
+
+    // Obtener el ID de la primera pestaña
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      // Verificar si hay pestañas activas
+      if (tabs.length > 0) {
+        const primeraPestanaID = tabs[0].id;
+
+        // Enviar los datos a la primera pestaña
+        chrome.tabs.sendMessage(primeraPestanaID, {
+          action: 'actualizar_datos_shipping_container',
+          datos: datosDesdeContainerDetail,
+        });
+      } else {
+        console.error('No se encontraron pestañas activas.');
+      }
+    });
   }
 });
 

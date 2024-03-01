@@ -7,10 +7,11 @@ console.log('[transactionHistory.js]');
  */
 
 function inicio() {
+  const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
+  
   const panelDetail =
     document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1076') ?? null;
 
-  const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
 
   if (!tbody) {
     console.log('El elemento tbody no existe.');

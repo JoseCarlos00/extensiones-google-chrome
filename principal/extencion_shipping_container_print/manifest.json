@@ -25,22 +25,15 @@
     "service_worker": "background.js"
   },
   "host_permissions": [
-    "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*",
-    "https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"
+    "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"
       ],
-      "js": ["shippingContainerInsight.js", "containerPrint.js"],
+      "js": ["containerPrint.js"],
       "css": ["style.css"]
-    },
-    {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"
-      ],
-      "js": ["containerDetail.js"]
     }
     
   ],
