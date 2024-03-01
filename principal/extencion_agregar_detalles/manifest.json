@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Detalles Scale",
   "version": "1.0",
-  "description": "Agrega detalles a[Shipment line insight] - [Transaction history] - [Wave insight] - [Inventory insight] - [Work insight]",
+  "description": "Agrega detalles a[Shipment line insight] - [Transaction history] - [Wave insight] - [Inventory insight] - [Receipt line insight] - [Receipt container insight] - [Work insight]",
   "permissions": ["scripting", "activeTab", "storage", "tabs"],
   "icons": {
     "16": "images/clipBoar16.png",
@@ -49,7 +49,34 @@
         "https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"
       ],
       "js": ["inventory_insight/inventoryDetail.js"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"
+      ],
+      "js": ["receipt_detail/receiptContainerInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"
+      ],
+      "js": ["receipt_detail/containerDetail.js"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"
+      ],
+      "js": ["receipt_detail/receiptLineInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/receipt/*"
+      ],
+      "js": ["receipt_detail/receiptDetail.js"]
     }
+    
   ],
   "action": {
     "default_popup": "popup.html",
