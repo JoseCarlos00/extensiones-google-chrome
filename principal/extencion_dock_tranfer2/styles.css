@@ -127,7 +127,6 @@
   opacity: 0.7;
 }
 
-
 .container-button {
   position: absolute;
   right: 463px;
@@ -243,26 +242,15 @@
 
   .ondas {
     position: absolute;
-    width: 65px;
-    height: 65px;
-    left: 50%;
-
+    width: 100%;
+    height: 100%;
+    left: 0%;
+    top: 0;
     border-radius: 50%;
-    transform: translate(-50%, -65%);
+    background-color: #09f;
 
     animation: ondas 2.5s infinite;
-  }
-}
-
-@keyframes ondas {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 0, 255, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 0 50px rgba(0, 0, 255, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 100px rgba(0, 0, 255, 0);
+    animation-direction: reverse;
   }
 }
 
@@ -396,5 +384,16 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes ondas {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    scale: 10;
+    opacity: 0.2;
   }
 }
