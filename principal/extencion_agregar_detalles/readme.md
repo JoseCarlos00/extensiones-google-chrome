@@ -1,6 +1,6 @@
 ## Detalles Scale
 
-** Agrega detalles a: **
+**Agrega detalles a:**
 
 - **[Shipment line insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2776](https://wms.fantasiasmiguel.com.mx/scale/insights/2776)
