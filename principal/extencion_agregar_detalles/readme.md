@@ -6,7 +6,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2776](https://wms.fantasiasmiguel.com.mx/scale/insights/2776)
 
 | Fila                       | Agredas / original |
-| -------------------------- | ------------------ |
+| :------------------------- | ------------------ |
 | Shipment Id                |                    |
 | Line Number                | Original           |
 | Item                       | Original           |
@@ -24,7 +24,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2783](https://wms.fantasiasmiguel.com.mx/scale/insights/2783)
 
 | Fila              | Agredas / original |
-| ----------------- | ------------------ |
+| :---------------- | ------------------ |
 | Reference Id      | Original           |
 | Transaction Type  | Original           |
 | Location          | Original           |
@@ -41,7 +41,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2723](https://wms.fantasiasmiguel.com.mx/scale/insights/2723)
 
 | Fila                         | Agredas / original |
-| ---------------------------- | ------------------ |
+| :--------------------------- | ------------------ |
 | Location                     | Original           |
 | Item                         | Original           |
 | Item Desc                    | Original           |
@@ -63,7 +63,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2780](https://wms.fantasiasmiguel.com.mx/scale/insights/2780)
 
 | Fila                  | Agredas / original |
-| --------------------- | ------------------ |
+| :-------------------- | ------------------ |
 | Receipt Id            |                    |
 | ERP order line number | Original           |
 | Item                  | Original           |
@@ -76,7 +76,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2779](https://wms.fantasiasmiguel.com.mx/scale/insights/2779)
 
 | Fila                           | Agredas / original   |
-| ------------------------------ | -------------------- |
+| :----------------------------- | -------------------- |
 | Receipt Id                     |                      |
 | Licence Plate                  | Original             |
 | Container Type                 | Original - Si existe |
@@ -96,7 +96,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/4026](https://wms.fantasiasmiguel.com.mx/scale/insights/4026)
 
 | Fila                   | Agredas / original   |
-| ---------------------- | -------------------- |
+| :--------------------- | -------------------- |
 | Container Id           | Original - Si existe |
 | Parent container id    |                      |
 | Status                 | Original             |
@@ -115,7 +115,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2773](https://wms.fantasiasmiguel.com.mx/scale/insights/2773)
 
 | Fila                                                | Agredas / original |
-| --------------------------------------------------- | ------------------ |
+| :-------------------------------------------------- | ------------------ |
 | Wave                                                | Original           |
 | Name                                                | Original           |
 | Flow - **_Tipo de Ola_**                            |                    |
@@ -128,7 +128,7 @@
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2757](https://wms.fantasiasmiguel.com.mx/scale/insights/2757)
 
 | Fila              | Agredas / original |
-| ----------------- | ------------------ |
+| :---------------- | ------------------ |
 | Work Unit         | Original           |
 | Work Type         | Original           |
 | Condition         | Original           |
