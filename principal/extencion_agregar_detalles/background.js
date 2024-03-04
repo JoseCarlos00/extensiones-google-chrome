@@ -148,11 +148,14 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.action === 'datos_no_encontrados_desde_detail') {
     console.log('[datos no encontrados GET]');
 
+    const datos = {
+      header: message.data,
+      message: 'Datos no encontrados',
+    };
+
     // Obtener el ID de la primera pestaña
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       // Verificar si hay pestañas activas
-
-      const datos = { message: 'Datos no encontrados' };
 
       if (tabs.length > 0) {
         const primeraPestanaID = tabs[0].id;

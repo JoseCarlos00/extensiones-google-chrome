@@ -7,7 +7,7 @@ function inicio() {
     clickForElement()
       .then(input => {
         console.log(input);
-        content();
+        setTimeout(content, 100);
       })
       .catch(err => {
         console.log(err);
@@ -17,29 +17,42 @@ function inicio() {
 
 function clickForElement() {
   return new Promise((resolve, reject) => {
-    const referenceInfo = document.querySelector('#sidebar-wrapper > ul > li:nth-child(6) > a');
+    const location = document.querySelector('#sidebar-wrapper > ul > li:nth-child(5) > a');
 
-    if (!referenceInfo) {
-      referenceInfo.click();
+    if (location) {
+      location.click();
       resolve('Click con Exito');
     } else {
       reject('No existe el elemento Reference Info');
-      chrome.runtime.sendMessage({ action: 'datos_no_encontrados_desde_detail' });
     }
   });
 }
 
 function content() {
-  const userStampElement = document.querySelector(
-    '#WaveDetailsReferenceInfoSectionUserStampValueEditingInput'
+  const fromZoneElement = document.querySelector(
+    '#LocationFromZoneValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input'
+  );
+  const toZoneElement = document.querySelector(
+    '#LocationFromZoneValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input'
   );
 
   // texto a enviar
-  const userStamp = userStampElement ? userStampElement.value : '';
 
-  // Extraer los datos relevantes de la página
+  const fromZone = fromZoneElement ? fromZoneElement.value : '';
+  const toZone = toZoneElement ? toZoneElement.value : '';
+
+  if (toZone === '' && fromZone === '') {
+    chrome.runtime.sendMessage({
+      action: 'datos_no_encontrados_desde_detail',
+      data: 'Work detail',
+    });
+    setTimeout(window.close, 50);
+    return;
+  }
+
   const datos = {
-    userStamp,
+    fromZone,
+    toZone,
   };
 
   console.log(datos);

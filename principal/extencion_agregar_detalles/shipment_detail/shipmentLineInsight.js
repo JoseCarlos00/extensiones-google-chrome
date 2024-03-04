@@ -42,38 +42,10 @@ function inicio() {
   observacion(tbody);
 }
 
-function pedirDatosdelPedido() {
-  console.log('[pedirDatosdelPedido]');
-
-  let pedido = '';
-  const queryParams = `?active=active`;
-
-  const internalNumElement = document.querySelector(
-    '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_SHIPMENT_NUM"]'
-  );
-
-  if (internalNumElement) {
-    pedirMasDetalles = true;
-    waitFordata();
-    pedido = internalNumElement.innerHTML + queryParams;
-
-    chrome.runtime.sendMessage(
-      {
-        action: 'some_action',
-        url: `https://wms.fantasiasmiguel.com.mx/scale/details/shipment/${pedido}`,
-      },
-      response => {
-        console.log('de background.js:', response);
-      }
-    );
-  } else {
-    alert('No se encontró el Internal shipment  Number, por favor active la columna.');
-    console.log('No se encontró el Internal shipment  Number');
-  }
-}
-
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
+
+  if (!tr) return;
 
   // Obtener elementos del DOM
   const shipmentIdElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_SHIPMENT_ID"]');
@@ -158,7 +130,7 @@ function insertarInfo(info) {
   if (verMasElement) {
     verMasElement.innerHTML = 'Ver mas info..';
 
-    verMasElement.addEventListener('click', pedirDatosdelPedido, { once: true });
+    verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
   }
 }
 
@@ -191,6 +163,129 @@ function limpiarPaneldeDetalles() {
   dateCreateElement && (dateCreateElement.innerHTML = '');
   waveNumberElement && (waveNumberElement.innerHTML = '');
 }
+
+function waitFordata() {
+  const text = '1346-863-28886...';
+
+  // Obtener elementos del DOM
+  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
+  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
+
+  if (dateCreateElement) {
+    dateCreateElement.innerHTML = text;
+    dateCreateElement.classList.add('wait');
+  }
+
+  if (waveNumberElement) {
+    waveNumberElement.innerHTML = text;
+    waveNumberElement.classList.add('wait');
+  }
+}
+
+function removeClassWait() {
+  console.log('[Remove Class Wait]');
+
+  const text = 'No encontrado';
+
+  // Obtener elementos del DOM
+  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
+  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
+
+  if (dateCreateElement) {
+    dateCreateElement.innerHTML = text;
+    dateCreateElement.classList.remove('wait');
+  }
+
+  if (waveNumberElement) {
+    waveNumberElement.innerHTML = text;
+    waveNumberElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function actualizarInterfaz(datos) {
+  const { date, internalShipmentNumber, waveNumber } = datos;
+
+  console.log('Date:', date);
+  console.log('Internal num:', typeof internalShipmentNumber, internalShipmentNumber);
+  console.log('Wave Number:', waveNumber);
+
+  // Obtener elementos del DOM
+  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
+  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
+  const internalNumElement = document.querySelector('#DetailPaneHeaderInternalShipmetNum');
+
+  console.log(internalShipmentNumber == internalNumElement?.innerHTML);
+  console.log(
+    'Internal Element1:',
+    typeof internalNumElement.innerHTML,
+    internalNumElement.innerHTML
+  );
+
+  // Verificar si el elemento interno existe y su valor coincide
+  if (internalNumElement?.innerHTML == internalShipmentNumber) {
+    console.log('Internal Element2:', internalNumElement.innerHTML);
+    // Actualizar elementos de la interfaz si los elementos existen
+
+    if (dateCreateElement) {
+      dateCreateElement.innerHTML = date;
+      dateCreateElement.classList.remove('wait');
+    }
+
+    if (waveNumberElement) {
+      waveNumberElement.innerHTML = `Wave: ${waveNumber}`;
+      waveNumberElement.classList.remove('wait');
+    }
+  }
+
+  pedirMasDetalles = false;
+}
+
+function solicitarDatosExternos() {
+  console.log('[pedirDatosdelPedido]');
+
+  let pedido = '';
+  const queryParams = `?active=active`;
+
+  const internalNumElement = document.querySelector(
+    '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_SHIPMENT_NUM"]'
+  );
+
+  if (internalNumElement) {
+    pedirMasDetalles = true;
+    waitFordata();
+    pedido = internalNumElement.innerHTML + queryParams;
+
+    chrome.runtime.sendMessage(
+      {
+        action: 'some_action',
+        url: `https://wms.fantasiasmiguel.com.mx/scale/details/shipment/${pedido}`,
+      },
+      response => {
+        console.log('de background.js:', response);
+      }
+    );
+  } else {
+    alert('No se encontró el Internal shipment  Number, por favor active la columna.');
+    console.log('No se encontró el Internal shipment  Number');
+  }
+}
+
+// Escuchar los mensajes enviados desde el script de fondo
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.action === 'actualizar_datos_de_shipment_detail') {
+    // Actualizar la interfaz de usuario con los datos recibidos
+    const datos = message.datos;
+    // console.log('Datos:', datos);
+    actualizarInterfaz(datos);
+  } else if (message.action === 'datos_no_encontrados') {
+    const errorMessage = message.datos;
+
+    console.log('No encotrado:', errorMessage);
+    removeClassWait();
+  }
+});
 
 const htmlShipmentId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
@@ -281,71 +376,5 @@ const tiendas = {
   4346: 'Yuc-Campestre',
   364: 'Yuc-Merida',
 };
-
-function waitFordata() {
-  const text = '1346-863-28886...';
-
-  // Obtener elementos del DOM
-  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
-  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
-
-  if (dateCreateElement) {
-    dateCreateElement.innerHTML = text;
-    dateCreateElement.classList.add('wait');
-  }
-
-  if (waveNumberElement) {
-    waveNumberElement.innerHTML = text;
-    waveNumberElement.classList.add('wait');
-  }
-}
-
-function actualizarInterfaz(datos) {
-  const { date, internalShipmentNumber, waveNumber } = datos;
-
-  console.log('Date:', date);
-  console.log('Internal num:', typeof internalShipmentNumber, internalShipmentNumber);
-  console.log('Wave Number:', waveNumber);
-
-  // Obtener elementos del DOM
-  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
-  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
-  const internalNumElement = document.querySelector('#DetailPaneHeaderInternalShipmetNum');
-
-  console.log(internalShipmentNumber == internalNumElement?.innerHTML);
-  console.log(
-    'Internal Element1:',
-    typeof internalNumElement.innerHTML,
-    internalNumElement.innerHTML
-  );
-
-  // Verificar si el elemento interno existe y su valor coincide
-  if (internalNumElement?.innerHTML == internalShipmentNumber) {
-    console.log('Internal Element2:', internalNumElement.innerHTML);
-    // Actualizar elementos de la interfaz si los elementos existen
-
-    if (dateCreateElement) {
-      dateCreateElement.innerHTML = date;
-      dateCreateElement.classList.remove('wait');
-    }
-
-    if (waveNumberElement) {
-      waveNumberElement.innerHTML = `Wave: ${waveNumber}`;
-      waveNumberElement.classList.remove('wait');
-    }
-  }
-
-  pedirMasDetalles = false;
-}
-
-// Escuchar los mensajes enviados desde el script de fondo
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === 'actualizar_datos_de_shipment_detail') {
-    // Actualizar la interfaz de usuario con los datos recibidos
-    const datos = message.datos;
-    // console.log('Datos:', datos);
-    actualizarInterfaz(datos);
-  }
-});
 
 window.addEventListener('load', inicio, { once: true });

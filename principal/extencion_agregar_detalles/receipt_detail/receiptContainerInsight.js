@@ -57,85 +57,6 @@ function inicio() {
   observacion(tbody);
 }
 
-function pedirDatosdeContainerDetail() {
-  console.log('[pedirDatosdeContainerDetail]');
-  let receipt = '';
-  const queryParams = `?active=active`;
-
-  const internalContainerNumElement =
-    document.querySelector(
-      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_REC_CONT_NUM"]'
-    ) ?? null;
-
-  console.log(internalContainerNumElement?.innerHTML);
-
-  if (internalContainerNumElement) {
-    pedirMasDetalles = true;
-    waitFordataContainerDetail();
-    receipt = internalContainerNumElement.innerHTML + queryParams;
-
-    chrome.runtime.sendMessage(
-      {
-        action: 'some_action',
-        url: `https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/${receipt}`,
-      },
-      response => {
-        console.log('Respuesta de background.js:', response);
-      }
-    );
-  } else {
-    alert('No se encontró el Internal Container Number, por favor active la columna.');
-    console.log('No se encontró el Internal Container Number');
-  }
-}
-
-function pedirDatosdeReceiptDetail() {
-  console.log('[pedirDatosdeReceiptDetail]');
-
-  let receipt = '';
-  const queryParams = `?active=active`;
-
-  const internalReceiptNumElement =
-    document.querySelector(
-      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_RECEIPT_NUM"]'
-    ) ?? null;
-
-  console.log(internalReceiptNumElement?.innerHTML);
-
-  if (internalReceiptNumElement) {
-    pedirMasDetalles = true;
-    waitFordataReceiptDetail();
-    receipt = internalReceiptNumElement.innerHTML + queryParams;
-
-    chrome.runtime.sendMessage(
-      {
-        action: 'some_action',
-        url: `https://wms.fantasiasmiguel.com.mx/scale/details/receipt/${receipt}`,
-      },
-      response => {
-        console.log('Respuesta del fondo:', response);
-      }
-    );
-  } else {
-    alert('No se encontró el Internal Receipt Number, por favor active la columna.');
-    console.log('No se encontró el Internal Receipt Number');
-  }
-}
-
-function extraerDatosDeTr(tr) {
-  console.log('[extraerDatosDeTr]');
-
-  // Obtener elementos del DOM
-  const receiptElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_RECEIPT_ID"]');
-
-  const receiptID = receiptElement ? receiptElement.innerText : '';
-
-  // Llamar a insertarInfo con los datos extraídos
-  insertarInfo({
-    receiptID,
-  });
-}
-
 function observacion(tbody) {
   console.log('[Observacion]');
   // Función que se ejecutará cuando ocurra una mutación en el DOM
@@ -163,6 +84,22 @@ function observacion(tbody) {
   observer.observe(tbody, observerConfig);
 }
 
+function extraerDatosDeTr(tr) {
+  console.log('[extraerDatosDeTr]');
+
+  if (!tr) return;
+
+  // Obtener elementos del DOM
+  const receiptElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_RECEIPT_ID"]');
+
+  const receiptID = receiptElement ? receiptElement.innerText : '';
+
+  // Llamar a insertarInfo con los datos extraídos
+  insertarInfo({
+    receiptID,
+  });
+}
+
 function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
@@ -183,12 +120,6 @@ function insertarInfo(info) {
   }
 }
 
-function solicitarDatosExternos() {
-  pedirMasDetalles = true;
-  pedirDatosdeContainerDetail();
-  pedirDatosdeReceiptDetail();
-}
-
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
   const receiptIdElement = document.querySelector('#DetailPaneHeaderReceiptId');
@@ -206,48 +137,6 @@ function limpiarPaneldeDetalles() {
   userStampElement && (userStampElement.innerHTML = '');
   trailerIdElement && (trailerIdElement.innerHTML = '');
 }
-
-const htmlReceiptId = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderReceiptId"
-    id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold;"></label>
-</div>
-`;
-
-const htmlParent = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderParent"
-    id="DetailPaneHeaderParent"></label>
-</div>
-`;
-
-const htmlReceiptDate = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderReceiptDate"
-    id="DetailPaneHeaderReceiptDate"></label>
-</div>
-`;
-
-const htmlCheckIn = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderCheckIn"
-    id="DetailPaneHeaderCheckIn"></label>
-</div>
-`;
-
-const htmlUserStamp = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderUserStamp"
-    id="DetailPaneHeaderUserStamp"></label>
-</div>
-`;
-
-const htmlTrailerId = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderTrailerId"
-    id="DetailPaneHeaderTrailerId"></label>
-</div>
-`;
 
 function waitFordataContainerDetail() {
   console.log('wait: container detail');
@@ -292,6 +181,67 @@ function waitFordataReceiptDetail() {
   }
 }
 
+function removeClassWaitDeContainerDetail() {
+  console.log('[Remove Class Wait]');
+
+  const text = 'No encontrado';
+
+  // Obtener elementos del DOM
+  const parentElement = document.querySelector('#DetailPaneHeaderParent');
+  const receiptDateElement = document.querySelector('#DetailPaneHeaderReceiptDate');
+  const checkInElement = document.querySelector('#DetailPaneHeaderCheckIn');
+  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp');
+
+  if (parentElement) {
+    parentElement.innerHTML = text;
+    parentElement.classList.remove('wait');
+  }
+
+  if (receiptDateElement) {
+    receiptDateElement.innerHTML = text;
+    receiptDateElement.classList.remove('wait');
+  }
+
+  if (checkInElement) {
+    checkInElement.innerHTML = text;
+    checkInElement.classList.remove('wait');
+  }
+
+  if (userStampElement) {
+    userStampElement.innerHTML = text;
+    userStampElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function removeClassWaitDeReceiptDetail() {
+  console.log('[Remove Class Wait]');
+
+  const text = 'No encontrado';
+  const trailerIdElement = document.querySelector('#DetailPaneHeaderTrailerId');
+
+  if (trailerIdElement) {
+    trailerIdElement.innerHTML = text;
+    trailerIdElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function removeClassWait(datos) {
+  const { header } = datos;
+  console.log('[Remove Class Wait]');
+  console.log(datos);
+  if (header === 'Receipt Container Detail') {
+    removeClassWaitDeContainerDetail();
+  }
+
+  if (header === 'Receipt Detail') {
+    removeClassWaitDeReceiptDetail();
+  }
+}
+
 function actualizarContainerDetail(datos) {
   // console.log(datos);
   const { parent, receiptDate, userStamp, checkIn } = datos;
@@ -332,11 +282,81 @@ function actualizarReceiptDetail(datos) {
   const trailerIdElement = document.querySelector('#DetailPaneHeaderTrailerId');
 
   if (trailerIdElement) {
-    trailerIdElement.innerHTML = `Trailer: ${trailerId}`;
+    trailerIdElement.innerHTML = `${trailerId}`;
     trailerIdElement.classList.remove('wait');
   }
 
   pedirMasDetalles = false;
+}
+
+function pedirDatosdeContainerDetail() {
+  console.log('[pedirDatosdeContainerDetail]');
+  let receipt = '';
+  const queryParams = `?active=active`;
+
+  const internalContainerNumElement =
+    document.querySelector(
+      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_REC_CONT_NUM"]'
+    ) ?? null;
+
+  console.log(internalContainerNumElement?.innerHTML);
+
+  if (internalContainerNumElement) {
+    pedirMasDetalles = true;
+    waitFordataContainerDetail();
+    receipt = internalContainerNumElement.innerHTML + queryParams;
+
+    chrome.runtime.sendMessage(
+      {
+        action: 'some_action',
+        url: `https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/${receipt}`,
+      },
+      response => {
+        console.log('Respuesta de background 1.js:', response);
+      }
+    );
+  } else {
+    alert('No se encontró el Internal Container Number, por favor active la columna.');
+    console.log('No se encontró el Internal Container Number');
+  }
+}
+
+function pedirDatosdeReceiptDetail() {
+  console.log('[pedirDatosdeReceiptDetail]');
+
+  let receipt = '';
+  const queryParams = `?active=active`;
+
+  const internalReceiptNumElement =
+    document.querySelector(
+      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_RECEIPT_NUM"]'
+    ) ?? null;
+
+  console.log(internalReceiptNumElement?.innerHTML);
+
+  if (internalReceiptNumElement) {
+    pedirMasDetalles = true;
+    waitFordataReceiptDetail();
+    receipt = internalReceiptNumElement.innerHTML + queryParams;
+
+    chrome.runtime.sendMessage(
+      {
+        action: 'some_action',
+        url: `https://wms.fantasiasmiguel.com.mx/scale/details/receipt/${receipt}`,
+      },
+      response => {
+        console.log('Respuesta de background 2.js:', response);
+      }
+    );
+  } else {
+    alert('No se encontró el Internal Receipt Number, por favor active la columna.');
+    console.log('No se encontró el Internal Receipt Number');
+  }
+}
+
+function solicitarDatosExternos() {
+  pedirDatosdeContainerDetail();
+  pedirDatosdeReceiptDetail();
 }
 
 // Escuchar los mensajes enviados desde el script de fondo
@@ -349,7 +369,54 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.action === 'actualizar_datos_de_receipt_detail') {
     const datos = message.datos;
     actualizarReceiptDetail(datos);
+  } else if (message.action === 'datos_no_encontrados') {
+    const errorMessage = message.datos;
+
+    console.log('No encotrado:', errorMessage);
+    removeClassWait(errorMessage);
   }
 });
+
+const htmlReceiptId = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderReceiptId"
+    id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold;"></label>
+</div>
+`;
+
+const htmlParent = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderParent"
+    id="DetailPaneHeaderParent"></label>
+</div>
+`;
+
+const htmlReceiptDate = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderReceiptDate"
+    id="DetailPaneHeaderReceiptDate"></label>
+</div>
+`;
+
+const htmlCheckIn = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderCheckIn"
+    id="DetailPaneHeaderCheckIn"></label>
+</div>
+`;
+
+const htmlUserStamp = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderUserStamp"
+    id="DetailPaneHeaderUserStamp"></label>
+</div>
+`;
+
+const htmlTrailerId = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderTrailerId"
+    id="DetailPaneHeaderTrailerId"></label>
+</div>
+`;
 
 window.addEventListener('load', inicio, { once: true });

@@ -7,7 +7,7 @@ function inicio() {
     clickForElement()
       .then(input => {
         console.log(input);
-        content();
+        setTimeout(content, 100);
       })
       .catch(err => {
         console.log(err);
@@ -36,7 +36,15 @@ function content() {
   // texto a enviar
   const userStamp = userStampElement ? userStampElement.value : '';
 
-  // Extraer los datos relevantes de la página
+  if (userStamp === '') {
+    chrome.runtime.sendMessage({
+      action: 'datos_no_encontrados_desde_detail',
+      data: 'Wave detail',
+    });
+    setTimeout(window.close, 50);
+    return;
+  }
+
   const datos = {
     userStamp,
   };

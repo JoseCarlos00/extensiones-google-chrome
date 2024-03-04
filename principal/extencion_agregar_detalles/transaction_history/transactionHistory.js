@@ -92,18 +92,6 @@ function observacion(tbody) {
   observer.observe(tbody, observerConfig);
 }
 
-function limpiarPaneldeDetalles() {
-  // Obtener elementos del DOM
-  const workUnitElement = document.querySelector('#DetailPaneHeaderWorkUnit');
-  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerId');
-  const userNameElement = document.querySelector('#DetailPaneHeaderUserStamp');
-
-  // Limpiar el contenido de los elementos si existen
-  workUnitElement && (workUnitElement.innerHTML = '');
-  containerIdElement && (containerIdElement.innerHTML = '');
-  userNameElement && (userNameElement.innerHTML = '');
-}
-
 function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
@@ -119,6 +107,18 @@ function insertarInfo(info) {
   workUnitElement && (workUnitElement.innerHTML = `${workUnit}`);
   containerIdElement && (containerIdElement.innerHTML = `${containerId}`);
   userNameElement && (userNameElement.innerHTML = `${userName}`);
+}
+
+function limpiarPaneldeDetalles() {
+  // Obtener elementos del DOM
+  const workUnitElement = document.querySelector('#DetailPaneHeaderWorkUnit');
+  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerId');
+  const userNameElement = document.querySelector('#DetailPaneHeaderUserStamp');
+
+  // Limpiar el contenido de los elementos si existen
+  workUnitElement && (workUnitElement.innerHTML = '');
+  containerIdElement && (containerIdElement.innerHTML = '');
+  userNameElement && (userNameElement.innerHTML = '');
 }
 
 const htmlWorkUnit = `

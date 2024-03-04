@@ -82,6 +82,17 @@ function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
   if (!tr) return;
 
+  // Fila de resumen de agrupamiento
+  const trTitle = tr.getAttribute('title');
+
+  console.log('trTitle:', trTitle);
+  if (trTitle) {
+    if (trTitle === 'Fila de resumen de agrupamiento') {
+      limpiarPaneldeDetalles();
+      return;
+    }
+  }
+
   const flowElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_WAVE_FLOW"]') ?? null;
 
   const endedDateTimeElement =
@@ -126,10 +137,57 @@ function limpiarPaneldeDetalles() {
   const EndedDateTimeElement = document.querySelector('#DetailPaneHeaderEndedDateTime') ?? null;
   const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp') ?? null;
 
+  const verMasElement = document.querySelector('#verMasInfomacion');
+
   // Limpiar el contenido de los elementos si existen
   flowElement && (flowElement.innerHTML = '');
   EndedDateTimeElement && (EndedDateTimeElement.innerHTML = '');
   userStampElement && (userStampElement.innerHTML = '');
+
+  verMasElement && (verMasElement.innerHTML = '');
+}
+
+function waitFordata() {
+  console.log('[wait for data]');
+  const text = '1346-863-28886...';
+
+  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp') ?? null;
+
+  if (userStampElement) {
+    userStampElement.innerHTML = text;
+    userStampElement.classList.add('wait');
+  }
+}
+
+function removeClassWait() {
+  console.log('[Remove Class Wait]');
+  const text = 'No encontrado';
+
+  // Obtener elementos del DOM
+  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp') ?? null;
+
+  if (userStampElement) {
+    userStampElement.innerHTML = text;
+    userStampElement.classList.add('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function actualizarInterfaz(datos) {
+  console.log('[Actualizar Interfaz]');
+
+  const { userStamp } = datos;
+
+  // Obtener elementos del DOM
+  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp') ?? null;
+
+  if (userStampElement) {
+    userStampElement.innerHTML = userStamp;
+    userStampElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
 }
 
 function solicitarDatosExternos() {
@@ -163,17 +221,18 @@ function solicitarDatosExternos() {
   }
 }
 
-function waitFordata() {
-  console.log('[wait for data]');
-  const text = '1346-863-28886...';
+// Escuchar los mensajes enviados desde el script de fondo
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.action === 'actualizar_datos_de_wave_detail') {
+    const datos = message.datos;
+    actualizarInterfaz(datos);
+  } else if (message.action === 'datos_no_encontrados') {
+    const errorMessage = message.datos;
 
-  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp') ?? null;
-
-  if (userStampElement) {
-    userStampElement.innerHTML = text;
-    userStampElement.classList.add('wait');
+    console.log('No encotrado:', errorMessage);
+    removeClassWait();
   }
-}
+});
 
 const htmlParentFlow = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
@@ -192,29 +251,5 @@ const htmlUserStamp = `
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderUserStamp"
     id="DetailPaneHeaderUserStamp"></label>
 </div>`;
-
-function actualizarInterfaz(datos) {
-  console.log('[Actualizar Interfaz]');
-
-  const { userStamp } = datos;
-
-  // Obtener elementos del DOM
-  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp') ?? null;
-
-  if (userStampElement) {
-    userStampElement.innerHTML = userStamp;
-    userStampElement.classList.remove('wait');
-  }
-
-  pedirMasDetalles = false;
-}
-
-// Escuchar los mensajes enviados desde el script de fondo
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === 'actualizar_datos_de_wave_detail') {
-    const datos = message.datos;
-    actualizarInterfaz(datos);
-  }
-});
 
 window.addEventListener('load', inicio, { once: true });

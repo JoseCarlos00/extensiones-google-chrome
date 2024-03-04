@@ -76,6 +76,23 @@ function content() {
       dateTimeStamp,
     };
 
+    if (
+      receivedDateTime === '' &&
+      attribute1 === '' &&
+      allocation === '' &&
+      locating === '' &&
+      workZone === '' &&
+      userStamp === '' &&
+      dateTimeStamp === ''
+    ) {
+      chrome.runtime.sendMessage({
+        action: 'datos_no_encontrados_desde_detail',
+        data: 'Inventory Detail',
+      });
+      setTimeout(window.close, 50);
+      return;
+    }
+
     console.log(datos);
 
     // Enviar los datos al script de fondo

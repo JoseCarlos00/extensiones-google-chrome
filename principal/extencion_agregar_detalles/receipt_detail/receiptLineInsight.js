@@ -105,4 +105,5 @@ const htmlReceiptId = `
     id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold;"></label>
 </div>
 `;
+
 window.addEventListener('load', inicio, { once: true });

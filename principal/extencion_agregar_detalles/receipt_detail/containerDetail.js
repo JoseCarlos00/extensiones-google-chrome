@@ -1,5 +1,5 @@
 function inicio() {
-  console.log('[Container Detail]');
+  console.log('[Receipt Container Detail]');
   const urlParams = new URLSearchParams(window.location.search);
   const activeParam = urlParams.get('active');
 
@@ -9,23 +9,34 @@ function inicio() {
 }
 
 function content() {
-  const referenceInfo = document.querySelector('#sidebar-wrapper > ul > li:nth-child(8) > a');
-  const dates = document.querySelector('#sidebar-wrapper > ul > li:nth-child(6) > a');
+  const elements = [
+    document.querySelector('#sidebar-wrapper > ul > li:nth-child(6) > a'),
+    document.querySelector('#sidebar-wrapper > ul > li:nth-child(8) > a'),
+  ];
 
-  if (referenceInfo && dates) {
-    dates.click();
-    setTimeout(() => {
-      referenceInfo.click();
-    }, 100);
+  function clickElement(element) {
+    return new Promise((resolve, reject) => {
+      if (element) {
+        element.click();
+        setTimeout(resolve, 250);
+      } else {
+        reject('Elemento no encontrado');
+      }
+    });
   }
 
-  // texto a enviar
-  let parent = '';
-  let receiptDate = '';
-  let userStamp = '';
-  let checkIn = '';
+  function clickElementsSequentially() {
+    let promiseChain = Promise.resolve();
 
-  setTimeout(() => {
+    elements.forEach(element => {
+      promiseChain = promiseChain.then(() => clickElement(element));
+      // console.log('promiseChain1:', promiseChain);
+    });
+    // console.log('promiseChain2:', promiseChain);
+    return promiseChain;
+  }
+
+  function insertarInfo() {
     // Obtener elementos del DOM
     const parentElement = document.querySelector(
       '#ReceiptContParentContSectionParentContIdValueEditingInput'
@@ -40,13 +51,23 @@ function content() {
       '#ReferenceInfoSectionDateTimeStampValueEditingInput'
     );
 
-    parentElement && (parent = parentElement.value);
-    receiptDateElement && (receiptDate = receiptDateElement.value);
-    userStampElement && (userStamp = userStampElement.value);
-    checkInElement && (checkIn = checkInElement.value);
+    // texto a enviar
+    const parent = parentElement ? parentElement.value : '';
+    const receiptDate = receiptDateElement ? receiptDateElement.value : '';
+    const userStamp = userStampElement ? userStampElement.value : '';
+    const checkIn = checkInElement ? checkInElement.value : '';
+
+    if (parent === '' && receiptDate === '' && userStamp === '' && checkIn === '') {
+      chrome.runtime.sendMessage({
+        action: 'datos_no_encontrados_desde_detail',
+        data: 'Receipt Container Detail',
+      });
+      setTimeout(window.close, 50);
+      return;
+    }
 
     // Extraer los datos relevantes de la página
-    let datos = {
+    const datos = {
       parent,
       receiptDate,
       userStamp,
@@ -59,7 +80,16 @@ function content() {
     chrome.runtime.sendMessage({ action: 'datos_desde_receipt_container_detail', datos: datos });
 
     setTimeout(window.close, 50);
-  }, 250);
+  }
+
+  clickElementsSequentially()
+    .then(() => {
+      console.log('Todos los elementos han sido clicados.');
+      insertarInfo();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 }
 
 window.addEventListener('load', inicio);

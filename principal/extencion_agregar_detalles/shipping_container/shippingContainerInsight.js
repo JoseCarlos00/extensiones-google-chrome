@@ -147,7 +147,7 @@ function insertarInfo(info) {
   if (verMasElement) {
     verMasElement.innerHTML = 'Ver mas info..';
 
-    verMasElement.addEventListener('click', pedirDatosdeShippingContainerDetail, { once: true });
+    verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
   }
 }
 
@@ -174,37 +174,6 @@ function limpiarPaneldeDetalles() {
   userStampElement && (userStampElement.innerHTML = '');
 }
 
-function pedirDatosdeShippingContainerDetail() {
-  console.log('[pedirDatosdeShippingContainerDetail]');
-
-  let receipt = '';
-  const queryParams = `?active=active`;
-
-  const internalContainerNumElement =
-    document.querySelector(
-      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_CONTAINER_NUM"]'
-    ) ?? null;
-
-  if (internalContainerNumElement) {
-    pedirMasDetalles = true;
-    waitFordata();
-    receipt = internalContainerNumElement.innerHTML + queryParams;
-
-    chrome.runtime.sendMessage(
-      {
-        action: 'some_action',
-        url: `https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/${receipt}`,
-      },
-      response => {
-        console.log('Respuesta del fondo:', response);
-      }
-    );
-  } else {
-    alert('No se encontró el Internal Container Numbrer, por favor active la columna.');
-    console.log('No se encontró el Internal Container Numbrer');
-  }
-}
-
 function waitFordata() {
   console.log('[wait for data]');
   const text = '1346-863-28886...';
@@ -222,6 +191,93 @@ function waitFordata() {
     userStampElement.classList.add('wait');
   }
 }
+
+function removeClassWait() {
+  console.log('[Remove Class Wait]');
+
+  const text = 'No encontrado';
+
+  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
+  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp');
+
+  if (dateCreateElement) {
+    dateCreateElement.innerHTML = text;
+    dateCreateElement.classList.remove('wait');
+  }
+
+  if (userStampElement) {
+    userStampElement.innerHTML = text;
+    userStampElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function actualizarInterfaz(datos) {
+  console.log('[Actualizar Interfaz]');
+
+  const { dateTimeStamp, userStamp } = datos;
+
+  // Obtener elementos del DOM
+  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
+  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp');
+
+  if (dateCreateElement) {
+    dateCreateElement.innerHTML = dateTimeStamp;
+    dateCreateElement.classList.remove('wait');
+  }
+
+  if (userStampElement) {
+    userStampElement.innerHTML = userStamp;
+    userStampElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function solicitarDatosExternos() {
+  console.log('[pedirDatosdeShippingContainerDetail]');
+
+  let internalNUm = '';
+  const queryParams = `?active=active`;
+
+  const internalContainerNumElement =
+    document.querySelector(
+      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_INTERNAL_CONTAINER_NUM"]'
+    ) ?? null;
+
+  if (internalContainerNumElement) {
+    pedirMasDetalles = true;
+    waitFordata();
+    internalNUm = internalContainerNumElement.innerHTML + queryParams;
+
+    chrome.runtime.sendMessage(
+      {
+        action: 'some_action',
+        url: `https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/${internalNUm}`,
+      },
+      response => {
+        console.log('Respuesta del fondo:', response);
+      }
+    );
+  } else {
+    alert('No se encontró el Internal Container Numbrer, por favor active la columna.');
+    console.log('No se encontró el Internal Container Numbrer');
+  }
+}
+
+// Escuchar los mensajes enviados desde el script de fondo
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.action === 'actualizar_datos_shipping_container') {
+    const datos = message.datos;
+    actualizarInterfaz(datos);
+  } else if (message.action === 'datos_no_encontrados') {
+    const errorMessage = message.datos;
+
+    console.log('No encotrado:', errorMessage);
+    removeClassWait();
+  }
+});
 
 const htmlParentContainerId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
@@ -260,35 +316,5 @@ const htmlUserStamp = `
     id="DetailPaneHeaderUserStamp"></label>
 </div>
 `;
-
-function actualizarInterfaz(datos) {
-  console.log('[Actualizar Interfaz]');
-
-  const { date, userStamp } = datos;
-
-  // Obtener elementos del DOM
-  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
-  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp');
-
-  if (dateCreateElement) {
-    dateCreateElement.innerHTML = date;
-    dateCreateElement.classList.remove('wait');
-  }
-
-  if (userStampElement) {
-    userStampElement.innerHTML = userStamp;
-    userStampElement.classList.remove('wait');
-  }
-
-  pedirMasDetalles = false;
-}
-
-// Escuchar los mensajes enviados desde el script de fondo
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === 'actualizar_datos_shipping_container') {
-    const datos = message.datos;
-    actualizarInterfaz(datos);
-  }
-});
 
 window.addEventListener('load', inicio, { once: true });

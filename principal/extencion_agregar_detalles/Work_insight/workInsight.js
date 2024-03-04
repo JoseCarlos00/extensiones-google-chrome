@@ -90,6 +90,17 @@ function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
   if (!tr) return;
 
+  // Fila de resumen de agrupamiento
+  const trTitle = tr.getAttribute('title');
+
+  console.log('trTitle:', trTitle);
+  if (trTitle) {
+    if (trTitle === 'Fila de resumen de agrupamiento') {
+      limpiarPaneldeDetalles();
+      return;
+    }
+  }
+
   const referenceIdElement =
     tr.querySelector('[aria-describedby="ListPaneDataGrid_REFERENCE_ID"]') ?? null;
 
@@ -119,7 +130,6 @@ function extraerDatosDeTr(tr) {
 function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
-
   const { referenceId, assignedUser, waveNumber, completedByUser } = info;
 
   // Obtener elementos del DOM
@@ -153,6 +163,8 @@ function limpiarPaneldeDetalles() {
   const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
   const toZoneElement = document.querySelector('#DetailPaneHeaderToZone') ?? null;
 
+  const verMasElement = document.querySelector('#verMasInfomacion');
+
   // Limpiar el contenido de los elementos si existen
   referenceIdElement && (referenceIdElement.innerHTML = '');
   assgnedUserElement && (assgnedUserElement.innerHTML = '');
@@ -161,6 +173,8 @@ function limpiarPaneldeDetalles() {
 
   fromZoneElement && (fromZoneElement.innerHTML = '');
   toZoneElement && (toZoneElement.innerHTML = '');
+
+  verMasElement && (verMasElement.innerHTML = '');
 }
 
 function waitFordata() {
@@ -181,6 +195,27 @@ function waitFordata() {
   }
 }
 
+function removeClassWait() {
+  console.log('[Remove Class Wait]');
+  const text = 'No encontrado';
+
+  // Obtener elementos del DOM
+  const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
+  const toZoneElement = document.querySelector('#DetailPaneHeaderToZone') ?? null;
+
+  if (fromZoneElement) {
+    fromZoneElement.innerHTML = text;
+    fromZoneElement.classList.remove('wait');
+  }
+
+  if (toZoneElement) {
+    toZoneElement.innerHTML = text;
+    toZoneElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
 function actualizarInterfaz(datos) {
   console.log('[Actualizar Interfaz]');
 
@@ -197,26 +232,6 @@ function actualizarInterfaz(datos) {
 
   if (toZoneElement) {
     toZoneElement.innerHTML = toZone;
-    toZoneElement.classList.remove('wait');
-  }
-
-  pedirMasDetalles = false;
-}
-
-function removeClassWait() {
-  console.log('[Remove Class Wait]');
-
-  // Obtener elementos del DOM
-  const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
-  const toZoneElement = document.querySelector('#DetailPaneHeaderToZone') ?? null;
-
-  if (fromZoneElement) {
-    fromZoneElement.innerHTML = '';
-    fromZoneElement.classList.remove('wait');
-  }
-
-  if (toZoneElement) {
-    toZoneElement.innerHTML = '';
     toZoneElement.classList.remove('wait');
   }
 
