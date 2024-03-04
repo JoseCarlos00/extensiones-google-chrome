@@ -136,11 +136,11 @@
 | Item              | Original           |
 | Item Desc         | Original           |
 | Company           | Original           |
-| Reference Id      |
-| Assigned User     |
-| Wave Number       |
-| Completed By User |
-| From zone         |
-| To zone           |
+| Reference Id      |                    |
+| Assigned User     |                    |
+| Wave Number       |                    |
+| Completed By User |                    |
+| From zone         |                    |
+| To zone           |                    |
 
 ---
