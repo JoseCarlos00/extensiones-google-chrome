@@ -1,0 +1,231 @@
+/* Content.js */
+.guia {
+  height: 1400px !important;
+  width: 1600px;
+}
+
+.container.inv-container {
+  overflow: hidden;
+}
+
+.textarea-container {
+  position: relative;
+  right: 39px;
+  top: 28px;
+  z-index: 10;
+
+  animation: entradaElemento 0.5s ease-in-out;
+}
+
+.textarea {
+  position: absolute;
+  resize: none;
+  min-height: 206px;
+  height: 254px;
+  width: 200px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.next-button {
+  cursor: pointer;
+  position: absolute;
+  top: -28px;
+  right: -24px;
+  padding: 3px 3px !important;
+  font-size: 15px;
+}
+
+.container-numPedidos {
+  position: absolute;
+  top: 0;
+  right: 15px;
+
+  & .numPedidos {
+    font-weight: bold;
+  }
+}
+
+.button {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 15px;
+  background-color: #007acc;
+  outline: 3px #007acc solid;
+  outline-offset: -3px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 400ms;
+}
+
+.button .text {
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+  transition: 400ms;
+  margin: 0;
+}
+
+.button:hover {
+  background-color: transparent;
+}
+
+.button:hover .text {
+  color: #007acc;
+}
+
+.pd-left {
+  padding-left: 15px;
+}
+
+@media print {
+  .next-button {
+    display: none;
+  }
+
+  .container-numPedidos {
+    display: none;
+  }
+
+  .textarea {
+    border: none;
+  }
+
+  .container-principal {
+    display: none;
+  }
+
+  body > div:nth-child(7) > div:nth-child(2) > div:nth-child(2) {
+    flex: 0 0 58.33333%;
+    max-width: 58.33333%;
+  }
+}
+
+/* Popup.js */
+.container-file-upload-form {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  width: 200px;
+  margin: 20px 0;
+
+  animation: entradaElemento 0.5s ease-in-out;
+}
+
+.file-upload-form {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.file-upload-label input {
+  display: none;
+}
+.file-upload-label svg {
+  height: 36px;
+  margin-bottom: 1px;
+}
+.file-upload-label {
+  cursor: pointer;
+  background-color: #ddd;
+  padding: 15px 35px;
+  border-radius: 40px;
+  border: 2px dashed rgb(82, 82, 82);
+  box-shadow: 0px 0px 200px -50px rgba(0, 0, 0, 0.719);
+  transition: border 0.3s ease-in-out;
+}
+
+/* Estilo de borde cuando se arrastra un archivo */
+.container-file-upload-form.drag-over .file-upload-label {
+  border: 2px solid #4caf50;
+}
+
+.container-file-upload-form.drag-over .file-upload-design {
+  opacity: 0.2;
+}
+.container-file-upload-form.drag-over::before {
+  content: 'Suelta el archivo aquí';
+  position: absolute;
+  font-family: cursive;
+  font-size: 1.4rem;
+  padding: 0px 3px 14px 34px;
+}
+.file-upload-design {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-upload-design svg:hover path:nth-child(1) {
+  fill: #fff !important; /* Cambia el color de relleno a blanco al hacer hover en el contenedor */
+  stroke: #000 !important;
+}
+
+.file-upload-design svg:hover path:nth-child(2) {
+  fill: #007acc !important; /* Cambia el color de relleno a azul al hacer hover en el contenedor */
+}
+.browse-button {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 15px;
+  background-color: #007acc;
+  outline: 3px #007acc solid;
+  outline-offset: -3px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 400ms;
+
+  padding: 2px 10px;
+  color: white;
+}
+.browse-button-text {
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+  transition: 400ms;
+  margin: 0;
+}
+.browse-button:hover {
+  background-color: #fff;
+}
+.browse-button:hover .browse-button-text {
+  color: #007acc;
+}
+.file-upoad-label-text {
+  margin: 0;
+  padding: 0;
+}
+
+#insertar {
+  position: absolute;
+  height: 36px;
+  right: -112px;
+  bottom: 0;
+}
+
+@media print {
+  .file-upload-form {
+    display: none;
+  }
+}
+
+@keyframes entradaElemento {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

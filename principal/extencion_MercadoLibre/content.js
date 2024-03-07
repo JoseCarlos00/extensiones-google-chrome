@@ -1,124 +1,5 @@
 (function () {
   function inicio() {
-    const head = document.querySelector('head');
-    const style = `
-    <style>
-    #registroForm {
-      display: flex;
-      flex-direction: column;
-      width: 400px;
-      gap: 8px;
-
-      & button {
-        align-self: center;
-        height: 36px;
-      }
-
-      & label {
-        margin: 0;
-        padding-top: 4px;
-      }
-    }
-
-    .textarea-container{
-      position: relative;
-      right: 39px;
-      top: -65px;
-      z-index: 10;
-    }
-    
-    .textarea {
-      position: absolute;
-      resize: none;
-      min-height: 206px;
-      height: 254px;
-      width: 200px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .next-button {
-      cursor: pointer;
-      position: absolute;
-      top: 0;
-      right: -60px;
-      padding: 3px 3px !important;
-      font-size: 15px;
-    }
-
-
-    .container-numPedidos {
-      position: absolute;
-      top: 0;
-      right: 15px;
-
-      & .numPedidos {
-        font-weight: bold;
-      }
-    }
-
-    .button {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 10px 15px;
-      gap: 15px;
-      background-color: #007ACC;
-      outline: 3px #007ACC solid;
-      outline-offset: -3px;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      transition: 400ms;
-    }
-    
-    .button .text {
-      color: white;
-      font-weight: 700;
-      font-size: 1em;
-      transition: 400ms;
-      margin: 0;
-    }
-    
-    .button:hover {
-      background-color: transparent;
-    }
-    
-    .button:hover .text {
-      color: #007ACC;
-    }
-    
-
-    @media print {
-      #registroForm {
-          display: none;
-      }
-
-      .next-button {
-        display: none;
-      }
-
-      .container-numPedidos {
-        display: none;
-      }
-
-      .textarea {
-        border: none
-      }
-
-      body > deepl-input-controller {
-        display: none;
-      }
-
-      .container-principal {
-        display: none;
-      }
-      
-    }
-    </style>
-    `;
-    head.insertAdjacentHTML('beforeend', style);
-
     const textarea = `
       <div class="col col-2 textarea-container">
         <textarea class="textarea" spellcheck="false" data-ms-editor="true"></textarea>
@@ -186,11 +67,11 @@
     `;
 
     document.querySelector('body').insertAdjacentHTML('afterbegin', containerPrincipal);
-    document.querySelector('.container-principal').insertAdjacentHTML('beforeend', formulario);
+    // document.querySelector('.container-principal').insertAdjacentHTML('beforeend', formulario);
 
     // Objeto para almacenar los datos
     const datos = {};
-    document.querySelector('#registrarPedidos').addEventListener('click', registrarDatos);
+    // document.querySelector('#registrarPedidos').addEventListener('click', registrarDatos);
 
     function registrarDatos() {
       const workPedido = document.getElementById('workPedido').value;

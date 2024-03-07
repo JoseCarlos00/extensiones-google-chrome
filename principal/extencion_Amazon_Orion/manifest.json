@@ -16,6 +16,7 @@
           "http://fmorion.dnsalias.com/orion/paginas/AppServicios/ImprAmazon.aspx?PedidoNum=*"
         ],
         "js": ["content.js", "popup.js", "xlsx.full.min.js"],
+        "css": ["style.css"],
         "run_at": "document_end"
       }
     ],
