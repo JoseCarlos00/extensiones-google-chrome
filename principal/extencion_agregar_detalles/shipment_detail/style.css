@@ -12,3 +12,8 @@
     margin-bottom: 8px;
   }
 }
+
+#DetailPaneHeaderLoadNumber a {
+  color: #4f93e4 !important;
+  font-weight: bold;
+}

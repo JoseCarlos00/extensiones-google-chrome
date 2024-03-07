@@ -28,6 +28,11 @@
       "js": ["shipment_detail/shipmentDetail.js"]
     },
     {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
+      "js": ["shipment_detail/shipmentInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css", "shipment_detail/style.css"]
+    },
+    {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
       "js": [
         "transaction_history/transactionHistory.js",

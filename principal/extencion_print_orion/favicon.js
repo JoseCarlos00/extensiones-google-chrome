@@ -8,6 +8,11 @@
     if (head) {
       head.insertAdjacentHTML('afterbegin', favicon);
     }
+
+    const NOMBRE = document.querySelector('#lblNombreUsuario') ?? undefined;
+    if (NOMBRE && NOMBRE.innerHTML.includes('Octavio')) {
+      NOMBRE.innerHTML = 'Octavio Ameneyro';
+    }
   }
 
   window.addEventListener('load', inicio, { once: true });

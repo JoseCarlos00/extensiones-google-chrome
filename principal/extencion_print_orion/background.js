@@ -1,14 +1,10 @@
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.action.setBadgeText({
-      text: "ON",
-    });
+  chrome.action.setBadgeText({
+    text: 'ON',
   });
+});
 
-
-const inventory = "http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx";
-const envio = "http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*";
-
-chrome.action.onClicked.addListener(async (tab) => {
+chrome.action.onClicked.addListener(async tab => {
   // Comprueba si la URL de la pestaña actual comienza con las URLs de extensiones o la envio de Chrome.
   if (tab.url.startsWith(inventory) || tab.url.startsWith(envio)) {
     // Obtiene el texto del distintivo (badge) de acción actual para verificar si la extensión está en 'ON' o 'OFF'.
@@ -22,4 +18,4 @@ chrome.action.onClicked.addListener(async (tab) => {
       text: nextState,
     });
   }
-});  
+});

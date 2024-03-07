@@ -1,0 +1,142 @@
+/** Envio */
+@media print {
+  table#gvEnvio_ctl00 {
+    border-color: #000 !important;
+
+    .rgHeader {
+      border-color: #000 !important;
+      font-weight: bold !important;
+    }
+
+    .rgHeader,
+    .rgHeader > a {
+      color: #000 !important;
+    }
+
+    tbody {
+      font-weight: bold !important;
+    }
+
+    .rgRow td,
+    .rgAltRow td {
+      border-color: #000 !important;
+    }
+  }
+
+  .main.container-fluid .d-flex.bd-highlight .btn,
+  #btnGuardarEnvio,
+  #btnComentario {
+    color: #000 !important;
+    border: 1px solid #000 !important;
+  }
+
+  .main-overview {
+    .overview-card .btn-link {
+      font-weight: bold;
+      color: #000 !important;
+    }
+
+    .custom-select:disabled {
+      color: #000 !important;
+      font-weight: bold !important;
+      border: 1px solid #000 !important;
+    }
+  }
+
+  #btnGuardarEnvio > i,
+  #btnEnviarEnvio > i {
+    padding-right: 8px !important;
+  }
+
+  #frmEnvio > div:nth-child(59),
+  footer.footer,
+  #divImpresionRepCotizacion
+    > table
+    > tbody
+    > tr:is(:nth-child(3), :nth-child(4), :nth-child(5), :nth-child(6), :nth-child(7)) {
+    display: none;
+  }
+
+  .table tr th {
+    vertical-align: baseline !important;
+  }
+
+  .container-work-unit .work-unit textarea {
+    resize: none;
+  }
+} /* Fin del print */
+
+/* Otros styles */
+#UpdatePanel > div.t-container.t-container-static table tr td:nth-child(3) table {
+  border: none !important;
+}
+
+#UpdatePanel > div.t-container.t-container-static table tr td:nth-child(3) table tbody {
+  display: flex;
+  width: max-content;
+  border-top: transparent;
+  border-left: transparent;
+  border-right: transparent;
+
+  span {
+    color: #000 !important;
+  }
+
+  tr:nth-child(1) {
+    td {
+      background-color: transparent !important;
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+  }
+
+  tr:nth-child(2) {
+    span {
+      padding-left: 8px !important;
+      padding-right: 4px !important;
+    }
+  }
+}
+
+div.p-2.bd-highlight button i {
+  padding-right: 4px;
+}
+
+.container-work-unit {
+  position: absolute;
+  right: 100px;
+  top: 286px;
+  font-size: 34px;
+  z-index: 10;
+}
+.work-unit {
+  animation: entradaElemento 0.5s ease-in-out;
+  display: flex;
+
+  textarea {
+    font-weight: bold;
+    font-size: 34px;
+    width: 220px;
+    border: transparent;
+    padding-left: 4px;
+    padding-top: 8px;
+    overflow: hidden;
+    height: 80px;
+    resize: vertical;
+  }
+
+  .animarTexto {
+    animation: entradaElemento 0.5s ease-in-out;
+  }
+}
+
+@keyframes entradaElemento {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

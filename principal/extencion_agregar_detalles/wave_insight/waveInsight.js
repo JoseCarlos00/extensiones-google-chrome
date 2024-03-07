@@ -60,7 +60,7 @@ function observacion(tbody) {
 
     if (mutationsList[0]) {
       const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]');
-      extraerDatosDeTr(trSelected);
+      if (trSelected) extraerDatosDeTr(trSelected);
     }
   }
 

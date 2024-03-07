@@ -1,21 +1,46 @@
 {
     "manifest_version": 3,
     "name": "Print Orion",
-    "version": "2.0",
+    "version": "3.0",
     "description": "Imprime un pedido de la lista de envio. y La paguina de Inventario por Bodega",
-    "permissions": ["scripting", "activeTab"],
+    "permissions": ["scripting", "activeTab", "storage"],
     "icons": {
       "16": "images/print16.png",
       "32": "images/print32.png",
       "48": "images/print48.png",
       "128": "images/print128.png"
     },
+    "host_permissions": ["http://fmorion.dnsalias.com/*"],
     "content_scripts": [
       {
         "matches": [
           "http://fmorion.dnsalias.com/*"
         ],
-        "js": ["content.js", "popup.js", "favicon.js"]
+        "js": ["favicon.js"]
+      },
+      {
+        "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/Productos3Cajas.aspx*"],
+        "js":["reporte3Cajas.js"],
+        "css": ["reporte3Cajas.css"]
+      },
+      {
+        "matches":["http://fmorion.dnsalias.com/orion/paginas/Envios/EnviosListas.aspx"],
+        "js":["listaEnvios.js"]
+      },
+      {
+        "matches":["http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"],
+        "js":["enviosItems.js"],
+        "css": ["envioItem.css"]
+      },
+      {
+        "matches":["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx*"],
+        "js":["InventarioBodega.js"],
+        "css": ["inventory.css"]
+      },
+      {
+        "matches":["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN.aspx*"],
+        "js":["InventarioBodegaN.js"],
+        "css": ["inventory.css"]
       }
     ],
     "action": {

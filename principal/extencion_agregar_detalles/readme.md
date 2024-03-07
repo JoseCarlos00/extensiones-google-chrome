@@ -2,7 +2,7 @@
 
 **Agrega detalles a:**
 
-- **[Shipment line insight]**
+- **[Shipment Line Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2776](https://wms.fantasiasmiguel.com.mx/scale/insights/2776)
 
 | Fila                       | Agredas / original |
@@ -20,7 +20,26 @@
 
 ---
 
-- **[Transaction history]**
+- **[Shipment Insight]**
+  > [https://wms.fantasiasmiguel.com.mx/scale/insights/2735](https://wms.fantasiasmiguel.com.mx/scale/insights/2735)
+
+| Fila                             | Agredas / original |
+| :------------------------------- | ------------------ |
+| Shipment Id                      | Original           |
+| Customer Name                    | Original           |
+| Ship To                          | Original           |
+| Carrier                          | Original           |
+| Carrier Service                  | Original           |
+| Trailing Status                  | Original           |
+| Leading Status                   | Original           |
+| Load Number                      |                    |
+| User Defined Fiel 3 - **_Pack_** |                    |
+| Wave Number                      |                    |
+| Internal Shipment Number         |                    |
+
+---
+
+- **[Transaction History]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2783](https://wms.fantasiasmiguel.com.mx/scale/insights/2783)
 
 | Fila              | Agredas / original |
@@ -37,7 +56,7 @@
 
 ---
 
-- **[Inventory insight]**
+- **[Inventory Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2723](https://wms.fantasiasmiguel.com.mx/scale/insights/2723)
 
 | Fila                         | Agredas / original |
@@ -59,7 +78,7 @@
 
 ---
 
-- **[Receipt line insight]**
+- **[Receipt Line Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2780](https://wms.fantasiasmiguel.com.mx/scale/insights/2780)
 
 | Fila                  | Agredas / original |
@@ -72,7 +91,7 @@
 
 ---
 
-- **[Receipt container insight]**
+- **[Receipt Container Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2779](https://wms.fantasiasmiguel.com.mx/scale/insights/2779)
 
 | Fila                           | Agredas / original   |
@@ -92,7 +111,7 @@
 
 ---
 
-- **[Shipping container insight]**
+- **[Shipping Container Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/4026](https://wms.fantasiasmiguel.com.mx/scale/insights/4026)
 
 | Fila                   | Agredas / original   |
@@ -111,7 +130,7 @@
 
 ---
 
-- **[Wave insight]**
+- **[Wave Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2773](https://wms.fantasiasmiguel.com.mx/scale/insights/2773)
 
 | Fila                                                | Agredas / original |
@@ -124,7 +143,7 @@
 
 ---
 
-- **[Work insight]**
+- **[Work Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2757](https://wms.fantasiasmiguel.com.mx/scale/insights/2757)
 
 | Fila              | Agredas / original |
