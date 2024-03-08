@@ -45,9 +45,20 @@
       background-color: #fff !important;
     }
 
+    tr td,
+    tr th {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     /* Columna description */
     thead > tr > th:nth-child(6) {
       width: 45%;
+    }
+
+    > tbody tr td:nth-last-child(2) {
+      text-align: center !important;
     }
   }
 

@@ -16,7 +16,8 @@
         "matches": [
           "http://fmorion.dnsalias.com/*"
         ],
-        "js": ["favicon.js"]
+        "js": ["favicon.js"],
+        "css" : ["favicon.css"]
       },
       {
         "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/Productos3Cajas.aspx*"],

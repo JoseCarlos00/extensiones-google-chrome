@@ -8,7 +8,7 @@ function inicio() {
   function validarAntesDeImprimir() {
     if (!numFilasElement || !tbodyList) return true;
 
-    if ((Number(numFilasElement.innerHTML) > tbodyList, length)) {
+    if (Number(numFilasElement.innerHTML) > tbodyList.length) {
       // Si es mayor, preguntar al usuario si desea imprimir
       let confirmacion = confirm('Active todas las filas');
       return confirmacion;
