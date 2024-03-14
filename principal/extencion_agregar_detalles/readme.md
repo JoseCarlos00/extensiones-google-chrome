@@ -16,7 +16,13 @@
 | Internal Shipment Num      |                    |
 | Internal Shipment Line Num |                    |
 | Shipment Date Create       |                    |
-| Wave Number                |                    |
+| Wave                       |                    |
+| Status1                    |                    |
+| Status1 Number             |                    |
+| Trailing                   |                    |
+| Trailing Number            |                    |
+| Leading                    |                    |
+| Leading Number             |                    |
 
 ---
 
@@ -30,11 +36,12 @@
 | Ship To                          | Original           |
 | Carrier                          | Original           |
 | Carrier Service                  | Original           |
-| Trailing Status                  | Original           |
+| Trailing Status                  |                    |
+| Trailing Status Number           | Original           |
 | Leading Status                   | Original           |
+| Leading Status Number            |                    |
 | Load Number                      |                    |
 | User Defined Fiel 3 - **_Pack_** |                    |
-| Wave Number                      |                    |
 | Internal Shipment Number         |                    |
 
 ---
@@ -78,16 +85,33 @@
 
 ---
 
+- **[Receipt Insight]**
+
+  > [https://wms.fantasiasmiguel.com.mx/scale/insights/2777](https://wms.fantasiasmiguel.com.mx/scale/insights/2777)
+
+  | Fila                    | Agredas / original |
+  | :---------------------- | ------------------ |
+  | Receipt Id              | Original           |
+  | Trailing Status         | Original           |
+  | Trailing Status Numeric |                    |
+  | Leading Status          | Original           |
+  | Leading Status Numeric  |                    |
+  | Internal Receipt Number | Original           |
+  | Trailer Id              |                    |
+
+---
+
 - **[Receipt Line Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2780](https://wms.fantasiasmiguel.com.mx/scale/insights/2780)
 
-| Fila                  | Agredas / original |
-| :-------------------- | ------------------ |
-| Receipt Id            |                    |
-| ERP order line number | Original           |
-| Item                  | Original           |
-| Company               | Original           |
-| Item desc             | Original           |
+| Fila                    | Agredas / original |
+| :---------------------- | ------------------ |
+| Receipt Id              |                    |
+| ERP order line number   | Original           |
+| Item                    | Original           |
+| Company                 | Original           |
+| Item desc               | Original           |
+| Internal Receipt Number |                    |
 
 ---
 

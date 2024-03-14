@@ -23,6 +23,23 @@ function inicio() {
     return;
   }
 
+  const trailingElment = document.querySelector('#ScreenControlLabel38608');
+  const leadingElement = document.querySelector('#ScreenControlLabel38609');
+
+  if (trailingElment) {
+    trailingElment.insertAdjacentHTML('afterend', htmlTrailingStsNumber);
+  }
+
+  if (leadingElement) {
+    leadingElement.insertAdjacentHTML('afterend', htmlLeadingStsNumber);
+  }
+
+  panelDetail.insertAdjacentHTML('beforeend', htmlLoadNumber);
+  panelDetail.insertAdjacentHTML('beforeend', htmlUserDefineFile3);
+  panelDetail.insertAdjacentHTML('beforeend', htmlinternalShipmentNum);
+
+  observacion(tbody);
+
   tbody.addEventListener('click', e => {
     const tr = e.target.closest('tr[data-id]');
     // console.log('e.target:', tr);
@@ -37,13 +54,6 @@ function inicio() {
     }
     extraerDatosDeTr(tr);
   });
-
-  panelDetail.insertAdjacentHTML('beforeend', htmlLoadNumber);
-  panelDetail.insertAdjacentHTML('beforeend', htmlUserDefineFile3);
-  panelDetail.insertAdjacentHTML('beforeend', htmlWaveNumber);
-  panelDetail.insertAdjacentHTML('beforeend', htmlinternalShipmentNum);
-
-  observacion(tbody);
 }
 
 function extraerDatosDeTr(tr) {
@@ -58,25 +68,30 @@ function extraerDatosDeTr(tr) {
     '[aria-describedby="ListPaneDataGrid_SHIPMENT_HEADER_USER_DEF3"]'
   );
 
-  const waveNumberElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_LAUNCH_NUM"]');
-
   const internalShipmentNumElement = tr.querySelector(
     '[aria-describedby="ListPaneDataGrid_INTERNAL_SHIPMENT_NUM"]'
   );
 
   const loadNumber = LoadNumberElement ? LoadNumberElement.innerHTML : '';
   const userDefine = userDefineFile3Element ? userDefineFile3Element.innerHTML : '';
-  const waveNumber = waveNumberElement ? waveNumberElement.innerHTML : '';
   const internalShipmentNum = internalShipmentNumElement
     ? internalShipmentNumElement.innerHTML
     : '';
+
+  // Status del pedido
+  const trailingNumElement = tr.querySelector(extraerStatus['trailingNum']);
+  const leadingNumElement = tr.querySelector(extraerStatus['leadingNum']);
+
+  const trailingNum = trailingNumElement ? trailingNumElement.innerText : '';
+  const leadingNum = leadingNumElement ? leadingNumElement.innerText : '';
 
   // Llamar a insertarInfo con los datos extraídos
   insertarInfo({
     loadNumber,
     userDefine,
-    waveNumber,
     internalShipmentNum,
+    trailingNum,
+    leadingNum,
   });
 }
 
@@ -111,33 +126,41 @@ function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
 
-  const { loadNumber, userDefine, waveNumber, internalShipmentNum } = info;
+  const { loadNumber, userDefine, internalShipmentNum, trailingNum, leadingNum } = info;
 
   // Obtener elementos del DOM
   const LoadNumberElement = document.querySelector('#DetailPaneHeaderLoadNumber');
   const userDefineFile3Element = document.querySelector('#DetailPaneHeaderUserDefineFile3');
-  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
   const internalShipmentNumElement = document.querySelector('#DetailPaneHeaderinternalShipmentNum');
+
+  const trailingNumElement = document.querySelector(statusSelector['trailingNum']);
+  const leadingNumElement = document.querySelector(statusSelector['leadingNum']);
 
   // Asignar valores a los elementos del DOM si existen
   LoadNumberElement && (LoadNumberElement.innerHTML = `${loadNumber}`);
   userDefineFile3Element && (userDefineFile3Element.innerHTML = `${userDefine}`);
-  waveNumberElement && (waveNumberElement.innerHTML = waveNumber);
   internalShipmentNumElement && (internalShipmentNumElement.innerHTML = internalShipmentNum);
+
+  trailingNumElement && (trailingNumElement.innerHTML = trailingNum);
+  leadingNumElement && (leadingNumElement.innerHTML = leadingNum);
 }
 
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
   const LoadNumberElement = document.querySelector('#DetailPaneHeaderLoadNumber');
   const userDefineFile3Element = document.querySelector('#DetailPaneHeaderUserDefineFile3');
-  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber');
   const internalShipmentNumElement = document.querySelector('#DetailPaneHeaderinternalShipmentNum');
+
+  const trailingNumElement = document.querySelector(statusSelector['trailingNum']);
+  const leadingNumElement = document.querySelector(statusSelector['leadingNum']);
 
   // Limpiar el contenido de los elementos si existen
   LoadNumberElement && (LoadNumberElement.innerHTML = '');
   userDefineFile3Element && (userDefineFile3Element.innerHTML = '');
-  waveNumberElement && (waveNumberElement.innerHTML = '');
   internalShipmentNumElement && (internalShipmentNumElement.innerHTML = '');
+
+  trailingNumElement && (trailingNumElement.innerHTML = '');
+  leadingNumElement && (leadingNumElement.innerHTML = '');
 }
 
 const htmlLoadNumber = `
@@ -154,13 +177,6 @@ const htmlUserDefineFile3 = `
 </div>
 `;
 
-const htmlWaveNumber = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderWaveNumber"
-    id="DetailPaneHeaderWaveNumber"></label>
-</div>
-`;
-
 const htmlinternalShipmentNum = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderinternalShipmentNum"
@@ -168,4 +184,28 @@ const htmlinternalShipmentNum = `
 </div>
 `;
 
+// Status numericos
+const htmlTrailingStsNumber = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderTrailingStsNumber"
+    id="DetailPaneHeaderTrailingStsNumber"></label>
+</div>
+`;
+
+const htmlLeadingStsNumber = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderLeadingStsNumber"
+    id="DetailPaneHeaderLeadingStsNumber"></label>
+</div>
+`;
+
+const statusSelector = {
+  trailingNum: '#DetailPaneHeaderTrailingStsNumber',
+  leadingNum: '#DetailPaneHeaderLeadingStsNumber',
+};
+
+const extraerStatus = {
+  trailingNum: "[aria-describedby='ListPaneDataGrid_TRAILINGSTS']",
+  leadingNum: "[aria-describedby='ListPaneDataGrid_LEADINGSTS']",
+};
 window.addEventListener('load', inicio, { once: true });
