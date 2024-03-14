@@ -16,6 +16,11 @@ function inicio() {
     return;
   }
 
+  panelDetail.insertAdjacentHTML('afterbegin', htmlReceiptId);
+  panelDetail.insertAdjacentHTML('beforeend', htmlInternalReceiptNumber);
+
+  observacion(tbody);
+
   tbody.addEventListener('click', e => {
     const tr = e.target.closest('tr[data-id]');
     // console.log('e.target:', tr);
@@ -30,10 +35,6 @@ function inicio() {
     }
     extraerDatosDeTr(tr);
   });
-
-  panelDetail.insertAdjacentHTML('afterbegin', htmlReceiptId);
-
-  observacion(tbody);
 }
 
 function extraerDatosDeTr(tr) {
@@ -42,12 +43,17 @@ function extraerDatosDeTr(tr) {
 
   // Obtener elementos del DOM
   const receiptElement = tr.querySelector('[aria-describedby="ListPaneDataGrid_RECEIPT_ID"]');
+  const internalReceiptNumElement = tr.querySelector(
+    '[aria-describedby="ListPaneDataGrid_INTERNAL_RECEIPT_NUM"]'
+  );
 
   const receiptID = receiptElement ? receiptElement.innerText : '';
+  const internalReceiptNum = internalReceiptNumElement ? internalReceiptNumElement.innerText : '';
 
   // Llamar a insertarInfo con los datos extraídos
   insertarInfo({
     receiptID,
+    internalReceiptNum,
   });
 }
 
@@ -81,28 +87,43 @@ function observacion(tbody) {
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
   const receiptIdElement = document.querySelector('#DetailPaneHeaderReceiptId');
+  const internalReceiptNumElement = document.querySelector(
+    '#DetailPaneHeaderInternalReceiptNumber'
+  );
 
   // Limpiar el contenido de los elementos si existen
   receiptIdElement && (receiptIdElement.innerHTML = '');
+  internalReceiptNumElement && (internalReceiptNumElement.innerHTML = '');
 }
 
 function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
 
-  const { receiptID } = info;
+  const { receiptID, internalReceiptNum } = info;
 
   // Obtener elementos del DOM
   const receiptIdElement = document.querySelector('#DetailPaneHeaderReceiptId');
+  const internalReceiptNumElement = document.querySelector(
+    '#DetailPaneHeaderInternalReceiptNumber'
+  );
 
   // Asignar valores a los elementos del DOM si existen
   receiptIdElement && (receiptIdElement.innerHTML = receiptID);
+  internalReceiptNumElement && (internalReceiptNumElement.innerHTML = internalReceiptNum);
 }
 
 const htmlReceiptId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderReceiptId"
     id="DetailPaneHeaderReceiptId" style="color: #4f93e4 !important; font-weight: bold;"></label>
+</div>
+`;
+
+const htmlInternalReceiptNumber = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderInternalReceiptNumber"
+    id="DetailPaneHeaderInternalReceiptNumber"></label>
 </div>
 `;
 

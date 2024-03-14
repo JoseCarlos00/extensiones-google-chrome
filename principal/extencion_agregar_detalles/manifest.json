@@ -3,7 +3,7 @@
   "name": "Detalles Scale",
   "version": "1.0",
   "author": "Jose Carlos Aguirre Romero>",
-  "description": "Agrega detalles a: [Shipment line insight] - [Transaction history] - [Inventory insight] - [Receipt line insight] - [Receipt container insight] - [Shipping container insight] - [Wave insight] -  [Work insight]",
+  "description": "Agrega detalles al panel de detalles en SCALE",
   "permissions": ["scripting", "activeTab", "storage", "tabs"],
   "icons": {
     "16": "images/clipBoar16.png",
@@ -50,6 +50,14 @@
         "https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"
       ],
       "js": ["inventory_insight/inventoryDetail.js"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
+      "js": [
+        "receipt_detail/receiptInsigh.js",
+        "funcionesGlobales.js"
+      ],
+      "css": ["style.css"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],

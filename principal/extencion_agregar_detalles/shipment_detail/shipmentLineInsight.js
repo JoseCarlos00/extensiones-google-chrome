@@ -24,6 +24,14 @@ function inicio() {
   panelDetail.insertAdjacentHTML('beforeend', htmlWaveNumber);
   panelDetail.insertAdjacentHTML('beforeend', htmlVerMas);
 
+  // Status del pedido
+  panelDetail.insertAdjacentHTML('beforeend', htmlStatus1);
+  panelDetail.insertAdjacentHTML('beforeend', htmlStatus1Number);
+  panelDetail.insertAdjacentHTML('beforeend', htmlTraingSts);
+  panelDetail.insertAdjacentHTML('beforeend', htmlTrailingStsNumber);
+  panelDetail.insertAdjacentHTML('beforeend', htmlLeadingSts);
+  panelDetail.insertAdjacentHTML('beforeend', htmlLeadingStsNumber);
+
   tbody.addEventListener('click', e => {
     const tr = e.target.closest('tr[data-id]');
     // console.log('e.target:', tr);
@@ -41,6 +49,15 @@ function inicio() {
 
   observacion(tbody);
 }
+
+const extraerStatus = {
+  status1: "[aria-describedby='ListPaneDataGrid_STATUS1']",
+  status1Num: "[aria-describedby='ListPaneDataGrid_STATUS1NUMERIC']",
+  trailing: "[aria-describedby='ListPaneDataGrid_TRAILING_STS']",
+  trailingNum: "[aria-describedby='ListPaneDataGrid_SHIPMENT_TRAILING_STS']",
+  leading: "[aria-describedby='ListPaneDataGrid_LEADING_STS']",
+  leadingNum: "[aria-describedby='ListPaneDataGrid_SHIPMENT_LEADING_STS']",
+};
 
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
@@ -65,11 +82,32 @@ function extraerDatosDeTr(tr) {
     ? internalShipmentLineNum.innerText
     : '';
 
+  // Status del pedido
+  const status1Element = tr.querySelector(extraerStatus['status1']);
+  const status1NumElement = tr.querySelector(extraerStatus['status1Num']);
+  const trailingElement = tr.querySelector(extraerStatus['trailing']);
+  const trailingNumElement = tr.querySelector(extraerStatus['trailingNum']);
+  const leadingElement = tr.querySelector(extraerStatus['leading']);
+  const leadingNumElement = tr.querySelector(extraerStatus['leadingNum']);
+
+  const status1 = status1Element ? status1Element.innerText : '';
+  const status1Num = status1NumElement ? status1NumElement.innerText : '';
+  const trailing = trailingElement ? trailingElement.innerText : '';
+  const trailingNum = trailingNumElement ? trailingNumElement.innerText : '';
+  const leading = leadingElement ? leadingElement.innerText : '';
+  const leadingNum = leadingNumElement ? leadingNumElement.innerText : '';
+
   // Llamar a insertarInfo con los datos extraídos
   insertarInfo({
     shipmentIDText,
     internalShipmentNumText,
     internalShipmentLineNumText,
+    status1,
+    status1Num,
+    trailing,
+    trailingNum,
+    leading,
+    leadingNum,
   });
 }
 
@@ -105,10 +143,15 @@ function insertarInfo(info) {
   limpiarPaneldeDetalles();
 
   const {
-    isClick,
     shipmentIDText: shipmentId,
     internalShipmentNumText: internalNum,
     internalShipmentLineNumText: internalLineNum,
+    status1,
+    status1Num,
+    trailing,
+    trailingNum,
+    leading,
+    leadingNum,
   } = info;
 
   // Obtener elementos del DOM
@@ -123,15 +166,31 @@ function insertarInfo(info) {
   customerElement && shipmentId && insertarTienda(customerElement, shipmentId);
 
   // Asignar valores a los elementos del DOM si existen
-  shipmentIdElement && (shipmentIdElement.innerHTML = shipmentId);
-  internalNumElement && (internalNumElement.innerHTML = internalNum);
-  internalNumLineElement && (internalNumLineElement.innerHTML = internalLineNum);
+  shipmentIdElement && (shipmentIdElement.innerText = shipmentId);
+  internalNumElement && (internalNumElement.innerText = internalNum);
+  internalNumLineElement && (internalNumLineElement.innerText = internalLineNum);
 
   if (verMasElement) {
     verMasElement.innerHTML = 'Ver mas info..';
 
     verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
   }
+
+  // Status del pedido
+  const status1Element = document.querySelector(statusSelector['status1']);
+  const status1NumElement = document.querySelector(statusSelector['status1Num']);
+  const trailingElement = document.querySelector(statusSelector['trailing']);
+  const trailingNumElement = document.querySelector(statusSelector['trailingNum']);
+  const leadingElement = document.querySelector(statusSelector['leading']);
+  const leadingNumElement = document.querySelector(statusSelector['leadingNum']);
+
+  // Asignar valores
+  status1Element && (status1Element.innerText = status1);
+  status1NumElement && (status1NumElement.innerText = status1Num);
+  trailingElement && (trailingElement.innerText = trailing);
+  trailingNumElement && (trailingNumElement.innerText = trailingNum);
+  leadingElement && (leadingElement.innerText = leading);
+  leadingNumElement && (leadingNumElement.innerText = leadingNum);
 }
 
 function insertarTienda(element, shipmentId) {
@@ -162,6 +221,22 @@ function limpiarPaneldeDetalles() {
   internalNumLineElement && (internalNumLineElement.innerHTML = '');
   dateCreateElement && (dateCreateElement.innerHTML = '');
   waveNumberElement && (waveNumberElement.innerHTML = '');
+
+  // Status del pedido
+  const status1Element = document.querySelector(statusSelector['status1']);
+  const status1NumElement = document.querySelector(statusSelector['status1Num']);
+  const trailingElement = document.querySelector(statusSelector['trailing']);
+  const trailingNumElement = document.querySelector(statusSelector['trailingNum']);
+  const leadingElement = document.querySelector(statusSelector['leading']);
+  const leadingNumElement = document.querySelector(statusSelector['leadingNum']);
+
+  // Asignar valores
+  status1Element && (status1Element.innerHTML = '');
+  status1NumElement && (status1NumElement.innerHTML = '');
+  trailingElement && (trailingElement.innerHTML = '');
+  trailingNumElement && (trailingNumElement.innerHTML = '');
+  leadingElement && (leadingElement.innerHTML = '');
+  leadingNumElement && (leadingNumElement.innerHTML = '');
 }
 
 function waitFordata() {
@@ -328,6 +403,56 @@ const htmlDateCreate = `
     id="DetailPaneHeaderDateCreate"></label>
 </div>
 `;
+
+// Html STATUS
+const htmlStatus1 = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderStatus1"
+    id="DetailPaneHeaderStatus1"></label>
+</div>
+`;
+const htmlStatus1Number = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderStatus1Number"
+    id="DetailPaneHeaderStatus1Number"></label>
+</div>
+`;
+
+const htmlTraingSts = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderTraingSts"
+    id="DetailPaneHeaderTraingSts"></label>
+</div>
+`;
+
+const htmlTrailingStsNumber = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderTrailingStsNumber"
+    id="DetailPaneHeaderTrailingStsNumber"></label>
+</div>
+`;
+
+const htmlLeadingSts = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderLeadingSts"
+    id="DetailPaneHeaderLeadingSts"></label>
+</div>
+`;
+const htmlLeadingStsNumber = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderLeadingStsNumber"
+    id="DetailPaneHeaderLeadingStsNumber"></label>
+</div>
+`;
+
+const statusSelector = {
+  status1: '#DetailPaneHeaderStatus1',
+  status1Num: '#DetailPaneHeaderStatus1Number',
+  trailing: '#DetailPaneHeaderTraingSts',
+  trailingNum: '#DetailPaneHeaderTrailingStsNumber',
+  leading: '#DetailPaneHeaderLeadingSts',
+  leadingNum: '#DetailPaneHeaderLeadingStsNumber',
+};
 
 const tiendas = {
   3407: 'Tol-Centro',
