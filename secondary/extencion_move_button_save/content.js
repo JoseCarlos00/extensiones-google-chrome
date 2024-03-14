@@ -57,20 +57,20 @@ function inicio() {
         
     </style>`;
 
-  // setTimeout(() => {
-  //   document
-  //     .querySelector('#NewWaveMenu > li.dropdownaction.pull-right.menubutton.menubuttonsave')
-  //     .classList.add('my-botton-save');
-  //   document
-  //     .querySelector('#NewWaveMenu > li.dropdownaction.pull-right.menubutton.menubuttonsave')
-  //     .classList.remove('pull-right');
-  //   document.querySelector('head').insertAdjacentHTML('beforeend', style);
-  // }, 2000);
+  setTimeout(() => {
+    document
+      .querySelector('#NewWaveMenu > li.dropdownaction.pull-right.menubutton.menubuttonsave')
+      .classList.add('my-botton-save');
+    document
+      .querySelector('#NewWaveMenu > li.dropdownaction.pull-right.menubutton.menubuttonsave')
+      .classList.remove('pull-right');
+    document.querySelector('head').insertAdjacentHTML('beforeend', style);
+  }, 2000);
 
   // Auto realise
-  // setTimeout(() => {
-  //   document.querySelector('#ScreenControlToggleSwitch37984 > div > div > div').click();
-  // }, 1000);
+  setTimeout(() => {
+    document.querySelector('#ScreenControlToggleSwitch37984 > div > div > div').click();
+  }, 1000);
 }
 
 window.onload = inicio;
