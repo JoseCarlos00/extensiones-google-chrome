@@ -134,7 +134,7 @@ const htmlShipTo = `
 const htmlInternalShipmentNumber = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderInternalShipmentNumber"
-    id="DetailPaneHeaderInternalShipmentNumber"></label>
+    id="DetailPaneHeaderInternalShipmentNumber" style="font-weight: bold; letter-spacing: 1px;"></label>
 </div>
 `;
 

@@ -284,7 +284,7 @@ const htmlUserDefineFile3 = `
 const htmlinternalShipmentNum = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderinternalShipmentNum"
-    id="DetailPaneHeaderinternalShipmentNum"></label>
+    id="DetailPaneHeaderinternalShipmentNum" style="font-weight: bold; letter-spacing: 1px;"></label>
 </div>
 `;
 

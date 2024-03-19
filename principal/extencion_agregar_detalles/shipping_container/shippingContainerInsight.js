@@ -294,7 +294,7 @@ const htmlShipmentId = `
 const htmlInternalShipmentNum = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderIntenalShipmetNum"
-    id="DetailPaneHeaderIntenalShipmetNum"></label>
+    id="DetailPaneHeaderIntenalShipmetNum" style="font-weight: bold; letter-spacing: 1px;"></label>
 </div>`;
 
 const htmlInternalContainerNum = `

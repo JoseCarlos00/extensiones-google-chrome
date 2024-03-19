@@ -379,7 +379,7 @@ const htmlCustomer = `
 const htmlInternalShipmentNum = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderInternalShipmetNum"
-    id="DetailPaneHeaderInternalShipmetNum"></label>
+    id="DetailPaneHeaderInternalShipmetNum" style="font-weight: bold; letter-spacing: 1px;"></label>
 </div>
 `;
 
