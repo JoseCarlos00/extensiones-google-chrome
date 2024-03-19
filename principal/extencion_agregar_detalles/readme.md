@@ -43,6 +43,7 @@
 | Load Number                      |                    |
 | User Defined Fiel 3 - **_Pack_** |                    |
 | Internal Shipment Number         |                    |
+| Dock Door                        |                    |
 
 ---
 
@@ -185,5 +186,21 @@
 | Completed By User |                    |
 | From zone         |                    |
 | To zone           |                    |
+
+---
+
+- **[Planned Shipment Insight]**
+  > [https://wms.fantasiasmiguel.com.mx/scale/insights/2774](https://wms.fantasiasmiguel.com.mx/scale/insights/2774)
+
+| Fila                  | Agredas / original |
+| :-------------------- | ------------------ |
+| Shipment Id           | Original           |
+| Ship to Name          | Original           |
+| Leading Status        | Original           |
+| Trailing Status       | Original           |
+| Customer              |                    |
+| Ship To               |                    |
+| Ship To               |                    |
+| Internal Shipment Num |                    |
 
 ---

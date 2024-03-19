@@ -5,6 +5,8 @@ console.log('[Shipment Insight]');
  * User Defined Fiel 3 - **_Pack_**
  * Wave Number
  * Internal Shipment Number
+ *
+ * Dock Door
  */
 
 function inicio() {
@@ -37,6 +39,10 @@ function inicio() {
   panelDetail.insertAdjacentHTML('beforeend', htmlLoadNumber);
   panelDetail.insertAdjacentHTML('beforeend', htmlUserDefineFile3);
   panelDetail.insertAdjacentHTML('beforeend', htmlinternalShipmentNum);
+  panelDetail.insertAdjacentHTML('beforeend', htmlDockDoor);
+
+  // Funciones Globales
+  panelDetail.insertAdjacentHTML('beforeend', htmlVerMas);
 
   observacion(tbody);
 
@@ -61,16 +67,10 @@ function extraerDatosDeTr(tr) {
   if (!tr) return;
 
   // Obtener elementos del DOM
-  const LoadNumberElement = tr.querySelector(
-    '[aria-describedby="ListPaneDataGrid_SHIPPING_LOAD_NUM"]'
-  );
-  const userDefineFile3Element = tr.querySelector(
-    '[aria-describedby="ListPaneDataGrid_SHIPMENT_HEADER_USER_DEF3"]'
-  );
+  const LoadNumberElement = tr.querySelector(`${extraerDatosInternos['loadNumber']} a`);
+  const userDefineFile3Element = tr.querySelector(extraerDatosInternos['userDefineFile3']);
 
-  const internalShipmentNumElement = tr.querySelector(
-    '[aria-describedby="ListPaneDataGrid_INTERNAL_SHIPMENT_NUM"]'
-  );
+  const internalShipmentNumElement = tr.querySelector(extraerDatosInternos['internalShipmentNum']);
 
   const loadNumber = LoadNumberElement ? LoadNumberElement.innerHTML : '';
   const userDefine = userDefineFile3Element ? userDefineFile3Element.innerHTML : '';
@@ -79,8 +79,8 @@ function extraerDatosDeTr(tr) {
     : '';
 
   // Status del pedido
-  const trailingNumElement = tr.querySelector(extraerStatus['trailingNum']);
-  const leadingNumElement = tr.querySelector(extraerStatus['leadingNum']);
+  const trailingNumElement = tr.querySelector(extraerDatosInternos['trailingNum']);
+  const leadingNumElement = tr.querySelector(extraerDatosInternos['leadingNum']);
 
   const trailingNum = trailingNumElement ? trailingNumElement.innerText : '';
   const leadingNum = leadingNumElement ? leadingNumElement.innerText : '';
@@ -129,30 +129,41 @@ function insertarInfo(info) {
   const { loadNumber, userDefine, internalShipmentNum, trailingNum, leadingNum } = info;
 
   // Obtener elementos del DOM
-  const LoadNumberElement = document.querySelector('#DetailPaneHeaderLoadNumber');
-  const userDefineFile3Element = document.querySelector('#DetailPaneHeaderUserDefineFile3');
-  const internalShipmentNumElement = document.querySelector('#DetailPaneHeaderinternalShipmentNum');
+  const LoadNumberElement = document.querySelector(selectores['loadNumber']);
+  const userDefineFile3Element = document.querySelector(selectores['userDefineFile3']);
+  const internalShipmentNumElement = document.querySelector(selectores['internalShipmentNum']);
 
-  const trailingNumElement = document.querySelector(statusSelector['trailingNum']);
-  const leadingNumElement = document.querySelector(statusSelector['leadingNum']);
+  const trailingNumElement = document.querySelector(selectores['trailingNum']);
+  const leadingNumElement = document.querySelector(selectores['leadingNum']);
 
   // Asignar valores a los elementos del DOM si existen
-  LoadNumberElement && (LoadNumberElement.innerHTML = `${loadNumber}`);
+  LoadNumberElement &&
+    (LoadNumberElement.innerHTML = `<a href="/scale/details/shippingload/${loadNumber}">${loadNumber}</a>`);
   userDefineFile3Element && (userDefineFile3Element.innerHTML = `${userDefine}`);
   internalShipmentNumElement && (internalShipmentNumElement.innerHTML = internalShipmentNum);
 
   trailingNumElement && (trailingNumElement.innerHTML = trailingNum);
   leadingNumElement && (leadingNumElement.innerHTML = leadingNum);
+
+  const verMasElement = document.querySelector('#verMasInfomacion');
+
+  if (verMasElement) {
+    verMasElement.innerHTML = 'Ver mas info..';
+
+    verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
+  }
 }
 
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
-  const LoadNumberElement = document.querySelector('#DetailPaneHeaderLoadNumber');
-  const userDefineFile3Element = document.querySelector('#DetailPaneHeaderUserDefineFile3');
-  const internalShipmentNumElement = document.querySelector('#DetailPaneHeaderinternalShipmentNum');
+  const LoadNumberElement = document.querySelector(selectores['loadNumber']);
+  const userDefineFile3Element = document.querySelector(selectores['userDefineFile3']);
+  const internalShipmentNumElement = document.querySelector(selectores['internalShipmentNum']);
 
-  const trailingNumElement = document.querySelector(statusSelector['trailingNum']);
-  const leadingNumElement = document.querySelector(statusSelector['leadingNum']);
+  const trailingNumElement = document.querySelector(selectores['trailingNum']);
+  const leadingNumElement = document.querySelector(selectores['leadingNum']);
+
+  const dockDoorElement = document.querySelector(selectores['dockDoor']);
 
   // Limpiar el contenido de los elementos si existen
   LoadNumberElement && (LoadNumberElement.innerHTML = '');
@@ -161,7 +172,100 @@ function limpiarPaneldeDetalles() {
 
   trailingNumElement && (trailingNumElement.innerHTML = '');
   leadingNumElement && (leadingNumElement.innerHTML = '');
+
+  dockDoorElement && (dockDoorElement.innerHTML = '');
 }
+
+function waitFordata() {
+  console.log('[wait for data]');
+  const text = '1346-863-28886...';
+
+  const dockDoorElement = document.querySelector(selectores['dockDoor']) ?? null;
+
+  if (dockDoorElement) {
+    dockDoorElement.innerHTML = text;
+    dockDoorElement.classList.add('wait');
+  }
+}
+
+function removeClassWait(text = 'No encontrado') {
+  console.log('[Remove Class Wait]');
+
+  // Obtener elementos del DOM
+  const dockDoorElement = document.querySelector(selectores['dockDoor']) ?? null;
+
+  if (dockDoorElement) {
+    dockDoorElement.innerHTML = text;
+    dockDoorElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function actualizarInterfaz(datos) {
+  console.log('[Actualizar Interfaz]');
+
+  const { dockDoor } = datos;
+
+  // Obtener elementos del DOM
+  const userStampElement = document.querySelector(selectores['dockDoor']) ?? null;
+
+  if (userStampElement) {
+    userStampElement.innerHTML = dockDoor;
+    userStampElement.classList.remove('wait');
+  }
+
+  pedirMasDetalles = false;
+}
+
+function solicitarDatosExternos() {
+  console.log('[solicitarDatosExternos]');
+
+  let loadNumber = '';
+  const queryParams = `?active=active`;
+
+  const loadNumberElement =
+    document.querySelector(
+      '#ListPaneDataGrid > tbody > tr[aria-selected="true"] td[aria-describedby="ListPaneDataGrid_SHIPPING_LOAD_NUM"] a'
+    ) ?? null;
+
+  if (loadNumberElement) {
+    if (loadNumberElement.innerHTML === '0') {
+      removeClassWait('Sin Load Number');
+      return;
+    }
+
+    pedirMasDetalles = true;
+    waitFordata();
+    loadNumber = loadNumberElement.innerHTML + queryParams;
+
+    chrome.runtime.sendMessage(
+      {
+        action: 'some_action',
+        url: `https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/${loadNumber}`,
+      },
+      response => {
+        console.log('Respuesta de background.js:', response);
+      }
+    );
+  } else {
+    alert('No se encontró el Load Numbrer, por favor active la columna.');
+    console.log('No se encontró el Load Numbrer');
+  }
+}
+
+// Escuchar los mensajes enviados desde el script de fondo
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.action === 'actualizar_datos_de_load_detail') {
+    const datos = message.datos;
+    actualizarInterfaz(datos);
+  } else if (message.action === 'datos_no_encontrados') {
+    const errorMessage = message.datos;
+
+    console.log('No encotrado:', errorMessage);
+    removeClassWait();
+  }
+});
 
 const htmlLoadNumber = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
@@ -184,6 +288,13 @@ const htmlinternalShipmentNum = `
 </div>
 `;
 
+const htmlDockDoor = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderDockDoor"
+    id="DetailPaneHeaderDockDoor"></label>
+</div>
+`;
+
 // Status numericos
 const htmlTrailingStsNumber = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
@@ -199,13 +310,21 @@ const htmlLeadingStsNumber = `
 </div>
 `;
 
-const statusSelector = {
+const selectores = {
+  loadNumber: '#DetailPaneHeaderLoadNumber',
+  userDefineFile3: '#DetailPaneHeaderUserDefineFile3',
+  internalShipmentNum: '#DetailPaneHeaderinternalShipmentNum',
   trailingNum: '#DetailPaneHeaderTrailingStsNumber',
   leadingNum: '#DetailPaneHeaderLeadingStsNumber',
+  dockDoor: '#DetailPaneHeaderDockDoor',
 };
 
-const extraerStatus = {
+const extraerDatosInternos = {
+  loadNumber: "[aria-describedby='ListPaneDataGrid_SHIPPING_LOAD_NUM']",
+  userDefineFile3: "[aria-describedby='ListPaneDataGrid_SHIPMENT_HEADER_USER_DEF3']",
+  internalShipmentNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_NUM']",
   trailingNum: "[aria-describedby='ListPaneDataGrid_TRAILINGSTS']",
   leadingNum: "[aria-describedby='ListPaneDataGrid_LEADINGSTS']",
 };
+
 window.addEventListener('load', inicio, { once: true });

@@ -145,6 +145,25 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         console.error('No se encontraron pestañas activas.');
       }
     });
+  } else if (message.action === 'datos_desde_load_detail') {
+    console.log('[load Detail GET]');
+    const datosDesdeloadDetail = message.datos;
+
+    // Obtener el ID de la primera pestaña
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      // Verificar si hay pestañas activas
+      if (tabs.length > 0) {
+        const primeraPestanaID = tabs[0].id;
+
+        // Enviar los datos a la primera pestaña
+        chrome.tabs.sendMessage(primeraPestanaID, {
+          action: 'actualizar_datos_de_load_detail',
+          datos: datosDesdeloadDetail,
+        });
+      } else {
+        console.error('No se encontraron pestañas activas.');
+      }
+    });
   } else if (message.action === 'datos_no_encontrados_desde_detail') {
     console.log('[datos no encontrados GET]');
 
@@ -189,7 +208,7 @@ else if (message.action === 'datos_desde_workinstruction_detail') {
 
         // Enviar los datos a la primera pestaña
         chrome.tabs.sendMessage(primeraPestanaID, {
-          action: 'actualizar_datos_de_workinstruction_detail',
+          action: 'actualizar_datos_de_load_detail',
           datos: datosDesdeWorkinstructionDetail,
         });
       } else {

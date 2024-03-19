@@ -33,6 +33,12 @@
       "css": ["style.css", "shipment_detail/style.css"]
     },
     {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/*"
+      ],
+      "js": ["shipment_detail/loadDetail.js"]
+    },
+    {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
       "js": [
         "transaction_history/transactionHistory.js",
@@ -120,6 +126,13 @@
         "https://wms.fantasiasmiguel.com.mx/scale/details/workinstruction/*"
       ],
       "js":["work_insight/workDetail.js"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"
+      ],
+      "js": ["planned_shipment_insight/plannedShipmentInsight.js", "funcionesGlobales.js"],
+      "css": ["style.css"]
     },
     {
       "matches":["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error=MSG_SECURITYVIOLATION*"],
