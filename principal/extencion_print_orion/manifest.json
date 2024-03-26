@@ -16,7 +16,8 @@
         "matches": [
           "http://fmorion.dnsalias.com/*"
         ],
-        "js": ["favicon.js"]
+        "js": ["favicon.js", "dark_theme/toggleSwitch.js"],
+        "css":["dark_theme/toggleSwitch.css"]
       },
       {
         "matches" : ["http://fmorion.dnsalias.com/orion/paginas/Dashboard/Dashboard.aspx"],
@@ -24,7 +25,7 @@
       },
       {
         "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/Productos3Cajas.aspx*"],
-        "js":["reporte3Cajas.js"],
+        "js":["reporte3Cajas.js", "dark_theme/producto3Cajas.js"],
         "css": ["reporte3Cajas.css"]
       },
       {
@@ -33,7 +34,7 @@
       },
       {
         "matches":["http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"],
-        "js":["enviosItems.js"],
+        "js":["enviosItems.js", "dark_theme/envioItem.js"],
         "css": ["envioItem.css"]
       },
       {
@@ -45,6 +46,26 @@
         "matches":["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN.aspx*"],
         "js":["InventarioBodegaN.js"],
         "css": ["inventory.css"]
+      },
+      {
+        "matches":[
+          "http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*",
+          "http://fmorion.dnsalias.com/Bodega/Bodega*",
+          "https://tableau.fantasiasmiguel.com.mx/trusted/ijShoAskRoeVKTlcCIxTGA==:Umbs4BtTpnexPcQY4OKAytXz/views/TareasAbiertasTiendasMariano/TareasAbiertasTiendas*"
+        ],
+        "js":["dark_theme/trabajoActivo.js"]
+      },
+      {
+        "matches":["http://fmorion.dnsalias.com/orion/paginas/Reportes/ReporteTableau2.aspx*"],
+        "js":["dark_theme/reporteTableu.js"]
+      },
+      {
+        "matches":[
+          "http://fmorion.dnsalias.com/orion/Default.aspx*",
+          "http://fmorion.dnsalias.com/Bodega/Default.aspx*",
+          "http://fmorion.dnsalias.com/orion/paginas/Dashboard/Dashboard.aspx*"
+        ],
+        "js":["dark_theme/defaulDashBoard.js"]
       }
     ],
     "action": {
@@ -58,6 +79,16 @@
     },
     "background": {
       "service_worker": "background.js"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["darkTheme.css"],
+        "matches": ["http://fmorion.dnsalias.com/*"]
+      }
+    ],
+    "content_security_policy": {
+      "script-src": ["'self'", "'unsafe-inline'"],
+      "object-src": "'self'"
     }
   }
   
