@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Imprime Inventory Insight",
+  "version": "1.0",
+  "description": "Crea una nueva pestaña el inventario para imprimir",
+  "permissions": [
+    "activeTab", "scripting", "tabs"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/print16.png",
+      "32": "images/print32.png",
+      "48": "images/print48.png",
+      "128": "images/print128.png"
+    }
+  },
+  "icons": {
+    "16": "images/print16.png",
+    "32": "images/print32.png",
+    "48": "images/print48.png",
+    "128": "images/print128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"
+      ],
+      "js": ["inventoryPrint.js"],
+      "css": ["style.css"]
+    }
+    
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["print/print.html"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "script-src": ["'self'", "'unsafe-inline'"],
+    "object-src": "'self'"
+  }
+}
