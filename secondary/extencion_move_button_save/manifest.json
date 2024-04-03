@@ -10,12 +10,14 @@
       "48": "images/broom48.png",
       "128": "images/broom128.png"
     },
+    "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
     "content_scripts": [
       {
         "matches": [
           "https://wms.fantasiasmiguel.com.mx/scale/trans/newwave?excludeFromNavTrail=Y"
         ],
-        "js": ["content.js"]
+        "js": ["new_wave.js"],
+        "css": ["new_wave.css"]
       }
     ],
     "action": {
@@ -26,6 +28,10 @@
         "48": "images/broom48.png",
         "128": "images/broom128.png"
       }
+    },
+    "content_security_policy": {
+      "script-src": ["'self'", "'unsafe-inline'"],
+      "object-src": "'self'"
     }
   }
   
