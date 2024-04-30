@@ -33,6 +33,14 @@ function inicio() {
       }
     }
   }, 2000);
+
+  const btnCancel = document.querySelector('#AddWaveActionCancel');
+
+  if (btnCancel) {
+    btnCancel.addEventListener('click', function (e) {
+      localStorage.removeItem('newWaveActive');
+    });
+  }
 }
 
 window.addEventListener('load', inicio, { once: true });

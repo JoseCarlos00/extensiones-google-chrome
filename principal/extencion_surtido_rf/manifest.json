@@ -10,12 +10,17 @@
       "48": "images/inventory48.png",
       "128": "images/inventory128.png"
     },
+    "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
     "content_scripts": [
       {
         "matches": [
           "https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?*", "https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?*"
         ],
         "js": ["content.js"]
+      },
+      {
+        "matches":["https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?UseContainerIdOnWorkInstruction=False*", "https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRF.aspx?CURRENTLOC=FROM*"],
+        "js":["popup.js"]
       }
     ],
     "action": {
