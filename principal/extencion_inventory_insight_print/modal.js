@@ -18,6 +18,7 @@ const modalHTML = `
           <thead>
           <th contenteditable="true" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">Item</th>
           <th contenteditable="true" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">Location</th>
+          <th contenteditable="true" >Check</th>
           <th contenteditable="true" id="ListPaneDataGrid_ITEM_DESC" aria-describedby="ListPaneDataGrid_ITEM_DESC">Description</th>
         </thead>
       </table>
@@ -96,14 +97,13 @@ function setEventListener(elements) {
     }
   });
 
-window.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    if (modal.style.display === 'block') {
-      modal.style.display = 'none';
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+      }
     }
-  }
-});
-
+  });
 }
 
 function getTableContents() {
@@ -133,22 +133,27 @@ function showTable(table) {
 
       if (ariadescribedby === 'ListPaneDataGrid_ITEM') {
         const tdItem = document.createElement('td');
-        tdItem.innerHTML = `<input value="${td.textContent}" readonly>`;
+        tdItem.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
         tdItem.setAttribute('aria-describedby', ariadescribedby);
         tr.prepend(tdItem);
       }
 
       if (ariadescribedby === 'ListPaneDataGrid_LOCATION') {
         const tdLoc = document.createElement('td');
-        tdLoc.innerHTML = `<input value="${td.textContent}" readonly>`;
+        tdLoc.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
         tdLoc.setAttribute('aria-describedby', ariadescribedby);
         tr.appendChild(tdLoc);
       }
 
       if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
+        const tdCheck = document.createElement('td');
         const tdItemDesc = document.createElement('td');
-        tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly>`;
+
+        tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
         tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
+
+        tdCheck.innerHTML = `<input type="checkbox" class="checkbox">`;
+        tr.appendChild(tdCheck);
         tr.appendChild(tdItemDesc);
       }
     });
