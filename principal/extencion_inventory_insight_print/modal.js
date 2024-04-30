@@ -18,7 +18,6 @@ const modalHTML = `
           <thead>
           <th contenteditable="true" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">Item</th>
           <th contenteditable="true" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">Location</th>
-          <th contenteditable="true" >Check</th>
           <th contenteditable="true" id="ListPaneDataGrid_ITEM_DESC" aria-describedby="ListPaneDataGrid_ITEM_DESC">Description</th>
         </thead>
       </table>
@@ -146,14 +145,11 @@ function showTable(table) {
       }
 
       if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
-        const tdCheck = document.createElement('td');
         const tdItemDesc = document.createElement('td');
 
         tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
         tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
 
-        tdCheck.innerHTML = `<input type="checkbox" class="checkbox">`;
-        tr.appendChild(tdCheck);
         tr.appendChild(tdItemDesc);
       }
     });

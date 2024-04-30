@@ -1,12 +1,23 @@
 function inicio() {
   console.log('Surtido RF');
+
   const toLoc =
     document.querySelector('#FORM1 > table > tbody > tr:nth-child(1) > td > input[type=text]') ??
     null;
 
   if (!toLoc) return;
 
-  // const loc = document.querySelector('#FORM1 > table > tbody > tr:nth-child(1) > td');
+  // Verificar si hay un estado guardado en el localStorage al cargar la página
+  const switchState = localStorage.getItem('surtidoOrderActive');
+  const switchElement = document.getElementById('switch');
+
+  if (switchState === 'true') {
+    switchElement && (switchElement.checked = true);
+    content(toLoc);
+  }
+}
+
+function content(toLoc) {
   const loc = document.querySelector('#HIDDENFROMLOC'); //BANDA
   const loc2 = document.querySelector('#HIDDENcheckDigit'); // EMPAQUE
 

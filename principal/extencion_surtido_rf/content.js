@@ -1,9 +1,21 @@
 function inicio() {
   console.log('Surtido RF');
+
   const itemContainer = document.querySelector('#FORM1 > table > tbody > tr:nth-child(3)') ?? null;
 
   if (!itemContainer) return;
 
+  // Verificar si hay un estado guardado en el localStorage al cargar la página
+  const switchState = localStorage.getItem('surtidoOrderActive');
+  const switchElement = document.getElementById('switch');
+
+  if (switchState === 'true') {
+    switchElement && (switchElement.checked = true);
+    content();
+  }
+}
+
+function content() {
   const item = document.querySelector('#HIDDENitem').value;
   const qty = document.querySelector('#HIDDENTOTALQTY').value;
   const LP1 = document.querySelector("#FORM1 tr td input[name='TRANSCONTID']") ?? null;
