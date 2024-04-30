@@ -95,6 +95,15 @@ function setEventListener(elements) {
       element.select();
     }
   });
+
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    if (modal.style.display === 'block') {
+      modal.style.display = 'none';
+    }
+  }
+});
+
 }
 
 function getTableContents() {
