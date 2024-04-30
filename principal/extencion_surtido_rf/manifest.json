@@ -20,6 +20,13 @@
         "css": ["style.css"]
       },
       {
+        "matches": [
+          "https://wms.fantasiasmiguel.com.mx/RF/WorkProfileSelectionRF.aspx?UseProfile=Y*"
+        ],
+        "js": ["switch.js"],
+        "css": ["style.css"]
+      },
+      {
         "matches":["https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?UseContainerIdOnWorkInstruction=False*", "https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRF.aspx?CURRENTLOC=FROM*"],
         "js":["popup.js", "switch.js"],
         "css": ["style.css"]
