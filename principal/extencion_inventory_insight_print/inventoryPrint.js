@@ -1,5 +1,5 @@
 function inicio() {
-  console.log('Inventory insight print and modal');
+  console.log('Inventory insight print');
 
   const ul =
     document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav') ?? null;

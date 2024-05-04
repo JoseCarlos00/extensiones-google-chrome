@@ -26,6 +26,7 @@ function content() {
     if (LP2 && LP1) {
       console.log('LP1 AND LP2');
       document.querySelector("#FORM1 tr td input[name='itemNum']").value = item;
+      LP1.focus();
 
       if (LP2.innerText.includes('Cont:')) {
         LP1.value = LP2.innerText.replace('Cont: ', '');
