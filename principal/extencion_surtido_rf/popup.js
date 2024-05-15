@@ -1,10 +1,11 @@
 function inicio() {
-  console.log('Surtido RF');
+  console.log('Surtido RF: popup.js');
 
   const toLoc =
     document.querySelector('#FORM1 > table > tbody > tr:nth-child(1) > td > input[type=text]') ??
     null;
 
+  console.log('ToLoc:', toLoc);
   if (!toLoc) return;
 
   // Verificar si hay un estado guardado en el localStorage al cargar la página
@@ -13,37 +14,41 @@ function inicio() {
 
   if (switchState === 'true') {
     switchElement && (switchElement.checked = true);
-    content(toLoc);
+    // content(toLoc);
   }
-}
 
-function content(toLoc) {
-  const loc = document.querySelector('#HIDDENFROMLOC'); //BANDA
-  const loc2 = document.querySelector('#HIDDENcheckDigit'); // EMPAQUE
+  function content(toLoc) {
+    const loc = document.querySelector('#HIDDENFROMLOC'); //BANDA
+    const loc2 = document.querySelector('#HIDDENcheckDigit'); // EMPAQUE
 
-  function insertar() {
-    setTimeout(() => {
-      if (loc) {
+    function insertar() {
+      setTimeout(() => {
+        if (!loc || !loc2) return;
+
         if (
           loc.value.includes('BANDA') ||
           loc.value.includes('ASCENSOR') ||
           loc.value.includes('PREPACK')
         ) {
-          toLoc.value = loc.value;
+          if (toLoc) {
+            toLoc.value = loc.value;
+          }
         } else {
-          toLoc.value = loc2.value;
+          if (toLoc) {
+            toLoc.value = loc2.value;
+          }
         }
-      }
-    }, 100);
-  }
-
-  insertar();
-
-  setInterval(() => {
-    if (toLoc.value === '') {
-      insertar();
+      }, 100);
     }
-  }, 800);
+
+    insertar();
+
+    setInterval(() => {
+      if (toLoc?.value === '') {
+        insertar();
+      }
+    }, 800);
+  }
 }
 
 window.addEventListener('load', inicio, { once: true });
