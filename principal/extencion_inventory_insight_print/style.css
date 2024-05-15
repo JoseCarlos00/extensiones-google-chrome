@@ -160,26 +160,35 @@
     font-size: 18px;
   }
 
+  table tr {
+    position: relative;
+  }
+
   table tr td,
   table tr th {
-    /* display: none; */
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
-  /* table
-    tr
-    :is(
-      td[aria-describedby='ListPaneDataGrid_LOCATION'],
-      td[aria-describedby='ListPaneDataGrid_ITEM'],
-      td[aria-describedby='ListPaneDataGrid_ITEM_DESC'],
-      th[aria-describedby='ListPaneDataGrid_LOCATION'],
-      th[aria-describedby='ListPaneDataGrid_ITEM'],
-      th[aria-describedby='ListPaneDataGrid_ITEM_DESC']
-    ) {
-    display: table-cell;
-  } */
+  table tr th[aria-describedby='ListPaneDataGrid_ITEM'],
+  table tr th[aria-describedby='ListPaneDataGrid_LOCATION'] {
+    cursor: pointer;
+
+    .value {
+      display: inline;
+    }
+
+    .ui-icon {
+      color: rgb(51, 51, 51);
+    }
+
+    .ui-iggrid-indicatorcontainer {
+      display: block;
+      float: right;
+      display: none;
+    }
+  }
 
   th,
   td {
@@ -195,20 +204,11 @@
       padding-block: 6px;
     }
 
-    .checkbox {
-      opacity: 0.5;
-
-      &:checked {
-        opacity: 1;
-      }
-
-      &:focus {
-        opacity: 1;
-        outline-width: 2px !important;
-        outline-color: blue !important;
-        outline-style: solid !important;
-        outline-offset: -2px !important;
-      }
+    .input-text:focus {
+      outline-width: 2px !important;
+      outline-color: blue !important;
+      outline-style: solid !important;
+      outline-offset: 4px !important;
     }
   }
 
@@ -219,6 +219,36 @@
   table a {
     text-decoration: none;
     color: inherit;
+  }
+
+  table tbody tr:hover > td:nth-last-child(1) .delete-row::before {
+    content: '\e676';
+
+    font-family: jquery-ui !important;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    display: block;
+    height: 1em;
+    line-height: 1;
+    margin-left: -0.5em;
+    margin-top: -0.5em;
+    position: absolute;
+    text-indent: 0;
+    width: 1em;
+    color: #888888;
+    font-size: 12px;
+    cursor: pointer;
+    font: normal normal normal 14px / 16px jquery-ui, sans-serif;
+    text-transform: none;
+
+    right: 2px;
+    top: 8px;
   }
 
   .ocultar {

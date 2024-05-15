@@ -16,9 +16,15 @@ const modalHTML = `
     
       <table id="tableContent" contenteditable="true">
           <thead>
-          <th contenteditable="true" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">Item</th>
-          <th contenteditable="true" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">Location</th>
-          <th contenteditable="true" id="ListPaneDataGrid_ITEM_DESC" aria-describedby="ListPaneDataGrid_ITEM_DESC">Description</th>
+          <th contenteditable="false" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">
+            <div class="value">Item</div>
+            <div class="ui-iggrid-indicatorcontainer"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>
+          </th>
+          <th contenteditable="false" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">
+            <div class="value">Location</div>
+            <div class="ui-iggrid-indicatorcontainer"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>
+          </th>
+          <th contenteditable="false" id="ListPaneDataGrid_ITEM_DESC" aria-describedby="ListPaneDataGrid_ITEM_DESC">Description</th>
         </thead>
       </table>
     </div>
@@ -96,6 +102,28 @@ function setEventListener(elements) {
     }
   });
 
+  const thItem = document.querySelector('#tableContent #ListPaneDataGrid_ITEM');
+  const thLoc = document.querySelector('#tableContent #ListPaneDataGrid_LOCATION');
+
+  // Click para ordenar elementos items o ubicacion
+  if (thItem) {
+    thItem.addEventListener('click', () => {
+      sortTable(0);
+    });
+  }
+
+  if (thLoc) {
+    thLoc.addEventListener('click', () => {
+      sortTable(1);
+    });
+  }
+
+  const tableModal = document.querySelector('#tableContent');
+
+  if (tableModal) {
+    tableModal.addEventListener('click', deleteRow);
+  }
+
   window.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       if (modal.style.display === 'block') {
@@ -115,6 +143,7 @@ function getTableContents() {
   table.innerHTML = tbodyContent;
 
   showTable(table);
+  showIndicator();
 }
 
 function showTable(table) {
@@ -146,9 +175,13 @@ function showTable(table) {
 
       if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
         const tdItemDesc = document.createElement('td');
-
         tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
         tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
+
+        const divDelete = document.createElement('div');
+        divDelete.className = 'delete-row';
+
+        tdItemDesc.appendChild(divDelete);
 
         tr.appendChild(tdItemDesc);
       }
@@ -161,6 +194,52 @@ function showTable(table) {
   tbodyExist && tbodyExist.remove();
 
   tableToInsert.appendChild(tbody);
+}
+
+function showIndicator(columnIndex) {
+  const thHeader = document.querySelectorAll('#tableContent thead tr th');
+
+  if (!thHeader) return;
+
+  thHeader.forEach((th, index) => {
+    const indicador = th.querySelector('.ui-iggrid-indicatorcontainer');
+
+    if (index === columnIndex) {
+      indicador && (indicador.style.display = 'block');
+    } else {
+      indicador && (indicador.style.display = 'none');
+    }
+  });
+}
+
+function sortTable(columnIndex) {
+  console.log('sortTable:', columnIndex);
+  showIndicator(columnIndex);
+
+  const table = document.querySelector('#tableContent');
+  const tbody = table.querySelector('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  rows.sort((a, b) => {
+    const aValue = a.querySelectorAll('input')[columnIndex].value;
+    const bValue = b.querySelectorAll('input')[columnIndex].value;
+    return aValue.localeCompare(bValue);
+  });
+
+  rows.forEach(row => tbody.appendChild(row));
+}
+
+function deleteRow(e) {
+  const elemento = e.target;
+  console.log('elemento:', elemento);
+
+  if (elemento.classList?.contains('delete-row')) {
+    const trSelected = elemento.closest('tr');
+
+    if (trSelected) {
+      trSelected.remove();
+    }
+  }
 }
 
 window.addEventListener('load', inicio);
