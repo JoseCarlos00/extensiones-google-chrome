@@ -14,10 +14,10 @@
   "content_scripts": [
     {
       "matches": [
-        "https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?*",
+        "https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx*",
         "https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx*"
       ],
-      "js": ["content.js", "switch.js"],
+      "js": ["content.js", "switch.js", "popup.js"],
       "css": ["style.css"]
     },
     {
@@ -28,10 +28,7 @@
       "css": ["style.css"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx*",
-        "https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRF.aspx"
-      ],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRF.aspx*"],
       "js": ["popup.js", "switch.js"],
       "css": ["style.css"]
     }

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Packing",
+  "version": "1.0",
+  "description": "Muestar una lista de los articulos y cantidad a empacar",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "icons": {
+    "16": "images/inventory16.png",
+    "32": "images/inventory32.png",
+    "48": "images/inventory48.png",
+    "128": "images/inventory128.png"
+  },
+  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/packing*"],
+      "js": ["content.js"],
+      "css": ["style.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "defaul_icon": {
+      "16": "images/inventory16.png",
+      "32": "images/inventory32.png",
+      "48": "images/inventory48.png",
+      "128": "images/inventory128.png"
+    }
+  }
+}

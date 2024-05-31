@@ -1,41 +1,47 @@
 function inicio() {
   console.log('Surtido RF: content.js');
 
-  const itemContainer = document.querySelector('#FORM1 > table > tbody > tr:nth-child(3)') ?? null;
-
+  const itemContainer = document.querySelector('#FORM1 > table > tbody > tr:nth-child(3)');
   if (!itemContainer) return;
 
-  // Verificar si hay un estado guardado en el localStorage al cargar la página
   const switchState = localStorage.getItem('surtidoOrderActive');
   const switchElement = document.getElementById('switch');
 
-  if (switchState === 'true') {
-    switchElement && (switchElement.checked = true);
-    content();
+  if (switchState === 'true' && switchElement) {
+    switchElement.checked = true;
+    processContent();
   }
 
-  function content() {
-    const item = document.querySelector('#HIDDENitem').value;
-    const qty = document.querySelector('#HIDDENTOTALQTY').value;
-    const LP1 = document.querySelector("#FORM1 tr td input[name='TRANSCONTID']") ?? null;
+  function processContent() {
+    const itemElement = document.querySelector('#HIDDENitem');
+    const LP1Element = document.querySelector("#FORM1 tr td input[name='TRANSCONTID']");
+    const LP2Element = document.querySelector('#FORM1 tr:nth-last-child(4) td');
 
-    const LP2 = document.querySelector('#FORM1 tr:nth-last-child(4) td') ?? null;
+    if (!itemElement || !LP1Element || !LP2Element) return;
+
+    const item = itemElement.value;
 
     setTimeout(() => {
-      if (LP2 && LP1) {
-        console.log('LP1 AND LP2');
-        document.querySelector("#FORM1 tr td input[name='itemNum']").value = item;
-        LP1.focus();
-
-        if (LP2.innerText.includes('Cont:')) {
-          LP1.value = LP2.innerText.replace('Cont: ', '');
-          setTimeout(() => {
-            document.querySelector('#bOK').click();
-            console.log('CLIK');
-          }, 50);
-        }
-      }
+      handleItem(LP1Element, LP2Element, item);
     }, 500);
+  }
+
+  function handleItem(LP1Element, LP2Element, item) {
+    console.log('LP1 AND LP2');
+    const itemInput = document.querySelector("#FORM1 tr td input[name='itemNum']");
+
+    if (itemInput) {
+      itemInput.value = item;
+      LP1Element.focus();
+
+      if (LP2Element.innerText.includes('Cont:')) {
+        LP1Element.value = LP2Element.innerText.replace('Cont: ', '');
+        setTimeout(() => {
+          document.querySelector('#bOK').click();
+          console.log('CLICK');
+        }, 500);
+      }
+    }
   }
 }
 

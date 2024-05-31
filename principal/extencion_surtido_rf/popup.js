@@ -1,51 +1,45 @@
 function inicio() {
   console.log('Surtido RF: popup.js');
 
-  const toLoc =
-    document.querySelector('#FORM1 > table > tbody > tr:nth-child(1) > td > input[type=text]') ??
-    null;
-
+  const toLoc = document.querySelector(
+    '#FORM1 > table > tbody > tr:nth-child(1) > td > input[type=text]'
+  );
   console.log('ToLoc:', toLoc);
   if (!toLoc) return;
 
-  // Verificar si hay un estado guardado en el localStorage al cargar la página
-  const switchState = localStorage.getItem('surtidoOrderActive');
   const switchElement = document.getElementById('switch');
+  const switchState = localStorage.getItem('surtidoOrderActive');
 
   if (switchState === 'true') {
-    switchElement && (switchElement.checked = true);
-    // content(toLoc);
+    if (switchElement) switchElement.checked = true;
+    processContent(toLoc);
   }
 
-  function content(toLoc) {
-    const loc = document.querySelector('#HIDDENFROMLOC'); //BANDA
-    const loc2 = document.querySelector('#HIDDENcheckDigit'); // EMPAQUE
+  function processContent(toLoc) {
+    const loc = document.querySelector('#HIDDENFROMLOC');
+    const loc2 = document.querySelector('#HIDDENcheckDigit');
+    const specialLocations = ['BANDA', 'ASCENSOR', 'ETIQUETADO', 'PREPACK'];
+    const regex = /^[A-Za-z]{3}\d{3}$/;
 
-    function insertar() {
-      setTimeout(() => {
-        if (!loc || !loc2) return;
+    function updateToLoc() {
+      console.log('[updateToLoc]');
+      if (!loc || !loc2 || !toLoc) return;
 
-        if (
-          loc.value.includes('BANDA') ||
-          loc.value.includes('ASCENSOR') ||
-          loc.value.includes('PREPACK')
-        ) {
-          if (toLoc) {
-            toLoc.value = loc.value;
-          }
-        } else {
-          if (toLoc) {
-            toLoc.value = loc2.value;
-          }
-        }
-      }, 100);
+      if (specialLocations.some(location => loc.value.includes(location))) {
+        toLoc.value = loc.value;
+      } else if (
+        specialLocations.some(location => loc2.value.includes(location)) ||
+        regex.test(loc2.value)
+      ) {
+        toLoc.value = loc2.value;
+      }
     }
 
-    insertar();
+    updateToLoc();
 
     setInterval(() => {
-      if (toLoc?.value === '') {
-        insertar();
+      if (toLoc.value === '') {
+        updateToLoc();
       }
     }, 800);
   }

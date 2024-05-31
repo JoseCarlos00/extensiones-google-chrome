@@ -17,8 +17,6 @@ const html = `
 
 body.insertAdjacentHTML('beforeend', html);
 
-switchToggle();
-
 function switchToggle() {
   // Verificar si hay un estado guardado en el localStorage al cargar la página
   const switchState = localStorage.getItem('surtidoOrderActive');
@@ -38,4 +36,4 @@ function switchToggle() {
   });
 }
 
-window.addEventListener('load', inicio, { once: true });
+window.addEventListener('load', switchToggle, { once: true });
