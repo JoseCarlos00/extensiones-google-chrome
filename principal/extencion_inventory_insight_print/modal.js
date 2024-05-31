@@ -144,6 +144,63 @@ function getTableContents() {
 
   showTable(table);
   showIndicator();
+
+  eventTeclas();
+}
+
+function eventTeclas() {
+  const table = document.getElementById('tableContent');
+  const cells = table.querySelectorAll('td[aria-describedby] input');
+
+  cells.forEach(cell => {
+    cell.setAttribute('tabindex', '0');
+    cell.addEventListener('keydown', handleKeydown);
+  });
+
+  function handleKeydown(event) {
+    const cell = event.target;
+    const row = cell.parentElement.parentElement;
+    const colIndex = Array.from(row.children).indexOf(cell.parentElement);
+
+    let nextCell;
+
+    switch (event.key) {
+      case 'ArrowRight':
+        nextCell = getNextCell(row, colIndex + 1);
+        break;
+      case 'ArrowLeft':
+        nextCell = getNextCell(row, colIndex - 1);
+        break;
+      case 'ArrowDown':
+        nextCell = getCellBelow(row, colIndex);
+        break;
+      case 'ArrowUp':
+        nextCell = getCellAbove(row, colIndex);
+        break;
+    }
+
+    console.log('nextCell', nextCell);
+
+    if (nextCell) {
+      event.preventDefault();
+      nextCell.focus();
+      nextCell?.select();
+    }
+  }
+
+  function getNextCell(row, colIndex) {
+    return row.children[colIndex]?.querySelector('input');
+  }
+
+  function getCellBelow(row, colIndex) {
+    const nextRow = row.nextElementSibling;
+    return nextRow?.children[colIndex]?.querySelector('input');
+  }
+
+  function getCellAbove(row, colIndex) {
+    const prevRow = row.previousElementSibling;
+    return prevRow?.children[colIndex]?.querySelector('input');
+  }
 }
 
 function showTable(table) {
