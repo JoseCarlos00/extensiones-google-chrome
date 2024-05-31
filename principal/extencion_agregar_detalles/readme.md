@@ -61,6 +61,7 @@
 | Work Unit         |                    |
 | LP / Container Id |                    |
 | User Name         |                    |
+| Customer          |                    |
 
 ---
 
