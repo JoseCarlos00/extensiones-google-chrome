@@ -134,12 +134,13 @@ function setEventListener(elements) {
 }
 
 function getTableContents() {
-  const theadContent = document.getElementById('ListPaneDataGrid_headers').innerHTML;
-  const tbodyContent = document.getElementById('ListPaneDataGrid').innerHTML;
+  const tbodyElement = document.getElementById('ListPaneDataGrid');
 
-  if (!theadContent || !tbodyContent) return;
+  if (!tbodyElement) return;
 
   const table = document.createElement('table');
+  const tbodyContent = tbodyElement.innerHTML;
+
   table.innerHTML = tbodyContent;
 
   showTable(table);

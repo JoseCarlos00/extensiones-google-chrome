@@ -14,19 +14,27 @@ const modalHTML = `
       </svg>
     </button>
     
-      <table id="tableContent" contenteditable="true">
-          <thead>
-          <th contenteditable="false" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">
-            <div class="value">Item</div>
-            <div class="ui-iggrid-indicatorcontainer"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>
-          </th>
-          <th contenteditable="false" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">
-            <div class="value">Location</div>
-            <div class="ui-iggrid-indicatorcontainer"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>
-          </th>
-          <th contenteditable="false" id="ListPaneDataGrid_ITEM_DESC" aria-describedby="ListPaneDataGrid_ITEM_DESC">Description</th>
-        </thead>
-      </table>
+    <table id="tableContent" contenteditable="true">
+
+    <thead>
+      <th contenteditable="false" aria-label="Item" tabindex="-1">
+        <div class="value ui-iggrid-headertext">Item</div>
+        </div>
+      </th>
+  
+      <th id="packingdetailkoGrid_ITEM_DESC" role="columnheader" aria-label="Description" tabindex="-1">
+        <span class="ui-iggrid-headertext">Description
+        </span>
+      </th>
+  
+      <th id="packingdetailkoGrid_AVAIL_QTY" role="columnheader" aria-label="Avail" tabindex="-1"
+        class="ui-iggrid-header ui-widget-header ui-iggrid-sortableheader ui-state-default">
+        <span class="ui-iggrid-headertext">Qty
+        </span>
+      </th>
+    </thead>
+  </table>
+
     </div>
   </div>
 
@@ -102,22 +110,6 @@ function setEventListener(elements) {
     }
   });
 
-  const thItem = document.querySelector('#tableContent #ListPaneDataGrid_ITEM');
-  const thLoc = document.querySelector('#tableContent #ListPaneDataGrid_LOCATION');
-
-  // Click para ordenar elementos items o ubicacion
-  if (thItem) {
-    thItem.addEventListener('click', () => {
-      sortTable(0);
-    });
-  }
-
-  if (thLoc) {
-    thLoc.addEventListener('click', () => {
-      sortTable(1);
-    });
-  }
-
   const tableModal = document.querySelector('#tableContent');
 
   if (tableModal) {
@@ -135,16 +127,16 @@ function setEventListener(elements) {
 
 function getTableContents() {
   console.log('[Get Table Contents]');
-  const theadContent = document.getElementById('ListPaneDataGrid_headers').innerHTML;
-  const tbodyContent = document.getElementById('ListPaneDataGrid').innerHTML;
+  const tbodyElement = document.querySelector('#packingdetailkoGrid > tbody');
 
-  if (!theadContent || !tbodyContent) return;
+  if (tbodyElement) return;
 
   const table = document.createElement('table');
+  const tbodyContent = tbodyElement.innerHTML;
+
   table.innerHTML = tbodyContent;
 
-  // showTable(table);
-  // showIndicator();
+  showTable(table);
 }
 
 function showTable(table) {
@@ -195,39 +187,6 @@ function showTable(table) {
   tbodyExist && tbodyExist.remove();
 
   tableToInsert.appendChild(tbody);
-}
-
-function showIndicator(columnIndex) {
-  const thHeader = document.querySelectorAll('#tableContent thead tr th');
-
-  if (!thHeader) return;
-
-  thHeader.forEach((th, index) => {
-    const indicador = th.querySelector('.ui-iggrid-indicatorcontainer');
-
-    if (index === columnIndex) {
-      indicador && (indicador.style.display = 'block');
-    } else {
-      indicador && (indicador.style.display = 'none');
-    }
-  });
-}
-
-function sortTable(columnIndex) {
-  console.log('sortTable:', columnIndex);
-  showIndicator(columnIndex);
-
-  const table = document.querySelector('#tableContent');
-  const tbody = table.querySelector('tbody');
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-
-  rows.sort((a, b) => {
-    const aValue = a.querySelectorAll('input')[columnIndex].value;
-    const bValue = b.querySelectorAll('input')[columnIndex].value;
-    return aValue.localeCompare(bValue);
-  });
-
-  rows.forEach(row => tbody.appendChild(row));
 }
 
 function deleteRow(e) {
