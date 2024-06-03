@@ -36,6 +36,11 @@
     font-size: 16px;
   }
 
+  #gvTrabajoActivoV3_ctl00 > thead > tr > th,
+  #gvTrabajoActivoV3_ctl00 > tbody > tr > td {
+    border-color: #000 !important;
+  }
+
   #gvTrabajoActivoV3_ctl00 > thead > tr > th a {
     color: #000 !important;
     font-weight: bold !important;
