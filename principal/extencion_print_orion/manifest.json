@@ -14,54 +14,8 @@
   "content_scripts": [
     {
       "matches": ["http://fmorion.dnsalias.com/*"],
-      "js": ["favicon.js", "dark_theme/toggleSwitch.js"],
+      "js": ["dark_theme/toggleSwitch.js"],
       "css": ["dark_theme/toggleSwitch.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Dashboard/Dashboard.aspx"],
-      "css": ["dashboard.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/Productos3Cajas.aspx*"],
-      "js": ["reporte3_cajas/reporte3Cajas.js", "dark_theme/producto3Cajas.js"],
-      "css": ["reporte3_cajas/reporte3Cajas.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/EnviosListas.aspx"],
-      "js": ["envios/listaEnvios.js"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"],
-      "js": ["envios/enviosItems.js", "dark_theme/envioItem.js"],
-      "css": ["envios/envioItem.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx*"],
-      "js": ["inventory/inventarioBodega.js"],
-      "css": ["inventory/inventory.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN.aspx*"],
-      "js": ["inventory/inventarioBodegaN.js"],
-      "css": ["inventory/inventory.css"]
-    },
-    {
-      "matches": [
-        "http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*",
-        "http://fmorion.dnsalias.com/Bodega/Bodega*",
-        "https://tableau.fantasiasmiguel.com.mx/trusted/ijShoAskRoeVKTlcCIxTGA==:Umbs4BtTpnexPcQY4OKAytXz/views/TareasAbiertasTiendasMariano/TareasAbiertasTiendas*"
-      ],
-      "js": ["dark_theme/trabajoActivo.js"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*"],
-      "js": ["trabajos_activos/trabajoActivoPaginasBodega.js"],
-      "css": ["trabajos_activos/trabajoActivoPaginas.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/Bodega/Bodega*"],
-      "js": ["trabajos_activos/trabajoActivoBodegaBodega.js"],
-      "css": ["trabajos_activos/trabajosActivoVisualizador.css"]
     },
     {
       "matches": ["http://fmorion.dnsalias.com/orion/paginas/Reportes/ReporteTableau2.aspx*"],
@@ -74,6 +28,64 @@
         "http://fmorion.dnsalias.com/orion/paginas/Dashboard/Dashboard.aspx*"
       ],
       "js": ["dark_theme/defaulDashBoard.js"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/Productos3Cajas.aspx*"],
+      "js": ["dark_theme/producto3Cajas.js"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"],
+      "js": ["dark_theme/envioItem.js"]
+    },
+    {
+      "matches": [
+        "http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*",
+        "http://fmorion.dnsalias.com/Bodega/Bodega*",
+        "https://tableau.fantasiasmiguel.com.mx/trusted/ijShoAskRoeVKTlcCIxTGA==:Umbs4BtTpnexPcQY4OKAytXz/views/TareasAbiertasTiendasMariano/TareasAbiertasTiendas*"
+      ],
+      "js": ["dark_theme/trabajoActivo.js"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/*"],
+      "js": ["favicon.js"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/Productos3Cajas.aspx*"],
+      "js": ["reporte3_cajas/reporte3Cajas.js"],
+      "css": ["reporte3_cajas/reporte3Cajas.css"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"],
+      "js": ["envios/enviosItems.js"],
+      "css": ["envios/envioItem.css"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Dashboard/Dashboard.aspx"],
+      "css": ["dashboard.css"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/EnviosListas.aspx"],
+      "js": ["envios/listaEnvios.js"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx*"],
+      "js": ["inventory/inventarioBodega.js"],
+      "css": ["inventory/inventory.css"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN.aspx*"],
+      "js": ["inventory/inventarioBodegaN.js"],
+      "css": ["inventory/inventory.css"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*"],
+      "js": ["trabajos_activos/trabajoActivoPaginasBodega.js"],
+      "css": ["trabajos_activos/trabajoActivoPaginas.css"]
+    },
+    {
+      "matches": ["http://fmorion.dnsalias.com/Bodega/Bodega*"],
+      "js": ["trabajos_activos/trabajoActivoBodegaBodega.js"],
+      "css": ["trabajos_activos/trabajosActivoVisualizador.css"]
     }
   ],
   "action": {
