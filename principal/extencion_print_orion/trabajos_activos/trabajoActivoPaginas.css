@@ -18,8 +18,17 @@
     display: none !important;
   }
 
+  #gvTrabajoActivoV3_ctl00 > thead > tr > th > a,
+  #gvTrabajoActivoV3_ctl00 > tbody > tr > td {
+    font-size: 16px;
+  }
+
   #gvTrabajoActivoV3_ctl00 > thead > tr > th > a {
     color: #000 !important;
     font-weight: bold !important;
+  }
+
+  #gvTrabajoActivoV3 {
+    border: none !important;
   }
 }
