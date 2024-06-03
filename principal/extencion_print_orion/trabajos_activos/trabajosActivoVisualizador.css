@@ -37,7 +37,8 @@
   }
 
   #gvTrabajoActivoV3_ctl00 > thead > tr > th,
-  #gvTrabajoActivoV3_ctl00 > tbody > tr > td {
+  #gvTrabajoActivoV3_ctl00 > tbody > tr > td,
+  #gvTrabajoActivoV3_ctl00 {
     border-color: #000 !important;
   }
 
