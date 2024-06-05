@@ -143,7 +143,10 @@ function getTableContents() {
 
   table.innerHTML = tbodyContent;
 
-  showTable(table);
+  showTable(table)
+    .then()
+    .catch(e => console.error(e.message));
+
   showIndicator();
 
   eventTeclas();
@@ -151,9 +154,9 @@ function getTableContents() {
 
 function eventTeclas() {
   const table = document.getElementById('tableContent');
-  const cells = table.querySelectorAll('td[aria-describedby] input');
+  const inputs = table.querySelectorAll('td[aria-describedby] input:not(.exclude)');
 
-  cells.forEach(cell => {
+  inputs.forEach(cell => {
     cell.setAttribute('tabindex', '0');
     cell.addEventListener('keydown', handleKeydown);
   });
@@ -205,53 +208,78 @@ function eventTeclas() {
 }
 
 function showTable(table) {
-  const rows = Array.from(table.querySelectorAll('tbody tr'));
+  return new Promise((resolve, reject) => {
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
 
-  const tableToInsert = document.getElementById('tableContent');
-  const tbody = document.createElement('tbody');
+    const tableToInsert = document.getElementById('tableContent');
+    const tbody = document.createElement('tbody');
 
-  rows.forEach(row => {
-    const fila = row.childNodes;
-    const tr = document.createElement('tr');
+    if (!rows || !tableToInsert || !tbody)
+      return reject({ message: 'No existe los elementos: [rows OR tableToInsert OR tbody] ' });
 
-    fila.forEach(td => {
-      const ariadescribedby = td.getAttribute('aria-describedby');
+    rows.forEach(row => {
+      const fila = row.childNodes;
+      const tr = document.createElement('tr');
 
-      if (ariadescribedby === 'ListPaneDataGrid_ITEM') {
-        const tdItem = document.createElement('td');
-        tdItem.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
-        tdItem.setAttribute('aria-describedby', ariadescribedby);
-        tr.prepend(tdItem);
-      }
+      fila.forEach(td => {
+        const ariadescribedby = td.getAttribute('aria-describedby');
 
-      if (ariadescribedby === 'ListPaneDataGrid_LOCATION') {
-        const tdLoc = document.createElement('td');
-        tdLoc.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
-        tdLoc.setAttribute('aria-describedby', ariadescribedby);
-        tr.appendChild(tdLoc);
-      }
+        if (ariadescribedby === 'ListPaneDataGrid_ITEM') {
+          const tdItem = document.createElement('td');
+          tdItem.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
+          tdItem.setAttribute('aria-describedby', ariadescribedby);
+          tr.prepend(tdItem);
+        }
 
-      if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
-        const tdItemDesc = document.createElement('td');
-        tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly class="input-text">`;
-        tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
+        if (ariadescribedby === 'ListPaneDataGrid_LOCATION') {
+          const tdLoc = document.createElement('td');
+          tdLoc.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
+          tdLoc.setAttribute('aria-describedby', ariadescribedby);
+          tr.appendChild(tdLoc);
+        }
 
-        const divDelete = document.createElement('div');
-        divDelete.className = 'delete-row';
+        if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
+          const tdItemDesc = document.createElement('td');
 
-        tdItemDesc.appendChild(divDelete);
+          tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly class="input-text exclude" tabindex="-1">`;
+          tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
 
-        tr.appendChild(tdItemDesc);
-      }
+          const divDelete = document.createElement('div');
+          divDelete.className = 'delete-row';
+
+          tdItemDesc.appendChild(divDelete);
+
+          tr.appendChild(tdItemDesc);
+        }
+      });
+
+      tbody.appendChild(tr);
     });
 
-    tbody.appendChild(tr);
+    const tbodyExist = document.querySelector('#tableContent tbody');
+    tbodyExist && tbodyExist.remove();
+
+    tableToInsert.appendChild(tbody);
+    resolve();
   });
+}
 
-  const tbodyExist = document.querySelector('#tableContent tbody');
-  tbodyExist && tbodyExist.remove();
+function tabIndexMenosUno() {
+  const table = document.getElementById('tableContent');
+  const rows = Array.from(table.querySelectorAll('tbody tr'));
 
-  tableToInsert.appendChild(tbody);
+  const tbody = document.createElement('tbody');
+
+  if (!rows || !table || !tbody) return;
+
+  rows.forEach(row => {
+    const td = row.querySelector('td:nth-child(3) > input');
+    console.log('td1:', td);
+    console.log(td.getAttribute('tabindex'));
+    td.setAttribute('tabindex', '-1');
+    console.log('td2:', td);
+    console.log(td.getAttribute('tabindex'));
+  });
 }
 
 function showIndicator(columnIndex) {
