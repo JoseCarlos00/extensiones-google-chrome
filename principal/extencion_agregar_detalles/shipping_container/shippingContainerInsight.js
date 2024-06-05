@@ -20,6 +20,7 @@ function inicio() {
   panelDetail.insertAdjacentHTML('beforeend', htmlShipmentId);
   panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentNum);
   panelDetail.insertAdjacentHTML('beforeend', htmlInternalContainerNum);
+  panelDetail.insertAdjacentHTML('beforeend', htmlCustomer);
   panelDetail.insertAdjacentHTML('beforeend', htmlUserStamp);
   panelDetail.insertAdjacentHTML('beforeend', htmlDateCreate);
 
@@ -71,24 +72,29 @@ function observacion(tbody) {
   observer.observe(tbody, observerConfig);
 }
 
+const extraerDatosInternos = {
+  containerId: "[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
+  parentContainerId: "[aria-describedby='ListPaneDataGrid_PARENT_CONTAINER_ID']",
+  shipmentId: "[aria-describedby='ListPaneDataGrid_SHIPMENT_ID']",
+  internalShipmentNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_NUM']",
+  internalContainerNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_CONTAINER_NUM']",
+};
+
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
   if (!tr) return;
 
-  const containerIdElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_CONTAINER_ID"]') ?? null;
+  const containerIdElement = tr.querySelector(extraerDatosInternos.containerId) ?? null;
 
-  const shipmentIdElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_SHIPMENT_ID"]') ?? null;
+  const shipmentIdElement = tr.querySelector(extraerDatosInternos.shipmentId) ?? null;
 
-  const parentContainerIdElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_PARENT_CONTAINER_ID"]') ?? null;
+  const parentContainerIdElement = tr.querySelector(extraerDatosInternos.parentContainerId) ?? null;
 
   const internalShipmentNumElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_INTERNAL_SHIPMENT_NUM"]') ?? null;
+    tr.querySelector(extraerDatosInternos.internalShipmentNum) ?? null;
 
   const internalContainerNumElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_INTERNAL_CONTAINER_NUM"]') ?? null;
+    tr.querySelector(extraerDatosInternos.internalContainerNum) ?? null;
 
   // Inner text
   const containerId = containerIdElement ? containerIdElement.innerText : '';
@@ -118,15 +124,11 @@ function insertarInfo(info) {
     info;
 
   // Obtener elementos del DOM
-  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID') ?? null;
-  const shipmentIdElement = document.querySelector('#DetailPaneHeaderShipmentID') ?? null;
-  const parentContainerIdElement =
-    document.querySelector('#DetailPaneHeaderParenContainerId') ?? null;
-  const shipmentNumElement = document.querySelector('#DetailPaneHeaderIntenalShipmetNum') ?? null;
-  const containerNumElement =
-    document.querySelector('#DetailPaneHeaderIntenalContainerNum') ?? null;
-
-  const verMasElement = document.querySelector('#verMasInfomacion');
+  const containerIdElement = document.querySelector(selectorId.containerId) ?? null;
+  const shipmentIdElement = document.querySelector(selectorId.shipmentId) ?? null;
+  const parentContainerIdElement = document.querySelector(selectorId.parentContainerId) ?? null;
+  const shipmentNumElement = document.querySelector(selectorId.shipmentId) ?? null;
+  const containerNumElement = document.querySelector(selectorId.internalContainerNum) ?? null;
 
   // Asignar valores a los elementos del DOM si existen
   if (containerId !== '') {
@@ -144,25 +146,32 @@ function insertarInfo(info) {
   shipmentNumElement && (shipmentNumElement.innerHTML = internalShipmentNum);
   containerNumElement && (containerNumElement.innerHTML = internalContainerNum);
 
+  const verMasElement = document.querySelector('#verMasInfomacion');
   if (verMasElement) {
     verMasElement.innerHTML = 'Ver mas info..';
 
     verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
   }
+
+  // Customer
+  const customerElement = document.querySelector(selectorId.customer);
+
+  // Insertar tienda si el elemento del cliente existe y hay un ID de envío
+  customerElement && shipmentId && insertarTienda(customerElement, shipmentId);
 }
 
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
-  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID') ?? null;
-  const shipmentIdElement = document.querySelector('#DetailPaneHeaderShipmentID') ?? null;
-  const parentContainerIdElement =
-    document.querySelector('#DetailPaneHeaderParenContainerId') ?? null;
-  const shipmentNumElement = document.querySelector('#DetailPaneHeaderIntenalShipmetNum') ?? null;
-  const containerNumElement =
-    document.querySelector('#DetailPaneHeaderIntenalContainerNum') ?? null;
+  const containerIdElement = document.querySelector(selectorId.containerId) ?? null;
+  const shipmentIdElement = document.querySelector(selectorId.shipmentId) ?? null;
+  const parentContainerIdElement = document.querySelector(selectorId.parentContainerId) ?? null;
+  const shipmentNumElement = document.querySelector(selectorId.shipmentId) ?? null;
+  const containerNumElement = document.querySelector(selectorId.internalContainerNum) ?? null;
 
-  const dateCreateElement = document.querySelector('#DetailPaneHeaderDateCreate');
-  const userStampElement = document.querySelector('#DetailPaneHeaderUserStamp');
+  const dateCreateElement = document.querySelector(selectorId.dateCreate);
+  const userStampElement = document.querySelector(selectorId.userStamp);
+
+  const customerElement = document.querySelector(selectorId.customer) ?? null;
 
   // Limpiar el contenido de los elementos si existen
   containerIdElement && (containerIdElement.innerHTML = '');
@@ -172,6 +181,7 @@ function limpiarPaneldeDetalles() {
   containerNumElement && (containerNumElement.innerHTML = '');
   dateCreateElement && (dateCreateElement.innerHTML = '');
   userStampElement && (userStampElement.innerHTML = '');
+  customerElement && (customerElement.innerHTML = '');
 }
 
 function waitFordata() {
@@ -266,6 +276,18 @@ function solicitarDatosExternos() {
   }
 }
 
+function insertarTienda(element, shipmentId) {
+  const clave = shipmentId.trim().split('-')[0];
+
+  console.log('clave:', clave);
+
+  if (tiendas.hasOwnProperty(clave)) {
+    element.innerHTML = tiendas[clave];
+  } else {
+    console.log('La clave de la tienda no existe.');
+  }
+}
+
 // Escuchar los mensajes enviados desde el script de fondo
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.action === 'actualizar_datos_shipping_container') {
@@ -316,5 +338,70 @@ const htmlUserStamp = `
     id="DetailPaneHeaderUserStamp"></label>
 </div>
 `;
+
+const htmlCustomer = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderCustomer"
+    id="DetailPaneHeaderCustomer"></label>
+</div>
+`;
+
+const selectorId = {
+  parentContainerId: '#DetailPaneHeaderParenContainerId',
+  shipmentId: '#DetailPaneHeaderShipmentID',
+  internalShipmentNum: '#DetailPaneHeaderIntenalShipmetNum',
+  internalContainerNum: '#DetailPaneHeaderIntenalContainerNum',
+  dateCreate: '#DetailPaneHeaderDateCreate',
+  userStamp: '#DetailPaneHeaderUserStamp',
+  customer: '#DetailPaneHeaderCustomer',
+};
+
+const tiendas = {
+  3407: 'Tol-Centro',
+  3409: 'Tol-Metepec',
+  417: 'Mex-Grande',
+  418: 'Mex-Chica',
+  444: 'Mex-Adornos',
+  1171: 'Mex-Mylin',
+  357: 'Mex-Mayoreo',
+  350: 'Mex-Lomas',
+  351: 'Mex-Satelite',
+  352: 'Mex-Coapa',
+  353: 'Mex-Tlalne',
+  356: 'Mex-Polanco',
+  360: 'Mex-Valle',
+  361: 'Mex-Coacalco',
+  363: 'Mex-Santa Fe',
+  414: 'Mex-Xochimilco',
+  415: 'Mex-Interlomas',
+  3401: 'Mex-Coyoacan',
+  3404: 'Mex-Pedregal',
+  4342: 'Ags-Aguascalientes',
+  4559: 'BCN-Carrousel',
+  4797: 'BCN-Mexicali',
+  4757: 'BCN-Tijuana',
+  4799: 'Coa-Saltillo',
+  4753: 'Coa-Torreon',
+  4756: 'Dur-Durango',
+  3400: 'Gto-Leon',
+  359: 'Jal-Centro',
+  4348: 'Jal-Gdl Palomar',
+  4345: 'Jal-Gdl Patria',
+  354: 'Jal-Zapopan',
+  355: 'Mty-Centro',
+  3405: 'Mty-Citadel',
+  3406: 'Mty-GarzaSada',
+  362: 'Mty-SanJeronimo',
+  3403: 'Pue-Puebla',
+  4798: 'QRO-Arboledas',
+  3402: 'Que-Queretaro',
+  4570: 'Roo-Cancun',
+  4755: 'Sin-Culiacan',
+  3408: 'SLP-SanLuis',
+  4574: 'Son-Hermosillo',
+  4573: 'Ver-Veracruz',
+  4346: 'Yuc-Campestre',
+  364: 'Yuc-Merida',
+};
 
 window.addEventListener('load', inicio, { once: true });

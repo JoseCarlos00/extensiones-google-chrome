@@ -43,4 +43,14 @@ function inicio() {
   }
 }
 
+const btnSave = document.querySelector(
+  '#NewWaveMenu > li.dropdownaction.menubutton.menubuttonsave.my-botton-save'
+);
+
+const area = document.querySelector('#ui-id-13').getBoundingClientRect();
+btnSave.style.top = area.bottom + 'px';
+
+const area2 = btnYes.getBoundingClientRect();
+btnSave.style.left = area2.right + 'px';
+
 window.addEventListener('load', inicio, { once: true });

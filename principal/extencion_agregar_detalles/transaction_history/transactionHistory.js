@@ -45,7 +45,7 @@ function inicio() {
   observacion(tbody);
 }
 
-const extraerDatos = {
+const extraerDatosInternos = {
   workUnit: "[aria-describedby='ListPaneDataGrid_WorkUnit']",
   containerId: "[aria-describedby='ListPaneDataGrid_ContainerId']",
   userName: "[aria-describedby='ListPaneDataGrid_UserName']",
@@ -57,10 +57,10 @@ function extraerDatosDeTr(tr) {
   if (!tr) return;
 
   // Obtener elementos del DOM
-  const workUnitElement = tr.querySelector(extraerDatos.workUnit);
-  const containerIdElement = tr.querySelector(extraerDatos.containerId);
-  const userNameElement = tr.querySelector(extraerDatos.userName);
-  const referenceIdElement = tr.querySelector(extraerDatos.referenceId);
+  const workUnitElement = tr.querySelector(extraerDatosInternos.workUnit);
+  const containerIdElement = tr.querySelector(extraerDatosInternos.containerId);
+  const userNameElement = tr.querySelector(extraerDatosInternos.userName);
+  const referenceIdElement = tr.querySelector(extraerDatosInternos.referenceId);
 
   const workUnit = workUnitElement ? workUnitElement.innerText : '';
   const containerId = containerIdElement ? containerIdElement.innerText : '';
