@@ -124,10 +124,10 @@ function insertarInfo(info) {
     info;
 
   // Obtener elementos del DOM
-  const containerIdElement = document.querySelector(selectorId.containerId) ?? null;
+  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID') ?? null;
   const shipmentIdElement = document.querySelector(selectorId.shipmentId) ?? null;
   const parentContainerIdElement = document.querySelector(selectorId.parentContainerId) ?? null;
-  const shipmentNumElement = document.querySelector(selectorId.shipmentId) ?? null;
+  const shipmentNumElement = document.querySelector(selectorId.internalShipmentNum) ?? null;
   const containerNumElement = document.querySelector(selectorId.internalContainerNum) ?? null;
 
   // Asignar valores a los elementos del DOM si existen
@@ -165,7 +165,7 @@ function limpiarPaneldeDetalles() {
   const containerIdElement = document.querySelector(selectorId.containerId) ?? null;
   const shipmentIdElement = document.querySelector(selectorId.shipmentId) ?? null;
   const parentContainerIdElement = document.querySelector(selectorId.parentContainerId) ?? null;
-  const shipmentNumElement = document.querySelector(selectorId.shipmentId) ?? null;
+  const shipmentNumElement = document.querySelector(selectorId.internalShipmentNum) ?? null;
   const containerNumElement = document.querySelector(selectorId.internalContainerNum) ?? null;
 
   const dateCreateElement = document.querySelector(selectorId.dateCreate);
@@ -402,6 +402,7 @@ const tiendas = {
   4573: 'Ver-Veracruz',
   4346: 'Yuc-Campestre',
   364: 'Yuc-Merida',
+  4344: 'ME-Maestros',
 };
 
 window.addEventListener('load', inicio, { once: true });

@@ -231,6 +231,7 @@ const tiendas = {
   4573: 'Ver-Veracruz',
   4346: 'Yuc-Campestre',
   364: 'Yuc-Merida',
+  4344: 'ME-Maestros',
 };
 
 window.addEventListener('load', inicio, { once: true });
