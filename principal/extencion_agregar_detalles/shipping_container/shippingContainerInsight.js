@@ -162,7 +162,7 @@ function insertarInfo(info) {
 
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
-  const containerIdElement = document.querySelector(selectorId.containerId) ?? null;
+  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID') ?? null;
   const shipmentIdElement = document.querySelector(selectorId.shipmentId) ?? null;
   const parentContainerIdElement = document.querySelector(selectorId.parentContainerId) ?? null;
   const shipmentNumElement = document.querySelector(selectorId.internalShipmentNum) ?? null;
