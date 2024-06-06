@@ -14,17 +14,21 @@ const modalHTML = `
       </svg>
     </button>
     
-      <table id="tableContent" contenteditable="true">
+    <button id='printButtonModal' href="#" data-toggle="detailpane" class="print-Button-Modal">
+        <i class="far fa-print"></i>
+    </button>
+
+      <table id="tableContent" contenteditable="false">
           <thead>
-          <th contenteditable="false" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">
+          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">
             <div class="value">Item</div>
             <div class="ui-iggrid-indicatorcontainer"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>
           </th>
-          <th contenteditable="false" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">
+          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">
             <div class="value">Location</div>
             <div class="ui-iggrid-indicatorcontainer"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>
           </th>
-          <th contenteditable="false" id="ListPaneDataGrid_ITEM_DESC" aria-describedby="ListPaneDataGrid_ITEM_DESC">Description</th>
+          <th  contenteditable="false" id="ListPaneDataGrid_ITEM_DESC" aria-describedby="ListPaneDataGrid_ITEM_DESC">Description</th>
         </thead>
       </table>
     </div>
@@ -131,6 +135,27 @@ function setEventListener(elements) {
       }
     }
   });
+
+  const printButtonModal = document.querySelector('#printButtonModal');
+
+  if (printButtonModal) {
+    printButtonModal.addEventListener('click', () => {
+      const theadToPrint = document.querySelector('#tableContent > thead');
+      const tbodyToPrint = document.querySelector('#tableContent > tbody');
+
+      if (theadToPrint && tbodyToPrint) {
+        // Envía un mensaje al script de fondo para solicitar la apertura de una nueva pestaña
+        if (chrome.runtime) {
+          chrome.runtime.sendMessage({
+            command: 'openNewTab',
+            theadToPrint: theadToPrint.innerHTML,
+            tbodyToPrint: tbodyToPrint.innerHTML,
+            type: 'modal',
+          });
+        }
+      }
+    });
+  }
 }
 
 function getTableContents() {

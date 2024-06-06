@@ -7,7 +7,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Crea una nueva pestaña con la URL específica
     chrome.tabs.create({
       url:
-        'print/print.html?thead=' +
+        'print/print.html?type=' +
+        encodeURIComponent(message.type) +
+        '&thead=' +
         encodeURIComponent(message.theadToPrint) +
         '&tbody=' +
         encodeURIComponent(message.tbodyToPrint),

@@ -13,7 +13,7 @@ table {
 }
 
 table tr td,
-table tr th {
+table tr th:not(.show-header) {
   display: none;
   overflow: hidden;
   white-space: nowrap;
@@ -54,4 +54,12 @@ table a {
 
 .ocultar {
   display: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.show-column {
+  display: table-cell !important;
 }
