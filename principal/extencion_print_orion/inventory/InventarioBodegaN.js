@@ -18,6 +18,9 @@ function inicio() {
         .addEventListener('click', () => window.print());
     }, 100);
   }
+
+  const tdFoot = document.querySelector('#gvInventario_ctl00 > tfoot > tr > td');
+  tdFoot && tdFoot.setAttribute('colspan', 24);
 }
 
 // Boton imprimir
