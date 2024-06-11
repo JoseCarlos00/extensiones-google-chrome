@@ -75,7 +75,7 @@
     {
       "matches": ["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN.aspx*"],
       "js": ["inventory/inventarioBodegaN.js"],
-      "css": ["inventory/inventory.css"]
+      "css": ["inventory/inventory.css", "inventory/inventoryN.css"]
     },
     {
       "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*"],

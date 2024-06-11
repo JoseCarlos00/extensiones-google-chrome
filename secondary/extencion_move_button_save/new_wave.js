@@ -1,56 +1,43 @@
-function inicio() {
-  let altura = '';
-
-  const anchoElemento1 = document.querySelector(
-    '#ScreenGroupSubAccordion12898 > div:nth-child(2) > div:nth-child(1)'
-  );
-  const anchoElemento2 = document.querySelector('#ScreenControlToggleSwitch37984 > div');
-
-  setTimeout(() => {
-    // Auto realise
-    document.querySelector('#ScreenControlToggleSwitch37984 > div > div > div').click();
-  }, 1000);
-
-  setTimeout(() => {
-    document
-      .querySelector('#NewWaveMenu > li.dropdownaction.pull-right.menubutton.menubuttonsave')
-      .classList.add('my-botton-save');
-    document
-      .querySelector('#NewWaveMenu > li.dropdownaction.pull-right.menubutton.menubuttonsave')
-      .classList.remove('pull-right');
-
-    if (anchoElemento1 && anchoElemento2) {
-      altura = Number(anchoElemento1.offsetWidth) + Number(anchoElemento2.offsetWidth) + 15;
-
-      if (
-        document.querySelector(
-          '#NewWaveMenu > li.dropdownaction.menubutton.menubuttonsave.my-botton-save'
-        )
-      ) {
-        document.querySelector(
-          '#NewWaveMenu > li.dropdownaction.menubutton.menubuttonsave.my-botton-save'
-        ).style.left = `${altura}px`;
-      }
-    }
-  }, 2000);
-
-  const btnCancel = document.querySelector('#AddWaveActionCancel');
-
-  if (btnCancel) {
-    btnCancel.addEventListener('click', function (e) {
-      localStorage.removeItem('newWaveActive');
-    });
-  }
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// const btnSave = document.querySelector(
-//   '#NewWaveMenu > li.dropdownaction.menubutton.menubuttonsave.my-botton-save'
-// );
+async function inicio() {
+  const btnSave = document.querySelector(
+    '#NewWaveMenu > li.dropdownaction.menubutton.menubuttonsave'
+  );
 
-// const area = document.querySelector('#ui-id-13').getBoundingClientRect();
-// btnSave.style.top = area.bottom + 'px';
+  // Espera 1 segundo
+  await delay(1000);
 
-// const area2 = btnYes.getBoundingClientRect();
-// btnSave.style.left = area2.right + 'px';
+  // Auto realise
+  const autoRealise = document.querySelector('#ScreenControlToggleSwitch37984 > div > div > div');
+  autoRealise?.click();
+
+  const btnCancel = document.querySelector('#AddWaveActionCancel');
+  btnCancel?.addEventListener('click', () => localStorage.removeItem('newWaveActive'));
+
+  // Espera 500 milisegundos adicionales
+  await delay(500);
+
+  btnSave.classList.add('my-botton-save');
+  btnSave.classList.remove('pull-right');
+
+  // Espera 500 milisegundos adicionales
+  await delay(500);
+  setPositionButtonSave(btnSave);
+
+  // Agregar el listener para el evento resize
+  window.addEventListener('resize', () => setPositionButtonSave(btnSave));
+}
+
+function setPositionButtonSave(btnSave) {
+  const btnYes = document.querySelector('#ScreenControlToggleSwitch37984 > div > div');
+  const area = document.querySelector('#ui-id-13')?.getBoundingClientRect();
+  const area2 = btnYes?.getBoundingClientRect();
+
+  btnSave.style.top = area.bottom + 'px';
+  btnSave.style.left = area2.right + 'px';
+}
 
 window.addEventListener('load', inicio, { once: true });

@@ -1,0 +1,28 @@
+table#gvInventario_ctl00 {
+  thead tr th:nth-child(3),
+  tbody tr td:nth-child(3),
+  thead tr th:nth-child(4),
+  tbody tr td:nth-child(4),
+  thead tr > th:nth-child(5),
+  tbody tr td:nth-child(5) {
+    display: table-cell !important;
+  }
+
+  thead tr th:nth-child(6),
+  tbody tr td:nth-child(6) {
+    text-wrap: nowrap;
+  }
+}
+
+@media print {
+  table#gvInventario_ctl00 {
+    thead tr th:nth-child(3),
+    tbody tr td:nth-child(3),
+    thead tr th:nth-child(4),
+    tbody tr td:nth-child(4),
+    thead tr > th:nth-child(5),
+    tbody tr td:nth-child(5) {
+      display: none !important;
+    }
+  }
+}

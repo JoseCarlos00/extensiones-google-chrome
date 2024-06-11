@@ -37,4 +37,11 @@
   #gvTrabajoActivoV3_ctl00 {
     border-color: #000 !important;
   }
+
+  #gvTrabajoActivoV3_ctl00 tr > th:nth-child(3),
+  #gvTrabajoActivoV3_ctl00 tr > td:nth-child(3) {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+  }
 }
