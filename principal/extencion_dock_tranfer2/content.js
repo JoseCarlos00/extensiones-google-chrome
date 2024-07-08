@@ -54,7 +54,7 @@ function inicio() {
       if (datosGuardados) {
         document.querySelector('.bnt-tranfer').setAttribute('disabled', true);
         document.querySelector('#containers').setAttribute('disabled', true);
-        
+
         contenedores = datosGuardados;
         console.log(
           'Se encontraron datos guardados:',
@@ -129,7 +129,7 @@ function inicio() {
 
     if (textarea.value === '') return;
 
-    const lineas = textarea.value.trim().split('\n');
+    const lineas = textarea?.value?.trim().split('\n');
 
     lineas.forEach(linea => {
       if (linea) {
@@ -226,15 +226,13 @@ function actualizarContadores() {
 }
 
 function tranferSubmit() {
-
   function waitForActive(timeout) {
     console.log('waitForActive1');
     return new Promise((resolve, reject) => {
       const intervalId = setInterval(() => {
         if (btnTranfer.disabled === false && puerta.value !== '') {
           // clearInterval(intervaloEnviar);
-          if (puerta.value == 'LIMPIEZA') 
-          clearInterval(intervalId);
+          if (puerta.value == 'LIMPIEZA') clearInterval(intervalId);
           resolve();
         }
         console.log('Enviar');
@@ -243,7 +241,7 @@ function tranferSubmit() {
       setTimeout(() => {
         clearInterval(intervalId);
         const errorMessage = `No Se activo del botton de 'Tranfer' después de ${timeout} segundos`;
-        if (document.querySelector("#buttonSubmit").disabled) reject(errorMessage);
+        if (document.querySelector('#buttonSubmit').disabled) reject(errorMessage);
       }, timeout);
     });
   }

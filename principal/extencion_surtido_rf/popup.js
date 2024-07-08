@@ -32,6 +32,8 @@ function inicio() {
         regex.test(loc2.value)
       ) {
         toLoc.value = loc2.value;
+      } else {
+        toLoc.value = loc.value;
       }
     }
 

@@ -13,6 +13,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         encodeURIComponent(message.theadToPrint) +
         '&tbody=' +
         encodeURIComponent(message.tbodyToPrint),
+      index: sender.tab.index + 1, // Abre la nueva pestaña al lado de la pestaña actual
+      active: true, // Haz que la nueva pestaña sea la activa
     });
   }
 });

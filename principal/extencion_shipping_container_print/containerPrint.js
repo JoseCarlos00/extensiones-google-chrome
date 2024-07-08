@@ -17,15 +17,15 @@ function inicio() {
     // Escucha el evento clic en el botón print
     document.getElementById('printButton').addEventListener('click', () => {
       // Lógica para obtener el contenido a imprimir de la página actual
-      const theadToPrint = document.getElementById('ListPaneDataGrid_headers').innerHTML;
-      const tbodyToPrint = document.getElementById('ListPaneDataGrid').innerHTML;
+      const theadToPrint = document.getElementById('ListPaneDataGrid_headers');
+      const tbodyToPrint = document.getElementById('ListPaneDataGrid');
 
       // Envía un mensaje al script de fondo para solicitar la apertura de una nueva pestaña
-      if (chrome.runtime) {
+      if (chrome.runtime && tbodyToPrint && theadToPrint) {
         chrome.runtime.sendMessage({
           command: 'openNewTab',
-          theadToPrint: theadToPrint,
-          tbodyToPrint: tbodyToPrint,
+          theadToPrint: theadToPrint.innerHTML,
+          tbodyToPrint: tbodyToPrint.innerHTML,
         });
       }
     });

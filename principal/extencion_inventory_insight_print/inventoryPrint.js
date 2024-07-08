@@ -6,7 +6,7 @@ function inicio() {
 
   const li = `
     <li class="navdetailpane visible-sm visible-md visible-lg">
-      <a id='printButton' href="#" data-toggle="detailpane" class="navimageanchor visiblepane">
+      <a id='printButton' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Imprimir Inventario" data-balloon-pos="down">
         <i class="far fa-print navimage"></i>
       </a>
     </li>
