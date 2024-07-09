@@ -23,7 +23,7 @@ const modalHTML = `
           <i class="far fa-plus"></i>
       </button>
 
-      <button id='copiarItem' href="#" data-toggle="detailpane" aria-label="Copy Item SQL" data-balloon-pos="up" class="copy-item" data-id="item-sql">
+      <button id='copiarItem' href="#" data-toggle="detailpane" aria-label="Copy Item SQL Values" data-balloon-pos="up" class="copy-item" data-id="item-sql">
           <i class="far fa-clipboard"></i>
       </button>
     </div>
@@ -125,21 +125,32 @@ function modalFunction() {
     const btnOpen = document.getElementById('openModalBtn');
     const btnClose = document.querySelector('.modal-container .close');
 
-    const modalIsert = document.getElementById('myModalInserToItem');
+    const modalInsert = document.getElementById('myModalInserToItem');
     const btnOpenModal = document.getElementById('insertItemModal');
     const btnCloseModal = document.querySelector('.modal-container-insert .close');
 
-    setEventListener({ modal, btnOpen, btnClose, modalIsert, btnCloseModal, btnOpenModal });
+    setEventListener({ modal, btnOpen, btnClose, modalInsert, btnCloseModal, btnOpenModal });
   });
 }
 
 function setEventModal(elements) {
-  const { btnOpen, btnClose, modal, modalIsert, btnCloseModal, btnOpenModal } = elements;
+  const { btnOpen, btnClose, modal, modalInsert, btnCloseModal, btnOpenModal } = elements;
 
   // Cuando el usuario hace clic en el botón, abre el modal
   btnOpen.addEventListener('click', function () {
     modal.style.display = 'block';
-    getTableContents();
+
+    getTableContents()
+      .then(() => {
+        const firstInputItem = document.querySelector(
+          '#tableContent > tbody > tr:nth-child(1) > td:nth-child(1) > input'
+        );
+
+        firstInputItem && firstInputItem.select();
+      })
+      .catch(err => {
+        console.error(err.message);
+      });
   });
 
   // Cuando el usuario hace clic en <span> (x), cierra el modal
@@ -150,17 +161,17 @@ function setEventModal(elements) {
   /** MODAL INSERTAR ITEM */
   // Cuando el usuario hace clic en el botón, abre el modal
   btnOpenModal.addEventListener('click', function () {
-    modalIsert.style.display = 'block';
+    modalInsert.style.display = 'block';
   });
 
   // Cuando el usuario hace clic en <span> (x), cierra el modal
   btnCloseModal.addEventListener('click', function () {
-    modalIsert.style.display = 'none';
+    modalInsert.style.display = 'none';
   });
 }
 
 function setEventListener(elements) {
-  const { modal, modalIsert } = elements;
+  const { modal, modalInsert } = elements;
   setEventModal(elements);
   setSortTableEvent();
 
@@ -171,8 +182,8 @@ function setEventListener(elements) {
 
     if (element == modal) {
       modal.style.display = 'none';
-    } else if (element == modalIsert) {
-      modalIsert.style.display = 'none';
+    } else if (element == modalInsert) {
+      modalInsert.style.display = 'none';
     }
 
     if (nodeName === 'INPUT') {
@@ -183,20 +194,16 @@ function setEventListener(elements) {
   const tableModal = document.querySelector('#tableContent');
   tableModal && tableModal.addEventListener('click', deleteRow);
 
-  window.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      const element = e.target;
-
-      if (element == modal) {
-        if (modal.style.display === 'block') {
-          modal.style.display = 'none';
-        }
-      } else if (element == modalIsert) {
-        if (modalIsert.style.display === 'block') {
-          modalIsert.style.display = 'none';
-        }
-      }
+  const closeModal = () => {
+    if (modalInsert.style.display === 'block') {
+      modalInsert.style.display = 'none';
+    } else if (modal.style.display === 'block') {
+      modal.style.display = 'none';
     }
+  };
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
   });
 
   const printButtonModal = document.querySelector('#printButtonModal');
@@ -251,21 +258,25 @@ function setSortTableEvent() {
 }
 
 function getTableContents() {
-  const tbodyElement = document.getElementById('ListPaneDataGrid');
+  return new Promise((resolve, reject) => {
+    const tbodyElement = document.getElementById('ListPaneDataGrid');
 
-  if (!tbodyElement) return;
+    if (!tbodyElement) reject({ message: 'No existe tbodyElement' });
 
-  const table = document.createElement('table');
-  const tbodyContent = tbodyElement.innerHTML;
+    const table = document.createElement('table');
+    const tbodyContent = tbodyElement.innerHTML;
 
-  table.innerHTML = tbodyContent;
+    table.innerHTML = tbodyContent;
 
-  showTable(table)
-    .then()
-    .catch(e => console.error(e.message));
+    showTable(table)
+      .then()
+      .catch(e => console.error(e.message));
 
-  showIndicator();
-  eventTeclas();
+    showIndicator();
+    eventTeclas();
+
+    resolve();
+  });
 }
 
 function eventTeclas() {
@@ -410,23 +421,6 @@ function showIndicator(columnIndex) {
       indicador && (indicador.style.display = 'none');
     }
   });
-}
-
-function sortTable(columnIndex) {
-  console.log('sortTable:', columnIndex);
-  showIndicator(columnIndex);
-
-  const table = document.querySelector('#tableContent');
-  const tbody = table.querySelector('tbody');
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-
-  rows.sort((a, b) => {
-    const aValue = a.querySelectorAll('input')[columnIndex].value;
-    const bValue = b.querySelectorAll('input')[columnIndex].value;
-    return aValue.localeCompare(bValue);
-  });
-
-  rows.forEach(row => tbody.appendChild(row));
 }
 
 function sortTable(columnIndex) {
