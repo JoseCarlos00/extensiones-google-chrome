@@ -43,6 +43,22 @@ function inicio() {
   panelDetail.insertAdjacentHTML('beforeend', htmlCustomer);
 
   observacion(tbody);
+  setEventTeclas(tbody);
+}
+
+function setEventTeclas(tbody) {
+  // Escuchar el evento de teclado en todo el documento
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowUp') {
+      const trSelected = tbody.querySelector('tr[aria-selected="true"]');
+      trSelected && extraerDatosDeTr(tr);
+    }
+
+    if (event.key === 'ArrowDown') {
+      const trSelected = tbody.querySelector('tr[aria-selected="true"]');
+      trSelected && extraerDatosDeTr(tr);
+    }
+  });
 }
 
 const extraerDatosInternos = {

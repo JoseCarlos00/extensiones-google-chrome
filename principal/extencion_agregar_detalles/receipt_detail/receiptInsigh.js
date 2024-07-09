@@ -44,6 +44,7 @@ function inicio() {
   });
 
   observacion(tbody);
+  setEventTeclas(tbody);
 }
 
 function extraerDatosDeTr(tr) {
@@ -72,6 +73,21 @@ function extraerDatosDeTr(tr) {
   });
 }
 
+function setEventTeclas(tbody) {
+  // Escuchar el evento de teclado en todo el documento
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowUp') {
+      const trSelected = tbody.querySelector('tr[aria-selected="true"]');
+      trSelected && extraerDatosDeTr(tr);
+    }
+
+    if (event.key === 'ArrowDown') {
+      const trSelected = tbody.querySelector('tr[aria-selected="true"]');
+      trSelected && extraerDatosDeTr(tr);
+    }
+  });
+}
+
 function observacion(tbody) {
   console.log('[Observacion]');
   // Función que se ejecutará cuando ocurra una mutación en el DOM
@@ -81,7 +97,7 @@ function observacion(tbody) {
 
     if (mutationsList[0]) {
       const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]') ?? null;
-      extraerDatosDeTr(trSelected);
+      trSelected && extraerDatosDeTr(tr);
     }
   }
 

@@ -23,7 +23,7 @@ const modalHTML = `
           <i class="far fa-plus"></i>
       </button>
 
-      <button id='copiarItem' href="#" data-toggle="detailpane" aria-label="Copy Item SQL Values" data-balloon-pos="up" class="copy-item" data-id="item-sql">
+      <button id='copiarItem' href="#" data-toggle="detailpane" aria-label="Copy Item SQL" data-balloon-pos="up" class="copy-item" data-id="item-sql">
           <i class="far fa-clipboard"></i>
       </button>
     </div>
@@ -547,6 +547,8 @@ async function copyToClipBoard(e) {
       location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
     };
 
+    let textoACopiar = '';
+
     rows.forEach(row => {
       let inputSelector = '';
 
@@ -568,6 +570,7 @@ async function copyToClipBoard(e) {
       }
     });
 
+    textoACopiar = textoItems.join('\n');
     await navigator.clipboard.writeText(textoACopiar);
   } catch (err) {
     console.error('Error al copiar al portapapeles:', err);

@@ -172,21 +172,21 @@
 - **[Work Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2757](https://wms.fantasiasmiguel.com.mx/scale/insights/2757)
 
-| Fila              | Agredas / original |
-| :---------------- | ------------------ |
-| Work Unit         | Original           |
-| Work Type         | Original           |
-| Condition         | Original           |
-| To location       | Original           |
-| Item              | Original           |
-| Item Desc         | Original           |
-| Company           | Original           |
-| Reference Id      |                    |
-| Assigned User     |                    |
-| Wave Number       |                    |
-| Completed By User |                    |
-| From zone         |                    |
-| To zone           |                    |
+| Fila                        | Agredas / original |
+| :-------------------------- | ------------------ |
+| Work Unit                   | Original           |
+| Work Type                   | Original           |
+| Condition                   | Original           |
+| To location                 | Original           |
+| Item                        | Original           |
+| Item Desc                   | Original           |
+| Company                     | Original           |
+| Reference Id                |                    |
+| Assigned User               |                    |
+| Internal Instruction Number |                    |
+| Completed By User           |                    |
+| From zone                   |                    |
+| To zone                     |                    |
 
 ---
 

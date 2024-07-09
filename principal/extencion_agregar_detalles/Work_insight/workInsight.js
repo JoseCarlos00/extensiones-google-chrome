@@ -4,7 +4,7 @@ console.log('Work insight');
  * DATOS INTERNOS
  * - Reference Id
  * - Assigned User
- * - Wave Number
+ * - Internal Instruction Number
  * - Completed By User
  *
  * LOCATION
@@ -31,7 +31,7 @@ function inicio() {
 
   panelDetail.insertAdjacentHTML('beforeend', htmlReferenceId);
   panelDetail.insertAdjacentHTML('beforeend', htmlAssignedUser);
-  panelDetail.insertAdjacentHTML('beforeend', htmlWaveNumber);
+  panelDetail.insertAdjacentHTML('beforeend', htmlInternalInstructionNum);
   panelDetail.insertAdjacentHTML('beforeend', htmlCompleteByUser);
 
   panelDetail.insertAdjacentHTML('beforeend', htmlFromZone);
@@ -56,6 +56,22 @@ function inicio() {
   });
 
   observacion(tbody);
+  setEventTeclas(tbody);
+}
+
+function setEventTeclas(tbody) {
+  // Escuchar el evento de teclado en todo el documento
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowUp') {
+      const trSelected = tbody.querySelector('tr[aria-selected="true"]');
+      trSelected && extraerDatosDeTr(tr);
+    }
+
+    if (event.key === 'ArrowDown') {
+      const trSelected = tbody.querySelector('tr[aria-selected="true"]');
+      trSelected && extraerDatosDeTr(tr);
+    }
+  });
 }
 
 function observacion(tbody) {
@@ -68,7 +84,7 @@ function observacion(tbody) {
     if (mutationsList[0]) {
       console.log('isColumnExist:', mutationsList[0]);
       const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]');
-      if (trSelected) extraerDatosDeTr(trSelected);
+      trSelected && extraerDatosDeTr(tr);
     }
   }
 
@@ -107,8 +123,8 @@ function extraerDatosDeTr(tr) {
   const assgnedUserElement =
     tr.querySelector('[aria-describedby="ListPaneDataGrid_USER_ASSIGNED"]') ?? null;
 
-  const waveNumberElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_LAUNCH_NUM"]') ?? null;
+  const internalInstructionNumElement =
+    tr.querySelector('[aria-describedby="ListPaneDataGrid_INTERNAL_INSTRUCTION_NUM"]') ?? null;
 
   const completedByUserElement =
     tr.querySelector('[aria-describedby="ListPaneDataGrid_COMPLETED_BY_USER"]') ?? null;
@@ -116,13 +132,15 @@ function extraerDatosDeTr(tr) {
   // Inner text
   const referenceId = referenceIdElement ? referenceIdElement.innerText : '';
   const assignedUser = assgnedUserElement ? assgnedUserElement.innerText : '';
-  const waveNumber = waveNumberElement ? waveNumberElement.innerText : '';
+  const internalInstructionNum = internalInstructionNumElement
+    ? internalInstructionNumElement.innerText
+    : '';
   const completedByUser = completedByUserElement ? completedByUserElement.innerText : '';
 
   insertarInfo({
     referenceId,
     assignedUser,
-    waveNumber,
+    internalInstructionNum,
     completedByUser,
   });
 }
@@ -130,12 +148,13 @@ function extraerDatosDeTr(tr) {
 function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
-  const { referenceId, assignedUser, waveNumber, completedByUser } = info;
+  const { referenceId, assignedUser, internalInstructionNum, completedByUser } = info;
 
   // Obtener elementos del DOM
   const referenceIdElement = document.querySelector('#DetailPaneHeaderReferenceId') ?? null;
   const assgnedUserElement = document.querySelector('#DetailPaneHeaderAssignedUser') ?? null;
-  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber') ?? null;
+  const internalInstructionNumElement =
+    document.querySelector('#DetailPaneHeaderInternalInstructionNum') ?? null;
   const completedByUserElement = document.querySelector('#DetailPaneHeaderCompleteByUser') ?? null;
 
   const verMasElement = document.querySelector('#verMasInfomacion');
@@ -143,7 +162,8 @@ function insertarInfo(info) {
   // Asignar valores a los elementos del DOM si existen
   referenceIdElement && (referenceIdElement.innerHTML = referenceId);
   assgnedUserElement && (assgnedUserElement.innerHTML = assignedUser);
-  waveNumberElement && (waveNumberElement.innerHTML = waveNumber);
+  internalInstructionNumElement &&
+    (internalInstructionNumElement.innerHTML = internalInstructionNum);
   completedByUserElement && (completedByUserElement.innerHTML = completedByUser);
 
   if (verMasElement) {
@@ -157,7 +177,8 @@ function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
   const referenceIdElement = document.querySelector('#DetailPaneHeaderReferenceId') ?? null;
   const assgnedUserElement = document.querySelector('#DetailPaneHeaderAssignedUser') ?? null;
-  const waveNumberElement = document.querySelector('#DetailPaneHeaderWaveNumber') ?? null;
+  const internalInstructionNumElement =
+    document.querySelector('#DetailPaneHeaderInternalInstructionNum') ?? null;
   const completedByUserElement = document.querySelector('#DetailPaneHeaderCompleteByUser') ?? null;
 
   const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
@@ -168,7 +189,7 @@ function limpiarPaneldeDetalles() {
   // Limpiar el contenido de los elementos si existen
   referenceIdElement && (referenceIdElement.innerHTML = '');
   assgnedUserElement && (assgnedUserElement.innerHTML = '');
-  waveNumberElement && (waveNumberElement.innerHTML = '');
+  internalInstructionNumElement && (internalInstructionNumElement.innerHTML = '');
   completedByUserElement && (completedByUserElement.innerHTML = '');
 
   fromZoneElement && (fromZoneElement.innerHTML = '');
@@ -296,10 +317,10 @@ const htmlAssignedUser = `
     id="DetailPaneHeaderAssignedUser"></label>
 </div>`;
 
-const htmlWaveNumber = `
+const htmlInternalInstructionNum = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderWaveNumber"
-    id="DetailPaneHeaderWaveNumber"></label>
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderInternalInstructionNum"
+    id="DetailPaneHeaderInternalInstructionNum"></label>
 </div>`;
 
 const htmlCompleteByUser = `

@@ -4,7 +4,7 @@ console.log('[background.js]');
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.action === 'some_action') {
     console.log('[Some Action]');
-    chrome.tabs.create({ url: message.url, active: false });
+    chrome.tabs.create({ url: message.url, index: sender.tab.index + 1, active: false });
     // Enviar respuesta al script de contenido
     sendResponse({ status: 'OK' });
     //
