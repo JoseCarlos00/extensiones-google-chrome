@@ -51,12 +51,12 @@ function setEventTeclas(tbody) {
   document.addEventListener('keydown', function (event) {
     if (event.key === 'ArrowUp') {
       const trSelected = tbody.querySelector('tr[aria-selected="true"]');
-      trSelected && extraerDatosDeTr(tr);
+      trSelected && extraerDatosDeTr(trSelected);
     }
 
     if (event.key === 'ArrowDown') {
       const trSelected = tbody.querySelector('tr[aria-selected="true"]');
-      trSelected && extraerDatosDeTr(tr);
+      trSelected && extraerDatosDeTr(trSelected);
     }
   });
 }

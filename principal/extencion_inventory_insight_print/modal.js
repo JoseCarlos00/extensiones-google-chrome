@@ -33,7 +33,7 @@ const modalHTML = `
           <th class="show-header" contenteditable="false" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">
             <div class="value">
               Item
-              <button href="#" data-toggle="detailpane" aria-label="Copy Table" data-balloon-pos="up" class="copy-item" data-id="item-location">
+              <button href="#" data-toggle="detailpane" aria-label="Copia Tabla" data-balloon-pos="left" class="copy-item" data-id="item-location">
                 <i class="far fa-clipboard"></i>
               </button>
             </div>
