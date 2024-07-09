@@ -3,9 +3,7 @@
   "name": "Imprime Shipping container insight",
   "version": "1.0",
   "description": "Crea una nueva pestaña los contenedores para imprimir",
-  "permissions": [
-    "activeTab", "scripting", "tabs"
-  ],
+  "permissions": ["activeTab", "scripting", "tabs"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -24,18 +22,13 @@
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": [
-    "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"
-  ],
+  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
   "content_scripts": [
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"
-      ],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
       "js": ["containerPrint.js"],
-      "css": ["style.css"]
+      "css": ["style.css", "balloon.css"]
     }
-    
   ],
   "web_accessible_resources": [
     {
