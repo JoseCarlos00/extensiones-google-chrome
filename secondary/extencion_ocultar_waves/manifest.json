@@ -1,31 +1,45 @@
 {
-    "manifest_version": 3,
-    "name": "Ocultar Olas",
-    "version": "1.0",
-    "description": "Pone en opacity 0, las olas no utilizada",
-    "permissions": ["scripting", "activeTab"],
-    "icons": {
+  "manifest_version": 3,
+  "name": "Ocultar Olas",
+  "version": "1.0",
+  "description": "Ocultas todas las Olas, solo dejando la Activa",
+  "permissions": ["scripting", "activeTab"],
+  "icons": {
+    "16": "images/broom16.png",
+    "32": "images/broom32.png",
+    "48": "images/broom48.png",
+    "128": "images/broom128.png"
+  },
+  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/newwave?excludeFromNavTrail=Y*"],
+      "js": ["new_wave.js"],
+      "css": ["new_wave.css"]
+    },
+    {
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/trans/addshipmenttowave?excludeFromNavTrail=Y*"
+      ],
+      "js": ["addNewWave.js"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"],
+      "js": ["plannedInsight.js"],
+      "css": ["plannedInsight.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "defaul_icon": {
       "16": "images/broom16.png",
       "32": "images/broom32.png",
       "48": "images/broom48.png",
       "128": "images/broom128.png"
-    },
-    "content_scripts": [
-      {
-        "matches": [
-          "https://wms.fantasiasmiguel.com.mx/scale/trans/newwave?excludeFromNavTrail=Y"
-        ],
-        "js": ["content.js"]
-      }
-    ],
-    "action": {
-      "default_popup": "popup.html",
-      "defaul_icon" :  {
-        "16": "images/broom16.png",
-        "32": "images/broom32.png",
-        "48": "images/broom48.png",
-        "128": "images/broom128.png"
-      }
     }
+  },
+  "content_security_policy": {
+    "script-src": ["'self'", "'unsafe-inline'"],
+    "object-src": "'self'"
   }
-  
+}
