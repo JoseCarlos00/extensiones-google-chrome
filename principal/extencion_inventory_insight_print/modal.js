@@ -85,6 +85,17 @@ const modalHTML = `
 </section>
 `;
 
+const alertHtml = `
+<div id="alerta-copy" aria-live="polite"
+  style="bottom: 40px; position: fixed; left: 0px; width: 100%; display: flex; z-index: 1000000; padding: 4px; opacity: 0; transition-property: opacity, transform; transition-duration: 270ms; transition-timing-function: ease;">
+  <div
+    style="background: rgb(47, 47, 47); color: rgb(211, 211, 211); border-radius: 8px; padding: 11px 16px; box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,   rgba(15, 15, 15, 0.2) 0px 5px 10px,   rgba(15, 15, 15, 0.4) 0px 15px 40px; margin: 0px auto; font-size: 14px; display: flex; align-items: center;">
+    Copiado al portapapeles
+    <div style="margin-left: 4px; margin-right: -4px"></div>
+  </div>
+</div>
+`;
+
 // Objeto para almacenar los datos
 const datos = [];
 
@@ -104,6 +115,7 @@ function inicio() {
   if (!ul) return;
 
   ul.insertAdjacentHTML('beforeend', li);
+  document.querySelector('body').insertAdjacentHTML('beforeend', alertHtml);
 
   modalFunction();
 }
@@ -530,51 +542,63 @@ function insertarItems() {
   }, 250);
 }
 
-async function copyToClipBoard(e) {
-  e.stopPropagation();
-
+async function copy(textoACopiar) {
   try {
-    let textoItems = [];
-    const element = e.target.nodeName === 'I' ? e.target.closest('button') : e.target;
-    const dataSet = element.dataset['id'] ?? '';
-
-    const table = document.querySelector('#tableContent');
-    const tbody = table.querySelector('tbody');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-
-    const selector = {
-      item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
-      location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
-    };
-
-    let textoACopiar = '';
-
-    rows.forEach(row => {
-      let inputSelector = '';
-
-      if (dataSet === 'item-sql') {
-        inputSelector = selector.item;
-      } else if (dataSet === 'item-location') {
-        textoItems = rows.map(row => {
-          const item = row.querySelector(selector.item).value;
-          const location = row.querySelector(selector.location).value;
-          return `${item}\t${location}`;
-        });
-      }
-
-      if (inputSelector) {
-        const input = row.querySelector(inputSelector);
-        if (input) {
-          textoItems.push(dataSet === 'item-sql' ? `'${input.value}',` : input.value);
-        }
-      }
-    });
-
-    textoACopiar = textoItems.join('\n');
     await navigator.clipboard.writeText(textoACopiar);
+
+    const alerta = document.querySelector('#alerta-copy');
+
+    alerta && (alerta.style.opacity = 1);
+    setTimeout(() => {
+      alerta && (alerta.style.opacity = 0);
+    }, 4000);
   } catch (err) {
     console.error('Error al copiar al portapapeles:', err);
+    alert('Error al copiar al portapapeles:');
   }
+}
+
+function copyToClipBoard(e) {
+  e.stopPropagation();
+
+  let textoItems = [];
+  const element = e.target.nodeName === 'I' ? e.target.closest('button') : e.target;
+  const dataSet = element.dataset['id'] ?? '';
+
+  const table = document.querySelector('#tableContent');
+  const tbody = table.querySelector('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  const selector = {
+    item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
+    location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
+  };
+
+  let textoACopiar = '';
+
+  rows.forEach(row => {
+    let inputSelector = '';
+
+    if (dataSet === 'item-sql') {
+      inputSelector = selector.item;
+    } else if (dataSet === 'item-location') {
+      textoItems = rows.map(row => {
+        const item = row.querySelector(selector.item).value;
+        const location = row.querySelector(selector.location).value;
+        return `${item}\t${location}`;
+      });
+    }
+
+    if (inputSelector) {
+      const input = row.querySelector(inputSelector);
+      if (input) {
+        textoItems.push(dataSet === 'item-sql' ? `'${input.value}',` : input.value);
+      }
+    }
+  });
+
+  textoACopiar = textoItems.join('\n');
+  copy(textoACopiar);
 }
 
 window.addEventListener('load', inicio);
