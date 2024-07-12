@@ -30,6 +30,7 @@ function inicio() {
   }
 
   panelDetail.insertAdjacentHTML('beforeend', htmlReferenceId);
+  panelDetail.insertAdjacentHTML('beforeend', htmlCustomer);
   panelDetail.insertAdjacentHTML('beforeend', htmlAssignedUser);
   panelDetail.insertAdjacentHTML('beforeend', htmlInternalInstructionNum);
   panelDetail.insertAdjacentHTML('beforeend', htmlCompleteByUser);
@@ -101,6 +102,12 @@ function observacion(tbody) {
   // Inicia la observación del nodo objetivo y su configuración
   observer.observe(tbody, observerConfig);
 }
+const extraerDatosInternos = {
+  referenceId: "[aria-describedby='ListPaneDataGrid_REFERENCE_ID']",
+  assignedUser: "[aria-describedby='ListPaneDataGrid_USER_ASSIGNED']",
+  internalNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_INSTRUCTION_NUM']",
+  completedByUser: "[aria-describedby='ListPaneDataGrid_COMPLETED_BY_USER']",
+};
 
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
@@ -117,17 +124,10 @@ function extraerDatosDeTr(tr) {
     }
   }
 
-  const referenceIdElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_REFERENCE_ID"]') ?? null;
-
-  const assgnedUserElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_USER_ASSIGNED"]') ?? null;
-
-  const internalInstructionNumElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_INTERNAL_INSTRUCTION_NUM"]') ?? null;
-
-  const completedByUserElement =
-    tr.querySelector('[aria-describedby="ListPaneDataGrid_COMPLETED_BY_USER"]') ?? null;
+  const referenceIdElement = tr.querySelector(extraerDatosInternos.referenceId) ?? null;
+  const assgnedUserElement = tr.querySelector(extraerDatosInternos.assignedUser) ?? null;
+  const internalInstructionNumElement = tr.querySelector(extraerDatosInternos.internalNum) ?? null;
+  const completedByUserElement = tr.querySelector(extraerDatosInternos.completedByUser) ?? null;
 
   // Inner text
   const referenceId = referenceIdElement ? referenceIdElement.innerText : '';
@@ -151,11 +151,11 @@ function insertarInfo(info) {
   const { referenceId, assignedUser, internalInstructionNum, completedByUser } = info;
 
   // Obtener elementos del DOM
-  const referenceIdElement = document.querySelector('#DetailPaneHeaderReferenceId') ?? null;
-  const assgnedUserElement = document.querySelector('#DetailPaneHeaderAssignedUser') ?? null;
-  const internalInstructionNumElement =
-    document.querySelector('#DetailPaneHeaderInternalInstructionNum') ?? null;
-  const completedByUserElement = document.querySelector('#DetailPaneHeaderCompleteByUser') ?? null;
+  const referenceIdElement = document.querySelector(selectorId.referenceId) ?? null;
+  const customerElement = document.querySelector(selectorId.customer);
+  const assgnedUserElement = document.querySelector(selectorId.assignedUser) ?? null;
+  const internalInstructionNumElement = document.querySelector(selectorId.internalNum) ?? null;
+  const completedByUserElement = document.querySelector(selectorId.completedByUser) ?? null;
 
   const verMasElement = document.querySelector('#verMasInfomacion');
 
@@ -171,23 +171,27 @@ function insertarInfo(info) {
 
     verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
   }
+
+  // Insertar tienda si el elemento del cliente existe y hay un ID de envío
+  customerElement && referenceId && insertarTienda(customerElement, referenceId);
 }
 
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
-  const referenceIdElement = document.querySelector('#DetailPaneHeaderReferenceId') ?? null;
-  const assgnedUserElement = document.querySelector('#DetailPaneHeaderAssignedUser') ?? null;
-  const internalInstructionNumElement =
-    document.querySelector('#DetailPaneHeaderInternalInstructionNum') ?? null;
-  const completedByUserElement = document.querySelector('#DetailPaneHeaderCompleteByUser') ?? null;
+  const referenceIdElement = document.querySelector(selectorId.referenceId) ?? null;
+  const customerElement = document.querySelector(selectorId.customer);
+  const assgnedUserElement = document.querySelector(selectorId.assignedUser) ?? null;
+  const internalInstructionNumElement = document.querySelector(selectorId.internalNum) ?? null;
+  const completedByUserElement = document.querySelector(selectorId.completedByUser) ?? null;
 
-  const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
-  const toZoneElement = document.querySelector('#DetailPaneHeaderToZone') ?? null;
+  const fromZoneElement = document.querySelector(selectorId.fromZone) ?? null;
+  const toZoneElement = document.querySelector(selectorId.toZone) ?? null;
 
   const verMasElement = document.querySelector('#verMasInfomacion');
 
   // Limpiar el contenido de los elementos si existen
   referenceIdElement && (referenceIdElement.innerHTML = '');
+  customerElement && (customerElement.innerHTML = '');
   assgnedUserElement && (assgnedUserElement.innerHTML = '');
   internalInstructionNumElement && (internalInstructionNumElement.innerHTML = '');
   completedByUserElement && (completedByUserElement.innerHTML = '');
@@ -202,8 +206,8 @@ function waitFordata() {
   console.log('[wait for data]');
   const text = '1346-863-28886...';
 
-  const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
-  const toZoneElement = document.querySelector('#DetailPaneHeaderToZone') ?? null;
+  const fromZoneElement = document.querySelector(selectorId.fromZone) ?? null;
+  const toZoneElement = document.querySelector(selectorId.toZone) ?? null;
 
   if (fromZoneElement) {
     fromZoneElement.innerHTML = text;
@@ -221,8 +225,8 @@ function removeClassWait() {
   const text = 'No encontrado';
 
   // Obtener elementos del DOM
-  const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
-  const toZoneElement = document.querySelector('#DetailPaneHeaderToZone') ?? null;
+  const fromZoneElement = document.querySelector(selectorId.fromZone) ?? null;
+  const toZoneElement = document.querySelector(selectorId.toZone) ?? null;
 
   if (fromZoneElement) {
     fromZoneElement.innerHTML = text;
@@ -243,8 +247,8 @@ function actualizarInterfaz(datos) {
   const { fromZone, toZone } = datos;
 
   // Obtener elementos del DOM
-  const fromZoneElement = document.querySelector('#DetailPaneHeaderFromZone') ?? null;
-  const toZoneElement = document.querySelector('#DetailPaneHeaderToZone') ?? null;
+  const fromZoneElement = document.querySelector(selectorId.fromZone) ?? null;
+  const toZoneElement = document.querySelector(selectorId.toZone) ?? null;
 
   if (fromZoneElement) {
     fromZoneElement.innerHTML = fromZone;
@@ -290,6 +294,18 @@ function solicitarDatosExternos() {
   }
 }
 
+function insertarTienda(element, shipmentId) {
+  const clave = shipmentId.trim().split('-')[0];
+
+  console.log('clave:', clave);
+
+  if (tiendas.hasOwnProperty(clave)) {
+    element.innerHTML = tiendas[clave];
+  } else {
+    console.log('La clave de la tienda no existe.');
+  }
+}
+
 // Escuchar los mensajes enviados desde el script de fondo
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   console.log('Escuchar mensaje:');
@@ -329,6 +345,13 @@ const htmlCompleteByUser = `
     id="DetailPaneHeaderCompleteByUser"></label>
 </div>`;
 
+// Datos Intermedios
+const htmlCustomer = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderCustomer"
+    id="DetailPaneHeaderCustomer"></label>
+</div>`;
+
 // Datos Externos
 const htmlFromZone = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
@@ -341,5 +364,64 @@ const htmlToZone = `
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderToZone"
     id="DetailPaneHeaderToZone"></label>
 </div>`;
+
+const selectorId = {
+  referenceId: '#DetailPaneHeaderReferenceId',
+  assignedUser: '#DetailPaneHeaderAssignedUser',
+  internalNum: '#DetailPaneHeaderInternalInstructionNum',
+  completedByUser: '#DetailPaneHeaderCompleteByUser',
+  customer: '#DetailPaneHeaderCustomer',
+  fromZone: '#DetailPaneHeaderFromZone',
+  toZone: '#DetailPaneHeaderToZone',
+};
+
+const tiendas = {
+  3407: 'Tol-Centro',
+  3409: 'Tol-Metepec',
+  417: 'Mex-Grande',
+  418: 'Mex-Chica',
+  444: 'Mex-Adornos',
+  1171: 'Mex-Mylin',
+  357: 'Mex-Mayoreo',
+  350: 'Mex-Lomas',
+  351: 'Mex-Satelite',
+  352: 'Mex-Coapa',
+  353: 'Mex-Tlalne',
+  356: 'Mex-Polanco',
+  360: 'Mex-Valle',
+  361: 'Mex-Coacalco',
+  363: 'Mex-Santa Fe',
+  414: 'Mex-Xochimilco',
+  415: 'Mex-Interlomas',
+  3401: 'Mex-Coyoacan',
+  3404: 'Mex-Pedregal',
+  4342: 'Ags-Aguascalientes',
+  4559: 'BCN-Carrousel',
+  4797: 'BCN-Mexicali',
+  4757: 'BCN-Tijuana',
+  4799: 'Coa-Saltillo',
+  4753: 'Coa-Torreon',
+  4756: 'Dur-Durango',
+  3400: 'Gto-Leon',
+  359: 'Jal-Centro',
+  4348: 'Jal-Gdl Palomar',
+  4345: 'Jal-Gdl Patria',
+  354: 'Jal-Zapopan',
+  355: 'Mty-Centro',
+  3405: 'Mty-Citadel',
+  3406: 'Mty-GarzaSada',
+  362: 'Mty-SanJeronimo',
+  3403: 'Pue-Puebla',
+  4798: 'QRO-Arboledas',
+  3402: 'Que-Queretaro',
+  4570: 'Roo-Cancun',
+  4755: 'Sin-Culiacan',
+  3408: 'SLP-SanLuis',
+  4574: 'Son-Hermosillo',
+  4573: 'Ver-Veracruz',
+  4346: 'Yuc-Campestre',
+  364: 'Yuc-Merida',
+  4344: 'ME-Maestros',
+};
 
 window.addEventListener('load', inicio, { once: true });

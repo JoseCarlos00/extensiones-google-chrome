@@ -120,20 +120,20 @@
 - **[Receipt Container Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2779](https://wms.fantasiasmiguel.com.mx/scale/insights/2779)
 
-| Fila                           | Agredas / original   |
-| :----------------------------- | -------------------- |
-| Receipt Id                     |                      |
-| Licence Plate                  | Original             |
-| Container Type                 | Original - Si existe |
-| Container Status               | Original             |
-| Item                           | Original             |
-| Item Desc                      | Original             |
-| Company                        | Original             |
-| Parent                         |                      |
-| Receipt Date                   |                      |
-| Date time stamp **_Check In_** |                      |
-| User Stamp                     |                      |
-| Trailer Id                     |                      |
+| Fila                           | Agredas / original      |
+| :----------------------------- | ----------------------- |
+| Receipt Id                     |                         |
+| Licence Plate                  | Original                |
+| Container Type                 | Original - (Si existe ) |
+| Container Status               | Original                |
+| Item                           | Original                |
+| Item Desc                      | Original                |
+| Company                        | Original                |
+| Parent                         |                         |
+| Receipt Date                   |                         |
+| Date time stamp **_Check In_** |                         |
+| User Stamp                     |                         |
+| Trailer Id                     |                         |
 
 ---
 
@@ -182,6 +182,7 @@
 | Item Desc                   | Original           |
 | Company                     | Original           |
 | Reference Id                |                    |
+| Customer                    |                    |
 | Assigned User               |                    |
 | Internal Instruction Number |                    |
 | Completed By User           |                    |
