@@ -278,6 +278,7 @@ function getTableContents() {
     const table = document.createElement('table');
     const tbodyContent = tbodyElement.innerHTML;
 
+    if (!table) reject({ message: 'No existe table Element' });
     table.innerHTML = tbodyContent;
 
     showTable(table)
