@@ -73,29 +73,24 @@
   border-collapse: collapse;
   font-size: 18px;
 
-  margin-top: 10px;
-
-  tr {
-    position: relative;
-  }
-
-  tr td,
-  tr th {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  th {
+    text-align: center;
   }
 
   th,
   td {
-    text-align: left;
     vertical-align: top;
     border: 1px solid #000;
-    padding: 0.3em;
+    padding: 0.3rem 0.5rem;
   }
 
-  .ocultar {
-    display: none;
+  th {
+    background-color: #bebebe;
+  }
+
+  .not-available {
+    background-color: #ff7f50;
+    opacity: 0.6;
   }
 }
 
