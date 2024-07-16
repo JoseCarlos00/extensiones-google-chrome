@@ -14,7 +14,12 @@
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],
-      "js": ["content.js"],
+      "js": ["ShippingLoadInsight.js"],
+      "css": ["style.css", "balloon.css"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload*"],
+      "js": ["shippingload.js"],
       "css": ["style.css", "balloon.css"]
     }
   ],

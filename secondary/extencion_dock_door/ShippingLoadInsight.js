@@ -168,6 +168,7 @@ const modalHTML = `
 
 function inicio() {
   console.log('[Inventory Insight Modal]');
+
   const ul =
     document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav') ?? null;
 
@@ -180,10 +181,47 @@ function inicio() {
     `;
 
   if (!ul) return;
-
   ul.insertAdjacentHTML('beforeend', li);
 
   modalFunction();
+
+  const tbody = document.querySelector('#ListPaneDataGrid > tbody');
+  tbody && observacion(tbody);
+}
+
+async function setLocalStorage(doorParams) {
+  try {
+    const door = doorParams || (await getDoockDoor());
+
+    await chrome.storage.local.set({ key: door });
+    console.log('Doors Save Storage');
+  } catch (error) {
+    console.error('Error saving doors to storage:', error);
+  }
+}
+
+function observacion(tbody) {
+  console.log('[Observacion]');
+  // Función que se ejecutará cuando ocurra una mutación en el DOM
+  function handleMutation(mutationsList, observer) {
+    // Realiza acciones en respuesta a la mutación
+    console.log('Se ha detectado una mutación en el DOM');
+
+    setLocalStorage();
+  }
+
+  // Configuración del observer
+  const observerConfig = {
+    attributes: false, // Observar cambios en atributos
+    childList: true, // Observar cambios en la lista de hijos
+    subtree: false, // Observar cambios en los descendientes de los nodos objetivo
+  };
+
+  // Crea una instancia de MutationObserver con la función de callback
+  const observer = new MutationObserver(handleMutation);
+
+  // Inicia la observación del nodo objetivo y su configuración
+  observer.observe(tbody, observerConfig);
 }
 
 function insertModal() {
@@ -250,7 +288,6 @@ function cleanClass(clase) {
   return new Promise((resolve, reject) => {
     try {
       const clases = document.querySelectorAll(`table#content .${clase}`);
-      console.log('cleanClass:', clases);
 
       if (clases.length === 0) {
         resolve(); // Resuelve la promesa incluso si no hay elementos
@@ -282,7 +319,7 @@ function getDoockDoor() {
       const content = doorElement.innerHTML;
 
       if (content) {
-        door.push(content);
+        door.push(content.replace(/&nbsp;/, ' '));
       }
     });
 
@@ -301,6 +338,8 @@ async function insertDoockNotAvailable() {
     if (rows.length === 0) return; // Asegurarse de que hay filas en la tabla
 
     const door = await getDoockDoor();
+    setLocalStorage(door);
+
     await cleanClass('not-available');
 
     rows.forEach(td => {
