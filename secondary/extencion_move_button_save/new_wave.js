@@ -1,30 +1,32 @@
+const selector = {
+  autoRelise: '#ScreenControlToggleSwitch37984 > div > div > div',
+  btnYes: '#ScreenControlToggleSwitch37984 > div > div',
+  btnSave: '#NewWaveMenu > li.dropdownaction.menubutton.menubuttonsave',
+};
+
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function inicio() {
-  const btnSave = document.querySelector(
-    '#NewWaveMenu > li.dropdownaction.menubutton.menubuttonsave'
-  );
+  const btnSave = document.querySelector(selector.btnSave);
 
-  // Espera 1 segundo
-  await delay(1000);
+  await delay(250);
+  await clickMenuWaveMaster();
 
   // Auto realise
-  const autoRealise = document.querySelector('#ScreenControlToggleSwitch37984 > div > div > div');
-  autoRealise?.click();
+  const autoRealise = document.querySelector(selector.autoRelise);
+  autoRealise && autoRealise.click();
 
   const btnCancel = document.querySelector('#AddWaveActionCancel');
-  btnCancel?.addEventListener('click', () => localStorage.removeItem('newWaveActive'));
+  btnCancel && btnCancel.addEventListener('click', () => localStorage.removeItem('newWaveActive'));
 
-  // Espera 500 milisegundos adicionales
-  await delay(500);
+  await delay(250);
 
   btnSave.classList.add('my-botton-save');
   btnSave.classList.remove('pull-right');
 
-  // Espera 500 milisegundos adicionales
-  await delay(500);
+  await delay(150);
   setPositionButtonSave(btnSave);
 
   // Agregar el listener para el evento resize
@@ -32,12 +34,22 @@ async function inicio() {
 }
 
 function setPositionButtonSave(btnSave) {
-  const btnYes = document.querySelector('#ScreenControlToggleSwitch37984 > div > div');
+  const btnYes = document.querySelector(selector.btnYes);
   const area = document.querySelector('#ui-id-13')?.getBoundingClientRect();
   const area2 = btnYes?.getBoundingClientRect();
 
-  btnSave.style.top = area.bottom + 'px';
+  btnSave.style.top = area.bottom - 4 + 'px';
   btnSave.style.left = area2.right + 'px';
+}
+
+function clickMenuWaveMaster() {
+  return new Promise((resolve, reject) => {
+    const btn = document.querySelector('#ui-id-12');
+
+    if (!btn) reject('No existe el button Wave Master');
+    btn.click();
+    resolve();
+  });
 }
 
 window.addEventListener('load', inicio, { once: true });
