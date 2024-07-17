@@ -11,9 +11,6 @@
     "128": "images/broom128.png"
   },
   "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/newwave?excludeFromNavTrail=Y*"],

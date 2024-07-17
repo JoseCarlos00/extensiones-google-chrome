@@ -1,15 +1,18 @@
-const newWave = localStorage.getItem('newWaveActive');
+const newWaveActive = localStorage.getItem('newWaveActive');
 
 function inicio() {
-  setTimeout(() => {
-    const btnNewWave = document.querySelector('#AddShipmentToNewWave');
+  if (!newWaveActive) return;
 
-    console.log('btnNewWave', btnNewWave);
+  const btnNewWave = document.querySelector('#AddShipmentToNewWave');
 
-    if (btnNewWave && newWave) {
-      btnNewWave.click();
-    }
-  }, 500);
+  if (btnNewWave) {
+    btnNewWave.click();
+  } else {
+    setTimeout(() => {
+      const btnNewWave = document.querySelector('#AddShipmentToNewWave');
+      btnNewWave && btnNewWave.click();
+    }, 500);
+  }
 }
 
 window.addEventListener('load', inicio, { once: true });
