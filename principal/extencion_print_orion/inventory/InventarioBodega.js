@@ -1,4 +1,4 @@
-function inicio() {
+function initialEvents() {
   const elementoInsert = document.querySelector(
     '#frmConsultaMiodani > main > div.row > div > div > div.card-table > div.form-inline'
   );
@@ -25,4 +25,4 @@ const buttonPrint = `
 </div>
 `;
 
-window.addEventListener('load', inicio, { once: true });
+window.addEventListener('load', initialEvents, { once: true });
