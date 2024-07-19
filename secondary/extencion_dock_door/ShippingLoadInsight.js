@@ -166,8 +166,9 @@ const modalHTML = `
 </section>
 `;
 
-function inicio() {
+async function main() {
   console.log('[Inventory Insight Modal]');
+  setLocalStorage([]);
 
   const ul =
     document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav') ?? null;
@@ -187,6 +188,8 @@ function inicio() {
 
   const tbody = document.querySelector('#ListPaneDataGrid > tbody');
   tbody && observacion(tbody);
+
+  await verificarHeaderDockDoor(true);
 }
 
 async function setLocalStorage(doorParams) {
@@ -208,7 +211,7 @@ function observacion(tbody) {
     console.log('Se ha detectado una mutación en el DOM');
 
     // Ejecutar la primera promesa
-    verificarHeaderDockDoor()
+    verificarHeaderDockDoor(true)
       .then(() => {
         return verificarTbodyDoockDoor();
       })
@@ -216,6 +219,7 @@ function observacion(tbody) {
         setLocalStorage();
       })
       .catch(error => {
+        setLocalStorage([]);
         console.error('Error:', error);
       });
   }
@@ -391,9 +395,12 @@ async function insertDoockNotAvailable() {
     if (rows.length === 0) return; // Asegurarse de que hay filas en la tabla
 
     const door = await getDoockDoor();
-    setLocalStorage(door);
 
-    await cleanClass('not-available');
+    if (!Array.isArray(door) || door.length === 0) {
+      setLocalStorage(door);
+      await cleanClass('not-available');
+      return;
+    }
 
     rows.forEach(td => {
       const content = td.innerHTML;
@@ -443,4 +450,4 @@ async function showAlert(message, type) {
   alertElement.remove();
 }
 
-window.addEventListener('load', inicio);
+window.addEventListener('load', main);

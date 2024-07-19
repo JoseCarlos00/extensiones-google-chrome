@@ -89,9 +89,9 @@
   }
 
   .not-available {
-    background-color: #ff7f50;
-    color: #e3d3d3;
-    opacity: 0.6;
+    background-color: red;
+    color: #fff;
+    opacity: 0.8;
   }
 }
 

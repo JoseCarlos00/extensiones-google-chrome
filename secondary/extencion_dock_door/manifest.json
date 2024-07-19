@@ -20,7 +20,7 @@
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload*"],
       "js": ["shippingload.js"],
-      "css": ["style.css", "balloon.css"]
+      "css": ["shippingLoad.css", "balloon.css"]
     }
   ],
   "action": {
