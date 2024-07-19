@@ -166,7 +166,7 @@ function insertarInfo(info) {
   ParentLogisticsUnitElement && (ParentLogisticsUnitElement.innerHTML = ParentLogisticsUnit);
 
   if (verMasElement) {
-    verMasElement.innerHTML = 'Ver mas info..';
+    verMasElement.innerHTML = 'Ver mas info...';
 
     verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
   }

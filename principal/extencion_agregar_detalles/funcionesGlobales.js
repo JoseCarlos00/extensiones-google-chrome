@@ -29,3 +29,7 @@ const htmlVerMas = `
 
 // Escuchar el evento visibilitychange
 document.addEventListener('visibilitychange', handleVisibilityChange);
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}

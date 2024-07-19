@@ -130,9 +130,17 @@ function insertarInfo(info) {
   receiptIdElement && (receiptIdElement.innerHTML = receiptID);
 
   if (verMasElement) {
-    verMasElement.innerHTML = 'Ver mas info..';
+    verMasElement.innerHTML = 'Ver mas info...';
 
-    verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
+    verMasElement.addEventListener('click', pedirDatosdeContainerDetail, { once: true });
+  }
+
+  const trailerIdElement = document.querySelector('#DetailPaneHeaderTrailerId');
+
+  if (trailerIdElement) {
+    trailerIdElement.innerHTML = 'Trailer Id...';
+
+    trailerIdElement.addEventListener('click', pedirDatosdeReceiptDetail, { once: true });
   }
 }
 
@@ -429,9 +437,8 @@ const htmlUserStamp = `
 `;
 
 const htmlTrailerId = `
-<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
-  <label class="detailpaneheaderlabel" for="DetailPaneHeaderTrailerId"
-    id="DetailPaneHeaderTrailerId"></label>
+<div id="ScreenControlHyperlink36456" class="ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row">
+  <a class="detailpaneheaderlabel ScreenControlHyperlink" id="DetailPaneHeaderTrailerId" href="#"  role="buttton"style="cursor: auto; pointer-events: auto;"></a>
 </div>
 `;
 

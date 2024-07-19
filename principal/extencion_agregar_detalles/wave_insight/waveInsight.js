@@ -141,7 +141,7 @@ function insertarInfo(info) {
   EndedDateTimeElement && (EndedDateTimeElement.innerHTML = EndedDateTime);
 
   if (verMasElement) {
-    verMasElement.innerHTML = 'Ver mas info..';
+    verMasElement.innerHTML = 'Ver mas info...';
 
     verMasElement.addEventListener('click', solicitarDatosExternos, { once: true });
   }
