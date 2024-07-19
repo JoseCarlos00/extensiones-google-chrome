@@ -207,7 +207,17 @@ function observacion(tbody) {
     // Realiza acciones en respuesta a la mutación
     console.log('Se ha detectado una mutación en el DOM');
 
-    setLocalStorage();
+    // Ejecutar la primera promesa
+    verificarHeaderDockDoor()
+      .then(() => {
+        return verificarTbodyDoockDoor();
+      })
+      .then(() => {
+        setLocalStorage();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   // Configuración del observer
@@ -249,15 +259,58 @@ function setEventModalOpenClose(elements) {
   const { btnOpen, btnClose, modal } = elements;
 
   // Cuando el usuario hace clic en el botón, abre el modal
-  btnOpen.addEventListener('click', function () {
-    modal.style.display = 'block';
+  btnOpen.addEventListener('click', async function () {
+    try {
+      await verificarHeaderDockDoor(true);
 
-    insertDoockNotAvailable();
+      modal.style.display = 'block';
+
+      await verificarTbodyDoockDoor(true);
+
+      insertDoockNotAvailable();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
   });
 
   // Cuando el usuario hace clic en <span> (x), cierra el modal
   btnClose.addEventListener('click', function () {
     modal.style.display = 'none';
+
+    cleanClass('not-available');
+  });
+}
+
+function verificarHeaderDockDoor(alertTrue) {
+  return new Promise((resolve, reject) => {
+    const dock_door_header = document.querySelector('#ListPaneDataGrid_DOCK_DOOR_LOCATION');
+
+    if (!dock_door_header) {
+      alertTrue && showAlert('Active la columna Dock Door', 'error');
+
+      reject('No existe la columna Dock Door');
+      return;
+    }
+
+    resolve();
+  });
+}
+
+function verificarTbodyDoockDoor(alertTrue) {
+  return new Promise((resolve, reject) => {
+    const dock_doors = document.querySelectorAll(
+      'td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]'
+    );
+
+    if (dock_doors.length === 0) {
+      alertTrue && showAlert('No se encontraron puertas', 'error');
+
+      reject('No se encontraron los elementos Dock Door');
+      return;
+    }
+
+    resolve();
   });
 }
 
@@ -305,13 +358,13 @@ function cleanClass(clase) {
 function getDoockDoor() {
   let door = [];
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const dock_doors = document.querySelectorAll(
       'td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]'
     );
 
     if (dock_doors.length === 0) {
-      reject('No se encontraron los elementos: ListPaneDataGrid_DOCK_DOOR_LOCATION');
+      resolve([]);
       return;
     }
 
@@ -350,7 +403,44 @@ async function insertDoockNotAvailable() {
     });
   } catch (error) {
     console.error(error);
+    return;
   }
+}
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+async function showAlert(message, type) {
+  const alertHtml = `
+  <div id="alerta-copy" aria-live="polite"
+    style="position: fixed;left: 0;width: 100%;display: flex;z-index: 1000000;padding: 4px;opacity: 1;transition-property: opacity, transform;transition-duration: 270ms;transition-timing-function: ease;top: 60px;">
+    <div class="alert-box"
+      style="background: ${
+        type === 'success' ? 'rgb(47, 153, 47)' : 'rgb(153, 47, 47)'
+      }; color: rgb(211, 211, 211);border-radius: 8px;padding: 11px 16px;box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.2) 0px 5px 10px, rgba(15, 15, 15, 0.4) 0px 15px 40px;margin: 0px auto;font-size: 16px;display: flex;align-items: center;justify-content: center;letter-spacing: 2px;">
+      ${message}
+      <div style="margin-left: 4px; margin-right: -4px"></div>
+    </div>
+  </div>
+  `;
+
+  const body = document.querySelector('body');
+
+  if (!body) return;
+  body.insertAdjacentHTML('beforeend', alertHtml);
+
+  const alertElement = document.getElementById('alerta-copy');
+  if (!alertElement) return;
+
+  await delay(10);
+  alertElement.style.opacity = '1';
+
+  await delay(1800);
+  alertElement.style.opacity = '0';
+
+  await delay(270);
+  alertElement.remove();
 }
 
 window.addEventListener('load', inicio);
