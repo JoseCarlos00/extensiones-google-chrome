@@ -232,22 +232,22 @@ function setEventListener(elements) {
       button.addEventListener('click', copyToClipBoard);
     });
   }
-}
 
-function getDataForToPrint() {
-  const theadToPrint = document.querySelector('#tableContent > thead');
-  const tbodyToPrint = document.querySelector('#tableContent > tbody');
+  function getDataForToPrint() {
+    const theadToPrint = document.querySelector('#tableContent > thead');
+    const tbodyToPrint = document.querySelector('#tableContent > tbody');
 
-  if (!tbodyToPrint || !theadToPrint) return;
+    if (!tbodyToPrint || !theadToPrint) return;
 
-  // Envía un mensaje al script de fondo para solicitar la apertura de una nueva pestaña
-  if (chrome.runtime) {
-    chrome.runtime.sendMessage({
-      command: 'openNewTab',
-      theadToPrint: theadToPrint.innerHTML,
-      tbodyToPrint: tbodyToPrint.innerHTML,
-      type: 'modal',
-    });
+    // Envía un mensaje al script de fondo para solicitar la apertura de una nueva pestaña
+    if (chrome.runtime) {
+      chrome.runtime.sendMessage({
+        command: 'openNewTab',
+        theadToPrint: theadToPrint.innerHTML,
+        tbodyToPrint: tbodyToPrint.innerHTML,
+        type: 'modal',
+      });
+    }
   }
 }
 
