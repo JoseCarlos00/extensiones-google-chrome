@@ -1,21 +1,21 @@
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.action.setBadgeText({
-    text: 'ON',
-  });
-});
+console.log('[background.js]');
 
-chrome.action.onClicked.addListener(async tab => {
-  // Comprueba si la URL de la pestaña actual comienza con las URLs de extensiones o la envio de Chrome.
-  if (tab.url.startsWith(inventory) || tab.url.startsWith(envio)) {
-    // Obtiene el texto del distintivo (badge) de acción actual para verificar si la extensión está en 'ON' o 'OFF'.
-    const prevState = await chrome.action.getBadgeText({ tabId: tab.id });
-    // El próximo estado siempre será el opuesto al estado actual.
-    const nextState = prevState === 'ON' ? 'OFF' : 'ON';
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('[Print Container]');
 
-    // Establece el texto del distintivo de acción en el próximo estado.
-    await chrome.action.setBadgeText({
-      tabId: tab.id,
-      text: nextState,
+  if (message.command === 'openNewTab') {
+    // Obtén el ID de la pestaña activa actual
+    const currentTabId = sender.tab.id;
+
+    // Crea una nueva pestaña con la URL específica justo al lado de la pestaña actual
+    chrome.tabs.create({
+      url:
+        'trabajos_activos/print/print.html?thead=' +
+        encodeURIComponent(message.theadToPrint) +
+        '&tbody=' +
+        encodeURIComponent(message.tbodyToPrint),
+      index: sender.tab.index + 1, // Abre la nueva pestaña al lado de la pestaña actual
+      active: true, // Haz que la nueva pestaña sea la activa
     });
   }
 });

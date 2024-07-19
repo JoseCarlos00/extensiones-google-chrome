@@ -10,7 +10,7 @@ function inicio() {
 
     if (Number(numFilasElement.innerHTML) > tbodyList.length) {
       // Si es mayor, preguntar al usuario si desea imprimir
-      let confirmacion = confirm('Active todas las filas');
+      let confirmacion = confirm('No estan activas todas las filas');
       return confirmacion;
     }
 
