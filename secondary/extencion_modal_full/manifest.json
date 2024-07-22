@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Dock Door",
+  "name": "Modal Receipt Container",
   "version": "1.0",
-  "description": "Muestar una tabla de dock door disponibles",
+  "description": "Crea un modal con el Container y Shipment Id",
   "permissions": ["scripting", "activeTab", "storage"],
   "icons": {
     "16": "images/inventory16.png",
@@ -13,7 +13,7 @@
   "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
   "content_scripts": [
     {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
       "js": ["content.js"],
       "css": ["style.css", "balloon.css"]
     }
