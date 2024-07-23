@@ -51,6 +51,10 @@
   }
 }
 
+.hidden {
+  display: none !important;
+}
+
 /* Consulta de medios para pantallas pequeñas */
 @media (width <= 968px) {
   #ScreenGroupSubAccordion11736 {

@@ -148,30 +148,47 @@ const tableHTML = `
 
 </div>
 `;
-
-async function main() {
-  const result = await getLocalStorage();
-  console.log('result:', result);
-
-  // Asegúrate de que result es un array antes de verificar su longitud
-  if (!Array.isArray(result) || result.length === 0) return;
-
-  // Código adicional
-  await insertTable();
-  insertDoockNotAvailable();
-
-  async function getLocalStorage() {
-    try {
-      const result = await chrome.storage.local.get(['key']);
-      if (!result || !result.key) {
-        console.error('No se encontró key en Chrome Storage');
-        return [];
-      }
-      return result.key;
-    } catch (error) {
-      console.error('Error al obtener doors desde el almacenamiento:', error);
+async function getLocalStorage() {
+  try {
+    const result = await chrome.storage.local.get(['key']);
+    if (!result || !result.key) {
+      console.error('No se encontró key en Chrome Storage');
       return [];
     }
+    return result.key;
+  } catch (error) {
+    console.error('Error al obtener doors desde el almacenamiento:', error);
+    return [];
+  }
+}
+
+async function main() {
+  let doors = [];
+
+  const inputDockDoor = document.querySelector(
+    '#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input'
+  );
+
+  const doorAssigned = inputDockDoor ? inputDockDoor.value : '';
+
+  try {
+    const result = await getLocalStorage();
+    console.log('result:', result);
+
+    // Asegúrate de que result es un array antes de verificar su longitud
+    if (!Array.isArray(result) || result.length === 0) return;
+
+    doors = result;
+    console.log('doors:', doors);
+    // Código adicional
+    await insertTable();
+    insertDoockNotAvailable();
+
+    setEventSave();
+    hiddenDoorLIst();
+  } catch (error) {
+    console.error('Error:', error);
+    return;
   }
 
   function insertTable() {
@@ -196,12 +213,15 @@ async function main() {
       const rows = Array.from(table.querySelectorAll('tbody tr td'));
       if (rows.length === 0) return; // Asegurarse de que hay filas en la tabla
 
-      const door = await getLocalStorage();
       // await cleanClass('not-available');
+
+      if (!doors) {
+        return;
+      }
 
       rows.forEach(td => {
         const content = td.innerHTML;
-        if (door.includes(content)) {
+        if (doors.includes(content)) {
           td.classList.add('not-available');
         }
       });
@@ -209,6 +229,79 @@ async function main() {
       console.error(error);
       return;
     }
+  }
+
+  function setEventSave() {
+    const btnSave = document.querySelector('#ShippingLoadMenuActionSave');
+
+    btnSave && btnSave.addEventListener('click', addToDoorLocalStorage);
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        addToDoorLocalStorage();
+      }
+    });
+  }
+
+  async function addToDoorLocalStorage() {
+    try {
+      if (!doors || !Array.isArray(doors)) {
+        return;
+      }
+
+      const valueINput = inputDockDoor ? inputDockDoor.value : '';
+
+      if (valueINput) {
+        doors.push('Hola-01');
+
+        await chrome.storage.local.set({ key: doors });
+        console.log('Doors Save Storage');
+      }
+    } catch (error) {
+      console.error('Error saving doors to storage:', error);
+    }
+  }
+
+  async function addToDoorLocalStorage() {
+    try {
+      if (!doors || !Array.isArray(doors)) {
+        return;
+      }
+
+      const valueINput = inputDockDoor ? inputDockDoor.value : '';
+
+      if (doorAssigned !== valueINput) {
+        // Elimina doorAssigned del array doors si es diferente a valueINput
+        doors = doors.filter(door => door !== doorAssigned);
+      }
+
+      if (valueINput) {
+        doors.push(valueINput);
+
+        await chrome.storage.local.set({ key: doors });
+        console.log('Doors Save Storage');
+      }
+    } catch (error) {
+      console.error('Error saving doors to storage:', error);
+    }
+  }
+
+  function hiddenDoorLIst() {
+    const doorList = document.querySelectorAll(
+      'body > div:nth-child(27) ul.ui-igcombo-listitemholder > li.ui-igcombo-listitem .comboInfo .emphasizedText'
+    );
+
+    if (!doorList) return;
+
+    doorList.forEach(doorElement => {
+      const content = doorElement.innerText;
+
+      const liElement = doorElement.closest('li.ui-igcombo-listitem');
+
+      if (doors.includes(content)) {
+        liElement && liElement.classList.add('hidden');
+      }
+    });
   }
 }
 

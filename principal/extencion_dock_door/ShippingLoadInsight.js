@@ -168,12 +168,13 @@ const modalHTML = `
 
 async function main() {
   console.log('[Inventory Insight Modal]');
-  setLocalStorage([]);
+  try {
+    setLocalStorage([]);
 
-  const ul =
-    document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav') ?? null;
+    const ul =
+      document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav') ?? null;
 
-  const li = `
+    const li = `
     <li class="navdetailpane visible-sm visible-md visible-lg">
       <a id='openModalBtn' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Abrir Modal" data-balloon-pos="right">
         <i class="far fa-clipboard navimage"></i>
@@ -181,15 +182,40 @@ async function main() {
     </li>
     `;
 
-  if (!ul) return;
-  ul.insertAdjacentHTML('beforeend', li);
+    if (!ul) return;
+    ul.insertAdjacentHTML('beforeend', li);
 
-  modalFunction();
+    modalFunction();
 
-  const tbody = document.querySelector('#ListPaneDataGrid > tbody');
-  tbody && observacion(tbody);
+    const tbody = document.querySelector('#ListPaneDataGrid > tbody');
+    tbody && observacion(tbody);
 
-  await verificarHeaderDockDoor(true);
+    const btnNewWave = document.querySelector('#ListPaneMenuActionNew');
+    const btnEditWave = document.querySelector('#ListPaneMenuActionEdit');
+
+    btnNewWave && btnNewWave.addEventListener('click', saveDoorToClick);
+    btnEditWave && btnEditWave.addEventListener('click', saveDoorToClick);
+
+    await verificarHeaderDockDoor(true);
+  } catch (error) {
+    console.error('Error:', error);
+    return;
+  }
+}
+
+async function saveDoorToClick(alert) {
+  try {
+    let alerta = alert ? true : false;
+
+    await verificarHeaderDockDoor(alerta);
+    await verificarTbodyDoockDoor();
+
+    setLocalStorage();
+  } catch (error) {
+    console.error('Error:', error);
+    setLocalStorage([]);
+    return;
+  }
 }
 
 async function setLocalStorage(doorParams) {
@@ -209,19 +235,7 @@ function observacion(tbody) {
   function handleMutation(mutationsList, observer) {
     // Realiza acciones en respuesta a la mutación
     console.log('Se ha detectado una mutación en el DOM');
-
-    // Ejecutar la primera promesa
-    verificarHeaderDockDoor(true)
-      .then(() => {
-        return verificarTbodyDoockDoor();
-      })
-      .then(() => {
-        setLocalStorage();
-      })
-      .catch(error => {
-        setLocalStorage([]);
-        console.error('Error:', error);
-      });
+    saveDoorToClick(true);
   }
 
   // Configuración del observer
@@ -242,7 +256,10 @@ function insertModal() {
   return new Promise((resolve, reject) => {
     const body = document.querySelector('body');
 
-    if (!body) return reject('No se encontro elemento a insertar el Modal');
+    if (!body) {
+      reject('No se encontro elemento a insertar el Modal');
+      return;
+    }
 
     body.insertAdjacentHTML('beforeend', modalHTML);
     resolve();
@@ -250,13 +267,15 @@ function insertModal() {
 }
 
 function modalFunction() {
-  insertModal().then(() => {
-    const modal = document.getElementById('myModal');
-    const btnOpen = document.getElementById('openModalBtn');
-    const btnClose = document.querySelector('.modal-container .close');
+  insertModal()
+    .then(() => {
+      const modal = document.getElementById('myModal');
+      const btnOpen = document.getElementById('openModalBtn');
+      const btnClose = document.querySelector('.modal-container .close');
 
-    setEventListener({ modal, btnOpen, btnClose });
-  });
+      setEventListener({ modal, btnOpen, btnClose });
+    })
+    .catch(err => console.error('Error:', err));
 }
 
 function setEventModalOpenClose(elements) {
