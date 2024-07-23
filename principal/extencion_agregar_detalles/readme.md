@@ -145,6 +145,7 @@
 | Container Id           | Original - Si existe |
 | Parent container id    |                      |
 | Status                 | Original             |
+| Status Numeric         |                      |
 | Item                   | Original             |
 | Item Desc              | Original             |
 | Company                | Original             |

@@ -17,6 +17,12 @@ function inicio() {
     return;
   }
 
+  const statusElement = document.querySelector('#ScreenControlLabel36547');
+
+  if (statusElement) {
+    statusElement.insertAdjacentHTML('afterend', htmlStatusNumeric);
+  }
+
   panelDetail.insertAdjacentHTML('beforeend', htmlShipmentId);
   panelDetail.insertAdjacentHTML('beforeend', htmlInternalShipmentNum);
   panelDetail.insertAdjacentHTML('beforeend', htmlInternalContainerNum);
@@ -92,6 +98,7 @@ const extraerDatosInternos = {
   containerId: "[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
   parentContainerId: "[aria-describedby='ListPaneDataGrid_PARENT_CONTAINER_ID']",
   shipmentId: "[aria-describedby='ListPaneDataGrid_SHIPMENT_ID']",
+  statusNumeric: "[aria-describedby='ListPaneDataGrid_STATUSNUMERIC']",
   internalShipmentNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_NUM']",
   internalContainerNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_CONTAINER_NUM']",
 };
@@ -100,22 +107,18 @@ function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
   if (!tr) return;
 
-  const containerIdElement = tr.querySelector(extraerDatosInternos.containerId) ?? null;
-
-  const shipmentIdElement = tr.querySelector(extraerDatosInternos.shipmentId) ?? null;
-
-  const parentContainerIdElement = tr.querySelector(extraerDatosInternos.parentContainerId) ?? null;
-
-  const internalShipmentNumElement =
-    tr.querySelector(extraerDatosInternos.internalShipmentNum) ?? null;
-
-  const internalContainerNumElement =
-    tr.querySelector(extraerDatosInternos.internalContainerNum) ?? null;
+  const containerIdElement = tr.querySelector(extraerDatosInternos.containerId);
+  const shipmentIdElement = tr.querySelector(extraerDatosInternos.shipmentId);
+  const parentContainerIdElement = tr.querySelector(extraerDatosInternos.parentContainerId);
+  const statusNumericElement = tr.querySelector(extraerDatosInternos.statusNumeric);
+  const internalShipmentNumElement = tr.querySelector(extraerDatosInternos.internalShipmentNum);
+  const internalContainerNumElement = tr.querySelector(extraerDatosInternos.internalContainerNum);
 
   // Inner text
   const containerId = containerIdElement ? containerIdElement.innerText : '';
   const shipmentId = shipmentIdElement ? shipmentIdElement.innerText : '';
   const parentContainerId = parentContainerIdElement ? parentContainerIdElement.innerText : '';
+  const statusNumeric = statusNumericElement ? statusNumericElement.innerText : '';
   const internalShipmentNum = internalShipmentNumElement
     ? internalShipmentNumElement.innerText
     : '';
@@ -127,6 +130,7 @@ function extraerDatosDeTr(tr) {
     containerId,
     shipmentId,
     parentContainerId,
+    statusNumeric,
     internalShipmentNum,
     internalContainerNum,
   });
@@ -136,15 +140,22 @@ function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
 
-  const { containerId, shipmentId, parentContainerId, internalShipmentNum, internalContainerNum } =
-    info;
+  const {
+    containerId,
+    shipmentId,
+    parentContainerId,
+    statusNumeric,
+    internalShipmentNum,
+    internalContainerNum,
+  } = info;
 
   // Obtener elementos del DOM
-  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID') ?? null;
-  const shipmentIdElement = document.querySelector(selectorId.shipmentId) ?? null;
-  const parentContainerIdElement = document.querySelector(selectorId.parentContainerId) ?? null;
-  const shipmentNumElement = document.querySelector(selectorId.internalShipmentNum) ?? null;
-  const containerNumElement = document.querySelector(selectorId.internalContainerNum) ?? null;
+  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID');
+  const shipmentIdElement = document.querySelector(selectorId.shipmentId);
+  const parentContainerIdElement = document.querySelector(selectorId.parentContainerId);
+  const statusNumericElement = document.querySelector(selectorId.statusNumeric);
+  const shipmentNumElement = document.querySelector(selectorId.internalShipmentNum);
+  const containerNumElement = document.querySelector(selectorId.internalContainerNum);
 
   // Asignar valores a los elementos del DOM si existen
   if (containerId !== '') {
@@ -159,6 +170,7 @@ function insertarInfo(info) {
 
   shipmentIdElement && (shipmentIdElement.innerHTML = shipmentId);
   parentContainerIdElement && (parentContainerIdElement.innerHTML = parentContainerId);
+  statusNumericElement && (statusNumericElement.innerHTML = statusNumeric);
   shipmentNumElement && (shipmentNumElement.innerHTML = internalShipmentNum);
   containerNumElement && (containerNumElement.innerHTML = internalContainerNum);
 
@@ -178,11 +190,12 @@ function insertarInfo(info) {
 
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
-  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID') ?? null;
-  const shipmentIdElement = document.querySelector(selectorId.shipmentId) ?? null;
-  const parentContainerIdElement = document.querySelector(selectorId.parentContainerId) ?? null;
-  const shipmentNumElement = document.querySelector(selectorId.internalShipmentNum) ?? null;
-  const containerNumElement = document.querySelector(selectorId.internalContainerNum) ?? null;
+  const containerIdElement = document.querySelector('#DetailPaneHeaderContainerID');
+  const shipmentIdElement = document.querySelector(selectorId.shipmentId);
+  const parentContainerIdElement = document.querySelector(selectorId.parentContainerId);
+  const statusNumericElement = document.querySelector(selectorId.statusNumeric);
+  const shipmentNumElement = document.querySelector(selectorId.internalShipmentNum);
+  const containerNumElement = document.querySelector(selectorId.internalContainerNum);
 
   const dateCreateElement = document.querySelector(selectorId.dateCreate);
   const userStampElement = document.querySelector(selectorId.userStamp);
@@ -193,6 +206,7 @@ function limpiarPaneldeDetalles() {
   containerIdElement && (containerIdElement.innerHTML = '');
   shipmentIdElement && (shipmentIdElement.innerHTML = '');
   parentContainerIdElement && (parentContainerIdElement.innerHTML = '');
+  statusNumericElement && (statusNumericElement.innerHTML = '');
   shipmentNumElement && (shipmentNumElement.innerHTML = '');
   containerNumElement && (containerNumElement.innerHTML = '');
   dateCreateElement && (dateCreateElement.innerHTML = '');
@@ -323,6 +337,12 @@ const htmlParentContainerId = `
     id="DetailPaneHeaderParenContainerId" style="color: #4f93e4 !important; font-weight: bold;"></label>
 </div>`;
 
+const htmlStatusNumeric = `
+<div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
+  <label class="detailpaneheaderlabel" for="DetailPaneHeaderStatusNumeric"
+    id="DetailPaneHeaderStatusNumeric" style="font-weight: bold;"></label>
+</div>`;
+
 const htmlShipmentId = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row ">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderShipmentID"
@@ -364,6 +384,7 @@ const htmlCustomer = `
 
 const selectorId = {
   parentContainerId: '#DetailPaneHeaderParenContainerId',
+  statusNumeric: '#DetailPaneHeaderStatusNumeric',
   shipmentId: '#DetailPaneHeaderShipmentID',
   internalShipmentNum: '#DetailPaneHeaderIntenalShipmetNum',
   internalContainerNum: '#DetailPaneHeaderIntenalContainerNum',
