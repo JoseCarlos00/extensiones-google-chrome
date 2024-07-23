@@ -23,14 +23,14 @@ const modalHTML = `
     
       <table id="tableContent" contenteditable="false">
         <thead>
-          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_LICENSE_PLATE_ID" aria-describedby="ListPaneDataGrid_LICENSE_PLATE_ID"">
-            <div class="value">
-             License Plate
-            </div>
-          </th>
           <th class="show-header" contenteditable="false" id="ListPaneDataGrid_RECEIPT_ID" aria-describedby="ListPaneDataGrid_RECEIPT_ID">
             <div class="value">
               Receipt id
+            </div>
+          </th>
+          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_LICENSE_PLATE_ID" aria-describedby="ListPaneDataGrid_LICENSE_PLATE_ID"">
+            <div class="value">
+             License Plate
             </div>
           </th>
         </thead>
@@ -251,7 +251,7 @@ function showTable(table) {
       fila.forEach(td => {
         const ariadescribedby = td.getAttribute('aria-describedby');
 
-        if (ariadescribedby === 'ListPaneDataGrid_LICENSE_PLATE_ID') {
+        if (ariadescribedby === 'ListPaneDataGrid_RECEIPT_ID') {
           const tdItem = document.createElement('td');
 
           tdItem.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
@@ -259,7 +259,7 @@ function showTable(table) {
           tr.prepend(tdItem);
         }
 
-        if (ariadescribedby === 'ListPaneDataGrid_RECEIPT_ID') {
+        if (ariadescribedby === 'ListPaneDataGrid_LICENSE_PLATE_ID') {
           const tdItemDesc = document.createElement('td');
 
           tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly class="input-text" tabindex="0">`;
