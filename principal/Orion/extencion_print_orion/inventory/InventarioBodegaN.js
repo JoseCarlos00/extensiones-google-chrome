@@ -22,7 +22,8 @@ function main() {
   }
 
   const body = document.querySelector('body');
-  const enlace = `<a href="#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox_Input" id="irALista" hidden="">Ir a Lista</a>`;
+  const enlace =
+    '<a href="#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox_Input" id="irALista" hidden="">Ir a Lista</a>';
 
   body && body.insertAdjacentHTML('afterbegin', enlace);
 
@@ -44,13 +45,18 @@ function main() {
     const numFilas = numFilasElement ? numFilasElement.length : 0;
     const totalNumber = totalElement ? Number(totalElement.innerHTML) : 0;
 
-    if (numFilas === totalNumber) return;
+    // Comparar el número de filas con el total
+    if (numFilas === totalNumber || (numFilas === 0 && totalNumber === 0)) {
+      console.warn('El total de filas  === 0 y total === 0\nO numfilas === totalNumber');
+      return;
+    }
 
     if (numFilas < totalNumber) {
       const userResponse = confirm('Impresión incompleta\nActive todas las lineas');
 
       if (userResponse) {
         activarFilas = true;
+        console.log('activarFilas = true');
       } else {
         activarFilas = false;
       }
@@ -58,20 +64,39 @@ function main() {
   }
 
   function activartodasLasLineas(e) {
-    e.preventDefault();
+    e.preventDefault(); // Evita el comportamiento predeterminado del evento
 
-    if (!activarFilas) return;
+    // Verificar si activarFilas está definido y es verdadero
+    if (typeof activarFilas === 'undefined' || !activarFilas) {
+      console.warn('No existe la variable activarFilas\nO es false');
+      return;
+    }
 
+    // Seleccionar el botón para ir a la lista y hacer clic si existe
     const btnIrALista = document.querySelector('#irALista');
 
-    btnIrALista && btnIrALista.click();
-    // alert('Activar la lineas a sido activada');
+    if (btnIrALista) {
+      btnIrALista.click();
+    } else {
+      console.warn('El botón #irALista no se encontró.');
+    }
 
-    const listFilas = document.querySelector(
-      '#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox > table'
+    // Seleccionar la lista de filas y agregar la clase 'bounce-active' si existe
+    const listaDeActivarFilas = document.querySelector(
+      '#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox > table tbody'
     );
 
-    listFilas && listFilas.classList.add('bounce-active');
+    if (listaDeActivarFilas) {
+      listaDeActivarFilas.addEventListener('click', () =>
+        listaDeActivarFilas.classList.remove('bounce-active')
+      );
+
+      setTimeout(() => {
+        listaDeActivarFilas.classList.add('bounce-active');
+      }, 100);
+    } else {
+      console.warn('La lista de filas no se encontró.');
+    }
   }
 }
 
