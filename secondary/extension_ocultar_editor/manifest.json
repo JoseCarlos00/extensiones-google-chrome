@@ -1,32 +1,28 @@
 {
-    "manifest_version": 3,
-    "name": "Extension ortografia",
-    "version": "1.0",
-    "description": "Elimna el elemento insertado de la extencion de ortografia de Microsoft",
-    "permissions": ["scripting", "activeTab"],
-    "icons": {
+  "manifest_version": 3,
+  "name": "Extension ortografia",
+  "version": "1.0",
+  "description": "Elimna el elemento insertado de la extencion de ortografia de Microsoft",
+  "permissions": ["scripting", "activeTab"],
+  "icons": {
+    "16": "images/editor16.png",
+    "32": "images/editor32.png",
+    "48": "images/editor48.png",
+    "128": "images/editor128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["style.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "defaul_icon": {
       "16": "images/editor16.png",
       "32": "images/editor32.png",
       "48": "images/editor48.png",
       "128": "images/editor128.png"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ],
-    "action": {
-      "default_popup": "popup.html",
-      "defaul_icon" :  {
-        "16": "images/editor16.png",
-        "32": "images/editor32.png",
-        "48": "images/editor48.png",
-        "128": "images/editor128.png"
-      }
-    },
-    "background": {
-      "service_worker": "background.js"
     }
   }
-  
+}

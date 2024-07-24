@@ -9,6 +9,9 @@
               display: none;
             }
           }
+            deepl-input-controller {
+            display: none;
+            }
     </style>
     `
   );
