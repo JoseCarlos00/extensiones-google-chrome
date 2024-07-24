@@ -37,14 +37,11 @@ async function main() {
   function insertarButtonPrint() {
     return new Promise(resolve => {
       const elementoInsert = document.querySelector(
-        '#frmInventarioSeparado > main > div.row > div > div > div.card-table > div.form-inline'
+        '#frmReciboListas > main > div.row > div > div.d-flex.bd-highlight.mb-3 > div:nth-child(1)'
       );
 
       if (elementoInsert) {
-        elementoInsert.classList.add('container-print');
-        elementoInsert.children[0].classList.remove('col');
-
-        elementoInsert.insertAdjacentHTML('beforeend', buttonPrint);
+        elementoInsert.insertAdjacentHTML('afterend', buttonPrint);
 
         resolve(true);
       } else {
@@ -179,8 +176,8 @@ async function main() {
 
 // Boton imprimir
 const buttonPrint = `
-<div >
-    <button id="printButtonInventory" type="button" class="btn btn-sm btn-purple"><i class="fas fa-print"></i>Imprimir</button>
+<div class="p-2 bd-highlight">
+    <button id="printButtonInventory" type="button" class="btn btn-sm btn-purple mt-3"><i class="fas fa-print"></i>Imprimir</button>
 </div>
 `;
 
