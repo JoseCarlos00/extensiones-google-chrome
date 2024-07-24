@@ -68,8 +68,10 @@ function main() {
     // alert('Activar la lineas a sido activada');
 
     const listFilas = document.querySelector(
-      '#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox_Input'
+      '#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox > table'
     );
+
+    listFilas && listFilas.classList.add('bounce-active');
   }
 }
 

@@ -108,3 +108,43 @@ html {
     display: none !important;
   }
 }
+
+#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox > table::before {
+  content: '';
+}
+
+.bounce-active {
+  animation: bounce 0.9s infinite;
+}
+
+.bounce-active .rcbInputCell,
+.bounce-active .rcbArrowCell {
+  animation: change-color 1.2s infinite;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+  100% {
+    transform: scale3d(0.75, 0.95, 1);
+  }
+}
+
+@keyframes change-color {
+  0% {
+    background-color: #fff;
+    color: #000;
+  }
+  50% {
+    background-color: #7575af;
+    color: #fff;
+  }
+  100% {
+    background-color: #53e06b;
+    color: #0505f9;
+  }
+}
