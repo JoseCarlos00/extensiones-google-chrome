@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Print Orion",
+  "name": "Orion Dark Mode",
   "version": "3.0",
-  "description": "Imprime un pedido de la lista de envio. y La paguina de Inventario por Bodega",
+  "description": "Agrega funcionalidad para el modo oscuro en orion",
   "permissions": ["scripting", "activeTab", "storage", "tabs"],
   "icons": {
     "16": "images/print16.png",
@@ -44,48 +44,6 @@
         "https://tableau.fantasiasmiguel.com.mx/trusted/ijShoAskRoeVKTlcCIxTGA==:Umbs4BtTpnexPcQY4OKAytXz/views/TareasAbiertasTiendasMariano/TareasAbiertasTiendas*"
       ],
       "js": ["dark_theme/trabajoActivo.js"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/*"],
-      "js": ["favicon.js"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/Productos3Cajas.aspx*"],
-      "js": ["reporte3_cajas/reporte3Cajas.js"],
-      "css": ["reporte3_cajas/reporte3Cajas.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"],
-      "js": ["envios/enviosItems.js"],
-      "css": ["envios/envioItem.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Dashboard/Dashboard.aspx"],
-      "css": ["dashboard.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/EnviosListas.aspx"],
-      "js": ["envios/listaEnvios.js"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioBodega.aspx*"],
-      "js": ["inventory/inventarioBodega.js"],
-      "css": ["inventory/inventory.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Medidas/InventarioSeparadoN.aspx*"],
-      "js": ["inventory/inventarioBodegaN.js"],
-      "css": ["inventory/inventory.css", "inventory/inventoryN.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/orion/paginas/Bodega/TrabajosActivos.aspx*"],
-      "js": ["trabajos_activos/trabajoActivoPaginasBodega.js"],
-      "css": ["trabajos_activos/trabajoActivoPaginas.css"]
-    },
-    {
-      "matches": ["http://fmorion.dnsalias.com/Bodega/Bodega*"],
-      "js": ["trabajos_activos/trabajoActivoBodegaBodega.js"],
-      "css": ["trabajos_activos/trabajosActivoVisualizador.css"]
     }
   ],
   "action": {
@@ -102,7 +60,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["darkTheme.css", "print/print.html"],
+      "resources": ["darkTheme.css"],
       "matches": ["<all_urls>"]
     }
   ],

@@ -1,5 +1,17 @@
+/** Inventory */
+html {
+  scroll-behavior: smooth;
+}
+
 @media print {
-  /** Inventory */
+  .table-container {
+    margin-top: 0 !important;
+  }
+
+  .RadGrid_Bootstrap {
+    border: none !important;
+  }
+
   table#gvInventario_ctl00 {
     border-color: #000 !important;
 
@@ -21,6 +33,8 @@
     .rgRow td,
     .rgAltRow td {
       border-color: #000 !important;
+      font-weight: 600 !important;
+      color: #000 !important;
     }
   }
 

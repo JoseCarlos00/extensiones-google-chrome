@@ -1,4 +1,4 @@
-/* @media print {
+@media print {
   .header,
   #RMReportes,
   #Panel15 > main > div.main-filtros,
@@ -44,8 +44,8 @@
     text-wrap: nowrap;
     text-overflow: ellipsis;
   }
-} */
+}
 
-/* @page {
+@page {
   size: auto !important;
-} */
+}
