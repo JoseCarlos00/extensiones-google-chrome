@@ -79,10 +79,10 @@ function initialEvents() {
 
     if (numFilas < totalNumber) {
       const userResponse = confirm(
-        'Impresión incompleta\n' +
+        '❌Impresión incompleta\n' +
           'Active todas las líneas\n' +
           '¿Desea continuar con la impresión?\n' +
-          '                                                                             Sí    /        No'
+          '     ⚠️                                                                      Sí        /        No'
       );
 
       if (userResponse) {
