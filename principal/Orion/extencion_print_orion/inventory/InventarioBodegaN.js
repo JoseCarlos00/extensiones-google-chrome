@@ -4,9 +4,9 @@ function main() {
   /** Banderas Globales */
   let activarFilas = false;
   let isVerificarLineasDeImpresionExecuted = false;
-  let isTotaltrueExecutes = false;
 
   try {
+    /** Isertar Button Imprimir */
     const elementoInsert = document.querySelector(
       '#frmInventarioSeparado > main > div.row > div > div > div.card-table > div.form-inline'
     );
@@ -25,6 +25,7 @@ function main() {
       }, 100);
     }
 
+    /** Inserar Enlace */
     const body = document.querySelector('body');
     const enlace =
       '<a href="#gvInventario_ctl00_ctl03_ctl01_PageSizeComboBox_Input" id="irALista" hidden="">Ir a Lista</a>';
@@ -34,6 +35,7 @@ function main() {
     const tdFoot = document.querySelector('#gvInventario_ctl00 > tfoot > tr > td');
     tdFoot && tdFoot.setAttribute('colspan', 24);
 
+    /** Insertar Eventos de Impresion */
     window.addEventListener('beforeprint', verificarLineasDeImpresion);
     window.addEventListener('afterprint', activartodasLasLineas);
 
@@ -72,7 +74,6 @@ function main() {
 
     // Comparar el número de filas con el total
     if (numFilas === totalNumber || (numFilas === 0 && totalNumber === 0)) {
-      isTotaltrueExecutes = true;
       console.warn('El total de filas  === 0 y total === 0\nO numfilas === totalNumber');
       window.print();
       return;
@@ -131,7 +132,7 @@ function main() {
         listaDeActivarFilas.classList.add('bounce-active');
       }, 100);
     } else {
-      console.warn('La lista de filas no se encontró.');
+      console.warn('La lista de filas activas no se encontró.');
     }
   }
 }

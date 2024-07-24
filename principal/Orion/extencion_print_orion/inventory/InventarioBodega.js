@@ -2,7 +2,6 @@ function initialEvents() {
   /** Banderas Globales */
   let activarFilas = false;
   let isVerificarLineasDeImpresionExecuted = false;
-  let isTotaltrueExecutes = false;
 
   try {
     const elementoInsert = document.querySelector(
@@ -71,7 +70,6 @@ function initialEvents() {
 
     // Comparar el número de filas con el total
     if (numFilas === totalNumber || (numFilas === 0 && totalNumber === 0)) {
-      isTotaltrueExecutes = true;
       console.warn('El total de filas  === 0 y total === 0\nO numfilas === totalNumber');
       window.print();
       return;
@@ -130,7 +128,7 @@ function initialEvents() {
         listaDeActivarFilas.classList.add('bounce-active');
       }, 100);
     } else {
-      console.warn('La lista de filas no se encontró.');
+      console.warn('La lista de filas activas no se encontró.');
     }
   }
 }
