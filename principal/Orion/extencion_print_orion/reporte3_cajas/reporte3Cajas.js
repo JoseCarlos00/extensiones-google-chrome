@@ -86,39 +86,39 @@ async function main() {
     const numFilasElementSelector =
       '#gvPedidosTienda_ctl00 > tfoot > tr > td > table > tbody > tr > td > div.rgWrap.rgInfoPart > strong:nth-child(1)';
     const totalElement = document.querySelector(numFilasElementSelector);
-    return totalElement ? Number(totalElement.innerHTML) : null;
+    return totalElement ? Number(totalElement.textContent.trim()) : null;
   }
 
   function obtenerNumFilas() {
     const numFilasElement = document.querySelectorAll('#gvPedidosTienda_ctl00 > tbody tr');
-    return numFilasElement ? numFilasElement.length : null;
+    return numFilasElement.length;
   }
 
   function esImpresionCompleta(numFilas, totalNumber) {
     if (numFilas === totalNumber || (numFilas === 0 && totalNumber === 0)) {
-      console.warn('El total de filas  === 0 y total === 0\nO numfilas === totalNumber');
+      console.warn('El total de filas  === 0 y total === 0\n\t\t\tOR\n numfilas === totalNumber');
       return true;
     }
     return false;
   }
 
   function manejarImpresionIncompleta(numFilas, totalNumber) {
-    if (numFilas < totalNumber) {
-      const userResponse = confirm(
-        '❌Impresión incompleta\n' +
-          'Active todas las líneas\n' +
-          '¿Desea continuar con la impresión?\n' +
-          '     ⚠️                                                                      Sí        /        No'
-      );
+    if (!(numFilas < totalNumber)) return;
 
-      if (userResponse) {
-        activarFilas = false;
-        window.print();
-      } else {
-        activarFilas = true;
-        console.log('activarFilas = true');
-        setTimeout(activartodasLasLineas, 50);
-      }
+    const userResponse = confirm(
+      '❌Impresión incompleta\n' +
+        '❕Active todas las líneas\n' +
+        '¿Desea continuar con la impresión?\n' +
+        '     ⚠️                                                                      Sí        /        No'
+    );
+
+    if (userResponse) {
+      activarFilas = false;
+      window.print();
+    } else {
+      activarFilas = true;
+      console.log('activarFilas = true');
+      setTimeout(activartodasLasLineas, 50);
     }
   }
 
@@ -135,7 +135,7 @@ async function main() {
 
     function isActivarFilasValido() {
       if (typeof activarFilas === 'undefined' || !activarFilas) {
-        console.warn('No existe la variable activarFilas o es false');
+        console.warn('No existe la variable activarFilas\n\t\tOR\n es false');
         return false;
       }
       return true;

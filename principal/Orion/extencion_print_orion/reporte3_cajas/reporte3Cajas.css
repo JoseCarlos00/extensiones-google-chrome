@@ -103,13 +103,12 @@ html {
   }
 }
 
-.bounce-active .rcbInputCell,
-.bounce-active .rcbArrowCell {
-  animation: change-color 1.5s infinite;
+.bounce-active {
+  animation: bounce 1.5s infinite;
 }
 
-select.bounce-active {
-  animation: bounce 1.5s infinite;
+.bounce-active .rcbInputCell,
+.bounce-active .rcbArrowCell {
   animation: change-color 1.5s infinite;
 }
 

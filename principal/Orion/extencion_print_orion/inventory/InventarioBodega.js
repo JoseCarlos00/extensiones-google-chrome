@@ -1,26 +1,15 @@
-function initialEvents() {
+async function initialEvents() {
   /** Banderas Globales */
   let activarFilas = false;
   let isVerificarLineasDeImpresionExecuted = false;
 
   try {
-    const elementoInsert = document.querySelector(
-      '#frmConsultaMiodani > main > div.row > div > div > div.card-table > div.form-inline'
-    );
+    /** Isertar Button Imprimir */
+    await insertarButtonPrint();
 
-    if (elementoInsert) {
-      elementoInsert.classList.add('container-print');
-      elementoInsert.children[0].classList.remove('col');
-
-      elementoInsert.insertAdjacentHTML('beforeend', buttonPrint);
-
-      //Evento
-      setTimeout(() => {
-        document
-          .querySelector('#printButtonInventory')
-          .addEventListener('click', verificarLineasDeImpresion);
-      }, 100);
-    }
+    const printButtonInventory = document.querySelector('#printButtonInventory');
+    printButtonInventory &&
+      printButtonInventory.addEventListener('click', verificarLineasDeImpresion);
 
     const body = document.querySelector('body');
     const enlace =
@@ -43,6 +32,26 @@ function initialEvents() {
     console.error('Error:', error);
   }
 
+  function insertarButtonPrint() {
+    return new Promise(resolve => {
+      const elementoInsert = document.querySelector(
+        '#frmConsultaMiodani > main > div.row > div > div > div.card-table > div.form-inline'
+      );
+
+      if (elementoInsert) {
+        elementoInsert.classList.add('container-print');
+        elementoInsert.children[0].classList.remove('col');
+
+        elementoInsert.insertAdjacentHTML('beforeend', buttonPrint);
+
+        resolve(true);
+      } else {
+        console.log(new Error('No se encontroe el elemento a insertar: Button Print'));
+        resolve(false);
+      }
+    });
+  }
+
   function verificarLineasDeImpresion() {
     if (isVerificarLineasDeImpresionExecuted) {
       console.log(
@@ -55,81 +64,124 @@ function initialEvents() {
     isVerificarLineasDeImpresionExecuted = true;
     console.log('verificarLineasDeImpresion se ha ejecutado');
 
+    const totalNumber = obtenerTotalNumber();
+    const numFilas = obtenerNumFilas();
+
+    if (numFilas === null || totalNumber === null) {
+      console.warn('Error al obtener el número de filas o el total.');
+      return;
+    }
+
+    if (esImpresionCompleta(numFilas, totalNumber)) {
+      window.print();
+      return;
+    }
+
+    manejarImpresionIncompleta(numFilas, totalNumber);
+  }
+
+  function obtenerTotalNumber() {
     const totalElement = document.querySelector(
       '#gvInventario_ctl00 > tfoot > tr > td > div > div > div:nth-child(7)'
     );
 
     // Obtener el contenido del elemento
-    const text = totalElement ? totalElement.innerText.trim() : '';
+    const text = totalElement ? totalElement.textContent.trim() : '';
     const match = text.match(/\d+/);
     const number = match ? match[0] : '0';
-    const totalNumber = Number(number);
 
-    const numFilasElement = document.querySelectorAll('#gvInventario_ctl00 > tbody tr');
-    const numFilas = numFilasElement ? numFilasElement.length : 0;
+    return number ? Number(number) : null;
+  }
 
-    // Comparar el número de filas con el total
-    if (numFilas === totalNumber || (numFilas === 0 && totalNumber === 0)) {
-      console.warn('El total de filas  === 0 y total === 0\nO numfilas === totalNumber');
-      window.print();
-      return;
+  function obtenerNumFilas() {
+    const numFilasElements = document.querySelectorAll('#gvInventario_ctl00 > tbody tr');
+    const noRegistrosElement = document.querySelector('#gvInventario_ctl00 > tbody tr td');
+
+    const noRegistrosText = noRegistrosElement ? noRegistrosElement.textContent.trim() : '';
+    const numTotalFilas = numFilasElements.length;
+
+    // Si el texto en noRegistrosElement contiene "No contiene Registros", entonces retornamos 0
+    if (noRegistrosText.includes('No contiene Registros')) {
+      return 0;
     }
 
-    if (numFilas < totalNumber) {
-      const userResponse = confirm(
-        '❌Impresión incompleta\n' +
-          'Active todas las líneas\n' +
-          '¿Desea continuar con la impresión?\n' +
-          '     ⚠️                                                                      Sí        /        No'
-      );
+    return Number(numTotalFilas);
+  }
 
-      if (userResponse) {
-        activarFilas = false;
-        window.print();
-      } else {
-        activarFilas = true;
-        console.log('activarFilas = true');
-        setTimeout(activartodasLasLineas, 50);
-      }
+  function esImpresionCompleta(numFilas, totalNumber) {
+    if (numFilas === totalNumber || (numFilas === 0 && totalNumber === 0)) {
+      console.warn('El total de filas  === 0 y total === 0\n\t\t\tOR\n numfilas === totalNumber');
+      return true;
+    }
+    return false;
+  }
+
+  function manejarImpresionIncompleta(numFilas, totalNumber) {
+    if (!(numFilas < totalNumber)) return;
+
+    const userResponse = confirm(
+      '❌Impresión incompleta\n' +
+        '❕Active todas las líneas\n' +
+        '¿Desea continuar con la impresión?\n' +
+        '     ⚠️                                                                      Sí        /        No'
+    );
+
+    if (userResponse) {
+      activarFilas = false;
+      window.print();
+    } else {
+      activarFilas = true;
+      console.log('activarFilas = true');
+      setTimeout(activartodasLasLineas, 50);
     }
   }
 
   function activartodasLasLineas() {
     isVerificarLineasDeImpresionExecuted = false;
 
-    // Verificar si activarFilas está definido y es verdadero
-    if (typeof activarFilas === 'undefined' || !activarFilas) {
-      console.warn('No existe la variable activarFilas\nO es false');
+    if (!isActivarFilasValido()) {
       return;
     }
 
     activarFilas = false;
+    clickBtnIrALista();
+    activarFilasLista();
 
-    // Seleccionar el botón para ir a la lista y hacer clic si existe
+    function isActivarFilasValido() {
+      if (typeof activarFilas === 'undefined' || !activarFilas) {
+        console.warn('No existe la variable activarFilas\n\t\tOR\n es false');
+        return false;
+      }
+      return true;
+    }
+  }
+
+  function clickBtnIrALista() {
     const btnIrALista = document.querySelector('#irALista');
-
     if (btnIrALista) {
       btnIrALista.click();
     } else {
       console.warn('El botón #irALista no se encontró.');
     }
+  }
 
-    // Seleccionar la lista de filas y agregar la clase 'bounce-active' si existe
+  function activarFilasLista() {
     const listaDeActivarFilas = document.querySelector(
       '#gvInventario_ctl00_ctl03_ctl01_ddlPageSize_Det'
     );
 
-    if (listaDeActivarFilas) {
-      listaDeActivarFilas.addEventListener('click', () =>
-        listaDeActivarFilas.classList.remove('bounce-active')
-      );
-
-      setTimeout(() => {
-        listaDeActivarFilas.classList.add('bounce-active');
-      }, 100);
-    } else {
+    if (!listaDeActivarFilas) {
       console.warn('La lista de filas activas no se encontró.');
+      return;
     }
+
+    listaDeActivarFilas.addEventListener('click', () => {
+      listaDeActivarFilas.classList.remove('bounce-active');
+    });
+
+    setTimeout(() => {
+      listaDeActivarFilas.classList.add('bounce-active');
+    }, 100);
   }
 }
 
