@@ -77,10 +77,6 @@ html {
     vertical-align: baseline !important;
   }
 
-  .container-work-unit .work-unit textarea {
-    resize: none;
-  }
-
   .header,
   main
     > div.d-flex.bd-highlight
@@ -104,6 +100,18 @@ html {
 
   .RadGrid_Bootstrap {
     border: none !important;
+  }
+
+  .work-unit {
+    #resetWorkUnit {
+      display: none !important;
+      border: none !important;
+    }
+
+    textarea {
+      resize: none;
+      border: none !important;
+    }
   }
 } /* Fin del print */
 
@@ -140,17 +148,10 @@ div.p-2.bd-highlight button i {
   padding-right: 4px;
 }
 
-.container-work-unit {
-  position: absolute;
-  right: 100px;
-  top: 286px;
-  font-size: 34px;
-  z-index: 10;
-}
-
 .work-unit {
   animation: entradaElemento 0.5s ease-in-out;
   display: flex;
+  font-size: 34px;
 
   .container-label {
     display: flex;
@@ -162,21 +163,23 @@ div.p-2.bd-highlight button i {
     }
   }
 
+  .form-group {
+    width: 100%;
+  }
+
   textarea {
     font-weight: bold;
     font-size: 34px;
-    width: 220px;
-    border: transparent;
-    padding-left: 4px;
-    padding-top: 8px;
-    overflow: hidden;
-    height: 80px;
-    resize: vertical;
+    field-sizing: content;
   }
 
   .animarTexto {
     animation: entradaElemento 0.5s ease-in-out;
   }
+}
+
+.hidden {
+  display: none !important;
 }
 
 @keyframes entradaElemento {

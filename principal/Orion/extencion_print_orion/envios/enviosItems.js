@@ -1,62 +1,182 @@
 /** Envio item */
+async function main() {
+  try {
+    await insertButtons();
+    await insertWorkUnitContainer();
 
-const divContainer = `<div class="container-work-unit"></div>`;
+    const btnWorkUnit = document.querySelector('#workUnitButton');
+    btnWorkUnit && btnWorkUnit.addEventListener('click', workUnitInsert);
 
-/** Work Unit */
-function workUnitInsert() {
-  const workUnitContainer = document.querySelector('body > .container-work-unit');
-  if (!workUnitContainer) {
-    console.error('Container not found');
-    return;
+    insertFooterDetail();
+    window.addEventListener('beforeprint', reviseTextarea);
+    window.addEventListener('afterprint', afterPrint);
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    alertaPrint();
   }
 
-  let workUnitText = prompt('Ingrese una unidad de trabajo:') ?? '';
+  function insertButtons() {
+    // Boton imprimir
+    const button = `
+      <div class="p-2 bd-highlight">
+          <button id="printButtonEnvio" class="btn btn-secondary btn-sm btn-dark-teal" type="button"><i class="fas fa-print"></i>Imprimir</button>
+      </div>
 
-  const workUnitElement = document.querySelector('body > .container-work-unit > .work-unit');
+      <div class="p-2 bd-highlight">
+          <button id="workUnitButton" class="btn btn-secondary btn-sm btn-dark-teal" type="button"><i class="fas fa-file-word"></i>Work Unit</button>
+      </div>
+      `;
 
-  if (workUnitElement) {
-    const textareaElement = document.querySelector('#workUnit');
-    /**
-     *  Si ya existe el elemeto [workUnitElement]
-     *  y el valor de [workUnitText] !== null
-     *  actualizamos el valor
-     *
-     * si existe y es null, retornamos
-     */
-    if (workUnitText) {
-      workUnitText = workUnitText.trim();
-      textareaElement.value = workUnitText;
-      textareaElement.classList.remove('animarTexto');
-      setTimeout(() => {
-        textareaElement.classList.add('animarTexto');
-      }, 50);
-    } else {
-      return;
-    }
-  } else {
-    /**
-     * Si no existe el elemento [workUnitElement]
-     *
-     * verificamos si [workUnitText] !== null
-     * y creamos el elemento [workUnitElement]
-     * con el valor de [workUnitText]
-     *
-     * en caso de no existir [workUnitElement] y [workUnitText] === nulll
-     * no hacemos nada
-     */
-    if (workUnitText) {
-      workUnitText = workUnitText.trim();
+    return new Promise((resolve, reject) => {
+      const elementoInsert = document.querySelector(
+        '#UpdatePanel > main > div.d-flex.bd-highlight > div:nth-child(2)'
+      );
 
-      workUnitContainer.insertAdjacentHTML('beforeend', workUnitHTML);
-      const textareaElement = document.querySelector('#workUnit');
-
-      if (!textareaElement) {
-        console.error('Error: else:No existe el elemento textarea');
+      if (!elementoInsert) {
+        console.error('Error: el elemento a insertar no existe');
+        return resolve();
       }
 
-      textareaElement.value = workUnitText; // Set value of textarea
-      textareaElement.classList.add('animarTexto');
+      elementoInsert.insertAdjacentHTML('afterend', button);
+
+      // Ajusta titulo de Envio #
+      document.querySelector(
+        '#UpdatePanel > main > div.d-flex.bd-highlight > div.flex-grow-1.bd-highlight'
+      ).style = 'padding-right: calc(88.22px + 0.5rem*2 + 0.5rem + 110.18px);';
+
+      resolve();
+    });
+  }
+
+  function insertWorkUnitContainer() {
+    const overviewCardWorkUnit = `
+      <div class="overview-card">
+        <button class="btn btn-link overview-card-toggle collapsed" type="button" data-toggle="collapse" data-target="#workUnit" aria-expanded="false" aria-controls="collapseExample">
+          <i class="fas fa-file-pen icons" aria-hidden="true"></i>Work Unit
+        </button>
+
+        <div class="overview-card-content filtros collapse show" id="workUnit" style="">
+          <div class="form-row">
+            <div class="col-sm work-unit">
+                <div class="form-group">
+                  <label for="workUnit"> Work Unit: <button id="resetWorkUnit" class="btn btn-danger btn-sm " type="reset"><i class="fas fa-trash-can" aria-hidden="true"></i></button></label>
+                  <textarea id="workUnitTextarea" class="animarTexto form-control collapse show" rows="1" placeholder="..." style=""></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    `;
+
+    return new Promise(resolve => {
+      const elementToInsert = document.querySelector(
+        '#UpdatePanel > main > div.main-overview.row > div:nth-child(2)'
+      );
+
+      if (!elementToInsert) {
+        console.error('Error: no se encontro el elemento a insertar [WorkUnitContainer]');
+        resolve();
+        return;
+      }
+
+      elementToInsert.insertAdjacentHTML('beforeend', overviewCardWorkUnit);
+
+      setTimeout(() => {
+        const btnReset = document.querySelector('#resetWorkUnit');
+        const textarea = document.querySelector('#workUnitTextarea');
+
+        btnReset.addEventListener('click', () => textarea && (textarea.value = ''));
+      }, 50);
+
+      resolve();
+    });
+  }
+
+  async function insertFooterDetail() {
+    const tbodyFooterDetail = document.querySelector(
+      '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody'
+    );
+
+    if (!tbodyFooterDetail) {
+      return console.error('No existe el tbody del footer');
     }
+
+    tbodyFooterDetail.innerHTML = '';
+
+    // Obtener los parámetros almacenados
+    await getParamsURL();
+    const params = getStoredParams();
+
+    // Crear el contenido condicionalmente
+    let envioContent = params.numberEnvio
+      ? `<td style="text-wrap: nowrap;"><strong>Envio:</strong> ${params.numberEnvio}</td>`
+      : '';
+    let userContent = params.userEnvio
+      ? `<td style="text-wrap: nowrap;"><strong>Creado:</strong> ${params.userEnvio}</td>`
+      : '';
+    let fechaContent = params.fechaEnvio
+      ? `<tr><td style="text-wrap: nowrap;"><strong>Fecha:</strong> ${params.fechaEnvio}</td></tr>`
+      : '';
+
+    // Componer el HTML del footer con los contenidos condicionales
+    const tbodyInner = `
+      <tr>
+        ${envioContent}
+        ${userContent}
+      </tr>
+        ${fechaContent}
+    `;
+
+    tbodyFooterDetail.insertAdjacentHTML('afterbegin', tbodyInner);
+  }
+
+  function workUnitInsert() {
+    const textarea = document.querySelector('#workUnitTextarea');
+
+    if (!textarea) {
+      console.error('Error: No existe el elemento textarea');
+    }
+
+    let workUnitText = prompt('Ingrese una unidad de trabajo:') ?? '';
+
+    if (workUnitText) {
+      textarea.value = workUnitText.trim();
+
+      textarea.classList.remove('animarTexto');
+      setTimeout(() => textarea.classList.add('animarTexto'), 50);
+    }
+  }
+
+  function reviseTextarea() {
+    const textarea = document.querySelector('#workUnitTextarea');
+    const textareaContainer = document.querySelector('#workUnit');
+
+    if (!textarea) {
+      console.error('Error: No existe el elemento textarea');
+    }
+
+    if (!textareaContainer) {
+      console.error('Error: No existe el Contenedor de textarea');
+    }
+
+    const txtValue = textarea.value.trim();
+
+    if (!txtValue) {
+      textareaContainer.classList.add('hidden');
+    }
+
+    textarea.value = txtValue;
+  }
+
+  function afterPrint() {
+    const textareaContainer = document.querySelector('#workUnit');
+
+    if (!textareaContainer) {
+      console.error('Error: No existe el Contenedor de textarea');
+    }
+
+    textareaContainer.classList.remove('hidden');
   }
 }
 
@@ -109,131 +229,6 @@ function getStoredParams() {
   );
 
   return { userEnvio, fechaEnvio, numberEnvio };
-}
-
-async function main() {
-  try {
-    await insertButtons();
-    await insertWorkUnitContainer();
-
-    const btnWorkUnit = document.querySelector('#workUnitButton');
-    btnWorkUnit && btnWorkUnit.addEventListener('click', workUnitInsert);
-
-    insertFooterDetail();
-  } catch (error) {
-    console.error('Error:', error);
-  } finally {
-    alertaPrint();
-  }
-
-  function insertButtons() {
-    // Boton imprimir
-    const button = `
-      <div class="p-2 bd-highlight">
-          <button id="printButtonEnvio" class="btn btn-secondary btn-sm btn-dark-teal" type="button"><i class="fas fa-print"></i>Imprimir</button>
-      </div>
-
-      <div class="p-2 bd-highlight">
-          <button id="workUnitButton" class="btn btn-secondary btn-sm btn-dark-teal" type="button"><i class="fas fa-file-word"></i>Work Unit</button>
-      </div>
-      `;
-
-    return new Promise((resolve, reject) => {
-      const elementoInsert = document.querySelector(
-        '#UpdatePanel > main > div.d-flex.bd-highlight > div:nth-child(2)'
-      );
-
-      if (!elementoInsert) {
-        console.error('Error: el elemento a insertar no existe');
-        return resolve();
-      }
-
-      elementoInsert.insertAdjacentHTML('afterend', button);
-
-      // Ajusta titulo de Envio #
-      document.querySelector(
-        '#UpdatePanel > main > div.d-flex.bd-highlight > div.flex-grow-1.bd-highlight'
-      ).style = 'padding-right: calc(88.22px + 0.5rem*2 + 0.5rem + 110.18px);';
-
-      resolve();
-    });
-  }
-
-  function insertWorkUnitContainer() {
-    const workUnitHTML = `
-      <div class="row">
-        <div class="work-unit">
-          <div class="container-label">
-              <label for="workUnit"> Work Unit: </label>
-              <button id="resetWorkUnit" class="btn btn-danger btn-sm " type="reset"><i class="fas fa-trash-can"
-                      aria-hidden="true"></i></button>
-          </div>
-          <textarea id="workUnit" class="animarTexto" placeholder="35449192"></textarea>
-        </div>
-      </div>
-      `;
-
-    return new Promise(resolve => {
-      const elementToInsert = document.querySelector(
-        '#UpdatePanel > main > div.main-overview.row > div:nth-child(2)'
-      );
-
-      if (!elementToInsert) {
-        console.error('Error: no se encontro el elemento a insertar [WorkUnitContainer]');
-        resolve();
-        return;
-      }
-
-      elementToInsert.insertAdjacentHTML('beforeend', workUnitHTML);
-
-      setTimeout(() => {
-        const btnReset = document.querySelector('#resetWorkUnit');
-        const textarea = document.querySelector('#workUnit');
-
-        btnReset.addEventListener('click', () => textarea && (textarea.value = ''));
-      }, 50);
-
-      resolve();
-    });
-  }
-
-  async function insertFooterDetail() {
-    const tbodyFooterDetail = document.querySelector(
-      '#divImpresionRepCotizacion > table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody'
-    );
-
-    if (!tbodyFooterDetail) {
-      return console.error('No existe el tbody del footer');
-    }
-
-    tbodyFooterDetail.innerHTML = '';
-
-    // Obtener los parámetros almacenados
-    await getParamsURL();
-    const params = getStoredParams();
-
-    // Crear el contenido condicionalmente
-    let envioContent = params.numberEnvio
-      ? `<td style="text-wrap: nowrap;"><strong>Envio:</strong> ${params.numberEnvio}</td>`
-      : '';
-    let userContent = params.userEnvio
-      ? `<td style="text-wrap: nowrap;"><strong>Creado:</strong> ${params.userEnvio}</td>`
-      : '';
-    let fechaContent = params.fechaEnvio
-      ? `<tr><td style="text-wrap: nowrap;"><strong>Fecha:</strong> ${params.fechaEnvio}</td></tr>`
-      : '';
-
-    // Componer el HTML del footer con los contenidos condicionales
-    const tbodyInner = `
-      <tr>
-        ${envioContent}
-        ${userContent}
-      </tr>
-        ${fechaContent}
-    `;
-
-    tbodyFooterDetail.insertAdjacentHTML('afterbegin', tbodyInner);
-  }
 }
 
 window.addEventListener('load', main, { once: true });
