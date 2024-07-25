@@ -10,6 +10,13 @@ async function main() {
     insertFooterDetail();
     window.addEventListener('beforeprint', reviseTextarea);
     window.addEventListener('afterprint', afterPrint);
+
+    const textarea = document.getElementById('workUnit');
+
+    if (!textarea) {
+      console.error('Error: no existe el elemento textrea');
+      return;
+    }
   } catch (error) {
     console.error('Error:', error);
   } finally {
@@ -87,6 +94,16 @@ async function main() {
         const textarea = document.querySelector('#workUnitTextarea');
 
         btnReset.addEventListener('click', () => textarea && (textarea.value = ''));
+
+        // Save to sessionStorage when the page is about to be refreshed or navigated away from
+        window.addEventListener('beforeunload', () => {
+          sessionStorage.setItem('workUnit', textarea.value);
+        });
+
+        const savedValue = sessionStorage.getItem('workUnit');
+        if (savedValue) {
+          textarea.value = savedValue;
+        }
       }, 50);
 
       resolve();
