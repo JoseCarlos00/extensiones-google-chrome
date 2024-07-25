@@ -173,3 +173,55 @@ div.p-2.bd-highlight button i {
     transform: translateY(0);
   }
 }
+
+/* Tabla de info footer  */
+#UpdatePanel > div.t-container.t-container-static {
+  width: 100% !important;
+  max-width: 100vw !important;
+
+  .t-row > div {
+    display: block !important;
+  }
+
+  #divImpresionRepCotizacion table tbody {
+    tr:not(:first-child) {
+      display: none !important;
+    }
+  }
+}
+
+.bounce-active {
+  animation: bounce 1.5s infinite;
+}
+
+.bounce-active .rcbInputCell,
+.bounce-active .rcbArrowCell {
+  animation: change-color 1.5s infinite;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+  100% {
+    transform: scale3d(0.75, 0.95, 1);
+  }
+}
+
+@keyframes change-color {
+  0% {
+    background-color: #fff;
+    color: #000;
+  }
+  50% {
+    background-color: #7575af;
+    color: #fff;
+  }
+  100% {
+    background-color: #53e06b;
+    color: #0505f9;
+  }
+}

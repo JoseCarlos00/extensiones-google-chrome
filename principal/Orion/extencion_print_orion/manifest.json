@@ -23,7 +23,7 @@
     },
     {
       "matches": ["http://fmorion.dnsalias.com/orion/paginas/Envios/Envio.aspx?EnvioNum=*"],
-      "js": ["envios/enviosItems.js"],
+      "js": ["envios/enviosItems.js", "envios/alertaPrint.js"],
       "css": ["envios/envioItem.css"]
     },
     {

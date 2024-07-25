@@ -4,17 +4,13 @@ async function main() {
   let isVerificarLineasDeImpresionExecuted = false;
 
   try {
-    /** Isertar Button Imprimir */
-    await insertarButtonPrint();
-
-    const printButtonInventory = document.querySelector('#printButtonInventory');
-    printButtonInventory &&
-      printButtonInventory.addEventListener('click', verificarLineasDeImpresion);
+    const printButtonEnvio = document.querySelector('#printButtonEnvio');
+    printButtonEnvio && printButtonEnvio.addEventListener('click', verificarLineasDeImpresion);
 
     /** Inserar Enlace */
     const body = document.querySelector('body');
     const enlace =
-      '<a href="#gvPedidosTienda_ctl00_ctl03_ctl01_PageSizeComboBox_Arrow" id="irALista" hidden="">Ir a Lista</a>';
+      '<a href="#gvEnvio_ctl00_ctl03_ctl01_PageSizeComboBox_Input" id="irALista" hidden="">Ir a Lista</a>';
 
     body && body.insertAdjacentHTML('afterbegin', enlace);
 
@@ -32,23 +28,6 @@ async function main() {
     });
   } catch (error) {
     console.error('Error:', error);
-  }
-
-  function insertarButtonPrint() {
-    return new Promise(resolve => {
-      const elementoInsert = document.querySelector(
-        '#frmReciboListas > main > div.row > div > div.d-flex.bd-highlight.mb-3 > div:nth-child(1)'
-      );
-
-      if (elementoInsert) {
-        elementoInsert.insertAdjacentHTML('afterend', buttonPrint);
-
-        resolve(true);
-      } else {
-        console.log(new Error('No se encontroe el elemento a insertar: Button Print'));
-        resolve(false);
-      }
-    });
   }
 
   function verificarLineasDeImpresion() {
@@ -80,15 +59,33 @@ async function main() {
   }
 
   function obtenerTotalNumber() {
-    const numFilasElementSelector =
-      '#gvPedidosTienda_ctl00 > tfoot > tr > td > table > tbody > tr > td > div.rgWrap.rgInfoPart > strong:nth-child(1)';
-    const totalElement = document.querySelector(numFilasElementSelector);
-    return totalElement ? Number(totalElement.textContent.trim()) : null;
+    const selector =
+      '#gvEnvio_ctl00 > tfoot > tr > td > table > tbody > tr > td > div.rgWrap.rgInfoPart';
+    const totalElement = document.querySelector(selector);
+
+    // Obtener el contenido del elemento
+    const text = totalElement ? totalElement.textContent.trim() : '';
+    const match = text.match(/^(\d+) elemento/);
+    const number = match ? match[1] : '0';
+
+    return number ? Number(number) : null;
   }
 
   function obtenerNumFilas() {
-    const numFilasElements = document.querySelectorAll('#gvPedidosTienda_ctl00 > tbody tr');
-    return numFilasElements.length;
+    // return numFilasElement.length;
+
+    const numFilasElements = document.querySelectorAll('#gvEnvio_ctl00 > tbody tr');
+    const noRegistrosElement = document.querySelector('#gvEnvio_ctl00 > tbody tr td');
+
+    const noRegistrosText = noRegistrosElement ? noRegistrosElement.textContent.trim() : '';
+    const numTotalFilas = numFilasElements.length;
+
+    // Si el texto en noRegistrosElement contiene "No contiene Registros", entonces retornamos 0
+    if (noRegistrosText.includes('No contiene Registros')) {
+      return 0;
+    }
+
+    return Number(numTotalFilas);
   }
 
   function esImpresionCompleta(numFilas, totalNumber) {
@@ -150,7 +147,7 @@ async function main() {
 
   function activarFilasLista() {
     const listaDeActivarFilasIunput = document.querySelector(
-      '#gvPedidosTienda_ctl00_ctl03_ctl01_PageSizeComboBox_Input'
+      '#gvEnvio_ctl00_ctl03_ctl01_PageSizeComboBox_Input'
     );
 
     if (!listaDeActivarFilasIunput) {
@@ -173,12 +170,5 @@ async function main() {
     }, 100);
   }
 }
-
-// Boton imprimir
-const buttonPrint = `
-<div class="p-2 bd-highlight">
-    <button id="printButtonInventory" type="button" class="btn btn-sm btn-purple mt-3"><i class="fas fa-print"></i>Imprimir</button>
-</div>
-`;
 
 window.addEventListener('load', main, { once: true });

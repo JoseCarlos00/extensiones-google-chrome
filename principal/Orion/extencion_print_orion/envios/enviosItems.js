@@ -82,7 +82,6 @@ function inicio() {
   document.querySelector('body').insertAdjacentHTML('afterbegin', divContainer);
 
   //Evento
-  document.querySelector('#printButtonEnvio').addEventListener('click', () => window.print());
   document.querySelector('#workUnitButton').addEventListener('click', workUnitInsert);
 
   // Titulo envio  => "Envio # 12679"
