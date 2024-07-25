@@ -2,13 +2,6 @@
 
 const divContainer = `<div class="container-work-unit"></div>`;
 
-const workUnitHTML = `
-  <div class="work-unit">
-    <label for="workUnit"> Work Unit: </label>
-    <textarea id="workUnit">WorkUnit</textarea>
-  </div>
-`;
-
 /** Work Unit */
 function workUnitInsert() {
   const workUnitContainer = document.querySelector('body > .container-work-unit');
@@ -121,10 +114,7 @@ function getStoredParams() {
 async function main() {
   try {
     await insertButtons();
-
-    // Container de  Work Unit
-    const body = document.querySelector('body');
-    body && body.insertAdjacentHTML('afterbegin', divContainer);
+    await insertWorkUnitContainer();
 
     const btnWorkUnit = document.querySelector('#workUnitButton');
     btnWorkUnit && btnWorkUnit.addEventListener('click', workUnitInsert);
@@ -164,6 +154,44 @@ async function main() {
       document.querySelector(
         '#UpdatePanel > main > div.d-flex.bd-highlight > div.flex-grow-1.bd-highlight'
       ).style = 'padding-right: calc(88.22px + 0.5rem*2 + 0.5rem + 110.18px);';
+
+      resolve();
+    });
+  }
+
+  function insertWorkUnitContainer() {
+    const workUnitHTML = `
+      <div class="row">
+        <div class="work-unit">
+          <div class="container-label">
+              <label for="workUnit"> Work Unit: </label>
+              <button id="resetWorkUnit" class="btn btn-danger btn-sm " type="reset"><i class="fas fa-trash-can"
+                      aria-hidden="true"></i></button>
+          </div>
+          <textarea id="workUnit" class="animarTexto" placeholder="35449192"></textarea>
+        </div>
+      </div>
+      `;
+
+    return new Promise(resolve => {
+      const elementToInsert = document.querySelector(
+        '#UpdatePanel > main > div.main-overview.row > div:nth-child(2)'
+      );
+
+      if (!elementToInsert) {
+        console.error('Error: no se encontro el elemento a insertar [WorkUnitContainer]');
+        resolve();
+        return;
+      }
+
+      elementToInsert.insertAdjacentHTML('beforeend', workUnitHTML);
+
+      setTimeout(() => {
+        const btnReset = document.querySelector('#resetWorkUnit');
+        const textarea = document.querySelector('#workUnit');
+
+        btnReset.addEventListener('click', () => textarea && (textarea.value = ''));
+      }, 50);
 
       resolve();
     });

@@ -101,6 +101,10 @@ html {
   .container-work-unit {
     top: 180px !important;
   }
+
+  .RadGrid_Bootstrap {
+    border: none !important;
+  }
 } /* Fin del print */
 
 /* Otros styles */
@@ -143,9 +147,20 @@ div.p-2.bd-highlight button i {
   font-size: 34px;
   z-index: 10;
 }
+
 .work-unit {
   animation: entradaElemento 0.5s ease-in-out;
   display: flex;
+
+  .container-label {
+    display: flex;
+    flex-direction: column;
+
+    button {
+      width: 30px;
+      align-self: center;
+    }
+  }
 
   textarea {
     font-weight: bold;
