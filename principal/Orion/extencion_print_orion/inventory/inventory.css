@@ -148,3 +148,14 @@ select.bounce-active {
     color: #0505f9;
   }
 }
+
+/* Inventory Filtros */
+/* Ocultar filas con la clase hidden-row por defecto */
+.hidden-row {
+  display: none;
+}
+
+/* Mostrar filas con la clase hidden-row cuando la tabla tiene la clase show-rows */
+.show-rows .hidden-row {
+  display: table-row;
+}

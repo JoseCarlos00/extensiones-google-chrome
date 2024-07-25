@@ -30,6 +30,8 @@ async function initialEvents() {
     });
   } catch (error) {
     console.error('Error:', error);
+  } finally {
+    inventarioBodegaFitros();
   }
 
   function insertarButtonPrint() {
