@@ -1,4 +1,4 @@
-async function main() {
+async function alertaPrint() {
   /** Banderas Globales */
   let activarFilas = false;
   let isVerificarLineasDeImpresionExecuted = false;
@@ -170,5 +170,3 @@ async function main() {
     }, 100);
   }
 }
-
-window.addEventListener('load', main, { once: true });

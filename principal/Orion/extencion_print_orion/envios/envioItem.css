@@ -1,4 +1,8 @@
 /** Envio */
+html {
+  scroll-behavior: smooth;
+}
+
 @media print {
   table#gvEnvio_ctl00 {
     border-color: #000 !important;
@@ -105,22 +109,19 @@
 }
 
 #UpdatePanel > div.t-container.t-container-static table tr td:nth-child(3) table tbody {
-  display: flex;
   width: max-content;
   border-top: transparent;
   border-left: transparent;
   border-right: transparent;
 
+  border: transparent;
+
   span {
     color: #000 !important;
   }
 
-  tr:nth-child(1) {
-    td {
-      background-color: transparent !important;
-      padding-left: 4px !important;
-      padding-right: 4px !important;
-    }
+  tr:nth-child(1) td {
+    background-color: transparent !important;
   }
 
   tr:nth-child(2) {
@@ -183,10 +184,26 @@ div.p-2.bd-highlight button i {
     display: block !important;
   }
 
-  #divImpresionRepCotizacion table tbody {
-    tr:not(:first-child) {
+  #divImpresionRepCotizacion > table > tbody {
+    > tr:not(:first-child) {
       display: none !important;
     }
+
+    > tr:first-child > td {
+      width: 33%;
+    }
+  }
+}
+
+@media print {
+  #UpdatePanel
+    > div.t-container.t-container-static
+    #divImpresionRepCotizacion
+    > table
+    > tbody
+    tr:first-child
+    td {
+    width: auto !important;
   }
 }
 

@@ -47,8 +47,8 @@ function main() {
 
     // Actualiza el href del anchor si no existe ya el parámetro
     const url = new URL(anchor.href);
-    url.searchParams.set('userEnvio', GENERADO_POR);
-    url.searchParams.set('fechaEnvio', FECHA_ENVIO);
+    url.searchParams.set('UserEnvio', GENERADO_POR);
+    url.searchParams.set('FechaEnvio', FECHA_ENVIO);
     anchor.href = url.toString();
   }
 }
