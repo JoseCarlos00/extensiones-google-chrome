@@ -1,34 +1,56 @@
 /** Lista de Envios */
-function listEnvios() {
-  console.log('Lista envios');
-  const filaPedidos = document.querySelectorAll('#gvEnvioListas_ctl00 > tbody tr');
+function main() {
+  try {
+    const tbody = document.querySelector('#gvEnvioListas_ctl00 > tbody');
 
-  filaPedidos.forEach(tr => {
-    const GENERADO_POR = tr.children[9].innerText;
-    const FECHA_ENVIO = tr.children[5].innerText;
-    let href = tr.children[2].children[0].getAttribute('href');
+    if (!tbody) {
+      console.error('No existe el elemento tbody');
+      return;
+    }
 
-    tr.children[2].children[0].setAttribute('target', '_blank');
-    href += `&userEnvio=${GENERADO_POR}&fechaEnvio=${FECHA_ENVIO}`;
+    tbody.addEventListener('click', eventClick);
 
-    tr.children[2].children[0].setAttribute('href', href);
-  });
-}
-//end
+    function eventClick(e) {
+      const element = e.target;
 
-function inicio() {
-  setTimeout(listEnvios, 1500);
+      if (
+        element.nodeName === 'SPAN' &&
+        /^gvEnvioListas_ctl00_ctl\d+_txtEnvioID$/.test(element.id)
+      ) {
+        const anchor = element.closest('a');
+        const trElement = element.closest('tr');
 
-  const btnBuscar = document.querySelector('#btnBuscar') ?? null;
+        if (!anchor) {
+          console.error('Elemento <a> no encontrado');
+          return;
+        }
 
-  if (btnBuscar) {
-    console.log('click buscar');
-    btnBuscar.addEventListener('click', () => {
-      setTimeout(() => {
-        listEnvios();
-      }, 1500);
-    });
+        if (!trElement) {
+          console.error('Elemento <tr> no encontrado');
+          return;
+        }
+
+        transformAnchor({ trElement, anchor });
+      } else {
+        console.warn('Elemento no válido:');
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+  function transformAnchor({ trElement, anchor }) {
+    // Verifica si los índices de los hijos existen antes de acceder a ellos
+    const cells = trElement.children;
+    const GENERADO_POR = cells[9] ? cells[9].textContent.trim() : 'No disponible';
+    const FECHA_ENVIO = cells[5] ? cells[5].textContent.trim() : 'No disponible';
+
+    // Actualiza el href del anchor si no existe ya el parámetro
+    const url = new URL(anchor.href);
+    url.searchParams.set('userEnvio', GENERADO_POR);
+    url.searchParams.set('fechaEnvio', FECHA_ENVIO);
+    anchor.href = url.toString();
   }
 }
 
-window.addEventListener('load', inicio, { once: true });
+window.addEventListener('load', main, { once: true });
