@@ -5,6 +5,9 @@ async function inventarioBodegaFitros() {
   try {
     await insertarInputCheckBox();
 
+    await insertarEventosInputCheck();
+
+    await insertCounterElements();
     hideInventory();
   } catch (error) {
     console.error('Error:', error);
@@ -31,14 +34,40 @@ async function inventarioBodegaFitros() {
 
       elementToInsert.insertAdjacentHTML('beforeend', htmlInputCheck);
 
-      setTimeout(() => {
-        const checkbox = document.querySelector('#showMtyGdlTij');
-        const table = document.querySelector('#gvInventario_ctl00');
+      setTimeout(resolve, 50);
+    });
+  }
 
-        checkbox.addEventListener('change', event => {
-          table.classList.toggle('show-rows', checkbox.checked);
-        });
-      }, 50);
+  function insertarEventosInputCheck() {
+    return new Promise(resolve => {
+      const checkbox = document.querySelector('#showMtyGdlTij');
+      const table = document.querySelector('#gvInventario_ctl00');
+
+      if (!checkbox) {
+        console.error('Error: no existe el elemento checkbox');
+        resolve();
+        return;
+      }
+
+      if (!table) {
+        console.error('Error: no existe el elemento table');
+        resolve();
+        return;
+      }
+
+      table.classList.add('table-no-show-rows');
+
+      checkbox.addEventListener('change', event => {
+        if (checkbox.checked) {
+          table.classList.add('show-rows');
+          table.classList.remove('table-no-show-rows');
+          updateRowCount(showAll);
+        } else {
+          table.classList.remove('show-rows');
+          table.classList.add('table-no-show-rows');
+          updateRowCount();
+        }
+      });
 
       resolve();
     });
@@ -74,17 +103,54 @@ async function inventarioBodegaFitros() {
           }
         }
       });
+
+      // Actualizar el contador después de ocultar filas
+      updateRowCount();
     } catch (error) {
       console.error('Error:', error);
     }
   }
 
-  function updateRowCount() {
-    const filas = document.querySelectorAll('#gvInventario_ctl00 > tbody tr');
-    const visibleFilas = document.querySelectorAll(
-      '#gvInventario_ctl00 > tbody tr:not(.hidden-row)'
-    );
-    const rowCountElement = document.getElementById('rowCount');
-    rowCountElement.textContent = visibleFilas.length;
+  function updateRowCount(showAll) {
+    const visibleRow = document.querySelectorAll('#gvInventario_ctl00 > tbody tr:not(.hidden-row)');
+    const hiddenRow = document.querySelectorAll('#gvInventario_ctl00 > tbody tr.hidden-row');
+
+    const visibleCountInput = document.getElementById('totalShow');
+    const hiddenCountInput = document.getElementById('totalHidden');
+
+    const visibleTotal = showAll ? '' : visibleRow.length;
+    const hiddenTotal = showAll ? '' : hiddenRow.length;
+
+    visibleCountInput && (visibleCountInput.textContent = visibleTotal);
+    hiddenCountInput && (hiddenCountInput.textContent = hiddenTotal);
+  }
+
+  function insertCounterElements() {
+    const htmlContadores = `
+      <div class="form-group contadores-show-hidden">
+        <label class="col-form-label col-form-label-sm">Mostradas:</label>
+        <span id="totalShow"></span>
+        </div>
+        
+        <div class="form-group contadores-show-hidden">
+        <label class="col-form-label col-form-label-sm">Ocultas:</label>
+        <span id="totalHidden"></span>
+      </div>
+    `;
+    return new Promise((resolve, reject) => {
+      const elementToInsert = document.querySelector(
+        '#gvInventario_ctl00 > tfoot > tr > td > div > div'
+      );
+
+      if (!elementToInsert) {
+        console.error('Error: no existe el elemento a insertar contadores');
+        resolve();
+        return;
+      }
+
+      elementToInsert.insertAdjacentHTML('beforeend', htmlContadores);
+      elementToInsert.className = 'col-12';
+      resolve();
+    });
   }
 }
