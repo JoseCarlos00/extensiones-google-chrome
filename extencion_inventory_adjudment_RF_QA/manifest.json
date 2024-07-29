@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "QA Inventory adjustment RF",
+  "version": "1.0",
+  "description": "Inventory adjustment automatic",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "icons": {
+    "16": "images/inventory16.png",
+    "32": "images/inventory32.png",
+    "48": "images/inventory48.png",
+    "128": "images/inventory128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://qawms.fantasiasmiguel.com.mx/RF/InventoryManagementRF.aspx*"],
+      "js": ["content.js", "popup.js"]
+    },
+    {
+      "matches": ["https://qawms.fantasiasmiguel.com.mx/RF/ToContainerRF.aspx?*"],
+      "js": ["tranfer_to_container_RF.js"],
+      "css": ["tranfer_to_container_RF.css", "buttons.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "defaul_icon": {
+      "16": "images/inventory16.png",
+      "32": "images/inventory32.png",
+      "48": "images/inventory48.png",
+      "128": "images/inventory128.png"
+    }
+  }
+}
