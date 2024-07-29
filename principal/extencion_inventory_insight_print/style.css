@@ -332,6 +332,7 @@
     outline-color: #f70431 !important;
     outline-style: solid !important;
     outline-offset: -2px !important;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
   }
 }
 
