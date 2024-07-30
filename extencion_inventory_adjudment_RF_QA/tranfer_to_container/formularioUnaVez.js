@@ -86,7 +86,15 @@ async function handleGenerico(formData) {
 
   // Redirigir a una función para procesar los datos y refrescar la página
   contador(repeatNumber);
-  await tranfer({ qty, LP: secuencia });
+  await tranfer({ QTY: qty, LP: secuencia });
+
+  setTimeout(() => {
+    console.log('pauseActive:', pauseActive);
+    if (pauseActive) {
+      // saveToSessionStorage('pause', false);
+      document.querySelector('#OK').click();
+    }
+  }, 1000);
 }
 
 async function handleNoGenerico(formData) {
@@ -117,7 +125,13 @@ async function handleNoGenerico(formData) {
 
   // Redirigir a una función para procesar los datos y refrescar la página
   contador(repeatNumber);
-  await tranfer({ qty, LP });
+  await tranfer({ QTY: qty, LP });
+
+  setTimeout(() => {
+    console.log('pauseActive:', pauseActive);
+    // saveToSessionStorage('pause', false);
+    document.querySelector('#OK').click();
+  }, 1000);
 }
 
 function countLeadingZeros(str) {
@@ -128,7 +142,15 @@ function countLeadingZeros(str) {
 async function getDataSessionStorage() {
   // Recuperar los datos del sessionStorage
   let storedData = sessionStorage.getItem('formData');
+  const buttonsControl = document.getElementById('buttonsControls');
+  const btnCancel = document.getElementById('cancelar');
+
   if (storedData) {
+    if (buttonsControl && btnCancel) {
+      btnCancel.dataset.storage = 'formData';
+      buttonsControl.classList.remove('hidden');
+    }
+
     let data = JSON.parse(storedData);
 
     // Obtener valores de sessionStorage
@@ -140,11 +162,8 @@ async function getDataSessionStorage() {
     contador(repeatNumber);
 
     if (repeatNumber > 0) {
-      // Incrementar la secuencia para la próxima repetición
-      secuencia++;
-
-      // Decrementar el número de repeticiones
-      repeatNumber--;
+      secuencia++; // Incrementar la secuencia para la próxima repetición
+      repeatNumber--; // Decrementar el número de repeticiones
 
       // Actualizar los datos en sessionStorage
       sessionStorage.setItem(
@@ -158,12 +177,23 @@ async function getDataSessionStorage() {
       );
 
       let LP = prefijo + secuencia;
-      // Volver a refrescar la página para repetir el proceso
-      tranfer({ qty, LP });
+      await tranfer({ QTY: qty, LP });
+
+      setTimeout(() => {
+        console.log('pauseActive:', pauseActive);
+        if (pauseActive) {
+          document.querySelector('#OK').click();
+        }
+      }, 1000);
     } else {
       // Limpiar sessionStorage cuando ya no hay más repeticiones
       sessionStorage.removeItem('formData');
       console.log('Proceso completado.');
+
+      if (buttonsControl && btnCancel) {
+        btnCancel.dataset.storage = '';
+        buttonsControl.classList.add('hidden');
+      }
     }
   }
 }

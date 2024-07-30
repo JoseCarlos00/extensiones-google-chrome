@@ -1,5 +1,5 @@
 console.log('[Tranfer to Container]');
-let pauseActive = false;
+let pauseActive = true;
 
 async function main() {
   try {
@@ -13,25 +13,9 @@ async function main() {
     collapse();
     setEventListeners();
 
-    const result = await getLocalStorage();
-    console.log('result:', result);
+    console.log('pauseActiveBefore:', pauseActive);
 
-    const pause = await getFromSessionStorageAsync('pause');
-
-    if (pause) {
-      pauseActive = pause;
-    } else {
-      saveToSessionStorage('pause', false);
-    }
-
-    if (Array.isArray(result) || result.length !== 0) {
-      const resultNum = Object.keys(result).length ?? '';
-
-      contador(resultNum);
-      insertarDatos1(result);
-      console.warn('Se insertaron los datos');
-      return;
-    }
+    getLocalStorage();
   } catch (error) {
     console.error('Error:', error);
   } finally {
@@ -42,14 +26,23 @@ async function main() {
 function insertarRegistroForm() {
   const registroHTML = `
 <div class="overview-card">
-		<button id="btnRegister" class="btn btn-link overview-card-toggle btn-register" type="button" aria-expanded="false"
-			aria-controls="Insert">
-			<svg class="icons" id="btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-				<path id="btnPath"
-					d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z">
-				</path>
-			</svg> Insertar
-		</button>
+		<div class="btn-group-controls">
+
+			<button id="btnRegister" class="btn btn-link overview-card-toggle btn-register" type="button"
+				aria-expanded="false" aria-controls="Insert">
+				<svg class="icons" id="btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+					<path id="btnPath"
+						d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z">
+					</path>
+				</svg> Insertar
+			</button>
+
+
+			<div id="buttonsControls" class="btn-control hidden">
+				<button id="pausar" type="button" class="btn btn-success">Pausar</button>
+				<button id="cancelar" type="button" class="btn btn-danger" data-storage="">Cancel</button>
+			</div>
+		</div>
 
 		<div class="overview-card-content collapse">
 			<div class="col-sm">
@@ -105,7 +98,7 @@ function insertarRegistroForm() {
 										<div class="input-group-prepend">
 											<label class="input-group-text" for="inputSecuencia">Secuencia</label>
 										</div>
-										<input id="inputSecuencia" type="text" minlength="1" maxlength="4" name="secuencia"
+										<input id="inputSecuencia" type="number" minlength="1" maxlength="4" name="secuencia"
 											class="form-control" placeholder="1, 12, 25">
 									</div>
 
@@ -117,9 +110,7 @@ function insertarRegistroForm() {
 						</div>
 
 						<div class="btn-group">
-							<button id="pausar" name="pausar" type="button" class="btn btn-success" tabindex="1">Pausar</button>
 							<button id="registraUbicaciones" class="btn btn-primary" type="submit" tabindex="0">Registrar</button>
-							<button id="cancelar" name="cancelar" type="button" class="btn btn-danger" tabindex="1">Cancel</button>
 						</div>
 
 					</fieldset>
@@ -135,9 +126,7 @@ function insertarRegistroForm() {
 2: LP:FMA0002376953  QTY:12" spellcheck="false" data-ms-editor="true"></textarea>
 
 						<div class="btn-group">
-							<button id="pausar" name="pausar" type="button" class="btn btn-success" tabindex="1">Pausar</button>
 							<button id="registraUbicaciones" class="btn btn-primary" type="submit" tabindex="0">Registrar</button>
-							<button id="cancelar" name="cancelar" type="button" class="btn btn-danger" tabindex="1">Cancel</button>
 						</div>
 					</fieldset>
 				</form>
@@ -215,48 +204,36 @@ function collapse() {
 function setEventListeners() {
   const formRegistro = document.querySelector('#registroForm');
 
+  // Buttons Control
+  const btnPausa = document.getElementById('pausar');
+  const btnCancel = document.getElementById('cancelar');
+
   if (!formRegistro) {
     console.error('Error: No se encontro el formulario registro');
     return;
   }
 
   formRegistro.addEventListener('submit', registrarDatosForm1);
-  formRegistro.pausar.addEventListener('click', pause);
-  formRegistro.cancelar.addEventListener('click', confirmClearLocalStorage);
-}
 
-function pause(e) {
-  console.log('Pause');
-  pauseActive = true;
+  if (btnPausa) {
+    btnPausa.addEventListener('click', pause);
+  } else {
+    console.warn('No se encontro el button de pause');
+  }
 
-  saveToSessionStorage('pause', true);
-  alert('Se ha detenido la ejecucion\nDa click en [OK] para continuar...');
-}
-
-function confirmPause() {
-  if (
-    confirm(
-      '¿Estás seguro de que deseas borrar todos los datos guardados? Esta acción no se puede deshacer.'
-    )
-  ) {
-    clearLocalStorage()
-      .then(() => {
-        alert('Los datos se han borrado exitosamente.');
-      })
-      .catch(error => {
-        alert('Hubo un error al borrar los datos.');
-        console.error(error);
-      });
+  if (btnCancel) {
+    btnCancel.addEventListener('click', function () {
+      confirmClearLocalStorage(btnCancel.dataset.storage);
+    });
+  } else {
+    console.warn('No se encontro el button de cancelar');
   }
 }
 
-function tranfer({ LP, QTY }) {
-  return new Promise(resolve => {
-    FORM1.toContID.value = LP;
-    FORM1.putAwayQty.value = QTY;
-
-    resolve();
-  });
+function pause() {
+  console.log('Pause');
+  pauseActive = false;
+  alert('Se ha detenido la ejecucion\nDa click en [OK] para reanudar...');
 }
 
 function registrarDatosForm1(e) {
@@ -320,8 +297,10 @@ async function insertarDatos1(datos) {
   setLocalStorage(datos);
 
   setTimeout(() => {
-    saveToSessionStorage('pause', false);
-    document.querySelector('#OK').click();
+    console.log('pauseActive:', pauseActive);
+    if (pauseActive) {
+      document.querySelector('#OK').click();
+    }
   }, 1000);
 }
 
@@ -330,53 +309,72 @@ function contador(value) {
   countRestante.innerHTML = `${value}`;
 }
 
-async function setLocalStorage(value) {
+function setLocalStorage(dataToTranfer) {
   try {
-    await chrome.storage.local.set({ dataToTranfer: value });
+    sessionStorage.setItem('dataToTranfer', JSON.stringify({ dataToTranfer }));
     console.log('Save Storage');
   } catch (error) {
     console.error('Error saving to storage:', error);
   }
 }
 
-async function getLocalStorage() {
+function getLocalStorage() {
   try {
-    const result = await chrome.storage.local.get(['dataToTranfer']);
-    if (!result || !result.key) {
-      console.error('No se encontró key en Chrome Storage');
-      return [];
+    let storedData = sessionStorage.getItem('dataToTranfer');
+    const buttonsControl = document.getElementById('buttonsControls');
+    const btnCancel = document.getElementById('cancelar');
+
+    if (storedData) {
+      if (buttonsControl && btnCancel) {
+        btnCancel.dataset.storage = 'dataToTranfer';
+        buttonsControl.classList.remove('hidden');
+      }
+
+      let data = JSON.parse(storedData);
+      const datos = data.dataToTranfer;
+      insertarDatos1(datos);
+    } else {
+      if (buttonsControl && btnCancel) {
+        btnCancel.dataset.storage = '';
+        buttonsControl.classList.add('hidden');
+      }
+      console.log('No hay datos en session storage del Form1');
     }
-    return result.key;
   } catch (error) {
-    console.error('Error al obtener doors desde el almacenamiento:', error);
-    return [];
+    console.error('Error los datos desde el almacenamiento:', error);
   }
 }
 
-async function clearLocalStorage() {
-  try {
-    await chrome.storage.local.remove(['dataToTranfer']);
-    console.log('Data cleared from storage');
-    const btnCancel = document.querySelector('#Cancel');
-    if (btnCancel) {
-      setTimeout(() => {
-        document.querySelector('#Cancel').click();
-      }, 500);
+function clearLocalStorage(key) {
+  return new Promise(resolve => {
+    try {
+      sessionStorage.removeItem(key);
+      console.log('Data cleared from storage');
+      resolve();
+    } catch (error) {
+      console.error('Error clearing data from storage:', error);
     }
-  } catch (error) {
-    console.error('Error clearing data from storage:', error);
-  }
+  });
 }
 
-function confirmClearLocalStorage() {
+function confirmClearLocalStorage(key) {
   if (
     confirm(
       '¿Estás seguro de que deseas borrar todos los datos guardados? Esta acción no se puede deshacer.'
     )
   ) {
-    clearLocalStorage()
+    clearLocalStorage(key)
       .then(() => {
         alert('Los datos se han borrado exitosamente.');
+        const btnCancel = document.getElementById('Cancel');
+
+        if (btnCancel) {
+          setTimeout(() => {
+            btnCancel.click();
+          }, 800);
+        } else {
+          console.warn('No se encontro el button [cancel] page');
+        }
       })
       .catch(error => {
         alert('Hubo un error al borrar los datos.');
@@ -408,6 +406,16 @@ function getFromSessionStorageAsync(key) {
       console.error('Error retrieving from sessionStorage:', error);
       resolve(null);
     }
+  });
+}
+
+function tranfer({ LP = '', QTY = '' } = {}) {
+  console.log('Tranfer:', 'LP:', LP, ' QTY:', QTY);
+  return new Promise(resolve => {
+    FORM1.toContID.value = LP;
+    FORM1.putAwayQty.value = QTY;
+
+    resolve();
   });
 }
 
