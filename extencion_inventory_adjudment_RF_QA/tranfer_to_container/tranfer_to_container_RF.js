@@ -35,96 +35,121 @@ async function main() {
   } catch (error) {
     console.error('Error:', error);
   } finally {
-    tranferToContainer();
+    formularioUnaVez();
   }
 }
 
 function insertarRegistroForm() {
   const registroHTML = `
-  <div class="overview-card">
-    <button id="btnRegister"  class="btn btn-link overview-card-toggle" type="button" aria-expanded="false" aria-controls="Insert">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="
-      width: 12px;">
-        <path
-          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
-          style="
-      fill: blue;
-  "></path>
-      </svg> Insetar</button>
+<div class="overview-card">
+		<button id="btnRegister" class="btn btn-link overview-card-toggle btn-register" type="button" aria-expanded="false"
+			aria-controls="Insert">
+			<svg class="icons" id="btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+				<path id="btnPath"
+					d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z">
+				</path>
+			</svg> Insertar
+		</button>
 
-    <div class="overview-card-content collapse">
-      <div class="col-sm">
+		<div class="overview-card-content collapse">
+			<div class="col-sm">
 
-        <form id="registroUnico" name="registroUnico">
-          <fieldset>
-            <legend>Insertar una unica vez</legend>
+				<form id="registroUnico" name="registroUnico">
+					<fieldset>
+						<legend>Insertar una unica vez</legend>
 
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <label class="input-group-text" for="inputQTy">QTY</label>
-              </div>
-              <input id="inputQTy" type="number" name="QTY" class="form-control">
-            </div>
+						<div class="input-group-container-generico">
+							<div class="input-group mb-3 mt-3 repeat">
+								<div class="input-group-prepend">
+									<label class="input-group-text" for="inputQTy">QTY</label>
+								</div>
+								<input id="inputQTy" type="number" name="QTY" class="form-control" placeholder="12" required>
+								<div class="input-group-append">
+									<span class="input-group-text">PZ</span>
+								</div>
+							</div>
 
-          
+							<div class="input-group mb-3 mt-3 repeat">
+								<div class="input-group-prepend">
+									<label class="input-group-text" for="repeatNumber">No. veces</label>
+								</div>
+								<input type="number" class="form-control" name="repeatNumber" id="repeatNumber" placeholder="repetir"
+									required>
+							</div>
+						</div>
 
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="elegirLP" id="generico"  checked>
-              <label class="form-check-label" for="generico">
-                LP generico
-                <input type="text" hidden name="lpGeneico">
-              </label>
-            </div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="elegirLP" id="generico" value="generico" checked
+								tabindex="1">
+							<label class="form-check-label" for="generico">
+								LP generico
+								<input type="text" hidden name="lpGeneico" id="lpGeneico">
+							</label>
+						</div>
 
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="elegirLP" id="noGenerico" >
-              <label class="form-check-label" for="noGenerico">
-                Ingresar uno
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="elegirLP" id="noGenerico" value="noGenerico">
+							<label class="form-check-label" for="noGenerico">
+								Crear uno
 
-                <div class="input-group mb-3 mt-3">
-                  <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputPrefix">Prefijo</label>
-                  </div>
-                  <input id="inputPrefix" type="text" name="prefijo" class="form-control" placeholder="FMA, LMX, DCR">
-                </div>
+								<div class="input-group-container">
+									<div class="input-group mb-3 mt-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="inputPrefix">Prefijo</label>
+										</div>
+										<input id="inputPrefix" type="text" name="prefijo" class="form-control mayusculas" maxlength="10"
+											placeholder="FMA0000, LMX0000, DCR0000">
+									</div>
 
-                <div class="input-group mb-3 mt-3">
-                  <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputSecuencia">Secuencia</label>
-                  </div>
-                  <input id="inputSecuencia" type="text" name="secuencia" class="form-control" placeholder="0001, 0002, 0003">
-                </div>
+									<div class="input-group mb-3 mt-3 repeat">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="inputSecuencia">Secuencia</label>
+										</div>
+										<input id="inputSecuencia" type="text" minlength="1" maxlength="4" name="secuencia"
+											class="form-control" placeholder="1, 12, 25">
+									</div>
 
-              </label>
-            </div>
+									<div class="lp-formated-container">
+										<input id="lpFormated" class="form-control lp-formated" hidden type="text" readonly tabindex="1">
+									</div>
+								</div>
 
-          </fieldset>
-        </form>
+						</div>
 
-        <form id="registroForm" name="registroForm">
-          <fieldset>
-            <legend>Insertar registro por registro </legend>
+						<div class="btn-group">
+							<button id="pausar" name="pausar" type="button" class="btn btn-success" tabindex="1">Pausar</button>
+							<button id="registraUbicaciones" class="btn btn-primary" type="submit" tabindex="0">Registrar</button>
+							<button id="cancelar" name="cancelar" type="button" class="btn btn-danger" tabindex="1">Cancel</button>
+						</div>
 
-            <label for="ubicaciones">LP, Qty:</label>
-            <textarea id="ubicaciones" name="registros" required="" rows="4" cols="50"
-              placeholder="LP:FMA0002376952	QTY:12pz" spellcheck="false" data-ms-editor="true"></textarea>
+					</fieldset>
+				</form>
 
-            <div class="btn-group">
-              <button id="pausar" name="pausar" type="button" class="btn btn-success" tabindex="1">Pausar</button>
-              <button id="registraUbicaciones" class="btn btn-primary" type="submit" tabindex="0">Registrar</button>
-              <button id="cancelar" name="cancelar" type="button" class="btn btn-danger" tabindex="1">Cancel</button>
-            </div>
-          </fieldset>
-        </form>
-      </div>
-    </div>
-  </div>
+
+				<form id="registroForm" name="registroForm">
+					<fieldset>
+						<legend>Insertar registro por registro </legend>
+
+						<label for="ubicaciones">LP, Qty:</label>
+						<textarea id="ubicaciones" name="registros" required="" rows="4" cols="50" placeholder="1: LP:FMA0002376952  QTY:12
+2: LP:FMA0002376953  QTY:12" spellcheck="false" data-ms-editor="true"></textarea>
+
+						<div class="btn-group">
+							<button id="pausar" name="pausar" type="button" class="btn btn-success" tabindex="1">Pausar</button>
+							<button id="registraUbicaciones" class="btn btn-primary" type="submit" tabindex="0">Registrar</button>
+							<button id="cancelar" name="cancelar" type="button" class="btn btn-danger" tabindex="1">Cancel</button>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
   `;
 
   const contadoresHTML = `
     <div class="contadores-container">
       <p>
-      Restantes:<spam id="countRestante">0</spam>
+      Restantes:<spam id="countRestante"></spam>
       </p>
     </div>
   `;
@@ -152,6 +177,9 @@ function collapse() {
   const collapseContent = document.querySelector('.overview-card-content');
 
   toggleButton.addEventListener('click', function () {
+    let button = this;
+    let iconPath = button.querySelector('svg path');
+
     // Verificar si el contenido está actualmente colapsado o no
     const isCollapsed = collapseContent.classList.contains('collapse');
 
@@ -165,6 +193,21 @@ function collapse() {
       collapseContent.classList.remove('show');
       collapseContent.classList.add('collapse');
       toggleButton.setAttribute('aria-expanded', 'false');
+    }
+
+    if (button.classList.contains('red')) {
+      // Cambiar a color y símbolo inicial
+      iconPath.setAttribute(
+        'd',
+        'M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z'
+      );
+      button.classList.remove('red');
+    } else {
+      button.classList.add('red');
+      iconPath.setAttribute(
+        'd',
+        'M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z'
+      );
     }
   });
 }
@@ -207,7 +250,7 @@ function confirmPause() {
   }
 }
 
-function tranfer(LP, QTY) {
+function tranfer({ LP, QTY }) {
   return new Promise(resolve => {
     FORM1.toContID.value = LP;
     FORM1.putAwayQty.value = QTY;
@@ -271,7 +314,7 @@ async function insertarDatos1(datos) {
 
   const primerObjetoDeDatos = datos[filas[0]];
 
-  await tranfer(primerObjetoDeDatos.LP, primerObjetoDeDatos.QTY);
+  await tranfer({ LP: primerObjetoDeDatos.LP, QTY: primerObjetoDeDatos.QTY });
 
   delete datos[filas[0]];
   setLocalStorage(datos);
