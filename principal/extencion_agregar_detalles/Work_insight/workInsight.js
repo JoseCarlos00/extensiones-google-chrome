@@ -70,7 +70,7 @@ function setEventTeclas(tbody) {
 
     if (event.key === 'ArrowDown') {
       const trSelected = tbody.querySelector('tr[aria-selected="true"]');
-      trSelected && extraerDatosDeTr(tr);
+      trSelected && extraerDatosDeTr(trSelected);
     }
   });
 }
@@ -85,7 +85,7 @@ function observacion(tbody) {
     if (mutationsList[0]) {
       console.log('isColumnExist:', mutationsList[0]);
       const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]');
-      trSelected && extraerDatosDeTr(tr);
+      trSelected && extraerDatosDeTr(trSelected);
     }
   }
 
