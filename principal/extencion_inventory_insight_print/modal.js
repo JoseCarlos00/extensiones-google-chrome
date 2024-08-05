@@ -87,7 +87,7 @@ const modalHTML = `
 
 const alertHtml = `
 <div id="alerta-copy" aria-live="polite"
-  style="bottom: 40px; position: fixed; left: 0px; width: 100%; display: flex; z-index: 1000000; padding: 4px; opacity: 0; transition-property: opacity, transform; transition-duration: 270ms; transition-timing-function: ease;">
+  style="bottom: 150px; position: fixed; left: 0px; width: 100%; display: none; z-index: 1000000; padding: 4px; opacity: 0; transition-property: opacity, transform; transition-duration: 270ms; transition-timing-function: ease;">
   <div
     style="background: rgb(47, 47, 47); color: rgb(211, 211, 211); border-radius: 8px; padding: 11px 16px; box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,   rgba(15, 15, 15, 0.2) 0px 5px 10px,   rgba(15, 15, 15, 0.4) 0px 15px 40px; margin: 0px auto; font-size: 14px; display: flex; align-items: center;">
     Copiado al portapapeles
@@ -549,9 +549,9 @@ async function copy(textoACopiar) {
 
     const alerta = document.querySelector('#alerta-copy');
 
-    alerta && (alerta.style.opacity = 1);
+    alerta && alerta.classList.add('show-alert');
     setTimeout(() => {
-      alerta && (alerta.style.opacity = 0);
+      alerta && alerta.classList.remove('show-alert');
     }, 4000);
   } catch (err) {
     console.error('Error al copiar al portapapeles:', err);

@@ -397,3 +397,8 @@
     outline-offset: var(--focus-outline-offset);
   }
 }
+
+.show-alert {
+  opacity: 1 !important;
+  display: flex !important;
+}
