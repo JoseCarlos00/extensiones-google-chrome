@@ -112,7 +112,7 @@ function constructTable() {
       const numberValue = Number(cellText.replace('.', '').replace(',', '.'));
 
       if (!isNaN(numberValue)) {
-        td.textContent = cellText.replace(/\./g, '');
+        cell.textContent = cellText.replace(/\./g, '');
       } else {
         cell.textContent = cellText; // Actualizar con el texto visible
       }
