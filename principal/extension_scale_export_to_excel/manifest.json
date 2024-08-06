@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Download Excel Scale",
+  "name": "Export to Excel For Scale",
   "version": "1.0",
   "author": "Jose Carlos Aguirre Romero>",
   "description": "Agrega el boton de donload exel a SCALE",
   "permissions": ["scripting", "activeTab", "storage", "tabs"],
   "icons": {
-    "16": "images/clipBoar16.png",
-    "32": "images/clipBoar32.png",
-    "48": "images/clipBoar48.png",
-    "128": "images/clipBoar128.png"
+    "16": "images/excel16.png",
+    "32": "images/excel32.png",
+    "48": "images/excel48.png",
+    "128": "images/excel128.png"
   },
   "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
   "content_scripts": [
@@ -22,10 +22,10 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/clipBoar16.png",
-      "32": "images/clipBoar32.png",
-      "48": "images/clipBoar48.png",
-      "128": "images/clipBoar128.png"
+      "16": "images/excel16.png",
+      "32": "images/excel32.png",
+      "48": "images/excel48.png",
+      "128": "images/excel128.png"
     }
   },
   "content_security_policy": {
