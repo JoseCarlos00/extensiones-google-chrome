@@ -13,11 +13,13 @@
 .context-menu {
   display: none;
   position: absolute;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid rgb(27, 27, 29);
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  border-radius: 8px;
+  border-radius: 4px;
+  background-color: rgb(27, 27, 29);
+  color: #e4e2e3;
+  font-size: 12px;
 }
 
 .context-menu ul {
@@ -27,12 +29,15 @@
 }
 
 .context-menu li {
-  padding: 6px 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-right: 24px;
+  padding-left: 18px;
   cursor: pointer;
 }
 
 .context-menu li:hover {
-  background-color: #f0f0f0;
+  background-color: #323234;
 }
 
 .ui-iggrid .ui-iggrid-paging-item span {

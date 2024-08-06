@@ -27,6 +27,8 @@ async function main() {
         copy(element.textContent);
       }
     });
+
+    document.getElementById('paste-option').addEventListener('click', handlePaste);
   } catch (error) {
     console.error('Error:', error);
   }
@@ -34,9 +36,10 @@ async function main() {
 
 function insertMenu() {
   const menu = `
-  <div id="context-menu" class="context-menu">
+    <div id="context-menu" class="context-menu">
       <ul>
         <li id="copy-option">Copiar</li>
+        <li id="paste-option">Pegar</li>
       </ul>
     </div>
   `;
@@ -65,33 +68,6 @@ function insertMenu() {
     body.insertAdjacentHTML('beforeend', alertHtml);
     resolve();
   });
-}
-
-function handleOpenMenu2(e) {
-  e.preventDefault();
-
-  const element = e.target;
-  const nodeName = e.target.nodeName;
-
-  if (nodeName === 'TD') {
-    console.log(element);
-  }
-
-  // Obtén la posición del clic
-  const x = e.pageX;
-  const y = e.pageY;
-
-  // Muestra el menú en la posición del clic
-  const contextMenu = document.getElementById('context-menu');
-
-  if (!contextMenu) {
-    console.error('No se encontro el menu');
-    return;
-  }
-
-  contextMenu.style.display = 'block';
-  contextMenu.style.left = `${x}px`;
-  contextMenu.style.top = `${y}px`;
 }
 
 function handleOpenMenu(e) {
@@ -154,6 +130,34 @@ async function copy(textoACopiar) {
     console.error('Error al copiar al portapapeles:', err);
     alert('Error al copiar al portapapeles:');
   }
+}
+
+async function handlePaste(e) {
+  try {
+    const clipboardText = await navigator.clipboard.readText();
+    const pasteArea1 = document.querySelector('#ItemInputEditingInput');
+    const pasteArea2 = document.querySelector(
+      '#ItemInput > div.ui-igeditor-input-container.ui-corner-all > input[type=hidden]:nth-child(2)'
+    );
+
+    if (!pasteArea1 || !pasteArea2) {
+      console.error('No se encotro el area de pegado');
+      return;
+    }
+
+    pasteArea2.value = clipboardText;
+    pasteArea1.value = clipboardText;
+
+    setTimeout(() => {
+      document.querySelector('#ItemInputEditingInput').select();
+      document.querySelector('#ItemInputEditingInput').focus();
+    }, 50);
+
+    console.log('Contenido pegado:', clipboardText);
+  } catch (error) {
+    console.error('Error al pegar:', error);
+  }
+  document.getElementById('context-menu').style.display = 'none';
 }
 
 window.addEventListener('load', main, { once: true });
