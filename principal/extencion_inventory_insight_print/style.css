@@ -35,7 +35,6 @@
 }
 
 /* The Modal (background) */
-
 .modal-container {
   .modal {
     display: none;
@@ -100,6 +99,13 @@
       button:focus {
         background-color: rgb(224, 49, 49);
         opacity: 1;
+      }
+
+      .row-counter {
+        background-color: rgb(24, 49, 83);
+        color: #fff;
+        border-radius: 4px;
+        padding: 1px 4px;
       }
     }
 

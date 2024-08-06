@@ -26,6 +26,8 @@ const modalHTML = `
       <button id='copiarItem' href="#" data-toggle="detailpane" aria-label="Copy Item SQL" data-balloon-pos="up" class="copy-item" data-id="item-sql">
           <i class="far fa-clipboard"></i>
       </button>
+
+      <span id="rowCounter" class="row-counter">Filas: 0</span>
     </div>
 
       <table id="tableContent" contenteditable="false">
@@ -159,6 +161,9 @@ function setEventModal(elements) {
         );
 
         firstInputItem && firstInputItem.select();
+
+        // Actualizar contador
+        actualizarContadorDeFilas();
       })
       .catch(err => {
         console.error(err.message);
@@ -484,6 +489,9 @@ function deleteRow(e) {
 
     if (trSelected) {
       trSelected.remove();
+
+      // Actualizar contador
+      actualizarContadorDeFilas();
     }
   }
 }
@@ -577,7 +585,7 @@ function copyToClipBoard(e) {
 
   let textoACopiar = '';
 
-  rows.forEach(row => {
+  rows.forEach((row, index, rows) => {
     let inputSelector = '';
 
     if (dataSet === 'item-sql') {
@@ -593,13 +601,34 @@ function copyToClipBoard(e) {
     if (inputSelector) {
       const input = row.querySelector(inputSelector);
       if (input) {
-        textoItems.push(dataSet === 'item-sql' ? `'${input.value}',` : input.value);
+        // Condición para determinar si es el último elemento
+        const value = dataSet === 'item-sql' ? `'${input.value}'` : input.value;
+
+        if (index === rows.length - 1) {
+          textoItems.push(value); // No agregar coma al final
+        } else {
+          textoItems.push(value + ','); // Agregar coma
+        }
       }
     }
   });
 
   textoACopiar = textoItems.join('\n');
   copy(textoACopiar);
+}
+
+function actualizarContadorDeFilas() {
+  const contador = document.getElementById('rowCounter');
+
+  if (!contador) {
+    console.error('El elemento contador no se encuentra en el DOM.');
+    return;
+  }
+
+  const rows = document.querySelectorAll('#tableContent tbody tr');
+
+  // Actualizar el texto del contador con el número de filas
+  contador.textContent = `Filas: ${rows.length}`;
 }
 
 window.addEventListener('load', inicio);
