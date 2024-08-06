@@ -7,7 +7,7 @@ function inicio() {
 
   const selector = '#packingdetailkoGrid > tbody';
 
-  buttonNewPack.addEventListener('click', contentProcess);
+  // buttonNewPack.addEventListener('click', contentProcess);
 
   // window.addEventListener('keydown', function (event) {
   //   if (event.key === 'Enter') {

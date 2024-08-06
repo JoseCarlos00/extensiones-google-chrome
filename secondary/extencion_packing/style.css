@@ -1,19 +1,89 @@
 #packingdetailkoGrid > tbody {
-  td {
-    .input-text {
-      background-color: transparent;
-      color: #000 !important;
-      border: none;
-      width: 100%;
-      height: 100%;
-      padding-block: 5px;
-    }
-
-    .input-text:focus {
-      outline-width: 2px !important;
-      outline-color: blue !important;
-      outline-style: solid !important;
-      outline-offset: 4px !important;
-    }
+  td[aria-describedby='packingdetailkoGrid_AVAIL_QTY'] {
+    color: red;
+    font-weight: 600;
   }
+}
+
+.show-alert {
+  opacity: 1 !important;
+  display: flex !important;
+}
+
+.context-menu {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 8px;
+}
+
+.context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.context-menu li {
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.context-menu li:hover {
+  background-color: #f0f0f0;
+}
+
+.ui-iggrid .ui-iggrid-paging-item span {
+  -moz-user-select: text !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+.ui-iggrid-sortableheader .ui-iggrid-headertext {
+  -moz-user-select: text !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -ms-user-select: text !important;
+}
+.ui-iggrid-sortableheader {
+  -moz-user-select: text !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+.ui-iggrid-canceltextselection {
+  -moz-user-select: text !important;
+  user-select: text !important;
+}
+
+.ui-iggrid-expandcolumn {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+.ui-iggrid-summaryiconcolumn {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+.igscroll-select-disabled {
+  -webkit-user-select: text !important;
+  -khtml-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+.ui-unselectable {
+  -moz-user-select: -moz-all;
+  -khtml-user-select: text !important;
+  -webkit-user-select: text !important;
+  -o-user-select: text !important;
+  user-select: text !important;
+}
+.ui-igtree {
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
 }

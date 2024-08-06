@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/packing*"],
-      "js": ["popup.js"],
+      "js": ["content.js"],
       "css": ["style.css"]
     }
   ],
