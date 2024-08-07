@@ -216,9 +216,9 @@ function inicio() {
           console.error('chrome.storage no está disponible.');
         }
 
+        console.log('pauseActive:', pause);
         if (pause) {
-          console.log('Submit');
-          form1.submit();
+          document.querySelector('#OK').click();
         }
       }, 1500);
     }
