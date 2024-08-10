@@ -178,7 +178,12 @@ function setEventModal(elements) {
   /** MODAL INSERTAR ITEM */
   // Cuando el usuario hace clic en el botón, abre el modal
   btnOpenModal.addEventListener('click', function () {
+    const textareaInsertarItem = document.getElementById('inserItem');
     modalInsert.style.display = 'block';
+
+    if (textareaInsertarItem) {
+      setTimeout(() => textareaInsertarItem.focus(), 50);
+    }
   });
 
   // Cuando el usuario hace clic en <span> (x), cierra el modal
