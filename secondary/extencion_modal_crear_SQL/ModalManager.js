@@ -56,7 +56,7 @@ class ModalManager {
 
   async insertModal() {
     const btnCopy = `
-  <button class="btn-copiar"
+  <button class="btn-copy-code"
   style="position: absolute;top: 3px;right: 1px;z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 0;transition: opacity 300ms ease-in;border: none;">
   <div
     style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
@@ -149,6 +149,16 @@ class ModalManager {
         this.closeModal();
       }
     });
+
+    // Event to copy
+    const btnCopy = document.querySelector('.btn-copy-code');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => {
+        const codeText = document.querySelector('code.language-sql')?.textContent;
+
+        codeText && copyToClipboard(codeText);
+      });
+    }
   }
 
   openModal() {
@@ -160,15 +170,17 @@ class ModalManager {
   }
 }
 
-async function copy(textoACopiar) {
+async function copyToClipboard(textoACopiar) {
   try {
     await navigator.clipboard.writeText(textoACopiar);
     const alerta = document.querySelector('#alerta-copy');
 
-    alerta && (alerta.style.opacity = 1);
-    setTimeout(() => {
-      alerta && (alerta.style.opacity = 0);
-    }, 4000);
+    if (alerta) {
+      alerta.classList.add('show-alert');
+      setTimeout(() => {
+        alerta.classList.remove('show-alert');
+      }, 4000);
+    }
   } catch (err) {
     console.error('Error al copiar al portapapeles:', err);
     alert('Error al copiar al portapapeles:');
