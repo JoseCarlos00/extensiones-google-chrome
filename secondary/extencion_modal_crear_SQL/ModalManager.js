@@ -73,7 +73,7 @@ class ModalManager {
             </svg>
           </button>
 
-          <label class="insert-logistict-unit">Contenedor: <input id="insertLogistictUnit" type="text" placeholder="Ingrese un Contededor"></label>
+          <label class="insert-logistict-unit">Contenedor: <input id="insertLogistictUnit" autocomplete="off" type="text" placeholder="Ingrese un Contededor"></label>
 
   <pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
     <span class="hljs-keyword">SET</span> 
@@ -144,9 +144,14 @@ class ModalManager {
       btnCopy.addEventListener('click', () => {
         const codeText = document.querySelector('code.language-sql')?.textContent;
 
+        const parentContainerText = this.modalHandler.parentContainerIdElement.textContent.trim();
+        const containerIdText = this.modalHandler.containerIdElement.textContent.trim();
+
         if (
-          this.modalHandler.parentContainerIdElement.textContent.trim() === 'CONTENEDOR' &&
-          this.modalHandler.containerIdElement.textContent.trim() === 'CONTENEDOR'
+          /''/.test(parentContainerText) ||
+          parentContainerText === 'CONTENEDOR' ||
+          /''/.test(containerIdText) ||
+          containerIdText === 'CONTENEDOR'
         ) {
           ToastAlert.showAlertTop('Ingrese un Contenedor Valido');
         } else {
