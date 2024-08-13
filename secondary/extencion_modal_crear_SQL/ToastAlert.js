@@ -6,24 +6,28 @@
  * @default type = 'error'
  */
 class ToastAlert {
-  constructor(message, type = 'error') {
+  constructor({ message, type, width, position, time }) {
     this.message = message;
     this.type = type;
     this.container = document.getElementById('toast-container');
+    this.position = position;
+    this.width = width;
+    this.time = time;
 
     // Comprobar si el contenedor existe; si no, crear uno
     if (!this.container) {
       this.container = document.createElement('div');
       this.container.id = 'toast-container';
       this.container.className = 'toast-top-full-width';
-      this.container.style.top = '23px';
+      this.container.style.top = this.position.top;
+      this.container.style.bottom = this.position.bottom;
       document.body.appendChild(this.container);
     }
   }
 
   createToast() {
     const toastHTML = `
-      <div class="toast toast-${this.type}">
+      <div class="toast toast-${this.type}" style="width: ${this.width};">
         <button class="toast-close-button">×</button>
         <div class="toast-message">${this.message}</div>
       </div>
@@ -32,7 +36,7 @@ class ToastAlert {
 
     // Agregar los event listeners para cerrar la alerta
     this.addEventListeners();
-    this.setTimeDeleteAlert(5000);
+    this.setTimeDeleteAlert(this.time);
   }
 
   addEventListeners() {
@@ -65,9 +69,34 @@ class ToastAlert {
    * @param {String} type Tipo de alerta: default [error]
    *
    */
-  static showAlert(message, type = 'error') {
+  static showAlertTop(message, type = 'error') {
     try {
-      const toastAlert = new ToastAlert(message, type);
+      const configuration = {
+        message: message,
+        type: type,
+        width: '96%',
+        time: 5000,
+        position: { top: '23px', bottom: 'initial' },
+      };
+
+      const toastAlert = new ToastAlert(configuration);
+      toastAlert.createToast();
+    } catch (error) {
+      console.error('Error: a surgido un problema al crear una alerta', error);
+    }
+  }
+
+  static showAlertMinBotton(message, type = 'error') {
+    try {
+      const configuration = {
+        message: message,
+        type: type,
+        width: '20%',
+        time: 3000,
+        position: { top: 'initial', bottom: '30px' },
+      };
+
+      const toastAlert = new ToastAlert(configuration);
       toastAlert.createToast();
     } catch (error) {
       console.error('Error: a surgido un problema al crear una alerta', error);

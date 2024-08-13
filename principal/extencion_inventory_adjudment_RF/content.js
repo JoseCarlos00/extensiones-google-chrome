@@ -210,7 +210,7 @@ function inicio() {
 
         console.log('pauseActive:', pause);
         if (pause) {
-          document.querySelector('#OK').click();
+          document.querySelector('#submit1').click();
         }
       }, 1500);
     }

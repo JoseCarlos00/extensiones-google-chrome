@@ -14,6 +14,7 @@ class ModalHandler {
       internalContainerNumbersElement: 'numbers-internals-containers',
       containerIdElement: 'container-id',
       parentContainerIdElement: 'parent-container-id',
+      inputInsertLogistisUnit: 'insertLogistictUnit',
     };
     this.internalData = {
       internalNumContainerId: '',
@@ -26,6 +27,7 @@ class ModalHandler {
     this.internalContainerNumbersElement = null;
     this.containerIdElement = null;
     this.parentContainerIdElement = null;
+    this.inputInsertLogistisUnit = null;
   }
 
   async handleOpenModal() {
@@ -48,13 +50,13 @@ class ModalHandler {
       );
 
       if (containers_ids.length === 0) {
-        ToastAlert.showAlert('No Hay filas en la tabla');
+        ToastAlert.showAlertTop('No Hay filas en la tabla');
         reject({ message: 'No Hay filas en la tabla' });
       } else {
         const containersFound = containers_ids.map(td => td.textContent.trim()).filter(Boolean);
 
         if (containersFound.length > 1 || !containersFound.length) {
-          ToastAlert.showAlert('No se encontro un formato valido en la tabla');
+          ToastAlert.showAlertTop('No se encontro un formato valido en la tabla');
           reject({ message: 'No Se encontro un formato valido en la tabla' });
         }
 
@@ -82,9 +84,23 @@ class ModalHandler {
     this.parentContainerIdElement = document.getElementById(
       this.selectors.parentContainerIdElement
     );
+    this.inputInsertLogistisUnit = document.getElementById(this.selectors.inputInsertLogistisUnit);
 
     // Check if all elements are selected
     await this.verifyAllElement();
+    this.setEventInsertLogisticUnit();
+  }
+
+  async setEventInsertLogisticUnit() {
+    this.inputInsertLogistisUnit.addEventListener('click', () =>
+      this.inputInsertLogistisUnit.select()
+    );
+
+    this.inputInsertLogistisUnit.addEventListener('input', async () => {
+      this.inputInsertLogistisUnit.value = this.inputInsertLogistisUnit.value.toUpperCase();
+
+      await this.setValueLogisticUnit(this.inputInsertLogistisUnit.value);
+    });
   }
 
   async verifyAllElement() {
@@ -93,14 +109,28 @@ class ModalHandler {
       !this.internalParentContainerNumElement ||
       !this.internalContainerNumbersElement ||
       !this.containerIdElement ||
-      !this.parentContainerIdElement
+      !this.parentContainerIdElement ||
+      !this.inputInsertLogistisUnit
     ) {
       throw new Error('No se encontraron los elementos para inicializar los variables');
     }
   }
 
+  /**
+   * Asignar LP a la consulta SQL
+   * @param {String} value : `'${value}'`
+   * Se formatea el texto para concatenar comillas sencillas.
+   * Valor por defaul: CONTENEDOR
+   */
+  async setValueLogisticUnit(value = 'CONTENEDOR') {
+    this.parentContainerIdElement.textContent = `'${value}'`;
+    this.containerIdElement.textContent = `'${value}'`;
+  }
+
   async openModal() {
     this.modal.style.display = 'block';
+    await this.setValueLogisticUnit();
+    this.inputInsertLogistisUnit.focus();
   }
 
   async processInternalTableData() {
@@ -118,6 +148,7 @@ class ModalHandler {
     this.internalData.internalNumParentContainerId.length = 0;
     this.internalData.internalsNumbers.length = 0;
     this.internalData.LP = '';
+    this.inputInsertLogistisUnit.value = '';
   }
 
   async setInternalData(rows) {
@@ -159,5 +190,3 @@ class ModalHandler {
       .join(', ');
   }
 }
-
-// const modalHandler = new ModalHandler(modalElement);

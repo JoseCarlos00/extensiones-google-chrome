@@ -27,17 +27,6 @@ class ModalManager {
     </li>
     `;
 
-    const alertHtml = `
-    <div id="alerta-copy" aria-live="polite"
-      style="bottom: 40px; position: fixed; left: 0px; width: 100%; display: none; z-index: 1000000; padding: 4px; opacity: 0; transition-property: opacity, transform; transition-duration: 270ms; transition-timing-function: ease;">
-      <div
-        style="background: rgb(47, 47, 47); color: rgb(211, 211, 211); border-radius: 8px; padding: 11px 16px; box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,   rgba(15, 15, 15, 0.2) 0px 5px 10px,   rgba(15, 15, 15, 0.4) 0px 15px 40px; margin: 0px auto; font-size: 14px; display: flex; align-items: center;">
-        Copiado al portapapeles
-        <div style="margin-left: 4px; margin-right: -4px"></div>
-      </div>
-    </div>
-    `;
-
     return new Promise(resolve => {
       const ul = document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav');
 
@@ -46,9 +35,6 @@ class ModalManager {
       }
 
       ul.insertAdjacentHTML('beforeend', li);
-
-      const body = document.querySelector('body');
-      body && body.insertAdjacentHTML('beforeend', alertHtml);
 
       setTimeout(resolve, 50);
     });
@@ -86,11 +72,13 @@ class ModalManager {
                 class="fa-primary"></path>
             </svg>
           </button>
-  
+
+          <label class="insert-logistict-unit">Contenedor: <input id="insertLogistictUnit" type="text" placeholder="Ingrese un Contededor"></label>
+
   <pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
     <span class="hljs-keyword">SET</span> 
-      container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-operator">=</span> <span class="hljs-string" id="internal-container-id-num"></span> <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="container-id" contenteditable="true">'FMA0002975623'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>,
-      parent_container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal-parent-container-id-num"></span>) <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="parent-container-id" contenteditable="true">'FMA0002975623'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>
+      container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-operator">=</span> <span class="hljs-string" id="internal-container-id-num"></span> <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="container-id" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>,
+      parent_container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal-parent-container-id-num"></span>) <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="parent-container-id" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>
     <span class="hljs-keyword">WHERE</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="numbers-internals-containers"></span>);</code>
   </pre>
           
@@ -156,7 +144,16 @@ class ModalManager {
       btnCopy.addEventListener('click', () => {
         const codeText = document.querySelector('code.language-sql')?.textContent;
 
-        codeText && copyToClipboard(codeText);
+        if (
+          this.modalHandler.parentContainerIdElement.textContent.trim() === 'CONTENEDOR' &&
+          this.modalHandler.containerIdElement.textContent.trim() === 'CONTENEDOR'
+        ) {
+          ToastAlert.showAlertTop('Ingrese un Contenedor Valido');
+        } else {
+          if (codeText) {
+            copyToClipboard(codeText);
+          }
+        }
       });
     }
   }
@@ -175,15 +172,10 @@ async function copyToClipboard(textoACopiar) {
     await navigator.clipboard.writeText(textoACopiar);
     const alerta = document.querySelector('#alerta-copy');
 
-    if (alerta) {
-      alerta.classList.add('show-alert');
-      setTimeout(() => {
-        alerta.classList.remove('show-alert');
-      }, 4000);
-    }
+    ToastAlert.showAlertMinBotton('Copiado al portapapeles', 'success');
   } catch (err) {
     console.error('Error al copiar al portapapeles:', err);
-    alert('Error al copiar al portapapeles:');
+    ToastAlert.showAlertMinBotton('Ha ocurrido al copiar al portapapeles');
   }
 }
 
