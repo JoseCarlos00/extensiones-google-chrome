@@ -30,12 +30,37 @@ class ModalHandler {
 
   async handleOpenModal() {
     try {
+      await this.verifyValidTable();
       await this.processInternalTableData();
       await this.setElementValues();
       await this.openModal();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error.message}`);
     }
+  }
+
+  async verifyValidTable() {
+    return new Promise((resolve, reject) => {
+      const containers_ids = Array.from(
+        document.querySelectorAll(
+          "#ListPaneDataGrid > tbody > tr > td[aria-describedby='ListPaneDataGrid_CONTAINER_ID']"
+        )
+      );
+
+      if (containers_ids.length === 0) {
+        ToastAlert.showAlert('No Hay filas en la tabla');
+        reject({ message: 'No Hay filas en la tabla' });
+      } else {
+        const containersFound = containers_ids.map(td => td.textContent.trim()).filter(Boolean);
+
+        if (containersFound.length > 1 || !containersFound.length) {
+          ToastAlert.showAlert('No se encontro un formato valido en la tabla');
+          reject({ message: 'No Se encontro un formato valido en la tabla' });
+        }
+
+        resolve();
+      }
+    });
   }
 
   /**
@@ -76,7 +101,6 @@ class ModalHandler {
 
   async openModal() {
     this.modal.style.display = 'block';
-    console.log('Modal abierto');
   }
 
   async processInternalTableData() {
@@ -122,8 +146,6 @@ class ModalHandler {
         }
       }
     });
-
-    console.log('internalData:', this.internalData); // Considera eliminar esto en producción
   }
 
   async setElementValues() {
