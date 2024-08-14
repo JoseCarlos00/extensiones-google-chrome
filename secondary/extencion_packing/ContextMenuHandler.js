@@ -83,8 +83,6 @@ class ContextMenuHandler {
     this.selectedElementForPaste =
       element.tagName === 'INPUT' && element.type === 'text' ? element : null;
 
-    console.log('Element:', element);
-
     const x = e.pageX;
     const y = e.pageY;
 
@@ -115,7 +113,6 @@ class ContextMenuHandler {
     const nodeName = element.nodeName;
 
     this.selectedElementForCopy = nodeName === 'TD' ? element : null;
-    console.log('Element:', element);
 
     if (this.selectedElementForCopy) {
       this.copyToClipboar(this.selectedElementForCopy.textContent.trim());
