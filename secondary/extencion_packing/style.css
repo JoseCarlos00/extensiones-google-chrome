@@ -40,55 +40,25 @@
   background-color: #323234;
 }
 
-.ui-iggrid .ui-iggrid-paging-item span {
-  -moz-user-select: text !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
+.toast-top-min-width {
+  width: 24%;
+  top: 12px;
+  left: 50%;
+  right: 50%;
+}
+.toast-bottom-min-width {
+  width: 24%;
+  bottom: 12px;
+  left: 50%;
+  right: 50%;
 }
 
-.ui-iggrid-sortableheader .ui-iggrid-headertext {
-  -moz-user-select: text !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  -ms-user-select: text !important;
-}
-.ui-iggrid-sortableheader {
-  -moz-user-select: text !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-}
-
-.ui-iggrid-canceltextselection {
-  -moz-user-select: text !important;
-  user-select: text !important;
-}
-
-.ui-iggrid-expandcolumn {
-  -webkit-user-select: text !important;
-  user-select: text !important;
-}
-
-.ui-iggrid-summaryiconcolumn {
-  -webkit-user-select: text !important;
-  user-select: text !important;
-}
-.igscroll-select-disabled {
-  -webkit-user-select: text !important;
-  -khtml-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  user-select: text !important;
-}
-.ui-unselectable {
-  -moz-user-select: -moz-all;
-  -khtml-user-select: text !important;
-  -webkit-user-select: text !important;
-  -o-user-select: text !important;
-  user-select: text !important;
-}
-.ui-igtree {
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
+#toast-container.toast-top-full-width > div,
+#toast-container.toast-bottom-full-width
+  > div
+  #toast-container.toast-top-min-width
+  > div
+  #toast-container.toast-bottom-min-width
+  > div {
+  margin-bottom: 1px !important;
 }
