@@ -149,9 +149,9 @@ class ModalManager {
 
         if (
           /''/.test(parentContainerText) ||
-          parentContainerText === 'CONTENEDOR' ||
+          parentContainerText === `'CONTENEDOR'` ||
           /''/.test(containerIdText) ||
-          containerIdText === 'CONTENEDOR'
+          containerIdText === `'CONTENEDOR'`
         ) {
           ToastAlert.showAlertTop('Ingrese un Contenedor Valido');
         } else {
