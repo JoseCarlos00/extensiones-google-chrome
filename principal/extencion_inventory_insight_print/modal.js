@@ -32,7 +32,7 @@ const modalHTML = `
 
       <table id="tableContent" contenteditable="false">
           <thead>
-          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM">
+          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_ITEM" aria-describedby="ListPaneDataGrid_ITEM" title="haga clic para ordenar la columna">
             <div class="value">
               Item
               <button href="#" data-toggle="detailpane" aria-label="Copia Tabla" data-balloon-pos="left" class="copy-item" data-id="item-location">
@@ -41,7 +41,7 @@ const modalHTML = `
             </div>
             <div class="ui-iggrid-indicatorcontainer"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>
           </th>
-          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION">
+          <th class="show-header" contenteditable="false" id="ListPaneDataGrid_LOCATION" aria-describedby="ListPaneDataGrid_LOCATION" title="haga clic para ordenar la columna">
             <div class="value">
               Location
             </div>
