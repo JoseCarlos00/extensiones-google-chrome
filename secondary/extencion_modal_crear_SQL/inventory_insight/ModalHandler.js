@@ -50,7 +50,7 @@ class ModalHandler {
       // await this.setElementValues();
       await this.openModal();
     } catch (error) {
-      console.error(`Error en handleOpenModal: ${error.message}`);
+      console.error(`Error en handleOpenModal: ${error}`);
     }
   }
 

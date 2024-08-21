@@ -1,9 +1,9 @@
 async function getHtmlContent() {
   const btnCopy = `
   <button class="btn-copy-code" tabindex="2"
-  style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none;">
+  style="position: absolute;right: 0; top: 0; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none; padding-right: 0;">
   <div
-    style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
+    style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px;">
     <div role="button" tabindex="0"
       style="user-select: none; transition: background 20ms ease-in; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap; height: 25px; border-radius:  0px 4px 4px 0px; font-size: 11.5px; line-height: 1.2; padding: 4px 6px; color: rgba(255, 255, 255, 0.81); background: rgb(37, 37, 37); font-weight: 400;"
       class="copy">
@@ -15,8 +15,31 @@ async function getHtmlContent() {
   </div>
   </button>`;
 
+  const inputChecks = `<div class="opcs-btn-container">
+  <input class="opc-btn" id="opc-oh" type="checkbox" checked="true" />
+  <label class="opc-label" for="opc-oh">OH</label>
+
+  <input class="opc-btn" id="opc-al" type="checkbox" />
+  <label class="opc-label" for="opc-al">AL</label>
+
+  <input class="opc-btn" id="opc-it" type="checkbox" />
+  <label class="opc-label" for="opc-it">IT</label>
+
+  <input class="opc-btn" id="opc-su" type="checkbox" />
+  <label class="opc-label" for="opc-su">SU</label>
+</div>
+`;
+
   const contenModal = `
-<label class="insert-logistict-unit">Contenedor: <input tabindex="1" id="insertLogistictUnit" autocomplete="off" type="text" placeholder="Ingrese un Contededor"></label>
+<pre class="postition-relative">${inputChecks}<code class="language-sql hljs" data-highlighted="yes">${btnCopy}<span class="hljs-keyword">UPDATE</span> location_inventory
+<span class="hljs-keyword">SET</span>
+ON_HAND_QTY <span class="hljs-operator">=</span> <input type="number" value="" class="input-update"/>
+ALLOCATED_QTY <span class="hljs-operator">=</span> <input type="number" value="" class="input-update"/>
+IN_TRANSIT_QTY <span class="hljs-operator">=</span> <input type="number" value="" class="input-update"/>
+SUSPENSE_QTY <span class="hljs-operator">=</span> <input type="number" value="" class="input-update"/>
+<span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">=</span> 'Mariano'
+internal_location_inv <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal-inventory-numbers">'null'</span>);</code>
+</pre>
 `;
 
   const modal = new ModalCreateHTML();

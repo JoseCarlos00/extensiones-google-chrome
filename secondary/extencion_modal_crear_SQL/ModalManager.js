@@ -1,5 +1,3 @@
-console.log('[Shipping container Insight Modal]');
-
 class ModalManager {
   constructor({ modalHandler, contentModalHtml }) {
     this.modalElement = null;
