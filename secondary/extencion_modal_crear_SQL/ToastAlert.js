@@ -3,36 +3,45 @@
  * Types: [error] [info]  [success] [warning]
  *
  * ToastAlert.showAlert('My error', 'info')
- * @default type = 'error'
+ *   
+  .toast-top-full-width 
+  .toast-bottom-full-width 
+
+  .toast-top-left
+  .toast-top-right
+  .toast-bottom-right 
+  .toast-bottom-left
+
+  .toast-top-min-width 
+  .toast-bottom-min-width 
  */
 class ToastAlert {
-  constructor({ message, type, width, position, time }) {
+  constructor({ message, type, time, _className }) {
     this.message = message;
     this.type = type;
-    this.container = document.getElementById('toast-container');
-    this.position = position;
-    this.width = width;
+    this.className = _className;
     this.time = time;
+
+    this.container = document.querySelector(`.${this.className}`);
 
     // Comprobar si el contenedor existe; si no, crear uno
     if (!this.container) {
       this.container = document.createElement('div');
       this.container.id = 'toast-container';
-      this.container.className = 'toast-top-full-width';
-      this.container.style.top = this.position.top;
-      this.container.style.bottom = this.position.bottom;
+      this.container.className = this.className;
+
       document.body.appendChild(this.container);
     }
   }
 
   createToast() {
     const toastHTML = `
-      <div class="toast toast-${this.type}" style="width: ${this.width};">
-        <button class="toast-close-button">×</button>
-        <div class="toast-message">${this.message}</div>
-      </div>
-    `;
-    this.container.innerHTML = toastHTML;
+        <div class="toast toast-${this.type}">
+          <button class="toast-close-button">×</button>
+          <div class="toast-message">${this.message}</div>
+        </div>
+      `;
+    this.container.innerHTML += toastHTML;
 
     // Agregar los event listeners para cerrar la alerta
     this.addEventListeners();
@@ -56,7 +65,24 @@ class ToastAlert {
   }
 
   hide() {
-    this.container.remove();
+    if (!this.container) {
+      throw new Error('No se encontro el contenedor de alerta #toast-container');
+    }
+
+    const toastElements = Array.from(this.container.querySelectorAll('.toast'));
+
+    if (toastElements.length === 1) {
+      this.container.remove();
+      return;
+    }
+
+    toastElements.reverse().forEach((toast, index) => {
+      if (index > 0) {
+        setTimeout(() => toast.remove(), 2000);
+      } else {
+        toast.remove();
+      }
+    });
   }
 
   setTimeDeleteAlert(time) {
@@ -69,14 +95,13 @@ class ToastAlert {
    * @param {String} type Tipo de alerta: default [error]
    *
    */
-  static showAlertTop(message, type = 'error') {
+  static showAlertFullTop(message, type = 'error') {
     try {
       const configuration = {
         message: message,
         type: type,
-        width: '96%',
         time: 5000,
-        position: { top: '23px', bottom: 'initial' },
+        _className: 'toast-top-full-width',
       };
 
       const toastAlert = new ToastAlert(configuration);
@@ -91,9 +116,8 @@ class ToastAlert {
       const configuration = {
         message: message,
         type: type,
-        width: '20%',
         time: 3000,
-        position: { top: 'initial', bottom: '30px' },
+        _className: 'toast-bottom-min-width',
       };
 
       const toastAlert = new ToastAlert(configuration);
@@ -103,3 +127,26 @@ class ToastAlert {
     }
   }
 }
+
+// Insertar Estilos Adicionales
+window.addEventListener('load', () => {
+  document.querySelector('head').insertAdjacentHTML(
+    'beforeend',
+    `
+    <style>
+      .toast-top-min-width {
+        width: 24%;
+        top: 12px;
+        left: 50%;
+        right: 50%;
+      }
+      .toast-bottom-min-width {
+        width: 24%;
+        bottom: 12px;
+        left: 50%;
+        right: 50%;
+      }
+    </style>
+    `
+  );
+});

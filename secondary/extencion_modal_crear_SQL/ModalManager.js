@@ -104,6 +104,7 @@ class ModalManager {
       this.btnOpen = document.getElementById('openModalBtn');
       this.btnClose = document.querySelector('.modal-container .close');
 
+      // Intanciar y guardar el manegador del Modal
       this.modalHandler = new ModalHandler(this.modalElement);
       this.setEventListeners();
     } catch (error) {
