@@ -50,13 +50,13 @@ class ModalHandler {
       );
 
       if (containers_ids.length === 0) {
-        ToastAlert.showAlertTop('No Hay filas en la tabla');
+        ToastAlert.showAlertFullTop('No Hay filas en la tabla');
         reject({ message: 'No Hay filas en la tabla' });
       } else {
         const containersFound = containers_ids.map(td => td.textContent.trim()).filter(Boolean);
 
         if (containersFound.length > 1 || !containersFound.length) {
-          ToastAlert.showAlertTop('No se encontro un formato valido en la tabla');
+          ToastAlert.showAlertFullTop('No se encontro un formato valido en la tabla');
           reject({ message: 'No Se encontro un formato valido en la tabla' });
         }
 

@@ -215,6 +215,7 @@
 
 .postition-relative:hover > .btn-copy-code {
   opacity: 1 !important;
+  background-color: rgba(255, 255, 255, 0.005);
 }
 
 .btn-copy-code:active,
@@ -222,7 +223,14 @@
   transform: scale(0.99);
 }
 
+.btn-copy-code:focus-visible .copy,
+.btn-copy-code:focus .copy,
+.copy:focus,
+.copy:focus-visible {
+  outline: 1px solid red !important;
+}
+
 .btn-copy-code:hover .copy,
 .copy:hover {
-  background-color: rgba(255, 255, 255, 0.005);
+  background-color: #000 !important;
 }

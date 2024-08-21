@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
-      "js": ["ModalManager.js", "ModalHandler.js", "ToastAlert.js"],
+      "js": ["ModalManager.js", "shipping_container_insight/ModalHandler.js", "ToastAlert.js"],
       "css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
     }
   ],
