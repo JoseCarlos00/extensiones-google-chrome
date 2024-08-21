@@ -18,6 +18,7 @@
         "shipping_container_insight/ModalHandler.js",
         "shipping_container_insight/modalContent.js",
         "shipping_container_insight/main.js",
+        "ModaCreateHTML.js",
         "ModalManager.js",
         "ToastAlert.js"
       ],
@@ -29,6 +30,7 @@
         "inventory_insight/ModalHandler.js",
         "inventory_insight/modalContent.js",
         "inventory_insight/main.js",
+        "ModaCreateHTML.js",
         "ModalManager.js",
         "ToastAlert.js"
       ],
