@@ -1,6 +1,6 @@
 const modalHTML = `
 <section class="modal-container">
-  <div id="myModal" class="modal">
+  <div id="myModalAssigment" class="modal">
     <div class="modal-content">
 
     <button type="button" aria-label="Close" data-balloon-pos="left" class="close">
@@ -108,7 +108,7 @@ function inicio() {
 
   const li = `
     <li class="navdetailpane visible-sm visible-md visible-lg">
-      <a id='openModalBtn' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Abrir Modal" data-balloon-pos="right">
+      <a id='openModalBtnAssigment' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Abrir Modal" data-balloon-pos="right">
         <i class="far fa-clipboard navimage"></i>
       </a>
     </li>
@@ -135,13 +135,15 @@ function insertModal() {
 
 function modalFunction() {
   insertModal().then(() => {
-    const modal = document.getElementById('myModal');
-    const btnOpen = document.getElementById('openModalBtn');
-    const btnClose = document.querySelector('.modal-container .close');
+    const modal = document.getElementById('myModalAssigment');
+    const btnOpen = document.querySelector('#openModalBtnAssigment');
+    const btnClose = document.querySelector('.modal-container #myModalAssigment .close');
 
-    const modalInsert = document.getElementById('myModalInserToItem');
-    const btnOpenModal = document.getElementById('insertItemModal');
-    const btnCloseModal = document.querySelector('.modal-container-insert .close');
+    const modalInsert = document.querySelector('#myModalInserToItem');
+    const btnOpenModal = document.querySelector('#insertItemModal');
+    const btnCloseModal = document.querySelector(
+      '.modal-container-insert #myModalInserToItem .close'
+    );
 
     setEventListener({ modal, btnOpen, btnClose, modalInsert, btnCloseModal, btnOpenModal });
   });
@@ -157,7 +159,7 @@ function setEventModal(elements) {
     getTableContents()
       .then(() => {
         const firstInputItem = document.querySelector(
-          '#tableContent > tbody > tr:nth-child(1) > td:nth-child(1) > input'
+          '#myModalAssigment #tableContent > tbody > tr:nth-child(1) > td:nth-child(1) > input'
         );
 
         firstInputItem && firstInputItem.select();
@@ -166,7 +168,7 @@ function setEventModal(elements) {
         actualizarContadorDeFilas();
       })
       .catch(err => {
-        console.error(err.message);
+        console.error('error:', err);
       });
   });
 
@@ -178,7 +180,7 @@ function setEventModal(elements) {
   /** MODAL INSERTAR ITEM */
   // Cuando el usuario hace clic en el botón, abre el modal
   btnOpenModal.addEventListener('click', function () {
-    const textareaInsertarItem = document.getElementById('inserItem');
+    const textareaInsertarItem = document.querySelector('#myModalInserToItem #inserItem');
     modalInsert.style.display = 'block';
 
     if (textareaInsertarItem) {
@@ -213,7 +215,7 @@ function setEventListener(elements) {
     }
   });
 
-  const tableModal = document.querySelector('#tableContent');
+  const tableModal = document.querySelector('#myModalAssigment #tableContent');
   tableModal && tableModal.addEventListener('click', deleteRow);
 
   const closeModal = () => {
@@ -228,14 +230,14 @@ function setEventListener(elements) {
     if (e.key === 'Escape') closeModal();
   });
 
-  const printButtonModal = document.querySelector('#printButtonModal');
+  const printButtonModal = document.querySelector('#myModalAssigment #printButtonModal');
   printButtonModal && printButtonModal.addEventListener('click', getDataForToPrint);
 
   /** Insertar Items */
-  const btnIsertItem = document.querySelector('#registrarItems');
+  const btnIsertItem = document.querySelector('#myModalAssigment #registrarItems');
   btnIsertItem && btnIsertItem.addEventListener('click', registrarDatos);
 
-  const btnsCopiarItems = document.querySelectorAll('.copy-item');
+  const btnsCopiarItems = document.querySelectorAll('#myModalAssigment .copy-item');
 
   if (btnsCopiarItems) {
     btnsCopiarItems.forEach(button => {
@@ -244,8 +246,8 @@ function setEventListener(elements) {
   }
 
   function getDataForToPrint() {
-    const theadToPrint = document.querySelector('#tableContent > thead');
-    const tbodyToPrint = document.querySelector('#tableContent > tbody');
+    const theadToPrint = document.querySelector('#myModalAssigment #tableContent > thead');
+    const tbodyToPrint = document.querySelector('#myModalAssigment #tableContent > tbody');
 
     if (!tbodyToPrint || !theadToPrint) return;
 
@@ -262,8 +264,10 @@ function setEventListener(elements) {
 }
 
 function setSortTableEvent() {
-  const thItem = document.querySelector('#tableContent #ListPaneDataGrid_ITEM');
-  const thLoc = document.querySelector('#tableContent #ListPaneDataGrid_LOCATION');
+  const thItem = document.querySelector('#myModalAssigment #tableContent #ListPaneDataGrid_ITEM');
+  const thLoc = document.querySelector(
+    '#myModalAssigment #tableContent #ListPaneDataGrid_LOCATION'
+  );
 
   // Click para ordenar elementos items o ubicacion
   if (thItem) {
@@ -303,7 +307,7 @@ function getTableContents() {
 }
 
 function eventTeclas() {
-  const table = document.getElementById('tableContent');
+  const table = document.querySelector('#myModalAssigment #tableContent');
   const inputs = table.querySelectorAll('td[aria-describedby] input:not(.exclude)');
 
   inputs.forEach(cell => {
@@ -359,7 +363,7 @@ function showTable(table) {
   return new Promise((resolve, reject) => {
     const rows = Array.from(table.querySelectorAll('tbody tr'));
 
-    const tableToInsert = document.getElementById('tableContent');
+    const tableToInsert = document.querySelector('#myModalAssigment #tableContent');
     const tbody = document.createElement('tbody');
 
     if (!rows || !tableToInsert || !tbody)
@@ -404,7 +408,7 @@ function showTable(table) {
       tbody.appendChild(tr);
     });
 
-    const tbodyExist = document.querySelector('#tableContent tbody');
+    const tbodyExist = document.querySelector('#myModalAssigment #tableContent tbody');
     tbodyExist && tbodyExist.remove();
 
     tableToInsert.appendChild(tbody);
@@ -413,7 +417,7 @@ function showTable(table) {
 }
 
 function tabIndexMenosUno() {
-  const table = document.getElementById('tableContent');
+  const table = document.querySelector('#myModalAssigment #tableContent');
   const rows = Array.from(table.querySelectorAll('tbody tr'));
 
   const tbody = document.createElement('tbody');
@@ -431,7 +435,7 @@ function tabIndexMenosUno() {
 }
 
 function showIndicator(columnIndex) {
-  const thHeader = document.querySelectorAll('#tableContent thead tr th');
+  const thHeader = document.querySelectorAll('#myModalAssigment #tableContent thead tr th');
 
   if (!thHeader) return;
 
@@ -450,7 +454,7 @@ function sortTable(columnIndex) {
   console.log('sortTable', columnIndex);
   showIndicator(columnIndex);
 
-  const table = document.querySelector('#tableContent');
+  const table = document.querySelector('#myModalAssigment #tableContent');
   const tbody = table.querySelector('tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
 
@@ -503,7 +507,7 @@ function deleteRow(e) {
 
 function registrarDatos() {
   const formItem = document.querySelector('#myModalInserToItem > div > form');
-  const itemElement = document.getElementById('inserItem')?.value;
+  const itemElement = document.querySelector('#myModalInserToItem #inserItem')?.value;
 
   if (!formItem || !itemElement) return;
 
@@ -536,7 +540,7 @@ function registrarDatos() {
 }
 
 function insertarItems() {
-  const table = document.querySelector('#tableContent');
+  const table = document.querySelector('#myModalAssigment #tableContent');
   const tbody = table.querySelector('tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
 
@@ -579,7 +583,7 @@ function copyToClipBoard(e) {
   const element = e.target.nodeName === 'I' ? e.target.closest('button') : e.target;
   const dataSet = element.dataset['id'] ?? '';
 
-  const table = document.querySelector('#tableContent');
+  const table = document.querySelector('#myModalAssigment #tableContent');
   const tbody = table.querySelector('tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
 
