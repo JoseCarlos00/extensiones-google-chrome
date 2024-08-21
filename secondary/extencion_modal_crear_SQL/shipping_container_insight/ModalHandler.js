@@ -1,10 +1,14 @@
+/**
+ * Manejador de Modal
+ *
+ * Funciones Obligatorias:
+ * 1. setModalElement -> initialVariables
+ * 2  handleOpenModal
+ * 3  handleCopyToClipBoar
+ */
 class ModalHandler {
-  constructor(modal) {
-    if (!modal) {
-      throw new Error('No se encontró el modal para abrir');
-    }
-
-    this.modal = modal;
+  constructor() {
+    this.modal = null;
     this.selectors = {
       internalContainerNum: "td[aria-describedby='ListPaneDataGrid_INTERNAL_CONTAINER_NUM']",
       containerId: "td[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
@@ -28,6 +32,15 @@ class ModalHandler {
     this.containerIdElement = null;
     this.parentContainerIdElement = null;
     this.inputInsertLogistisUnit = null;
+  }
+
+  setModalElement(modal) {
+    if (!modal) {
+      throw new Error('No se encontró el modal para abrir');
+    }
+
+    this.modal = modal;
+    this.initialVariables();
   }
 
   async handleOpenModal() {
@@ -188,5 +201,25 @@ class ModalHandler {
     this.internalContainerNumbersElement.textContent = this.internalData.internalsNumbers
       .map(i => `'${i}'`)
       .join(', ');
+  }
+
+  handleCopyToClipBoar() {
+    const codeText = document.querySelector('code.language-sql')?.textContent;
+
+    const parentContainerText = this.parentContainerIdElement.textContent.trim();
+    const containerIdText = this.containerIdElement.textContent.trim();
+
+    if (
+      /''/.test(parentContainerText) ||
+      parentContainerText === `'CONTENEDOR'` ||
+      /''/.test(containerIdText) ||
+      containerIdText === `'CONTENEDOR'`
+    ) {
+      ToastAlert.showAlertFullTop('Ingrese un Contenedor Valido');
+    } else {
+      if (codeText) {
+        copyToClipboard(codeText);
+      }
+    }
   }
 }
