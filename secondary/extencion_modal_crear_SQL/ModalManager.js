@@ -1,11 +1,12 @@
 console.log('[Shipping container Insight Modal]');
 
 class ModalManager {
-  constructor(modalHandler) {
+  constructor({ modalHandler, contentModalHtml }) {
     this.modalElement = null;
     this.btnOpen = null;
     this.btnClose = null;
     this.modalHandler = modalHandler ?? null;
+    this.contentModalHtml = contentModalHtml ?? null;
   }
 
   async initialize() {
@@ -42,16 +43,15 @@ class ModalManager {
 
   async insertModal() {
     return new Promise((resolve, reject) => {
-      const htmContent = modalHTML ?? '';
       const body = document.querySelector('body');
 
       if (!body) return reject('No se encontro elemento <body> a insertar el Modal');
 
-      if (!htmContent) {
+      if (!this.contentModalHtml instanceof Element) {
         return reject('No se encontró el contenido del modal');
       }
 
-      body.insertAdjacentHTML('beforeend', htmContent);
+      body.appendChild(this.contentModalHtml);
       setTimeout(resolve, 50);
     });
   }

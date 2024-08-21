@@ -3,7 +3,7 @@ window.addEventListener(
   async () => {
     const modalHandler = new ModalHandler();
 
-    const modalManager = new ModalManager(modalHandler);
+    const modalManager = new ModalManager({ modalHandler, modalHTML: contentModalHtml });
     await modalManager.initialize();
   },
   { once: true }
