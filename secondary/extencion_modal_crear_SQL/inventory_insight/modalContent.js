@@ -16,22 +16,22 @@ async function getHtmlContent() {
   </button>`;
 
   const inputChecks = `<div class="opcs-btn-container">
-  <input class="opc-btn" id="opc-oh" type="checkbox" checked="true" />
+  <input class="opc-btn" id="opc-oh" type="checkbox" checked="true" data-class-insert="OH" />
   <label class="opc-label" for="opc-oh">OH</label>
 
-  <input class="opc-btn" id="opc-al" type="checkbox" />
+  <input class="opc-btn" id="opc-al" type="checkbox" data-class-insert="AL"/>
   <label class="opc-label" for="opc-al">AL</label>
 
-  <input class="opc-btn" id="opc-it" type="checkbox" />
+  <input class="opc-btn" id="opc-it" type="checkbox" data-class-insert="IT"/>
   <label class="opc-label" for="opc-it">IT</label>
 
-  <input class="opc-btn" id="opc-su" type="checkbox" />
+  <input class="opc-btn" id="opc-su" type="checkbox" data-class-insert="SU"/>
   <label class="opc-label" for="opc-su">SU</label>
 </div>
 `;
 
   const contenModal = `
-<pre class="postition-relative">${inputChecks}<code class="language-sql hljs" data-highlighted="yes">${btnCopy}<span class="hljs-keyword">UPDATE</span> location_inventory
+<pre class="container-code postition-relative OH">${inputChecks}<code class="language-sql hljs" data-highlighted="yes">${btnCopy}<span class="hljs-keyword">UPDATE</span> location_inventory
 <span class="hljs-keyword">SET</span>
 ON_HAND_QTY <span class="hljs-operator">=</span> <input type="number" value="" class="input-update"/>
 ALLOCATED_QTY <span class="hljs-operator">=</span> <input type="number" value="" class="input-update"/>
