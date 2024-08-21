@@ -44,14 +44,15 @@ class ModalManager {
   async insertModal() {
     return new Promise((resolve, reject) => {
       const body = document.querySelector('body');
+      const { contentModalHtml } = this;
 
       if (!body) return reject('No se encontro elemento <body> a insertar el Modal');
 
-      if (!this.contentModalHtml instanceof Element) {
-        return reject('No se encontró el contenido del modal');
+      if (!(contentModalHtml instanceof Element)) {
+        return reject('[contentModalHtml] no es un un elemento html');
       }
 
-      body.appendChild(this.contentModalHtml);
+      body.appendChild(contentModalHtml);
       setTimeout(resolve, 50);
     });
   }

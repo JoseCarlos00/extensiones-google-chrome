@@ -71,7 +71,11 @@ class ModalCreateHTML {
     return contentModal;
   }
 
-  async createModal() {
+  /**
+   * Crea una estructura html para un modal
+   * @returns Elemento <section>
+   */
+  async createModaElement() {
     try {
       const section = await this.createSection();
       const modal = await this.createDivModal();
@@ -83,19 +87,10 @@ class ModalCreateHTML {
       section.appendChild(modal);
 
       this.contenModal = contentModal;
+
+      return section;
     } catch (error) {
       console.error('Ha ocurrido un error al crear el Modal HTML', error);
     }
-  }
-
-  /**
-   * Crea una estructura html para un modal
-   * @returns Elemento <section>
-   */
-  static createModalHTML() {
-    const modal = new ModalCreateHTML();
-    modal.createModal();
-
-    return modal;
   }
 }

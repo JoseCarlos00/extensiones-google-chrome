@@ -1,4 +1,5 @@
-const btnCopy = `
+async function getHtmlContent() {
+  const btnCopy = `
   <button class="btn-copy-code" tabindex="2"
   style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none;">
   <div
@@ -14,7 +15,7 @@ const btnCopy = `
   </div>
   </button>`;
 
-const contenModal = `
+  const contenModal = `
 <label class="insert-logistict-unit">Contenedor: <input tabindex="1" id="insertLogistictUnit" autocomplete="off" type="text" placeholder="Ingrese un Contededor"></label>
 
 <pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
@@ -25,6 +26,10 @@ const contenModal = `
 </pre>
 `;
 
-const modalHTML = ModalCreateHTML.createModalHTML();
+  const modal = new ModalCreateHTML();
+  const modalHTML = await modal.createModaElement();
 
-modalHTML.insertContenModal(contenModal);
+  await modal.insertContenModal(contenModal);
+
+  return modalHTML;
+}

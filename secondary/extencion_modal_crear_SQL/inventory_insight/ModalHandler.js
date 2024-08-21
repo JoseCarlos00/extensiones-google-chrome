@@ -45,9 +45,9 @@ class ModalHandler {
 
   async handleOpenModal() {
     try {
-      await this.verifyValidTable();
-      await this.processInternalTableData();
-      await this.setElementValues();
+      // await this.verifyValidTable();
+      // await this.processInternalTableData();
+      // await this.setElementValues();
       await this.openModal();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error.message}`);
@@ -100,8 +100,8 @@ class ModalHandler {
     this.inputInsertLogistisUnit = document.getElementById(this.selectors.inputInsertLogistisUnit);
 
     // Check if all elements are selected
-    await this.verifyAllElement();
-    this.setEventInsertLogisticUnit();
+    // await this.verifyAllElement();
+    // this.setEventInsertLogisticUnit();
   }
 
   async setEventInsertLogisticUnit() {

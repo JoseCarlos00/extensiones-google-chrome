@@ -227,7 +227,7 @@
 .btn-copy-code:focus .copy,
 .copy:focus,
 .copy:focus-visible {
-  outline: 1px solid red !important;
+  outline: 2px solid red !important;
 }
 
 .btn-copy-code:hover .copy,
