@@ -2,8 +2,10 @@
  * Crea alertas para Scale;
  * Types: [error] [info]  [success] [warning]
  *
- * ToastAlert.showAlert('My error', 'info')
- *   
+ * ToastAlert.showAlertFullTop('MSG', 'Type')
+ * ToastAlert.showAlertMinBotton('MSG', 'Type')
+ * 
+ * TODO: Inplementar todas las posiciones de alerta
   .toast-top-full-width 
   .toast-bottom-full-width 
 
