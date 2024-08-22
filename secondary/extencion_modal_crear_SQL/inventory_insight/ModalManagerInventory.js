@@ -85,4 +85,9 @@ class ModalManagerInventory extends ModalManager {
     super.modalFunction();
     this.containerPrincipal = document.querySelector('#myModal .main-code-container');
   }
+
+  closeModal() {
+    super.closeModal();
+    this.modalHandler.resetSelectedRows();
+  }
 }

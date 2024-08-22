@@ -9,49 +9,25 @@
 class ModalHandler {
   constructor() {
     this.modal = null;
-    this.selectors = {
-      internalContainerNum: "td[aria-describedby='ListPaneDataGrid_INTERNAL_CONTAINER_NUM']",
-      containerId: "td[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
-      tbody: '#ListPaneDataGrid > tbody',
-      internalContainerNumElement: 'internal-container-id-num',
-      internalParentContainerNumElement: 'internal-parent-container-id-num',
-      internalContainerNumbersElement: 'numbers-internals-containers',
-      containerIdElement: 'container-id',
-      parentContainerIdElement: 'parent-container-id',
-      inputInsertLogistisUnit: 'insertLogistictUnit',
+    this.tbodyTable = document.querySelector('#ListPaneDataGrid > tbody');
+
+    this.internalDataSelector = {
+      item: "td[aria-describedby='ListPaneDataGrid_ITEM']",
+      location: "td[aria-describedby='ListPaneDataGrid_LOCATION']",
+      internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
     };
-    this.internalData = {
-      internalNumContainerId: '',
-      internalNumParentContainerId: [],
-      LP: '',
-      internalsNumbers: [],
+
+    this.queryElement = {
+      OH: null,
+      AL: null,
+      IT: null,
+      SU: null,
+      DIV_INTERNAL_NUM: null,
+      LOCATION: null,
+      ITEM: null,
     };
-    this.internalContainerNumElement = null;
-    this.internalParentContainerNumElement = null;
-    this.internalContainerNumbersElement = null;
-    this.containerIdElement = null;
-    this.parentContainerIdElement = null;
-    this.inputInsertLogistisUnit = null;
-  }
 
-  setModalElement(modal) {
-    if (!modal) {
-      throw new Error('No se encontró el modal para abrir');
-    }
-
-    this.modal = modal;
-    this.initialVariables();
-  }
-
-  async handleOpenModal() {
-    try {
-      // await this.verifyValidTable();
-      // await this.processInternalTableData();
-      // await this.setElementValues();
-      await this.openModal();
-    } catch (error) {
-      console.error(`Error en handleOpenModal: ${error}`);
-    }
+    this._selectedRows = [];
   }
 
   async verifyValidTable() {
@@ -82,131 +58,105 @@ class ModalHandler {
    * Initializes the variables by selecting DOM elements.
    * Throws an error if any element is not found.
    */
-  async initialVariables() {
-    // Select elements
-    this.internalContainerNumElement = document.getElementById(
-      this.selectors.internalContainerNumElement
-    );
-    this.internalParentContainerNumElement = document.getElementById(
-      this.selectors.internalParentContainerNumElement
-    );
-    this.internalContainerNumbersElement = document.getElementById(
-      this.selectors.internalContainerNumbersElement
-    );
-    this.containerIdElement = document.getElementById(this.selectors.containerIdElement);
-    this.parentContainerIdElement = document.getElementById(
-      this.selectors.parentContainerIdElement
-    );
-    this.inputInsertLogistisUnit = document.getElementById(this.selectors.inputInsertLogistisUnit);
+  async _initialVariables() {
+    try {
+      const prefix = '#myModal .main-code-container .code-container';
 
-    // Check if all elements are selected
-    // await this.verifyAllElement();
-    // this.setEventInsertLogisticUnit();
-  }
+      const internalElements = {
+        OH: document.querySelector(`${prefix} #input_OH`),
+        AL: document.querySelector(`${prefix} #input_AL`),
+        IT: document.querySelector(`${prefix} #input_IT`),
+        SU: document.querySelector(`${prefix} #input_SU`),
+        DIV_INTERNAL_NUM: document.querySelector(`${prefix} #internal-inventory-numbers`),
+        LOCATION: document.querySelector(`${prefix} #location`),
+        ITEM: document.querySelector(`${prefix} #item`),
+      };
 
-  async setEventInsertLogisticUnit() {
-    this.inputInsertLogistisUnit.addEventListener('click', () =>
-      this.inputInsertLogistisUnit.select()
-    );
+      const missingOptions = Object.entries(internalElements)
+        .filter(([key, value]) => !value)
+        .map(([key]) => key);
 
-    this.inputInsertLogistisUnit.addEventListener('input', async () => {
-      this.inputInsertLogistisUnit.value = this.inputInsertLogistisUnit.value.toUpperCase();
+      if (missingOptions.length > 0) {
+        throw new Error(
+          `No se encontraron los elementos necesarios para inicializar el menú contextual: [${missingOptions.join(
+            ', '
+          )}]`
+        );
+      }
 
-      await this.setValueLogisticUnit(this.inputInsertLogistisUnit.value);
-    });
-  }
-
-  async verifyAllElement() {
-    if (
-      !this.internalContainerNumElement ||
-      !this.internalParentContainerNumElement ||
-      !this.internalContainerNumbersElement ||
-      !this.containerIdElement ||
-      !this.parentContainerIdElement ||
-      !this.inputInsertLogistisUnit
-    ) {
-      throw new Error('No se encontraron los elementos para inicializar los variables');
+      // Asignar los elementos validados a `queryElement`
+      this.queryElement = internalElements;
+    } catch (error) {
+      console.error(`Error en initialVariables: ${error}`);
     }
   }
 
-  /**
-   * Asignar LP a la consulta SQL
-   * @param {String} value : `'${value}'`
-   * Se formatea el texto para concatenar comillas sencillas.
-   * Valor por defaul: CONTENEDOR
-   */
-  async setValueLogisticUnit(value = 'CONTENEDOR') {
-    this.parentContainerIdElement.textContent = `'${value}'`;
-    this.containerIdElement.textContent = `'${value}'`;
-  }
-
-  async openModal() {
+  async _openModal() {
     this.modal.style.display = 'block';
-    await this.setValueLogisticUnit();
-    this.inputInsertLogistisUnit.focus();
   }
 
-  async processInternalTableData() {
-    const tbody = document.querySelector('#ListPaneDataGrid > tbody');
-    if (!tbody) {
-      throw new Error('No se encontró <tbody>');
-    }
-
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    await this.setInternalData(rows);
+  resetSelectedRows() {
+    this._selectedRows.length = 0;
   }
 
-  async cleanInternalData() {
-    this.internalData.internalNumContainerId = '';
-    this.internalData.internalNumParentContainerId.length = 0;
-    this.internalData.internalsNumbers.length = 0;
-    this.internalData.LP = '';
-    this.inputInsertLogistisUnit.value = '';
-  }
-
-  async setInternalData(rows) {
-    const { internalContainerNum, containerId } = this.selectors;
+  async _getRowsSelected() {
+    const rows = Array.from(this.tbodyTable.rows);
 
     if (rows.length === 0) {
-      throw new Error('No se encontraron filas en el <tbody>');
+      console.error('No se encontraron th[data-role="checkbox"]');
+      return null;
     }
 
-    await this.cleanInternalData();
+    const selectedRows = rows.filter(row => {
+      const checkbox = row.querySelector('th span[name="chk"]');
 
-    rows.forEach(row => {
-      const internalContainerNumElement = row.querySelector(internalContainerNum);
-      const containerIdElement = row.querySelector(containerId);
-
-      if (internalContainerNumElement && containerIdElement) {
-        const containerIdText = containerIdElement.textContent.trim();
-        const internalNumText = internalContainerNumElement.textContent.trim();
-
-        if (containerIdText && internalNumText) {
-          this.internalData.internalNumContainerId = internalNumText;
-          this.internalData.internalsNumbers.push(internalNumText);
-        } else if (!containerIdText && internalNumText) {
-          this.internalData.internalNumParentContainerId.push(internalNumText);
-          this.internalData.internalsNumbers.push(internalNumText);
-        }
+      if (checkbox) {
+        const { chk } = checkbox.dataset;
+        return chk === 'on';
       }
     });
+
+    this._selectedRows = selectedRows;
   }
 
-  async setElementValues() {
-    await this.verifyAllElement();
+  async _getItemFromRowSelected() {
+    // Obtener el elemento seleccionado
+  }
 
-    this.internalContainerNumElement.textContent = `'${this.internalData.internalNumContainerId}'`;
-    this.internalParentContainerNumElement.textContent =
-      this.internalData.internalNumParentContainerId.map(i => `'${i}'`).join(', ');
-    this.internalContainerNumbersElement.textContent = this.internalData.internalsNumbers
-      .map(i => `'${i}'`)
-      .join(', ');
+  async setModalElement(modal) {
+    try {
+      if (!modal) {
+        throw new Error('No se encontró el modal para abrir');
+      }
+
+      this.modal = modal;
+      await this._initialVariables();
+
+      if (!this.tbodyTable) {
+        throw new Error('No se encontró el elemento tbody');
+      }
+    } catch (error) {
+      console.error(`Error en setModalElement: ${error}`);
+    }
+  }
+
+  async handleOpenModal() {
+    try {
+      await this._getRowsSelected();
+      await this._openModal();
+    } catch (error) {
+      console.error(`Error en handleOpenModal: ${error}`);
+    }
   }
 
   handleCopyToClipBoar() {
-    const codeText = document.querySelector('code.language-sql')?.textContent;
+    const codeText = document.querySelector('#myModal .main-code-container .code-container');
 
     console.log('[handleCopyToClipBoar]', codeText);
     ToastAlert.showAlertMinBotton('Se hizo clip en copiar', 'info');
   }
 }
+
+/**
+ * TODO: Necesito Obtener datos internos y mostrarlos en los elementos Internos
+ */
