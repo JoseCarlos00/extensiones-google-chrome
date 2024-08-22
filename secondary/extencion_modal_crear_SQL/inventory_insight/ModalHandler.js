@@ -17,7 +17,7 @@ class ModalHandler {
       internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
     };
 
-    this.queryElement = {
+    this.queryElements = {
       OH: null,
       AL: null,
       IT: null,
@@ -85,7 +85,7 @@ class ModalHandler {
       }
 
       // Asignar los elementos validados a `queryElement`
-      this.queryElement = internalElements;
+      this.queryElements = internalElements;
     } catch (error) {
       console.error(`Error en initialVariables: ${error}`);
     }
@@ -119,8 +119,54 @@ class ModalHandler {
     this._selectedRows = selectedRows;
   }
 
-  async _getItemFromRowSelected() {
-    // Obtener el elemento seleccionado
+  async _resetValuesQueryElements() {
+    // Recorrer las claves del objeto
+    Object.keys(this.queryElements).forEach(key => {
+      const element = this.queryElements[key];
+
+      if (element && element.tagName === 'INPUT') {
+        element.value = '';
+      } else if (element && element.tagName === 'DIV') {
+        element.textContent = '';
+      }
+    });
+  }
+
+  async _setValuesForQueryElements() {
+    if (this._selectedRows.length === 0) {
+      ToastAlert.showAlertFullTop('No se encontraron filas selecionadas', 'info');
+      return;
+    }
+
+    await this._resetValuesQueryElements();
+    const internalNumbers = [];
+
+    this._selectedRows.forEach((row, index) => {
+      const internalNumber = row.querySelector(this.internalDataSelector.internalNumber);
+
+      if (index === 0) {
+        const item = row.querySelector(this.internalDataSelector.item);
+        const location = row.querySelector(this.internalDataSelector.location);
+
+        if (item) {
+          this.queryElements.ITEM.value = item.textContent;
+        }
+
+        if (location) {
+          this.queryElements.LOCATION.value = location.textContent;
+        }
+      }
+
+      if (internalNumber) {
+        internalNumbers.push(internalNumber.textContent);
+      }
+    });
+
+    if (internalNumbers.length > 0) {
+      this.queryElements.DIV_INTERNAL_NUM.textContent = internalNumbers
+        .map(i => `'${i}'`)
+        .join(',\n');
+    }
   }
 
   async setModalElement(modal) {
@@ -143,6 +189,7 @@ class ModalHandler {
   async handleOpenModal() {
     try {
       await this._getRowsSelected();
+      await this._setValuesForQueryElements();
       await this._openModal();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error}`);
