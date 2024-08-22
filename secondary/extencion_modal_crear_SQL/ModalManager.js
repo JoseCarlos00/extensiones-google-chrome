@@ -21,7 +21,7 @@ class ModalManager {
     const li = `
     <li class="navdetailpane visible-sm visible-md visible-lg">
       <a id='openModalBtn' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Crear Sentemcia SQL" data-balloon-pos="right">
-        <i class="far fa-plus navimage"></i>
+        <i class="far fa-database navimage"></i>
       </a>
     </li>
     `;
@@ -59,7 +59,7 @@ class ModalManager {
     try {
       this.modalElement = document.getElementById('myModal');
       this.btnOpen = document.getElementById('openModalBtn');
-      this.btnClose = document.querySelector('.modal-container .close');
+      this.btnClose = document.querySelector('.modal-container #myModal .close');
 
       // Intanciar y guardar el manegador del Modal
       if (!this.modalHandler) {
