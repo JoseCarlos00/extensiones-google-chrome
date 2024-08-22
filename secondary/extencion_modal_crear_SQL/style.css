@@ -208,12 +208,12 @@
   display: flex !important;
 }
 
-.postition-relative {
+pre.postition-relative {
   position: relative;
   font-size: 16px;
 }
 
-.postition-relative:hover > .btn-copy-code {
+pre.postition-relative:hover > .btn-copy-code {
   opacity: 1 !important;
   background-color: rgba(255, 255, 255, 0.005);
 }

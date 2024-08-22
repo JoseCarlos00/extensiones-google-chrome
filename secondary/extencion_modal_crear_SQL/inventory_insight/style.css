@@ -15,7 +15,7 @@
   box-shadow: -1px 1px 4px rgba(0, 123, 255, 0.5);
 }
 
-.language-sql.hljs {
+.position-relative {
   position: relative;
 }
 
@@ -106,32 +106,23 @@
   .code-container {
     min-width: 360px;
 
-    .code-content {
+    padding: 3px 5px;
+    background: #f3f3f3;
+    color: #444;
+
+    font-family: monospace;
+    font-size: 13px;
+
+    .internal-num-code,
+    .item-loc-code {
       display: none;
-
-      padding: 3px 5px;
-      background: #f3f3f3;
-      color: #444;
-
-      font-family: monospace;
-      font-size: 13px;
-
-      input[type='text'][name='location'] {
-        margin-bottom: 4px;
-      }
-    }
-
-    .container-type {
-      margin: 4px 0;
-      width: 245px;
-
-      input[type='number'] {
-        width: 80px;
-      }
     }
 
     .container-type[data-type] {
       display: none;
+
+      margin: 4px 0;
+      width: 245px;
       grid-template-columns: 1fr 30px 1fr;
       grid-template-rows: auto;
       grid-auto-rows: 0px;
@@ -149,6 +140,7 @@
       }
 
       input {
+        width: 80px;
         grid-column: 3;
         grid-row: 1;
       }
@@ -179,16 +171,16 @@
     display: block;
   }
 
-  &.OH .code-container .code-content [data-type='OH'] {
+  &.OH .code-container .container-type[data-type='OH'] {
     display: grid;
   }
-  &.AL .code-container .code-content [data-type='AL'] {
+  &.AL .code-container .container-type[data-type='AL'] {
     display: grid;
   }
-  &.IT .code-container .code-content [data-type='IT'] {
+  &.IT .code-container .container-type[data-type='IT'] {
     display: grid;
   }
-  &.SU .code-container .code-content [data-type='SU'] {
+  &.SU .code-container .container-type[data-type='SU'] {
     display: grid;
   }
 }
