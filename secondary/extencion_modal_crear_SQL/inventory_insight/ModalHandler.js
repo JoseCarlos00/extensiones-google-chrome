@@ -21,6 +21,7 @@ class ModalHandler {
 
     this._selectedRows = [];
     this._statementUpdateSQL = '';
+    this._isInitialVariables = true;
   }
 
   /**
@@ -46,8 +47,9 @@ class ModalHandler {
         .map(([key]) => key);
 
       if (missingOptions.length > 0) {
+        this._isInitialVariables = false;
         throw new Error(
-          `No se encontraron los elementos necesarios para inicializar el menú contextual: [${missingOptions.join(
+          `No se encontraron los elementos necesarios para inicializar [ModalHandler]: [${missingOptions.join(
             ', '
           )}]`
         );
@@ -102,40 +104,44 @@ class ModalHandler {
   }
 
   async _setValuesForQueryElements() {
-    if (this._selectedRows.length === 0) {
-      ToastAlert.showAlertFullTop('No se encontraron filas selecionadas', 'info');
-      return;
-    }
+    try {
+      await this._resetValuesQueryElements();
 
-    await this._resetValuesQueryElements();
-
-    const { ITEM, LOCATION, DIV_INTERNAL_NUM } = this.queryElements;
-    const [firstRow] = this._selectedRows;
-
-    const {
-      item: itemSelector,
-      location: locationSelector,
-      divInternalNum: internalNumSelector,
-    } = this.internalDataSelector;
-
-    const item = firstRow.querySelector(itemSelector)?.textContent || '';
-    const location = firstRow.querySelector(locationSelector)?.textContent || '';
-
-    ITEM.value = item;
-    LOCATION.value = location;
-
-    if (this._selectedRows.length === 1) {
-      const internalNumber = firstRow.querySelector(internalNumSelector)?.textContent || '';
-      DIV_INTERNAL_NUM.value = internalNumber;
-    } else {
-      const internalNumbers = this._selectedRows
-        .map(row => row.querySelector(internalNumSelector)?.textContent)
-        .filter(Boolean)
-        .map(text => `'${text}'`);
-
-      if (internalNumbers.length > 0) {
-        DIV_INTERNAL_NUM.textContent = internalNumbers.join(',\n');
+      if (this._selectedRows.length === 0) {
+        ToastAlert.showAlertFullTop('No se encontraron filas selecionadas', 'info');
+        return;
       }
+
+      const { ITEM, LOCATION, DIV_INTERNAL_NUM } = this.queryElements;
+      const [firstRow] = this._selectedRows;
+
+      const {
+        item: itemSelector,
+        location: locationSelector,
+        internalNumber: internalNumSelector,
+      } = this.internalDataSelector;
+
+      const item = firstRow.querySelector(itemSelector)?.textContent || '';
+      const location = firstRow.querySelector(locationSelector)?.textContent || '';
+
+      ITEM.value = item;
+      LOCATION.value = location;
+
+      if (this._selectedRows.length === 1) {
+        const internalNumber = firstRow.querySelector(internalNumSelector)?.textContent || '';
+        DIV_INTERNAL_NUM.textContent = `'${internalNumber}'`;
+      } else {
+        const internalNumbers = this._selectedRows
+          .map(row => row.querySelector(internalNumSelector)?.textContent)
+          .filter(Boolean)
+          .map(text => `'${text}'`);
+
+        if (internalNumbers.length > 0) {
+          DIV_INTERNAL_NUM.textContent = internalNumbers.join(',\n');
+        }
+      }
+    } catch (error) {
+      console.error(`Error en setValuesForQueryElements: ${error}`);
     }
   }
 
@@ -145,7 +151,8 @@ class ModalHandler {
     );
 
     if (!typeStatementWhere) {
-      console.error('No se encontro el tipo de condicion [where]');
+      console.error('No se encontro el tipo de condicion [WHERE]');
+      ToastAlert.showAlertFullTop('No se encontro el tipo de condicion [WHERE]');
       return;
     }
 
@@ -173,7 +180,10 @@ class ModalHandler {
     );
 
     if (selectedTypesOfSetSentences.length === 0) {
-      console.error('No se selecciono ninguna opcion para el tipo de sentencia [set]');
+      console.error('No se selecciono ninguna opcion para el tipo de sentencia [SET]');
+      ToastAlert.showAlertFullTop(
+        'No se selecciono ninguna opcion para el tipo de sentencia [SET]'
+      );
       return;
     }
 
@@ -187,7 +197,7 @@ class ModalHandler {
     return selectedTypesOfSetSentences.map(item => typeSetMap[item.dataset.type]()).join(',\n');
   }
 
-  async getStatementSQL() {
+  async _getStatementSQL() {
     try {
       const { OH, AL, IT, SU, DIV_INTERNAL_NUM, LOCATION, ITEM } = this.queryElements;
 
@@ -210,13 +220,27 @@ class ModalHandler {
 
       return `UPDATE location_inventory\nSET\n${statementSET}\n${statementWhere}`;
     } catch (error) {
-      console.error('Error: Ha ocurrido un error al  generar las sentencias SQL');
+      console.error('Error: Ha ocurrido un error al  generar las sentencias SQL', error);
       return;
     }
   }
 
-  async getSelectedRowsNum() {
+  async _getSelectedRowsNum() {
     return this._selectedRows.length;
+  }
+
+  async _addClassSelectedRows() {
+    const containerPrincipal = document.querySelector('#myModal .main-code-container');
+
+    if (!containerPrincipal) {
+      console.error('[updateModalContent] No se encontró el elemento .main-code-container');
+      return;
+    }
+
+    const rowNum = (await this._getSelectedRowsNum()) ?? 0;
+
+    containerPrincipal.classList.toggle('single', rowNum <= 1);
+    containerPrincipal.classList.toggle('multiple', rowNum >= 2);
   }
 
   async setModalElement(modal) {
@@ -238,21 +262,30 @@ class ModalHandler {
 
   async handleOpenModal() {
     try {
+      if (!this._isInitialVariables) {
+        throw new Error('No se encontraron los elementos necesarios de la consulta');
+      }
+
       await this._getRowsSelected();
       await this._setValuesForQueryElements();
-      await this._openModal();
+      await this._addClassSelectedRows();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error}`);
+    } finally {
+      await this._openModal();
     }
   }
 
   async handleCopyToClipBoar() {
     try {
-      const statementSQL = await this.getStatementSQL();
+      const statementSQL = await this._getStatementSQL();
 
-      copyToClipboard(statementSQL);
+      if (statementSQL) {
+        copyToClipboard(statementSQL);
+      }
     } catch (error) {
       console.error(`Error en handleCopyToClipBoar: ${error}`);
+      return;
     }
   }
 }

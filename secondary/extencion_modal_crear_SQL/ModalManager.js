@@ -116,8 +116,11 @@ class ModalManager {
 
 async function copyToClipboard(textoACopiar) {
   try {
+    if (!textoACopiar) {
+      throw new Error('No se encontro contenido para Copiar al portapapeles');
+    }
+
     await navigator.clipboard.writeText(textoACopiar);
-    const alerta = document.querySelector('#alerta-copy');
 
     ToastAlert.showAlertMinBotton('Copiado al portapapeles', 'success');
   } catch (err) {

@@ -19,6 +19,22 @@
   position: relative;
 }
 
+.ms-2 {
+  margin-left: 0.5rem !important;
+}
+.ms-3 {
+  margin-left: 1rem !important;
+}
+.mb-1 {
+  margin-bottom: 0.25rem !important;
+}
+.mt-1 {
+  margin-top: 0.25rem !important;
+}
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
 .main-code-container {
   width: min-content;
   background-color: #f3f3f3;
@@ -182,5 +198,14 @@
   }
   &.SU .code-container .container-type[data-type='SU'] {
     display: grid;
+  }
+
+  &.single .multi-internal,
+  &.multiple .single-internal-operator {
+    display: none !important;
+  }
+
+  &.single .single-internal {
+    display: inline !important;
   }
 }
