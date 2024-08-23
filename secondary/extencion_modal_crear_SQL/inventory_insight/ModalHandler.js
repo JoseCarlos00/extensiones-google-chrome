@@ -108,36 +108,38 @@ class ModalHandler {
     }
 
     await this._resetValuesQueryElements();
-    const internalNumbers = [];
+
     const { ITEM, LOCATION, DIV_INTERNAL_NUM } = this.queryElements;
+    const [firstRow] = this._selectedRows;
 
-    this._selectedRows.forEach((row, index) => {
-      const internalNumber = row.querySelector(this.internalDataSelector.internalNumber);
+    const {
+      item: itemSelector,
+      location: locationSelector,
+      divInternalNum: internalNumSelector,
+    } = this.internalDataSelector;
 
-      if (index === 0) {
-        const item = row.querySelector(this.internalDataSelector.item);
-        const location = row.querySelector(this.internalDataSelector.location);
+    const item = firstRow.querySelector(itemSelector)?.textContent || '';
+    const location = firstRow.querySelector(locationSelector)?.textContent || '';
 
-        if (item) {
-          ITEM.value = `${item.textContent}`;
-        }
+    ITEM.value = item;
+    LOCATION.value = location;
 
-        if (location) {
-          LOCATION.value = `${location.textContent}`;
-        }
+    if (this._selectedRows.length === 1) {
+      const internalNumber = firstRow.querySelector(internalNumSelector)?.textContent || '';
+      DIV_INTERNAL_NUM.value = internalNumber;
+    } else {
+      const internalNumbers = this._selectedRows
+        .map(row => row.querySelector(internalNumSelector)?.textContent)
+        .filter(Boolean)
+        .map(text => `'${text}'`);
+
+      if (internalNumbers.length > 0) {
+        DIV_INTERNAL_NUM.textContent = internalNumbers.join(',\n');
       }
-
-      if (internalNumber) {
-        internalNumbers.push(internalNumber.textContent);
-      }
-    });
-
-    if (internalNumbers.length > 0) {
-      DIV_INTERNAL_NUM.textContent = internalNumbers.map(i => `'${i}'`).join(',\n');
     }
   }
 
-  async _getStatementWhere(vaules) {
+  async _getStatementWhere(values) {
     const typeStatementWhere = document.querySelector(
       '#myModal .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]:checked'
     );
@@ -148,85 +150,73 @@ class ModalHandler {
     }
 
     const { type } = typeStatementWhere.dataset;
-    const { DIV_INTERNAL_NUM, ITEM, LOCATION } = vaules;
+    const { DIV_INTERNAL_NUM, ITEM, LOCATION } = values;
     const selectedRowsNum = this._selectedRows.length;
 
-    const params = {
-      value: DIV_INTERNAL_NUM,
-      item: ITEM,
-      location: LOCATION,
-    };
-
     const typeWhereMap = {
-      internal: ({ value }) => {
-        const statement = selectedRowsNum > 1 ? `IN (\n${value}\n)` : ' = ' + value;
-
+      internal: () => {
+        const statement =
+          selectedRowsNum > 1 ? `IN (\n${DIV_INTERNAL_NUM}\n)` : `= '${DIV_INTERNAL_NUM}'`;
         return `AND internal_location_inv ${statement}`;
       },
-      itemLoc: ({ item, location }) => `AND location = '${location}'\nAND item = '${item}'`,
+      itemLoc: () => `AND location = '${LOCATION}'\nAND item = '${ITEM}'`,
     };
 
-    const statementWhere = `\nWHERE warehouse = 'Mariano'\n${typeWhereMap[type](params)}`;
-
-    return statementWhere;
+    return `\nWHERE warehouse = 'Mariano'\n${typeWhereMap[type]()}`;
   }
 
-  async _getStatementSet(vaules) {
-    const typesOfSetSentences = Array.from(
+  async _getStatementSet(values) {
+    const selectedTypesOfSetSentences = Array.from(
       document.querySelectorAll(
         '#myModal .main-code-container .opcs-btn-container input.opc-btn:checked'
       )
     );
 
-    if (typesOfSetSentences.length === 0) {
+    if (selectedTypesOfSetSentences.length === 0) {
       console.error('No se selecciono ninguna opcion para el tipo de sentencia [set]');
       return;
     }
 
-    const { OH, AL, IT, SU } = vaules;
-
-    const valueSelect = {
-      OH: OH,
-      AL: AL,
-      IT: IT,
-      SU: SU,
-    };
-
     const typeSetMap = {
-      OH: ({ value: OH }) => `  ON_HAND_QTY = ${OH}`,
-      AL: ({ value: AL }) => `  ALLOCATED_QTY = ${AL}`,
-      IT: ({ value: IT }) => `  IN_TRANSIT_QTY = ${IT}`,
-      SU: ({ value: SU }) => `  SUSPENSE_QTY = ${SU}`,
+      OH: () => `  ON_HAND_QTY = ${values.OH}`,
+      AL: () => `  ALLOCATED_QTY = ${values.AL}`,
+      IT: () => `  IN_TRANSIT_QTY = ${values.IT}`,
+      SU: () => `  SUSPENSE_QTY = ${values.SU}`,
     };
 
-    const statementSET = typesOfSetSentences
-      .map(item => {
-        const { type } = item.dataset;
-        return typeSetMap[type]({ value: valueSelect[type] });
-      })
-      .join(',\n');
-
-    return statementSET;
+    return selectedTypesOfSetSentences.map(item => typeSetMap[item.dataset.type]()).join(',\n');
   }
 
   async getStatementSQL() {
-    const { OH, AL, IT, SU, DIV_INTERNAL_NUM, LOCATION, ITEM } = this.queryElements;
+    try {
+      const { OH, AL, IT, SU, DIV_INTERNAL_NUM, LOCATION, ITEM } = this.queryElements;
 
-    const vaules = {
-      OH: OH.value,
-      AL: AL.value,
-      IT: IT.value,
-      SU: SU.value,
-      DIV_INTERNAL_NUM: DIV_INTERNAL_NUM.textContent,
-      LOCATION: LOCATION.value,
-      ITEM: ITEM.value,
-    };
+      const values = {
+        OH: OH.value.trim(),
+        AL: AL.value.trim(),
+        IT: IT.value.trim(),
+        SU: SU.value.trim(),
+        DIV_INTERNAL_NUM: DIV_INTERNAL_NUM.textContent.trim(),
+        LOCATION: LOCATION.value.trim(),
+        ITEM: ITEM.value.trim(),
+      };
 
-    const statementWhere = await this._getStatementWhere(vaules);
-    const statementSET = await this._getStatementSet(vaules);
-    const statemenUPDATE = 'UPDATE location_inventory\nSET\n' + statementSET + statementWhere;
+      const statementWhere = await this._getStatementWhere(values);
+      const statementSET = await this._getStatementSet(values);
 
-    return statemenUPDATE;
+      if (!statementWhere || !statementSET) {
+        throw new Error('Error al generar las declaraciones SQL.');
+      }
+
+      return `UPDATE location_inventory\nSET\n${statementSET}\n${statementWhere}`;
+    } catch (error) {
+      console.error('Error: Ha ocurrido un error al  generar las sentencias SQL');
+      return;
+    }
+  }
+
+  async getSelectedRowsNum() {
+    return this._selectedRows.length;
   }
 
   async setModalElement(modal) {
