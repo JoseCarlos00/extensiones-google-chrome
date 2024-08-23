@@ -49,41 +49,47 @@ async function getHtmlContent() {
     `;
 
   const codeContainer = `
-<div class="code-container postition-relative language-sql hljs">
-<span class="hljs-keyword">UPDATE</span> location_inventory
-<br>&emsp;<span id="element-to-insert" class="hljs-keyword">SET</span>
-<div class="container-type" data-type="OH">
-&emsp;&ensp;<span>ON_HAND_QTY</span> <span class="hljs-operator">=</span> <input type="number" value="" id="input_OH"/>
-</div>
-<div class="container-type" data-type="AL">
-&emsp;&ensp;<span>ALLOCATED_QTY</span> <span class="hljs-operator">=</span> <input type="number" value="" id="input_AL"/>
-</div>
-<div class="container-type" data-type="IT">
-&emsp;&ensp;<span>IN_TRANSIT_QTY</span> <span class="hljs-operator">=</span> <input type="number" value="" id="input_IT"/>
-</div>
+    <div class="code-container postition-relative language-sql hljs">
 
-<div class="container-type" data-type="SU">
-&emsp;&ensp;<span>SUSPENSE_QTY </span><span class="hljs-operator">=</span> <input type="number" value="" id="input_SU"/>
-</div>
+      <span class="hljs-keyword">UPDATE</span> location_inventory
+      <br>&emsp;<span id="element-to-insert" class="hljs-keyword">SET</span>
 
-<br>&emsp;<span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">=</span> 'Mariano'
+      <div class="container-type" data-type="OH">
+        &emsp;&ensp;<span>ON_HAND_QTY</span> <span class="hljs-operator">=</span>
+        <input type="number" value="" id="input_OH"/>
+      </div>
 
-<div class="internal-num-code">
-<br>&emsp;<span class="hljs-keyword">AND</span>
-internal_location_inv
-<br>&emsp;<span class="hljs-keyword aling-top">IN</span><span class="aling-top">(</span><span
-class="hljs-string">
-<div contenteditable class="internal-inventory-numbers" id="internal-inventory-numbers"></div>
-</span>);
-</div>
+      <div class="container-type" data-type="AL">
+        &emsp;&ensp;<span>ALLOCATED_QTY</span> <span class="hljs-operator">=</span> <input type="number" value="" id="input_AL"/>
+      </div>
 
-<div class="item-loc-code">
-<br>&emsp;<span class="hljs-keyword">AND</span> location <span class="hljs-operator">=</span>
-<input type="text" name="location" id="location">
-<br>&emsp;<span class="hljs-keyword">AND</span> item <span class="hljs-operator">=</span> <input type="text"
-name="item" id="item">
-</div>
-</div>  
+      <div class="container-type" data-type="IT">
+        &emsp;&ensp;<span>IN_TRANSIT_QTY</span> <span class="hljs-operator">=</span> <input type="number" value="" id="input_IT"/>
+      </div>
+
+      <div class="container-type" data-type="SU">
+        &emsp;&ensp;<span>SUSPENSE_QTY </span><span class="hljs-operator">=</span> <input type="number" value="" id="input_SU"/>
+      </div>
+
+      <br>&emsp;<span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">=</span> 'Mariano'
+
+      <div class="internal-num-code">
+        <br>&emsp;<span class="hljs-keyword">AND</span>
+        internal_location_inv
+        <br>&emsp;<span class="hljs-keyword aling-top">IN</span><span class="aling-top">(</span><span
+          class="hljs-string">
+          <div contenteditable class="internal-inventory-numbers" id="internal-inventory-numbers"></div>
+        </span>);
+      </div>
+
+      <div class="item-loc-code">
+        <br>&emsp;<span class="hljs-keyword">AND</span> location <span class="hljs-operator">=</span>
+        <input type="text" name="location" id="location">
+        <br>&emsp;<span class="hljs-keyword">AND</span> item <span class="hljs-operator">=</span> <input type="text"
+          name="item" id="item">
+      </div>
+
+    </div>  
   `;
 
   const containerMain = document.createElement('div');

@@ -20,6 +20,7 @@ class ModalHandler {
     };
 
     this._selectedRows = [];
+    this._statementUpdateSQL = '';
   }
 
   /**
@@ -108,6 +109,7 @@ class ModalHandler {
 
     await this._resetValuesQueryElements();
     const internalNumbers = [];
+    const { ITEM, LOCATION, DIV_INTERNAL_NUM } = this.queryElements;
 
     this._selectedRows.forEach((row, index) => {
       const internalNumber = row.querySelector(this.internalDataSelector.internalNumber);
@@ -117,11 +119,11 @@ class ModalHandler {
         const location = row.querySelector(this.internalDataSelector.location);
 
         if (item) {
-          this.queryElements.ITEM.value = item.textContent;
+          ITEM.value = `${item.textContent}`;
         }
 
         if (location) {
-          this.queryElements.LOCATION.value = location.textContent;
+          LOCATION.value = `${location.textContent}`;
         }
       }
 
@@ -131,10 +133,95 @@ class ModalHandler {
     });
 
     if (internalNumbers.length > 0) {
-      this.queryElements.DIV_INTERNAL_NUM.textContent = internalNumbers
-        .map(i => `'${i}'`)
-        .join(',\n');
+      DIV_INTERNAL_NUM.textContent = internalNumbers.map(i => `'${i}'`).join(',\n');
     }
+  }
+
+  async _getStatementWhere(vaules) {
+    const typeStatementWhere = document.querySelector(
+      '#myModal .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]:checked'
+    );
+
+    if (!typeStatementWhere) {
+      console.error('No se encontro el tipo de condicion [where]');
+      return;
+    }
+
+    const { type } = typeStatementWhere.dataset;
+    const { DIV_INTERNAL_NUM, ITEM, LOCATION } = vaules;
+
+    const params = {
+      value: DIV_INTERNAL_NUM,
+      item: ITEM,
+      location: LOCATION,
+    };
+
+    const typeWhereMap = {
+      internal: ({ value }) => `AND internal_location_inv IN (\n${value}\n)`,
+      itemLoc: ({ item, location }) => `AND location = '${location}'\nAND item = '${item}'`,
+    };
+
+    const statementWhere = `\nWHERE warehouse = 'Mariano'\n${typeWhereMap[type](params)}`;
+
+    return statementWhere;
+  }
+
+  async _getStatementSet(vaules) {
+    const typesOfSetSentences = Array.from(
+      document.querySelectorAll(
+        '#myModal .main-code-container .opcs-btn-container input.opc-btn:checked'
+      )
+    );
+
+    if (typesOfSetSentences.length === 0) {
+      console.error('No se selecciono ninguna opcion para el tipo de sentencia [set]');
+      return;
+    }
+
+    const { OH, AL, IT, SU } = vaules;
+
+    const valueSelect = {
+      OH: OH,
+      AL: AL,
+      IT: IT,
+      SU: SU,
+    };
+
+    const typeSetMap = {
+      OH: ({ value: OH }) => `  ON_HAND_QTY = ${OH}`,
+      AL: ({ value: AL }) => `  ALLOCATED_QTY = ${AL}`,
+      IT: ({ value: IT }) => `  IN_TRANSIT_QTY = ${IT}`,
+      SU: ({ value: SU }) => `  SUSPENSE_QTY = ${SU}`,
+    };
+
+    const statementSET = typesOfSetSentences
+      .map(item => {
+        const { type } = item.dataset;
+        return typeSetMap[type]({ value: valueSelect[type] });
+      })
+      .join(',\n');
+
+    return statementSET;
+  }
+
+  async getStatementSQL() {
+    const { OH, AL, IT, SU, DIV_INTERNAL_NUM, LOCATION, ITEM } = this.queryElements;
+
+    const vaules = {
+      OH: OH.value,
+      AL: AL.value,
+      IT: IT.value,
+      SU: SU.value,
+      DIV_INTERNAL_NUM: DIV_INTERNAL_NUM.textContent,
+      LOCATION: LOCATION.value,
+      ITEM: ITEM.value,
+    };
+
+    const statementWhere = await this._getStatementWhere(vaules);
+    const statementSET = await this._getStatementSet(vaules);
+    const statemenUPDATE = 'UPDATE location_inventory\nSET\n' + statementSET + statementWhere;
+
+    return statemenUPDATE;
   }
 
   async setModalElement(modal) {
@@ -164,10 +251,13 @@ class ModalHandler {
     }
   }
 
-  handleCopyToClipBoar() {
-    const codeText = document.querySelector('#myModal .main-code-container .code-container');
+  async handleCopyToClipBoar() {
+    try {
+      const statementSQL = await this.getStatementSQL();
 
-    console.log('[handleCopyToClipBoar]', codeText);
-    ToastAlert.showAlertMinBotton('Se hizo clip en copiar', 'info');
+      copyToClipboard(statementSQL);
+    } catch (error) {
+      console.error(`Error en handleCopyToClipBoar: ${error}`);
+    }
   }
 }

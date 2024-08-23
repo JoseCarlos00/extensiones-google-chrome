@@ -61,16 +61,12 @@ class ModalManagerInventory extends ModalManager {
   }
 
   async setEventListenerOpction() {
-    this._setEventListeners(
-      '#myModal .main-code-container .opcs-btn-container input.opc-btn',
-      'change'
-    );
+    this._setEventListeners('#myModal .main-code-container .opcs-btn-container input.opc-btn');
   }
 
   async setEventListenerOptionType() {
     this._setEventListeners(
-      '#myModal .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]',
-      'change'
+      '#myModal .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]'
     );
   }
 
@@ -81,8 +77,8 @@ class ModalManagerInventory extends ModalManager {
     await this.setEventListenerOptionType();
   }
 
-  modalFunction() {
-    super.modalFunction();
+  async modalFunction() {
+    await super.modalFunction();
     this.containerPrincipal = document.querySelector('#myModal .main-code-container');
   }
 

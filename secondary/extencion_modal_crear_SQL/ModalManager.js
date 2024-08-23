@@ -55,7 +55,7 @@ class ModalManager {
     });
   }
 
-  modalFunction() {
+  async modalFunction() {
     try {
       this.modalElement = document.getElementById('myModal');
       this.btnOpen = document.getElementById('openModalBtn');
@@ -66,7 +66,7 @@ class ModalManager {
         throw new Error('No se proporcionó un manejador de modal.');
       }
 
-      this.modalHandler.setModalElement(this.modalElement);
+      await this.modalHandler.setModalElement(this.modalElement);
       this.setEventListeners();
     } catch (error) {
       console.error('Error al inicializar los eventos del modal:', error);
