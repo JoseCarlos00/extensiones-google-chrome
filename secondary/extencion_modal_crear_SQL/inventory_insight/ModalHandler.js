@@ -149,6 +149,7 @@ class ModalHandler {
 
     const { type } = typeStatementWhere.dataset;
     const { DIV_INTERNAL_NUM, ITEM, LOCATION } = vaules;
+    const selectedRowsNum = this._selectedRows.length;
 
     const params = {
       value: DIV_INTERNAL_NUM,
@@ -157,7 +158,11 @@ class ModalHandler {
     };
 
     const typeWhereMap = {
-      internal: ({ value }) => `AND internal_location_inv IN (\n${value}\n)`,
+      internal: ({ value }) => {
+        const statement = selectedRowsNum > 1 ? `IN (\n${value}\n)` : ' = ' + value;
+
+        return `AND internal_location_inv ${statement}`;
+      },
       itemLoc: ({ item, location }) => `AND location = '${location}'\nAND item = '${item}'`,
     };
 
