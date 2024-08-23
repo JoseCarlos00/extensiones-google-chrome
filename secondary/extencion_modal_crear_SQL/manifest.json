@@ -15,24 +15,27 @@
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
       "js": [
+        "ButtonOpenModal.js",
         "ModalManager.js",
         "ToastAlert.js",
         "ModaCreateHTML.js",
+        "shipping_container_insight/ModalManagerShippingContainer.js",
+        "shipping_container_insight/ModalHandler.js",
         "shipping_container_insight/modalContent.js",
-        "shipping_container_insight/main.js",
-        "shipping_container_insight/ModalHandler.js"
+        "shipping_container_insight/main.js"
       ],
       "css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
       "js": [
+        "ButtonOpenModal.js",
         "ModalManager.js",
         "ToastAlert.js",
         "ModaCreateHTML.js",
+        "inventory_insight/ModalManagerInventory.js",
         "inventory_insight/ModalHandler.js",
         "inventory_insight/modalContent.js",
-        "inventory_insight/ModalManagerInventory.js",
         "inventory_insight/main.js"
       ],
       "css": [

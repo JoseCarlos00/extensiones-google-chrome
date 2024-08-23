@@ -378,14 +378,14 @@ function showTable(table) {
 
         if (ariadescribedby === 'ListPaneDataGrid_ITEM') {
           const tdItem = document.createElement('td');
-          tdItem.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
+          tdItem.innerHTML = `<input value="${td.textContent} "tabindex="0" class="input-text">`;
           tdItem.setAttribute('aria-describedby', ariadescribedby);
           tr.prepend(tdItem);
         }
 
         if (ariadescribedby === 'ListPaneDataGrid_LOCATION') {
           const tdLoc = document.createElement('td');
-          tdLoc.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
+          tdLoc.innerHTML = `<input value="${td.textContent} "tabindex="0" class="input-text">`;
           tdLoc.setAttribute('aria-describedby', ariadescribedby);
           tr.appendChild(tdLoc);
         }
@@ -393,7 +393,7 @@ function showTable(table) {
         if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
           const tdItemDesc = document.createElement('td');
 
-          tdItemDesc.innerHTML = `<input value="${td.textContent}" readonly class="input-text exclude" tabindex="-1">`;
+          tdItemDesc.innerHTML = `<input value="${td.textContent} "class="input-text exclude" tabindex="-1">`;
           tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
 
           const divDelete = document.createElement('div');

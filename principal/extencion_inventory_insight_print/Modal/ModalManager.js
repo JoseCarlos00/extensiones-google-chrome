@@ -1,17 +1,8 @@
 class ModalManager {
-  constructor({
-    modalHandler,
-    contentModalHtml,
-    modalId,
-    sectionContainerClass,
-    buttonOpenModal,
-    buttonOpenModalId,
-  }) {
+  constructor({ modalHandler, contentModalHtml, modalId, sectionContainerClass }) {
     this.modalId = modalId;
     this.sectionContainerClass = sectionContainerClass;
     this.modalElement = null;
-    this.buttonOpenModal = buttonOpenModal;
-    this.buttonOpenModalId = buttonOpenModalId;
     this.btnOpen = null;
     this.btnClose = null;
     this.modalHandler = modalHandler ?? null;
@@ -29,6 +20,14 @@ class ModalManager {
   }
 
   async insertBtnOpenModal() {
+    const li = `
+    <li class="navdetailpane visible-sm visible-md visible-lg">
+      <a id='openModalBtn' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Crear Sentemcia SQL" data-balloon-pos="right">
+        <i class="far fa-database navimage"></i>
+      </a>
+    </li>
+    `;
+
     return new Promise(resolve => {
       const ul = document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav');
 
@@ -36,11 +35,7 @@ class ModalManager {
         throw new Error('No se encontró el elemento ul');
       }
 
-      if (!(this.buttonOpenModal instanceof Element)) {
-        throw new Error('El elemento buttonOpenModal no es un elemento <li> HTML');
-      }
-
-      ul.insertAdjacentElement('beforeend', this.buttonOpenModal);
+      ul.insertAdjacentHTML('beforeend', li);
 
       setTimeout(resolve, 50);
     });
@@ -54,7 +49,7 @@ class ModalManager {
       if (!body) return reject('No se encontro elemento <body> a insertar el Modal');
 
       if (!(contentModalHtml instanceof Element)) {
-        return reject('[insertModal] contentModalHtml no es un un elemento html');
+        return reject('[contentModalHtml] no es un un elemento html');
       }
 
       body.appendChild(contentModalHtml);
@@ -65,26 +60,10 @@ class ModalManager {
   async modalFunction() {
     try {
       this.modalElement = document.getElementById(this.modalId);
-      this.btnOpen = document.getElementById(this.buttonOpenModalId);
+      this.btnOpen = document.getElementById('openModalBtn');
       this.btnClose = document.querySelector(
         `.${this.sectionContainerClass} #${this.modalId} .close`
       );
-
-      if (!this.modalElement) {
-        console.warn(`No se encontró el elemento con id: [${this.modalId}]`);
-      }
-      if (!this.btnOpen) {
-        console.warn(`No se encontró el elemento con id: [${this.buttonOpenModalId}]`);
-      }
-      if (!this.btnClose) {
-        console.warn(
-          `No se encontró el elemento con clase: [${this.sectionContainerClass}] y id: [${this.modalId}] y clase close`
-        );
-      }
-
-      if (!this.modalElement || !this.btnOpen || !this.btnClose) {
-        throw new Error('No se encontraron los elementos necesarios para inicializar el modal');
-      }
 
       // Intanciar y guardar el manegador del Modal
       if (!this.modalHandler) {
@@ -99,6 +78,10 @@ class ModalManager {
   }
 
   setEventListeners() {
+    if (!this.modalElement || !this.btnOpen || !this.btnClose) {
+      throw new Error('No se encontraron los elementos necesarios para inicializar el modal');
+    }
+
     this.btnOpen.addEventListener('click', () => {
       this.modalHandler.handleOpenModal();
     });
@@ -118,6 +101,16 @@ class ModalManager {
         this.closeModal();
       }
     });
+
+    // Event to copy
+    const btnCopy = document.querySelector('.btn-copy-code');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => this.modalHandler.handleCopyToClipBoar());
+    }
+  }
+
+  openModal() {
+    this.modalElement.style.display = 'block';
   }
 
   closeModal() {

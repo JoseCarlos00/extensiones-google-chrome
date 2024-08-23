@@ -7,10 +7,27 @@ window.addEventListener(
         sectionContainerClass: 'modal-container',
       };
 
+      const buttonConfiguration = {
+        buttonId: 'openModalBtn',
+        iconoModal: 'fa-database',
+        textLabel: 'Crear Sentemcia SQ',
+        textLabelPosition: 'right',
+      };
+
+      const buttonOpenModal = await ButtonOpenModal.getButtonOpenModal(buttonConfiguration);
+      const buttonOpenModalId = buttonConfiguration.buttonId;
+
       const modalHandler = new ModalHandler({ ...selectoresModal });
       const contentModalHtml = await getHtmlContent({ ...selectoresModal });
 
-      const modalManager = new ModalManager({ modalHandler, contentModalHtml, ...selectoresModal });
+      const modalManager = new ModalManager({
+        modalHandler,
+        contentModalHtml,
+        buttonOpenModal,
+        buttonOpenModalId,
+        ...selectoresModal,
+      });
+
       await modalManager.initialize();
     } catch (error) {
       console.error('Error: al inicializar el modal ', error);

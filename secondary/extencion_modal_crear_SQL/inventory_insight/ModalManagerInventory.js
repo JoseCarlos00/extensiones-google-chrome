@@ -1,6 +1,6 @@
 class ModalManagerInventory extends ModalManager {
-  constructor({ modalHandler, contentModalHtml, modalId, sectionContainerClass }) {
-    super({ modalHandler, contentModalHtml, modalId, sectionContainerClass });
+  constructor(configuration) {
+    super(configuration);
 
     this.containerPrincipal = null;
     this.mapType = {
@@ -74,6 +74,12 @@ class ModalManagerInventory extends ModalManager {
 
   async setEventListeners() {
     super.setEventListeners();
+
+    // Event to copy
+    const btnCopy = document.querySelector('.btn-copy-code');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => this.modalHandler.handleCopyToClipBoar());
+    }
 
     await this.setEventListenerOpction();
     await this.setEventListenerOptionType();
