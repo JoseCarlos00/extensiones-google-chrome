@@ -10,7 +10,7 @@ window.addEventListener(
       const buttonConfiguration = {
         buttonId: 'openModalBtn',
         iconoModal: 'fa-database',
-        textLabel: 'Crear Sentemcia SQ',
+        textLabel: 'Crear Sentencia SQ',
         textLabelPosition: 'right',
       };
 

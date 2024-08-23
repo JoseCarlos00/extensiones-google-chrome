@@ -3,14 +3,14 @@ window.addEventListener(
   async () => {
     try {
       const selectoresModal = {
-        modalId: 'myModal',
+        modalId: 'myModalShowTable',
         sectionContainerClass: 'modal-container',
       };
 
       const buttonConfiguration = {
-        buttonId: 'openModalBtn',
-        iconoModal: 'fa-database',
-        textLabel: 'Crear Sentemcia SQ',
+        buttonId: 'openModalShowTable',
+        iconoModal: 'fa-clipboard',
+        textLabel: 'Abrir Modal',
         textLabelPosition: 'right',
       };
 

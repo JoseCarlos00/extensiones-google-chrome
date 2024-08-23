@@ -26,7 +26,16 @@
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
-      "js": ["inventoryPrint.js", "modal.js"],
+      "js": [
+        "inventoryPrint.js",
+        "modal/ButtonOpenModal.js",
+        "modal/ModaCreateHTML.js",
+        "modal/ModalManager.js",
+        "modal/inventory_insight/modalContent.js",
+        "modal/inventory_insight/ModalHandler.js",
+        "modal/inventory_insight/ModalManagerInventory.js",
+        "modal/inventory_insight/main.js"
+      ],
       "css": ["style.css", "balloon.css"]
     }
   ],

@@ -49,37 +49,3 @@ class AbstractModalHandler {
     }
   }
 }
-
-function getTextWithInputValues(element) {
-  let text = '';
-  element.childNodes.forEach(node => {
-    console.log('node:', node);
-
-    if (node.nodeType === Node.TEXT_NODE) {
-      text += node.textContent;
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-      if (node.tagName === 'INPUT' || node.tagName === 'TEXTAREA') {
-        text += node.value;
-      } else {
-        text += getTextWithInputValues(node);
-      }
-    }
-  });
-  return text;
-}
-
-function copyTextToClipboard() {
-  const codeText = document.querySelector('#myModal .main-code-container .code-container');
-  const textToCopy = getTextWithInputValues(codeText);
-
-  navigator.clipboard
-    .writeText(textToCopy)
-    .then(() => {
-      console.log('Texto copiado al portapapeles:', textToCopy);
-    })
-    .catch(err => {
-      console.error('Error al copiar texto al portapapeles:', err);
-    });
-}
-
-copyTextToClipboard();
