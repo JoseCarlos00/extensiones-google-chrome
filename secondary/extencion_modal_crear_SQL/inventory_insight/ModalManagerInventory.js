@@ -73,16 +73,23 @@ class ModalManagerInventory extends ModalManager {
   }
 
   async setEventListeners() {
-    super.setEventListeners();
+    try {
+      super.setEventListeners();
 
-    // Event to copy
-    const btnCopy = document.querySelector('.btn-copy-code');
-    if (btnCopy) {
-      btnCopy.addEventListener('click', () => this.modalHandler.handleCopyToClipBoar());
+      // Event to copy
+      const btnCopy = document.querySelector('.btn-copy-code');
+      if (btnCopy) {
+        btnCopy.addEventListener('click', () => this.modalHandler.handleCopyToClipBoar());
+      }
+
+      await this.setEventListenerOpction();
+      await this.setEventListenerOptionType();
+    } catch (error) {
+      console.error(
+        'Error:[setEventListeners] Ha ocurrido un error al crear los eventListener',
+        error
+      );
     }
-
-    await this.setEventListenerOpction();
-    await this.setEventListenerOptionType();
   }
 
   async modalFunction() {

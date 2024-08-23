@@ -20,7 +20,7 @@ window.addEventListener(
       const modalHandler = new ModalHandler({ ...selectoresModal });
       const contentModalHtml = await getHtmlContent({ ...selectoresModal });
 
-      const modalManager = new ModalManager({
+      const modalManager = new ModalManagerShippingContainer({
         modalHandler,
         contentModalHtml,
         buttonOpenModal,
