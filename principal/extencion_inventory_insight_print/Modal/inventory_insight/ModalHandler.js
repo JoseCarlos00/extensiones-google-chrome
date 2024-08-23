@@ -7,7 +7,7 @@
  * 3  handleCopyToClipBoar
  */
 
-class AbstractModalHandler {
+class ModalHandler {
   constructor() {
     this.modal = null;
   }
@@ -37,10 +37,16 @@ class AbstractModalHandler {
   }
 
   handleCopyToClipBoar() {
-    const codeText = document.querySelector('#myModal .main-code-container .code-container');
+    try {
+      const texto = '';
 
-    console.log('[handleCopyToClipBoar]', codeText);
-    ToastAlert.showAlertMinBotton('Se hizo click en copiar', 'info');
+      if (texto) {
+        copyToClipboard(texto);
+      }
+    } catch (error) {
+      console.error(`Error en handleCopyToClipBoar: ${error}`);
+      return;
+    }
   }
 }
 
