@@ -1,5 +1,7 @@
 class ModalManager {
-  constructor({ modalHandler, contentModalHtml }) {
+  constructor({ modalHandler, contentModalHtml, modalId, sectionContainerClass }) {
+    this.modalId = modalId;
+    this.sectionContainerClass = sectionContainerClass;
     this.modalElement = null;
     this.btnOpen = null;
     this.btnClose = null;
@@ -57,9 +59,11 @@ class ModalManager {
 
   async modalFunction() {
     try {
-      this.modalElement = document.getElementById('myModal');
+      this.modalElement = document.getElementById(this.modalId);
       this.btnOpen = document.getElementById('openModalBtn');
-      this.btnClose = document.querySelector('.modal-container #myModal .close');
+      this.btnClose = document.querySelector(
+        `.${this.sectionContainerClass} #${this.modalId} .close`
+      );
 
       // Intanciar y guardar el manegador del Modal
       if (!this.modalHandler) {

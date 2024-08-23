@@ -1,4 +1,4 @@
-async function getHtmlContent() {
+async function getHtmlContent({ sectionContainerClass, modalId }) {
   const btnCopy = `
   <button class="btn-copy-code" tabindex="2"
   style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none;">
@@ -26,7 +26,7 @@ async function getHtmlContent() {
 </pre>
 `;
 
-  const modal = new ModalCreateHTML();
+  const modal = new ModalCreateHTML({ sectionContainerClass, modalId });
   const modalHTML = await modal.createModaElement();
 
   await modal.insertContenModal(contenModal);

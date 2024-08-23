@@ -1,6 +1,6 @@
 class ModalManagerInventory extends ModalManager {
-  constructor({ modalHandler, contentModalHtml }) {
-    super({ modalHandler, contentModalHtml });
+  constructor({ modalHandler, contentModalHtml, modalId, sectionContainerClass }) {
+    super({ modalHandler, contentModalHtml, modalId, sectionContainerClass });
 
     this.containerPrincipal = null;
     this.mapType = {
@@ -61,12 +61,14 @@ class ModalManagerInventory extends ModalManager {
   }
 
   async setEventListenerOpction() {
-    this._setEventListeners('#myModal .main-code-container .opcs-btn-container input.opc-btn');
+    this._setEventListeners(
+      `#${this.modalId} .main-code-container .opcs-btn-container input.opc-btn`
+    );
   }
 
   async setEventListenerOptionType() {
     this._setEventListeners(
-      '#myModal .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]'
+      `#${this.modalId} .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]`
     );
   }
 
@@ -79,7 +81,7 @@ class ModalManagerInventory extends ModalManager {
 
   async modalFunction() {
     await super.modalFunction();
-    this.containerPrincipal = document.querySelector('#myModal .main-code-container');
+    this.containerPrincipal = document.querySelector(`#${this.modalId} .main-code-container`);
   }
 
   closeModal() {

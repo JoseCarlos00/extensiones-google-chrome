@@ -1,6 +1,8 @@
 class ModalCreateHTML {
-  constructor() {
+  constructor({ modalId, sectionContainerClass }) {
     this.contenModal = null;
+    this._modalId = modalId;
+    this._sectionContainerClass = sectionContainerClass;
   }
 
   async _createButtonClose() {
@@ -29,14 +31,14 @@ class ModalCreateHTML {
   async _createDivModal() {
     const divModal = document.createElement('div');
     divModal.className = 'modal';
-    divModal.id = 'myModal';
+    divModal.id = this._modalId;
 
     return divModal;
   }
 
   async _createSection() {
     const section = document.createElement('section');
-    section.className = 'modal-container';
+    section.className = this._sectionContainerClass;
 
     return section;
   }

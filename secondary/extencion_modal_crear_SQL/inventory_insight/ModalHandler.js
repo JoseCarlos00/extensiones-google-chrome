@@ -1,5 +1,8 @@
 class ModalHandler {
-  constructor() {
+  constructor({ modalId, sectionContainerClass }) {
+    this.modalId = modalId;
+    this.sectionContainerClass = sectionContainerClass;
+
     this.modal = null;
     this.tbodyTable = document.querySelector('#ListPaneDataGrid > tbody');
 
@@ -30,7 +33,7 @@ class ModalHandler {
    */
   async _initialVariables() {
     try {
-      const prefix = '#myModal .main-code-container .code-container';
+      const prefix = `#${this.modalId} .main-code-container .code-container`;
 
       const internalElements = {
         OH: document.querySelector(`${prefix} #input_OH`),
@@ -147,7 +150,7 @@ class ModalHandler {
 
   async _getStatementWhere(values) {
     const typeStatementWhere = document.querySelector(
-      '#myModal .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]:checked'
+      `#${this.modalId} .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]:checked`
     );
 
     if (!typeStatementWhere) {
@@ -175,7 +178,7 @@ class ModalHandler {
   async _getStatementSet(values) {
     const selectedTypesOfSetSentences = Array.from(
       document.querySelectorAll(
-        '#myModal .main-code-container .opcs-btn-container input.opc-btn:checked'
+        `#${this.modalId} .main-code-container .opcs-btn-container input.opc-btn:checked`
       )
     );
 

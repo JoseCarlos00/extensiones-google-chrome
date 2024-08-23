@@ -203,11 +203,6 @@
   }
 }
 
-.show-alert {
-  opacity: 1 !important;
-  display: flex !important;
-}
-
 pre.postition-relative {
   position: relative;
   font-size: 16px;

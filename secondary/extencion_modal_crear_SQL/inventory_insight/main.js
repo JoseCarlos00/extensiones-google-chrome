@@ -2,10 +2,19 @@ window.addEventListener(
   'load',
   async () => {
     try {
-      const modalHandler = new ModalHandler();
-      const contentModalHtml = await getHtmlContent();
+      const selectoresModal = {
+        modalId: 'myModal',
+        sectionContainerClass: 'modal-container',
+      };
 
-      const modalManager = new ModalManagerInventory({ modalHandler, contentModalHtml });
+      const modalHandler = new ModalHandler({ ...selectoresModal });
+      const contentModalHtml = await getHtmlContent({ ...selectoresModal });
+
+      const modalManager = new ModalManagerInventory({
+        modalHandler,
+        contentModalHtml,
+        ...selectoresModal,
+      });
       await modalManager.initialize();
     } catch (error) {
       console.error('Error: al inicializar el modal ', error);
