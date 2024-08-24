@@ -18,7 +18,7 @@ const buttons = `
 
 async function getHeader() {
   const uiIggridIndicator =
-    '<div class="ui-iggrid-indicatorcontainer" style="display = "none"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>';
+    '<div class="ui-iggrid-indicatorcontainer" style="display: none;"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>';
 
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');

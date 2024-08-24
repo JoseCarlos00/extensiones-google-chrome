@@ -141,7 +141,7 @@ class ModalHandler {
     }
 
     if (tagName === 'INPUT') {
-      this.focusFirstInput();
+      target.focus();
       target.select();
     }
   }

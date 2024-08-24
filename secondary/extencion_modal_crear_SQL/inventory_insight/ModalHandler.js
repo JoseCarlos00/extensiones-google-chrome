@@ -166,7 +166,7 @@ class ModalHandler {
     const typeWhereMap = {
       internal: () => {
         const statement =
-          selectedRowsNum > 1 ? `IN (\n${DIV_INTERNAL_NUM}\n)` : `= '${DIV_INTERNAL_NUM}'`;
+          selectedRowsNum > 1 ? `IN (\n${DIV_INTERNAL_NUM}\n)` : `= ${DIV_INTERNAL_NUM}`;
         return `AND internal_location_inv ${statement}`;
       },
       itemLoc: () => `AND location = '${LOCATION}'\nAND item = '${ITEM}'`,
