@@ -34,7 +34,11 @@
         "modal/inventory_insight/modalContent.js",
         "modal/inventory_insight/ModalHandler.js",
         "modal/inventory_insight/ModalManagerInventory.js",
-        "modal/inventory_insight/main.js"
+        "modal/inventory_insight/main.js",
+        "modal/inventory_insight/Moda_Insert_Item/ModalManagerInsertItem.js",
+        "modal/inventory_insight/Moda_Insert_Item/ModalHandler.js",
+        "modal/inventory_insight/Moda_Insert_Item/modalContent.js",
+        "modal/inventory_insight/Moda_Insert_Item/main.js"
       ],
       "css": ["style.css", "balloon.css"]
     }

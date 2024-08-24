@@ -18,17 +18,19 @@ window.addEventListener(
       const buttonOpenModalId = buttonConfiguration.buttonId;
 
       const modalHandler = new ModalHandler({ ...selectoresModal });
-      const contentModalHtml = await getHtmlContent({ ...selectoresModal });
+      const ModalHtml = await getHtmlContent({ ...selectoresModal });
 
       const modalManager = new ModalManagerInventory({
         modalHandler,
-        contentModalHtml,
+        contentModalHtml: ModalHtml,
         buttonOpenModal,
         buttonOpenModalId,
         ...selectoresModal,
       });
 
       await modalManager.initialize();
+
+      setTimeout(async () => await insertModalInserItem(), 100);
     } catch (error) {
       console.error('Error: al inicializar el modal ', error);
     }
