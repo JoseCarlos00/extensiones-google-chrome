@@ -110,12 +110,12 @@ class ModalHandler {
   focusFirstInput() {
     const firstInput = this.tableContent.querySelector('input.input-text');
 
-    setTimeout(() => {
-      if (firstInput) {
+    if (firstInput) {
+      setTimeout(() => {
         firstInput.focus();
         firstInput.select();
-      }
-    }, 50);
+      }, 50);
+    }
   }
 
   async _openModal() {
@@ -134,7 +134,7 @@ class ModalHandler {
 
   handleEventCLick(e) {
     const { target } = e;
-    const { classList, tagName } = target;
+    const { classList, tagName, dataset } = target;
 
     if (classList.contains('delete-row')) {
       this.deleteRow(target);
@@ -144,6 +144,10 @@ class ModalHandler {
       target.focus();
       target.select();
     }
+
+    console.log('target:', target);
+
+    console.log('dataset:', dataset);
   }
 
   async setEventClickModalTable() {
@@ -292,7 +296,7 @@ function showIndicator({ columnIndex, table }) {
 }
 
 function sortTable(params) {
-  showIndicator(params);
+  // showIndicator(params);
 
   const { columnIndex, table } = params;
 

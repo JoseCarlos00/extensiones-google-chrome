@@ -28,11 +28,12 @@ async function getHeader() {
   th1.setAttribute('contenteditable', 'false');
   th1.setAttribute('aria-describedby', 'aria-describedby="ListPaneDataGrid_ITEM');
   th1.setAttribute('title', 'haga clic para ordenar la columna');
+  th1.dataset['columnIndex'] = '1';
 
   th1.innerHTML = `
     <div class="value">
       Item
-      <button href="#" data-toggle="detailpane" aria-label="Copia Tabla" data-balloon-pos="up" class="copy-item" data-id="item-location">
+      <button href="#" data-toggle="detailpane" aria-label="Copiar Tabla" data-balloon-pos="up" class="copy-item" data-id="item-location">
         <i class="far fa-clipboard"></i>
       </button>
     </div>
@@ -44,6 +45,7 @@ async function getHeader() {
   th2.setAttribute('contenteditable', 'false');
   th2.setAttribute('aria-describedby', 'aria-describedby="ListPaneDataGrid_LOCATION');
   th2.setAttribute('title', 'haga clic para ordenar la columna');
+  th2.dataset['columnIndex'] = '1';
   th2.innerHTML = `
     <div class="value">
       Location
@@ -56,6 +58,7 @@ async function getHeader() {
   th3.setAttribute('contenteditable', 'false');
   th3.setAttribute('aria-describedby', 'aria-describedby="ListPaneDataGrid_ITEM_DESC');
   th3.setAttribute('title', 'haga clic para ordenar la columna');
+  th3.dataset['columnIndex'] = '2';
   th3.textContent = `Description`;
 
   tr.append(th1, th2, th3);
