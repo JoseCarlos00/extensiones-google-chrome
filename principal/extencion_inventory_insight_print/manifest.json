@@ -22,7 +22,7 @@
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
+  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/scale/*"],
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],

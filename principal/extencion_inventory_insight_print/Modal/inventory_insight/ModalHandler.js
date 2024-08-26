@@ -299,6 +299,7 @@ class ModalHandler {
       await this.setEventTeclas();
       await this._openModal();
       await this.updateRowCounter();
+      this.uiIggridIndicator.deleteAllIdicator();
       this.focusFirstInput();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error}`);

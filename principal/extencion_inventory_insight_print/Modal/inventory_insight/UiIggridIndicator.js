@@ -4,6 +4,23 @@ class UiIggridIndicator {
     this.elementSelected = null;
   }
 
+  deleteAllIdicator() {
+    const uiIndicators = Array.from(
+      document.querySelectorAll(
+        '#myModalShowTable #tableContent thead  th .ui-iggrid-indicatorcontainer span'
+      )
+    );
+
+    if (uiIndicators.length === 0) {
+      console.warn('No se encontraron elemento indicadores .ui-iggrid-indicatorcontainer span');
+      return;
+    }
+
+    uiIndicators.forEach(item => {
+      item.remove();
+    });
+  }
+
   validateElement(element) {
     if (!element) {
       throw new Error('El elemento proporcionado es nulo o indefinido.');
