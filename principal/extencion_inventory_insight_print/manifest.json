@@ -28,6 +28,7 @@
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
       "js": [
         "inventoryPrint.js",
+        "ToastAlert.js",
         "modal/ButtonOpenModal.js",
         "modal/ModaCreateHTML.js",
         "modal/ModalManager.js",

@@ -4,36 +4,19 @@ class UiIggridIndicator {
     this.elementSelected = null;
   }
 
-  deleteAllIdicator() {
-    const uiIndicators = Array.from(
-      document.querySelectorAll(
-        '#myModalShowTable #tableContent thead  th .ui-iggrid-indicatorcontainer span'
-      )
-    );
-
-    if (uiIndicators.length === 0) {
-      console.warn('No se encontraron elemento indicadores .ui-iggrid-indicatorcontainer span');
-      return;
-    }
-
-    uiIndicators.forEach(item => {
-      item.remove();
-    });
-  }
-
-  validateElement(element) {
+  #validateElement(element) {
     if (!element) {
       throw new Error('El elemento proporcionado es nulo o indefinido.');
     }
   }
 
   setElementSelected(element) {
-    this.validateElement(element);
+    this.#validateElement(element);
     this.elementSelected = element;
-    this.setContainerIndicator();
+    this.#setContainerIndicator();
   }
 
-  setContainerIndicator() {
+  #setContainerIndicator() {
     if (!this.elementSelected) {
       throw new Error('No se ha seleccionado un elemento. Llama a setElementSelected primero.');
     }
@@ -44,7 +27,7 @@ class UiIggridIndicator {
     }
   }
 
-  setContentIndicator(sortOrder) {
+  #setContentIndicator(sortOrder) {
     if (!this.indicator) {
       throw new Error(
         'El contenedor del indicador no está definido. Llama a setContainerIndicator primero.'
@@ -64,7 +47,7 @@ class UiIggridIndicator {
     this.indicator.innerHTML = content;
   }
 
-  setAttributeTitle(sortOrder) {
+  #setAttributeTitle(sortOrder) {
     if (!this.elementSelected) {
       throw new Error('No se ha seleccionado un elemento. Llama a setElementSelected primero.');
     }
@@ -84,13 +67,30 @@ class UiIggridIndicator {
 
   showIndicator(sortOrder) {
     try {
-      this.setAttributeTitle(sortOrder);
-      this.setContentIndicator(sortOrder);
+      this.#setAttributeTitle(sortOrder);
+      this.#setContentIndicator(sortOrder);
     } catch (error) {
       console.error(
         'Error: [showIndicator] Ha ocurrido un error al mostrar el indicador de ordenamiento:',
         error
       );
     }
+  }
+
+  static deleteAllIdicator() {
+    const uiIndicators = Array.from(
+      document.querySelectorAll(
+        '#myModalShowTable #tableContent thead  th .ui-iggrid-indicatorcontainer span'
+      )
+    );
+
+    if (uiIndicators.length === 0) {
+      console.warn('No se encontraron elemento indicadores .ui-iggrid-indicatorcontainer span');
+      return;
+    }
+
+    uiIndicators.forEach(item => {
+      item.remove();
+    });
   }
 }

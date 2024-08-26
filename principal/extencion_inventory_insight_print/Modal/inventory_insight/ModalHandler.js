@@ -9,19 +9,18 @@
 
 class ModalHandler {
   constructor() {
-    this.modal = null;
-    this.tbodyTable = null;
-    this.tableContent = null;
-    this.uiIggridIndicator = new UiIggridIndicator();
+    this._modal = null;
+    this._tbodyTable = null;
+    this._tableContent = null;
   }
 
-  async valitateElementsTable() {
+  async _valitateElementsTable() {
     return new Promise((resolve, reject) => {
-      if (!this.tbodyTable) {
+      if (!this._tbodyTable) {
         reject('No se encontro el elemento <tbody>');
       }
 
-      if (!this.tableContent) {
+      if (!this._tableContent) {
         reject("Error:[createTbody] No se encontro el elemento <table id='tableContent'>");
       }
 
@@ -29,11 +28,11 @@ class ModalHandler {
     });
   }
 
-  async createTbody() {
+  async _createTbody() {
     try {
-      await this.valitateElementsTable();
+      await this._valitateElementsTable();
 
-      const rows = Array.from(this.tbodyTable.rows);
+      const rows = Array.from(this._tbodyTable.rows);
 
       // Create new tbody
       const newTbody = document.createElement('tbody');
@@ -88,28 +87,28 @@ class ModalHandler {
     }
   }
 
-  async insertTbody() {
+  async _insertTbody() {
     try {
-      await this.valitateElementsTable();
+      await this._valitateElementsTable();
 
-      const newTbody = await this.createTbody();
+      const newTbody = await this._createTbody();
 
-      const tbodyExist = this.tableContent.querySelector('tbody');
+      const tbodyExist = this._tableContent.querySelector('tbody');
       tbodyExist && tbodyExist.remove();
 
-      this.tableContent.appendChild(newTbody);
+      this._tableContent.appendChild(newTbody);
     } catch (error) {
       console.error('Error: [insertTbody] Ha Ocurrido un error al insertar el new <tbody>:', error);
     }
   }
 
-  async initialVariables() {
-    this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
-    this.tableContent = document.querySelector('#myModalShowTable #tableContent');
+  async _initialVariables() {
+    this._tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
+    this._tableContent = document.querySelector('#myModalShowTable #tableContent');
   }
 
-  focusFirstInput() {
-    const firstInput = this.tableContent.querySelector('input.input-text');
+  _focusFirstInput() {
+    const firstInput = this._tableContent.querySelector('input.input-text');
 
     if (firstInput) {
       setTimeout(() => {
@@ -120,78 +119,46 @@ class ModalHandler {
   }
 
   async _openModal() {
-    this.modal.style.display = 'block';
+    this._modal.style.display = 'block';
   }
 
-  deleteRow(element) {
-    if (!element) {
-      throw new Error('No se encotro un elemento HTML');
+  _setEventsForCopyButtons() {
+    const prefix = '#myModalShowTable';
+    const copytable = document.querySelector(`${prefix} #copy-table`);
+    const copyItems = document.querySelector(`${prefix} #copy-items`);
+
+    const eventManager = new EventManagerCopy();
+
+    if (!eventManager) {
+      throw new Error('No se encontró el EventManager');
     }
 
-    const trSelected = element.closest('tr');
-
-    if (trSelected) {
-      trSelected.remove();
-
-      this.updateRowCounter();
-    }
-  }
-
-  async handleSortTable(element) {
-    if (!element) {
-      throw new Error('No se encotro un elemento HTML');
-    }
-
-    const { classList, dataset } = element;
-    const columnIndex = parseInt(dataset.columnIndex, 10);
-
-    if (isNaN(columnIndex)) {
-      throw new Error('No se encontró el atributo "data-column-index" en el elemento <th>');
-    }
-
-    this.uiIggridIndicator.setElementSelected(element);
-
-    let sortOrder;
-
-    if (classList.contains('ui-iggrid-colheaderasc')) {
-      // Orden descendente
-      classList.replace('ui-iggrid-colheaderasc', 'ui-iggrid-colheaderdesc');
-      sortOrder = 'desc';
+    if (copytable) {
+      copytable.addEventListener('click', e =>
+        eventManager.handleEvent({ ev: e, tableContent: this._tableContent })
+      );
     } else {
-      // Orden ascendente (si estaba en descendente o sin ordenar)
-      classList.remove('ui-iggrid-colheaderdesc');
-      classList.add('ui-iggrid-colheaderasc');
-      sortOrder = 'asc';
+      console.error('No se encontró el elemento #copy-table');
     }
 
-    this.uiIggridIndicator.showIndicator(sortOrder);
-    sortTable({ columnIndex, table: this.tableContent, sortOrder });
-  }
-
-  handleEventCLick(e) {
-    const { target } = e;
-    const { classList, tagName } = target;
-
-    if (classList.contains('delete-row')) {
-      this.deleteRow(target);
-    } else if (classList.contains('ui-iggrid-headertext')) {
-      const th = target.closest('th');
-      this.handleSortTable(th);
-    }
-
-    if (tagName === 'INPUT') {
-      target.focus();
-      target.select();
-    } else if (tagName === 'TH') {
-      this.handleSortTable(target);
+    if (copyItems) {
+      copyItems.addEventListener('click', e =>
+        eventManager.handleEvent({ ev: e, tableContent: this._tableContent })
+      );
+    } else {
+      console.error('No se encontró el elemento #copy-items');
     }
   }
 
-  async setEventClickModalTable() {
+  async _setEventClickModalTable() {
     try {
-      await this.valitateElementsTable();
+      await this._valitateElementsTable();
+      const eventManager = new EventManager({
+        updateRowCounter: this._updateRowCounter,
+        tableContent: this._tableContent,
+      });
 
-      this.tableContent.addEventListener('click', e => this.handleEventCLick(e));
+      this._tableContent.addEventListener('click', e => eventManager.handleEvent({ ev: e }));
     } catch (error) {
       console.error(
         'Error: Ha ocurrido un error al crear el Evento click en #tableContent: ',
@@ -206,9 +173,10 @@ class ModalHandler {
         throw new Error('No se encontró el modal para abrir');
       }
 
-      this.modal = modal;
-      await this.initialVariables();
-      await this.setEventClickModalTable();
+      this._modal = modal;
+      await this._initialVariables();
+      await this._setEventClickModalTable();
+      this._setEventsForCopyButtons();
     } catch (error) {
       console.error(`Error en setModalElement: ${error}`);
     }
@@ -217,10 +185,10 @@ class ModalHandler {
   /**
    * TODO: Refactorizar
    */
-  async setEventTeclas() {
+  async _setEventTeclas() {
     try {
-      await this.valitateElementsTable();
-      const inputs = Array.from(this.tableContent.querySelectorAll('td[aria-describedby] input'));
+      await this._valitateElementsTable();
+      const inputs = Array.from(this._tableContent.querySelectorAll('td[aria-describedby] input'));
 
       if (inputs.length == 0) {
         console.warn(
@@ -279,7 +247,7 @@ class ModalHandler {
     } catch (error) {}
   }
 
-  async updateRowCounter() {
+  async _updateRowCounter() {
     const contador = document.querySelector('#myModalShowTable #rowCounter');
 
     if (!contador) {
@@ -287,7 +255,7 @@ class ModalHandler {
       return;
     }
 
-    const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
+    const rows = Array.from(this._tableContent.querySelectorAll('tbody tr'));
 
     // Actualizar el texto del contador con el número de filas
     contador.textContent = `Filas: ${rows.length}`;
@@ -295,27 +263,14 @@ class ModalHandler {
 
   async handleOpenModal() {
     try {
-      await this.insertTbody();
-      await this.setEventTeclas();
+      await this._insertTbody();
+      await this._setEventTeclas();
       await this._openModal();
-      await this.updateRowCounter();
-      this.uiIggridIndicator.deleteAllIdicator();
-      this.focusFirstInput();
+      await this._updateRowCounter();
+      UiIggridIndicator.deleteAllIdicator();
+      this._focusFirstInput();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error}`);
-    }
-  }
-
-  handleCopyToClipBoar() {
-    try {
-      const texto = '';
-
-      if (texto) {
-        copyToClipboard(texto);
-      }
-    } catch (error) {
-      console.error(`Error en handleCopyToClipBoar: ${error}`);
-      return;
     }
   }
 }
@@ -361,4 +316,192 @@ function sortTable({ columnIndex, table, sortOrder = 'asc' }) {
 
   // Limpiar y reordenar las filas en el tbody
   rows.forEach(row => tbody.appendChild(row));
+}
+
+class EventManager {
+  constructor({ updateRowCounter, tableContent }) {
+    this._tableContent = tableContent;
+    this._uiIggridIndicator = new UiIggridIndicator();
+    this._updateRowCounter = updateRowCounter;
+  }
+
+  handleEvent({ ev }) {
+    const { target, type } = ev;
+    const { nodeName } = target;
+
+    if (type === 'click') {
+      this.#handleClick(target, nodeName);
+    }
+  }
+
+  #handleClick(target, nodeName) {
+    const { classList } = target;
+
+    if (classList.contains('delete-row')) {
+      this.#deleteRow(target);
+    } else if (classList.contains('ui-iggrid-headertext')) {
+      const th = target.closest('th');
+      this.#handleSortTable(th);
+    }
+
+    if (nodeName === 'INPUT') {
+      target.focus();
+      target.select();
+    } else if (nodeName === 'TH') {
+      this.#handleSortTable(target);
+    }
+  }
+
+  #validateElement(element) {
+    if (!element) {
+      throw new Error('El elemento HTML proporcionado es nulo o indefinido');
+    }
+  }
+
+  async #handleSortTable(element) {
+    this.#validateElement(element);
+
+    const { classList, dataset } = element;
+    const columnIndex = parseInt(dataset.columnIndex, 10);
+
+    if (isNaN(columnIndex)) {
+      throw new Error('Atributo "data-column-index" no encontrado en el elemento <th>');
+    }
+
+    this._uiIggridIndicator.setElementSelected(element);
+
+    const sortOrder = classList.contains('ui-iggrid-colheaderasc') ? 'desc' : 'asc';
+
+    classList.toggle('ui-iggrid-colheaderasc', sortOrder === 'asc');
+    classList.toggle('ui-iggrid-colheaderdesc', sortOrder === 'desc');
+
+    this._uiIggridIndicator.showIndicator(sortOrder);
+    sortTable({ columnIndex, table: this._tableContent, sortOrder });
+  }
+
+  #deleteRow(element) {
+    this.#validateElement(element);
+
+    const trSelected = element.closest('tr');
+    if (trSelected) {
+      trSelected.remove();
+      this._updateRowCounter();
+    }
+  }
+}
+
+class EventManagerCopy {
+  elemetSelected = null;
+  tableContent = null;
+  selector = {
+    item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
+    location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
+  };
+
+  handleEvent({ ev, tableContent }) {
+    this.tableContent = tableContent;
+
+    const { target: element, type } = ev;
+    const { nodeName } = ev.target;
+
+    if (type === 'click') {
+      if (nodeName === 'I') {
+        this.elemetSelected = element.parentElement;
+      } else {
+        this.elemetSelected = element;
+      }
+
+      this.#handleOnClick();
+    }
+  }
+
+  #handleOnClick() {
+    if (!this.elemetSelected) {
+      throw new Error('Error: [handleOnClick] No se encontro un elemento selecionado');
+    }
+
+    const { id } = this.elemetSelected.dataset;
+    this.#handleCopyToClipBoar(id);
+  }
+
+  #getTextToCopy({ id, rows }) {
+    const { item: itemSelector, location: locationSelector } = this.selector;
+
+    const getElementValue = (element, selector) => {
+      const el = element.querySelector(selector);
+      return el ? el.value.trim() : '';
+    };
+
+    const itemSql = () =>
+      rows
+        .map(row => `'${getElementValue(row, itemSelector)}'`)
+        .filter(Boolean)
+        .join(',\n');
+
+    const itemLocation = () =>
+      rows
+        .map(
+          row => `${getElementValue(row, itemSelector)}\t${getElementValue(row, locationSelector)}`
+        )
+        .filter(Boolean)
+        .join('\n');
+
+    const handleCopyMap = {
+      'item-sql': itemSql,
+      'item-location': itemLocation,
+    };
+
+    // Verifica si el id es válido
+    if (!handleCopyMap[id]) {
+      console.error(`No se encontró una función asociada al ID: ${id}`);
+      return null;
+    }
+
+    return handleCopyMap[id]();
+  }
+
+  #isTableEmptyOrSingleRow() {
+    return new Promise(resolve => {
+      const firsrRow = this.tableContent.querySelector('td');
+      const txt = firsrRow ? firsrRow.textContent.trim().toLowerCase() : '';
+
+      if (!firsrRow || txt.includes('no hay datos')) {
+        resolve(true);
+        return;
+      }
+
+      resolve(false);
+    });
+  }
+
+  async #handleCopyToClipBoar(id) {
+    try {
+      const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
+
+      if (rows.length <= 1) {
+        const result = await this.#isTableEmptyOrSingleRow();
+
+        if (result) {
+          console.warn('No hay filas en la tabla');
+          ToastAlert.showAlertFullTop('No hay filas en la tabla', 'info');
+        }
+
+        return;
+      }
+
+      const texto = this.#getTextToCopy({ id, rows });
+
+      if (!texto) {
+        console.warn('El texto generado está vacío');
+        ToastAlert.showAlertFullTop('No se pudo generar texto para copiar', 'warning');
+        return;
+      }
+
+      // Copia el texto al portapapeles
+      copyToClipboard(texto);
+    } catch (error) {
+      console.error(`Error en handleCopyToClipBoar: ${error}`);
+      return;
+    }
+  }
 }

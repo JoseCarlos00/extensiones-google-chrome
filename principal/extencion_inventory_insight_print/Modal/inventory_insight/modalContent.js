@@ -1,24 +1,25 @@
 const buttons = `
-    <button id='printButtonModal' data-toggle="detailpane" aria-label="Imprimir Tabla" data-balloon-pos="up" class="print-button-modal">
+    <button id='printButtonModal' aria-label="Imprimir Tabla" data-balloon-pos="up" class="print-button-modal" style="display: none;">
         <i class="far fa-print"></i>
     </button>
 
     <div class="container-group">
      <button 
+        id="copy-table"
         class="copy-table" 
         data-id="item-location"
         aria-label="Item y Location" 
         data-balloon-pos="up">
         Copiar Tabla
-         <i class="far fa-clipboard"></i>
+         <i class="far fa-copy"></i>
       </button>
 
-      <button id='insertItemModal' data-toggle="detailpane" aria-label="Insertar Item" data-balloon-pos="up" class="insert-item">
+      <button id='insertItemModal' class="insert-item" data-id="item-sql" aria-label="Insertar Item" data-balloon-pos="up">
           <i class="far fa-plus"></i>
       </button>
 
-      <button id='copiarItem' data-toggle="detailpane" aria-label="Copy Item SQL" data-balloon-pos="up" class="copy-item" data-id="item-sql">
-          <i class="far fa-clipboard"></i>
+      <button id='copy-items' class="copy-item" data-id="item-sql" aria-label="Copy Item SQL" data-balloon-pos="up">
+          <i class="far fa-database"></i>
       </button>
 
       <span id="rowCounter" class="row-counter">Filas: 0</span>
