@@ -20,6 +20,6 @@ async function insertModalInserItem() {
 
     modalManager.initialize();
   } catch (error) {
-    console.error('Error: al inicializar el modal Inser Item ', error);
+    console.error('Error: Ha ocurrido un error al inicializar el modal Inser Item ', error);
   }
 }

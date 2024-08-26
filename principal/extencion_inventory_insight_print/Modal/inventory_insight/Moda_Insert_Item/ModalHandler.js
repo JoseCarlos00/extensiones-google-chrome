@@ -10,10 +10,100 @@
 class ModalHandlerInsertItem {
   constructor() {
     this.modal = null;
+    this.formItem = null;
+    this.inserItem = null;
+    this.datos = [];
+  }
+
+  datosReset() {
+    this.datos.length = 0;
+  }
+
+  async initialVatiables() {
+    this.formItem = document.getElementById('formInsertItem');
+    this.inserItem = this.formItem.inserItem;
+  }
+
+  insertarItems() {
+    const table = document.querySelector('#myModalShowTable #tableContent');
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+    if (rows.length === 0) {
+      console.warn('No se ecnontraron filas en la tabla');
+    }
+
+    rows.forEach(row => {
+      const td = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"]');
+      const inputItem = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"] input');
+      const item = inputItem ? inputItem.value.trim() : '';
+
+      if (item && this.datos.includes(item)) {
+        td.classList.add('item-exist');
+      }
+    });
+
+    this.datosReset();
+  }
+
+  registrarDatos(e) {
+    e.preventDefault();
+
+    const { inserItem, formItem, datos } = this;
+
+    if (!inserItem || !formItem) {
+      console.error('No se encontro el formulario #formInsertItem y sus campos');
+      return;
+    }
+
+    this.datosReset();
+
+    // Dividir el texto en lineas
+    const lineas = inserItem.value.split('\n');
+
+    // Procesar cada linea
+    lineas.forEach(linea => {
+      const regex = /^(\d+-\d+-\d+),?\s*$/;
+      const match = linea.match(regex);
+
+      if (match) {
+        // match[1] contiene el valor sin la coma al final
+        const valorSinComa = match[1];
+
+        if (!datos.includes(valorSinComa)) {
+          datos.push(valorSinComa);
+        }
+      }
+    });
+
+    if (datos.length === 0) {
+      inserItem.classList.add('is-invalid');
+      return;
+    }
+
+    // Limpiar el campo de texto
+    inserItem.classList.remove('is-invalid');
+    formItem.reset();
+
+    setTimeout(() => this._closeModal(), 100);
+
+    // Insertar datos
+    this.insertarItems();
+  }
+
+  setEventListenerS() {
+    if (!this.formItem) {
+      throw new Error('No se encontro el formulalio #formInsertItem');
+    }
+
+    this.formItem.addEventListener('submit', e => this.registrarDatos(e));
   }
 
   async _openModal() {
     this.modal.style.display = 'block';
+  }
+
+  async _closeModal() {
+    this.modal.style.display = 'none';
   }
 
   async setModalElement(modal) {
@@ -23,6 +113,9 @@ class ModalHandlerInsertItem {
       }
 
       this.modal = modal;
+
+      await this.initialVatiables();
+      this.setEventListenerS();
     } catch (error) {
       console.error(`Error en setModalElement: ${error}`);
     }
@@ -31,94 +124,12 @@ class ModalHandlerInsertItem {
   async handleOpenModal() {
     try {
       await this._openModal();
+
+      if (this.inserItem) {
+        setTimeout(() => this.inserItem.focus(), 50);
+      }
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error}`);
     }
   }
-
-  handleCopyToClipBoar() {
-    try {
-      const texto = '';
-
-      if (texto) {
-        copyToClipboard(texto);
-      }
-    } catch (error) {
-      console.error(`Error en handleCopyToClipBoar: ${error}`);
-      return;
-    }
-  }
-}
-
-// Objeto para almacenar los datos
-const datos = [];
-
-function registrarDatos() {
-  const formItem = document.querySelector('#myModalInserToItem > div > form');
-  const itemElement = document.querySelector('#myModalInserToItem #inserItem')?.value;
-
-  if (!formItem || !itemElement) return;
-
-  datos.length = 0;
-
-  // Dividir el texto en lineas
-  const lineas = itemElement.split('\n');
-
-  // Procesar cada linea
-  lineas.forEach(linea => {
-    const regex = /^(\d+-\d+-\d+),?\s*$/;
-    const match = linea.match(regex);
-
-    if (match) {
-      // match[1] contiene el valor sin la coma al final
-      const valorSinComa = match[1];
-
-      if (!datos.includes(valorSinComa)) {
-        console.log('No existe: Insertar');
-        datos.push(valorSinComa);
-      }
-    }
-  });
-
-  // Limpiar el campo de texto
-  formItem.reset();
-
-  // Insertar datos
-  insertarItems();
-}
-
-function insertarItems() {
-  const table = document.querySelector('#myModalAssigment #tableContent');
-  const tbody = table.querySelector('tbody');
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-
-  rows.forEach(row => {
-    const inputTd = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"]');
-    const inputItem = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"] input');
-
-    if (datos.includes(inputItem.value)) {
-      inputTd.classList.add('item-exist');
-    }
-  });
-
-  // Cerrar modal
-  setTimeout(() => {
-    const modal = document.getElementById('myModalInserToItem');
-    modal && (modal.style.display = 'none');
-  }, 250);
-}
-
-function setEventModal(elements) {
-  const { btnOpen, btnClose, modal, modalInsert, btnCloseModal, btnOpenModal } = elements;
-
-  /** MODAL INSERTAR ITEM */
-  // Cuando el usuario hace clic en el botón, abre el modal
-  btnOpenModal.addEventListener('click', function () {
-    const textareaInsertarItem = document.querySelector('#myModalInserToItem #inserItem');
-    modalInsert.style.display = 'block';
-
-    if (textareaInsertarItem) {
-      setTimeout(() => textareaInsertarItem.focus(), 50);
-    }
-  });
 }
