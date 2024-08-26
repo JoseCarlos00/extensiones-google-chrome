@@ -32,6 +32,7 @@
         "modal/ModaCreateHTML.js",
         "modal/ModalManager.js",
         "modal/inventory_insight/modalContent.js",
+        "modal/inventory_insight/UiIggridIndicator.js",
         "modal/inventory_insight/ModalHandler.js",
         "modal/inventory_insight/ModalManagerInventory.js",
         "modal/inventory_insight/main.js",
