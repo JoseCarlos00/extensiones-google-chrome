@@ -17,49 +17,48 @@ const buttons = `
   `;
 
 async function getHeader() {
-  const uiIggridIndicator =
-    '<div class="ui-iggrid-indicatorcontainer" style="display: none;"><span class="ui-iggrid-colindicator ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span></div>';
+  const uiIggridIndicator = `<div class="ui-iggrid-indicatorcontainer"> </div>`;
 
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');
 
   const th1 = document.createElement('th');
-  th1.className = 'show-header';
+  th1.className = 'ui-widget-header';
   th1.setAttribute('contenteditable', 'false');
   th1.setAttribute('aria-describedby', 'aria-describedby="ListPaneDataGrid_ITEM');
   th1.setAttribute('title', 'haga clic para ordenar la columna');
-  th1.dataset['columnIndex'] = '1';
+  th1.dataset['columnIndex'] = '0';
 
   th1.innerHTML = `
-    <div class="value">
-      Item
-      <button href="#" data-toggle="detailpane" aria-label="Copiar Tabla" data-balloon-pos="up" class="copy-item" data-id="item-location">
-        <i class="far fa-clipboard"></i>
+    <span class="ui-iggrid-headertext" style="width: 100%;">
+      Item 
+      <button href="#" 
+        class="copy-item" 
+        data-id="item-location"
+        aria-label="Copiar Tabla" 
+        data-balloon-pos="up">
+         <i class="far fa-clipboard"></i>
       </button>
-    </div>
+    </span>
+
     ${uiIggridIndicator}
   `;
 
   const th2 = document.createElement('th');
-  th2.className = 'show-header';
+  th2.className = 'ui-widget-header';
   th2.setAttribute('contenteditable', 'false');
   th2.setAttribute('aria-describedby', 'aria-describedby="ListPaneDataGrid_LOCATION');
   th2.setAttribute('title', 'haga clic para ordenar la columna');
   th2.dataset['columnIndex'] = '1';
-  th2.innerHTML = `
-    <div class="value">
-      Location
-    </div>
-    ${uiIggridIndicator}
-  `;
+  th2.innerHTML = `<span class="ui-iggrid-headertext" style="width: 100%;">Location</span>${uiIggridIndicator}`;
 
   const th3 = document.createElement('th');
-  th3.className = 'show-header';
+  th3.className = 'ui-widget-header';
   th3.setAttribute('contenteditable', 'false');
   th3.setAttribute('aria-describedby', 'aria-describedby="ListPaneDataGrid_ITEM_DESC');
   th3.setAttribute('title', 'haga clic para ordenar la columna');
   th3.dataset['columnIndex'] = '2';
-  th3.textContent = `Description`;
+  th3.innerHTML = `<span class="ui-iggrid-headertext" style="width: 100%;">Description</span>${uiIggridIndicator}`;
 
   tr.append(th1, th2, th3);
   thead.appendChild(tr);

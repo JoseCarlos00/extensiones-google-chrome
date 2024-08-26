@@ -138,13 +138,6 @@
     position: relative;
   }
 
-  table tr td,
-  table tr th {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
   table tr th[aria-describedby='ListPaneDataGrid_ITEM'],
   table tr th[aria-describedby='ListPaneDataGrid_LOCATION'] {
     cursor: pointer;
@@ -157,11 +150,11 @@
       color: rgb(51, 51, 51);
     }
 
-    .ui-iggrid-indicatorcontainer {
+    /* .ui-iggrid-indicatorcontainer {
       display: block;
       float: right;
       display: none;
-    }
+    } */
   }
 
   th,

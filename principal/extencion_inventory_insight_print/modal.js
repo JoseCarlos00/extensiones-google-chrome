@@ -1,23 +1,3 @@
-function setSortTableEvent() {
-  const thItem = document.querySelector('#myModalAssigment #tableContent #ListPaneDataGrid_ITEM');
-  const thLoc = document.querySelector(
-    '#myModalAssigment #tableContent #ListPaneDataGrid_LOCATION'
-  );
-
-  // Click para ordenar elementos items o ubicacion
-  if (thItem) {
-    thItem.addEventListener('click', () => {
-      sortTable(0);
-    });
-  }
-
-  if (thLoc) {
-    thLoc.addEventListener('click', () => {
-      sortTable(1);
-    });
-  }
-}
-
 function copyToClipBoard2(e) {
   e.stopPropagation();
 

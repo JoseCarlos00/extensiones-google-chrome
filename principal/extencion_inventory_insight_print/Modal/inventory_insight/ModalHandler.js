@@ -12,6 +12,7 @@ class ModalHandler {
     this.modal = null;
     this.tbodyTable = null;
     this.tableContent = null;
+    this.uiIggridIndicator = new UiIggridIndicator();
   }
 
   async valitateElementsTable() {
@@ -123,6 +124,10 @@ class ModalHandler {
   }
 
   deleteRow(element) {
+    if (!element) {
+      throw new Error('No se encotro un elemento HTML');
+    }
+
     const trSelected = element.closest('tr');
 
     if (trSelected) {
@@ -132,22 +137,54 @@ class ModalHandler {
     }
   }
 
+  async handleSortTable(element) {
+    if (!element) {
+      throw new Error('No se encotro un elemento HTML');
+    }
+
+    const { classList, dataset } = element;
+    const columnIndex = parseInt(dataset.columnIndex, 10);
+
+    if (isNaN(columnIndex)) {
+      throw new Error('No se encontró el atributo "data-column-index" en el elemento <th>');
+    }
+
+    this.uiIggridIndicator.setElementSelected(element);
+
+    let sortOrder;
+
+    if (classList.contains('ui-iggrid-colheaderasc')) {
+      // Orden descendente
+      classList.replace('ui-iggrid-colheaderasc', 'ui-iggrid-colheaderdesc');
+      sortOrder = 'desc';
+    } else {
+      // Orden ascendente (si estaba en descendente o sin ordenar)
+      classList.remove('ui-iggrid-colheaderdesc');
+      classList.add('ui-iggrid-colheaderasc');
+      sortOrder = 'asc';
+    }
+
+    this.uiIggridIndicator.showIndicator(sortOrder);
+    sortTable({ columnIndex, table: this.tableContent, sortOrder });
+  }
+
   handleEventCLick(e) {
     const { target } = e;
-    const { classList, tagName, dataset } = target;
+    const { classList, tagName } = target;
 
     if (classList.contains('delete-row')) {
       this.deleteRow(target);
+    } else if (classList.contains('ui-iggrid-headertext')) {
+      const th = target.closest('th');
+      this.handleSortTable(th);
     }
 
     if (tagName === 'INPUT') {
       target.focus();
       target.select();
+    } else if (tagName === 'TH') {
+      this.handleSortTable(target);
     }
-
-    console.log('target:', target);
-
-    console.log('dataset:', dataset);
   }
 
   async setEventClickModalTable() {
@@ -185,7 +222,9 @@ class ModalHandler {
       );
 
       if (inputs.length == 0) {
-        console.warn('No se encontraron elementos td[aria-describedby] input:not(.exclude)');
+        console.warn(
+          '[setEventTeclas]: No se encontraron elementos td[aria-describedby] input:not(.exclude)'
+        );
         return;
       }
 
@@ -279,53 +318,43 @@ class ModalHandler {
   }
 }
 
-function showIndicator({ columnIndex, table }) {
-  const thHeader = table.querySelectorAll('thead tr th');
-
-  if (!thHeader) return;
-
-  thHeader.forEach((th, index) => {
-    const indicador = th.querySelector('.ui-iggrid-indicatorcontainer');
-
-    if (index === columnIndex) {
-      indicador && (indicador.style.display = 'block');
-    } else {
-      indicador && (indicador.style.display = 'none');
-    }
-  });
-}
-
-function sortTable(params) {
-  // showIndicator(params);
-
-  const { columnIndex, table } = params;
-
+function sortTable({ columnIndex, table, sortOrder = 'asc' }) {
   const tbody = table.querySelector('tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
 
+  if (rows.length === 0) {
+    console.warn('No se encontraron filas para ordenar');
+    return;
+  }
+
   rows.sort((a, b) => {
     // Obtener los inputs de las filas a y b
-    const inputA = a.querySelectorAll('input')[columnIndex];
-    const inputB = b.querySelectorAll('input')[columnIndex];
-
-    const tdItemA = a.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"]');
-    const tdItemB = b.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"]');
+    const inputA = a.cells[columnIndex].querySelector('input');
+    const inputB = b.cells[columnIndex].querySelector('input');
 
     // Verificar si alguna fila tiene la clase 'item-exist'
-    const hasClassA = tdItemA.classList.contains('item-exist');
-    const hasClassB = tdItemB.classList.contains('item-exist');
+    const hasClassA = a.cells[columnIndex].classList.contains('item-exist');
+    const hasClassB = b.cells[columnIndex].classList.contains('item-exist');
+
+    let comparison = 0;
 
     // Ordenar primero por 'item-exist' y luego por valor de input
     if (hasClassA && !hasClassB) {
-      return -1; // a viene antes que b
+      // return -1; // a viene antes que b
+      comparison = -1; // a viene antes que b
     } else if (!hasClassA && hasClassB) {
-      return 1; // b viene antes que a
+      // return 1; // b viene antes que a
+      comparison = 1; // b viene antes que a
     } else {
       // Ambas tienen o no tienen 'item-exist', ordenar por valor del input
       const aValue = inputA.value;
       const bValue = inputB.value;
-      return aValue.localeCompare(bValue);
+      // return aValue.localeCompare(bValue);
+      comparison = aValue.localeCompare(bValue);
     }
+
+    // Si sortOrder es 'desc', invertir la comparación
+    return sortOrder === 'desc' ? -comparison : comparison;
   });
 
   // Limpiar y reordenar las filas en el tbody
