@@ -214,12 +214,13 @@ class ModalHandler {
     }
   }
 
+  /**
+   * TODO: Refactorizar
+   */
   async setEventTeclas() {
     try {
       await this.valitateElementsTable();
-      const inputs = Array.from(
-        this.tableContent.querySelectorAll('td[aria-describedby] input:not(.exclude)')
-      );
+      const inputs = Array.from(this.tableContent.querySelectorAll('td[aria-describedby] input'));
 
       if (inputs.length == 0) {
         console.warn(
@@ -229,7 +230,7 @@ class ModalHandler {
       }
 
       inputs.forEach(cell => {
-        cell.setAttribute('tabindex', '0');
+        // cell.setAttribute('tabindex', '0');
         cell.addEventListener('keydown', handleKeydown);
       });
 
