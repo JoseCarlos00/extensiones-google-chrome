@@ -3,14 +3,14 @@ window.addEventListener(
   async () => {
     try {
       const selectoresModal = {
-        modalId: 'myModal',
+        modalId: 'myModalShowTable',
         sectionContainerClass: 'modal-container',
       };
 
       const buttonConfiguration = {
-        buttonId: 'openModalBtn',
-        iconoModal: 'fa-database',
-        textLabel: 'Crear Sentemcia SQ',
+        buttonId: 'openModalShowTable',
+        iconoModal: 'fa-clipboard',
+        textLabel: 'Abrir Modal',
         textLabelPosition: 'right',
       };
 
@@ -18,17 +18,22 @@ window.addEventListener(
       const buttonOpenModalId = buttonConfiguration.buttonId;
 
       const modalHandler = new ModalHandler({ ...selectoresModal });
-      const contentModalHtml = await getHtmlContent({ ...selectoresModal });
+      const ModalHtml = await getHtmlContent({ ...selectoresModal });
 
       const modalManager = new ModalManagerInventory({
         modalHandler,
-        contentModalHtml,
+        contentModalHtml: ModalHtml,
         buttonOpenModal,
         buttonOpenModalId,
         ...selectoresModal,
       });
 
       await modalManager.initialize();
+
+      setTimeout(async () => {
+        await insertModalInserItem();
+        modalManager.setModalInsert();
+      }, 100);
     } catch (error) {
       console.error('Error: al inicializar el modal ', error);
     }
