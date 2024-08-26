@@ -47,3 +47,51 @@ function copyToClipBoard2(e) {
   textoACopiar = textoItems.join('\n');
   copy(textoACopiar);
 }
+
+function setEventListener(elements) {
+  const { modal, modalInsert } = elements;
+
+  const closeModal = () => {
+    if (modalInsert.style.display === 'block') {
+      modalInsert.style.display = 'none';
+    } else if (modal.style.display === 'block') {
+      modal.style.display = 'none';
+    }
+  };
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  const printButtonModal = document.querySelector('#myModalAssigment #printButtonModal');
+  printButtonModal && printButtonModal.addEventListener('click', getDataForToPrint);
+
+  /** Insertar Items */
+  const btnIsertItem = document.querySelector('#myModalAssigment #registrarItems');
+  btnIsertItem && btnIsertItem.addEventListener('click', registrarDatos);
+
+  const btnsCopiarItems = document.querySelectorAll('#myModalAssigment .copy-item');
+
+  if (btnsCopiarItems) {
+    btnsCopiarItems.forEach(button => {
+      button.addEventListener('click', copyToClipBoard);
+    });
+  }
+
+  function getDataForToPrint() {
+    const theadToPrint = document.querySelector('#myModalAssigment #tableContent > thead');
+    const tbodyToPrint = document.querySelector('#myModalAssigment #tableContent > tbody');
+
+    if (!tbodyToPrint || !theadToPrint) return;
+
+    // Envía un mensaje al script de fondo para solicitar la apertura de una nueva pestaña
+    if (chrome.runtime) {
+      chrome.runtime.sendMessage({
+        command: 'openNewTab',
+        theadToPrint: theadToPrint.innerHTML,
+        tbodyToPrint: tbodyToPrint.innerHTML,
+        type: 'modal',
+      });
+    }
+  }
+}

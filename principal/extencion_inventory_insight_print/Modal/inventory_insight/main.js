@@ -30,7 +30,10 @@ window.addEventListener(
 
       await modalManager.initialize();
 
-      setTimeout(async () => await insertModalInserItem(), 100);
+      setTimeout(async () => {
+        await insertModalInserItem();
+        modalManager.setModalInsert();
+      }, 100);
     } catch (error) {
       console.error('Error: al inicializar el modal ', error);
     }
