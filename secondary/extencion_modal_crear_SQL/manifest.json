@@ -45,6 +45,20 @@
         "highlight/vs.css",
         "inventory_insight/style.css"
       ]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
+      "js": [
+        "ButtonOpenModal.js",
+        "ModalManager.js",
+        "ToastAlert.js",
+        "ModaCreateHTML.js",
+        "shipment_line_insight/ModalManagerShippingContainer.js",
+        "shipment_line_insight/ModalHandler.js",
+        "shipment_line_insight/modalContent.js",
+        "shipment_line_insight/main.js"
+      ],
+      "css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
     }
   ],
   "action": {
