@@ -13,6 +13,8 @@ class ModalHandlerInsertItem {
     this.formItem = null;
     this.inserItem = null;
     this.datos = [];
+    this.btnGetSentence = null;
+    this.tableContent = null;
   }
 
   datosReset() {
@@ -22,9 +24,84 @@ class ModalHandlerInsertItem {
   async initialVatiables() {
     this.formItem = document.getElementById('formInsertItem');
     this.inserItem = this.formItem.inserItem;
+    this.btnGetSentence = document.getElementById('get-sentece');
+    this.tableContent = document.querySelector('#myModalShowTable #tableContent');
   }
 
-  insertarItems() {
+  #isTableEmptyOrSingleRow() {
+    return new Promise(resolve => {
+      const firsrRow = this.tableContent.querySelector('td');
+      const txt = firsrRow ? firsrRow.textContent.trim().toLowerCase() : '';
+
+      if (!firsrRow || txt.includes('no hay datos')) {
+        resolve(true);
+        return;
+      }
+
+      resolve(false);
+    });
+  }
+
+  #getItemsFromTable({ rows }) {
+    const itemSelector = `td[aria-describedby='ListPaneDataGrid_ITEM'] input`;
+
+    const getElementValue = (element, selector) => {
+      const el = element.querySelector(selector);
+      return el ? el.value.trim() : '';
+    };
+
+    const itemSql = rows
+      .map(row => `'${getElementValue(row, itemSelector)}'`)
+      .filter(Boolean)
+      .join(',\n');
+
+    return itemSql;
+  }
+
+  async #generateSentenceSQL({ rows }) {
+    const items = await this.#getItemsFromTable({ rows });
+
+    if (!items) {
+      console.warn('No se encontreo contenido para la consulta');
+      return;
+    }
+
+    const sentece = `SELECT DISTINCT item\nFROM item_location_assignment\nWHERE item\nIN (
+    ${items}
+    )`;
+
+    return sentece;
+  }
+
+  async #obtenerSentencia(e) {
+    e.preventDefault();
+
+    const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
+
+    if (rows.length <= 1) {
+      const result = await this.#isTableEmptyOrSingleRow();
+
+      if (result) {
+        console.warn('No hay filas en la tabla');
+        ToastAlert.showAlertFullTop('No hay filas en la tabla', 'info');
+      }
+
+      return;
+    }
+
+    const texto = this.#generateSentenceSQL({ rows });
+
+    if (!texto) {
+      console.warn('El texto generado está vacío');
+      ToastAlert.showAlertFullTop('No se pudo generar texto para copiar', 'warning');
+      return;
+    }
+
+    // Copia el texto al portapapeles
+    copyToClipboard(texto);
+  }
+
+  #insertarItems() {
     const table = document.querySelector('#myModalShowTable #tableContent');
     const rows = Array.from(table.querySelectorAll('tbody tr'));
 
@@ -45,7 +122,7 @@ class ModalHandlerInsertItem {
     this.datosReset();
   }
 
-  registrarDatos(e) {
+  #registrarDatos(e) {
     e.preventDefault();
 
     const { inserItem, formItem, datos } = this;
@@ -84,25 +161,31 @@ class ModalHandlerInsertItem {
     inserItem.classList.remove('is-invalid');
     formItem.reset();
 
-    setTimeout(() => this._closeModal(), 100);
+    setTimeout(() => this.#closeModal(), 100);
 
     // Insertar datos
-    this.insertarItems();
+    this.#insertarItems();
   }
 
-  setEventListenerS() {
-    if (!this.formItem) {
-      throw new Error('No se encontro el formulalio #formInsertItem');
+  #setEventListenerS() {
+    if (this.formItem) {
+      this.formItem.addEventListener('submit', e => this.#registrarDatos(e));
+    } else {
+      console.error('No se encontro el formulario #formInsertItem');
     }
 
-    this.formItem.addEventListener('submit', e => this.registrarDatos(e));
+    if (this.btnGetSentence) {
+      this.btnGetSentence.addEventListener('click', e => this.#obtenerSentencia(e));
+    } else {
+      throw new Error('No se encontro el boton #btnGetSentence');
+    }
   }
 
-  async _openModal() {
+  async #openModal() {
     this.modal.style.display = 'block';
   }
 
-  async _closeModal() {
+  async #closeModal() {
     this.modal.style.display = 'none';
   }
 
@@ -115,7 +198,7 @@ class ModalHandlerInsertItem {
       this.modal = modal;
 
       await this.initialVatiables();
-      this.setEventListenerS();
+      this.#setEventListenerS();
     } catch (error) {
       console.error(`Error en setModalElement: ${error}`);
     }
@@ -123,7 +206,7 @@ class ModalHandlerInsertItem {
 
   async handleOpenModal() {
     try {
-      await this._openModal();
+      await this.#openModal();
 
       if (this.inserItem) {
         setTimeout(() => this.inserItem.focus(), 50);
