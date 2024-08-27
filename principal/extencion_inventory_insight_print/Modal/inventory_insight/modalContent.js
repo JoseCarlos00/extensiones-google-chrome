@@ -1,12 +1,115 @@
+const storedState = localStorage.getItem('storedStateHide');
+
+const configurationInitial = {
+  'copy-table': {
+    name: 'Copiar Tabla',
+    hide: false,
+  },
+  'insert-item': {
+    name: 'Insertar Item',
+    hide: true,
+  },
+  'copy-item': {
+    name: 'Copiar Item',
+    hide: true,
+  },
+  'counter-row': {
+    name: 'Contar Filas',
+    hide: false,
+  },
+};
+
+const configurationElementHide = JSON.parse(storedState) ?? configurationInitial;
+
+const validateProperty = (value, property) => {
+  const config = configurationElementHide[value];
+
+  if (!config) {
+    console.warn(`No se encontró configuración para el valor: ${value}`);
+    return '';
+  }
+
+  const mapCase = {
+    className: config.hide ? 'hidden' : '',
+    iconName: config.hide ? 'hide' : 'show',
+  };
+
+  if (!mapCase[property]) {
+    console.warn(`Propiedad no válida: ${property}`);
+    return '';
+  }
+
+  return mapCase[property];
+};
+
+const hideMenu = `
+ <a id="hide-elements" role="button" tabindex="0" href="javascript:void(0)" title="Ocultar elementos">
+    <span class="ui-iggrid-featurechooserbutton ui-icon ui-icon-gear"></span>
+  </a>
+
+  <div class="ui-widget ui-igpopover hidden" id="ListPaneDataGrid_popover">
+
+    <div class="ui-igpopover-arrow ui-igpopover-arrow-top"></div>
+
+    <div class="ui-widget-content ui-corner-all">
+      <div style="position: relative;">
+
+        <ul id="list-elements" class="ui-corner-all ui-menu ui-widget ui-widget-content ul-container">
+
+          <li class="li-item" data-hide="copy-table" title="Ocultar">
+            <span class="ui-icon ui-iggrid-icon-${validateProperty(
+              'copy-table',
+              'iconName'
+            )}"></span>
+            <span class="value">Copiar Tabla</span>
+          </li>
+          <li class="ui-iggrid-featurechooser-separator"></li>
+
+          <li class="li-item" data-hide="insert-item" title="Ocultar">
+            <span class="ui-icon ui-iggrid-icon-${validateProperty(
+              'insert-item',
+              'iconName'
+            )}"></span>
+            <span class="value">Insertar Item</span>
+          </li>
+          <li class="ui-iggrid-featurechooser-separator"></li>
+
+          <li class="li-item" data-hide="copy-item" title="Ocultar">
+            <span class="ui-icon ui-iggrid-icon-${validateProperty(
+              'copy-item',
+              'iconName'
+            )}"></span>
+            <span class="value">Copiar Item</span>
+          </li>
+          <li class="ui-iggrid-featurechooser-separator"></li>
+
+          <li class="li-item" data-hide="counter-row" title="Ocultar">
+            <span class="ui-icon ui-iggrid-icon-${validateProperty(
+              'counter-row',
+              'iconName'
+            )}"></span>
+            <span class="value">Contar Filas</span>
+          </li>
+          <li class="ui-iggrid-featurechooser-separator"></li>
+
+        </ul>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+`;
+
 const buttons = `
     <button id='printButtonModal' aria-label="Imprimir Tabla" data-balloon-pos="up" class="print-button-modal" style="display: none;">
         <i class="far fa-print"></i>
     </button>
 
+    ${hideMenu}
+
     <div class="container-group">
      <button 
         id="copy-table"
-        class="copy-table" 
+        class="copy-table ${validateProperty('copy-table', 'className')}" 
         data-id="item-location"
         aria-label="Item y Location" 
         data-balloon-pos="up">
@@ -14,15 +117,26 @@ const buttons = `
          <i class="far fa-copy"></i>
       </button>
 
-      <button id='insertItemModal' class="insert-item" data-id="item-sql" aria-label="Insertar Item" data-balloon-pos="up">
+      <button id='insertItemModal' 
+        class="insert-item ${validateProperty('insert-item', 'className')}"
+        data-id="item-sql" 
+        aria-label="Insertar Item" 
+        data-balloon-pos="up">
           <i class="far fa-plus"></i>
       </button>
 
-      <button id='copy-items' class="copy-item" data-id="item-sql" aria-label="Copy Item SQL" data-balloon-pos="up">
+      <button id='copy-items' 
+        class="copy-item ${validateProperty('copy-item', 'className')}" 
+        data-id="item-sql" 
+        aria-label="Copy Item SQL" 
+        data-balloon-pos="up">
           <i class="far fa-database"></i>
       </button>
 
-      <span id="rowCounter" class="row-counter">Filas: 0</span>
+      <span id="rowCounter" class="row-counter ${validateProperty(
+        'counter-row',
+        'className'
+      )}">Filas: 0</span>
     </div>
   `;
 
