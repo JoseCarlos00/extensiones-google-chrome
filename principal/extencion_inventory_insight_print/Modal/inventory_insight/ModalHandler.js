@@ -12,6 +12,8 @@ class ModalHandler {
     this._modal = null;
     this._tbodyTable = null;
     this._tableContent = null;
+    this._listPaneDataGridPopover = null;
+    this._prefix = '#myModalShowTable';
   }
 
   async _valitateElementsTable() {
@@ -104,7 +106,22 @@ class ModalHandler {
 
   async _initialVariables() {
     this._tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
-    this._tableContent = document.querySelector('#myModalShowTable #tableContent');
+    this._tableContent = document.querySelector(`${this._prefix} #tableContent`);
+    this._listPaneDataGridPopover = document.querySelector(
+      `${this._prefix} #ListPaneDataGrid_popover`
+    );
+
+    if (!this._tbodyTable) {
+      throw new Error('No se encontro el elemento #ListPaneDataGrid tbody');
+    }
+
+    if (!this._tableContent) {
+      throw new Error('No se encontro el elemento #tableContent');
+    }
+
+    if (!this._listPaneDataGridPopover) {
+      throw new Error('No se encontro el elemento #ListPaneDataGrid_popover');
+    }
   }
 
   _focusFirstInput() {
@@ -123,9 +140,8 @@ class ModalHandler {
   }
 
   _setEventsForCopyButtons() {
-    const prefix = '#myModalShowTable';
-    const copytable = document.querySelector(`${prefix} #copy-table`);
-    const copyItems = document.querySelector(`${prefix} #copy-items`);
+    const copytable = document.querySelector(`${this._prefix} #copy-table`);
+    const copyItems = document.querySelector(`${this._prefix} #copy-items`);
 
     const eventManager = new EventManagerCopy();
 
@@ -153,6 +169,7 @@ class ModalHandler {
   async _setEventClickModalTable() {
     try {
       await this._valitateElementsTable();
+
       const eventManager = new EventManager({
         updateRowCounter: this._updateRowCounter,
         tableContent: this._tableContent,
@@ -168,15 +185,13 @@ class ModalHandler {
   }
 
   _setEventHideElement() {
-    const prefix = '#myModalShowTable';
-    const btnHideElement = document.querySelector(`${prefix} #hide-elements`);
+    const btnHideElement = document.querySelector(`${this._prefix} #hide-elements`);
 
-    const ulList = document.querySelector(`${prefix} #list-elements`);
-    const listPaneDataGridPopover = document.querySelector(`${prefix} #ListPaneDataGrid_popover`);
+    const ulList = document.querySelector(`${this._prefix} #list-elements`);
 
-    if (btnHideElement) {
+    if (btnHideElement && this._listPaneDataGridPopover) {
       btnHideElement.addEventListener('click', e => {
-        listPaneDataGridPopover && listPaneDataGridPopover.classList.toggle('hidden');
+        this._listPaneDataGridPopover.classList.toggle('hidden');
       });
     } else {
       console.warn('No se encontró el elemento #hide-elements');

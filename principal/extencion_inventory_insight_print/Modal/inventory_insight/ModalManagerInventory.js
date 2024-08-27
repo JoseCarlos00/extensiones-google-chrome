@@ -2,6 +2,12 @@ class ModalManagerInventory extends ModalManager {
   constructor(configuration) {
     super(configuration);
     this.modalInsert = null;
+    this._listPaneDataGridPopover = null;
+  }
+
+  modalFunction() {
+    super.modalFunction();
+    this.setListPaneDataGridPopover();
   }
 
   setEventListeners() {
@@ -25,13 +31,31 @@ class ModalManagerInventory extends ModalManager {
           if (this.modalInsert.style.display === 'block') {
             this.modalInsert.style.display = 'none';
           } else if (this.modalElement.style.display === 'block') {
-            this.modalElement.style.display = 'none';
+            const isHide = this._listPaneDataGridPopover.classList.contains('hidden');
+
+            if (isHide) {
+              this.closeModal();
+            } else {
+              this._listPaneDataGridPopover.classList.add('hidden');
+            }
           }
         } else if (this.modalElement.style.display === 'block') {
-          this.closeModal();
+          const isHide = this._listPaneDataGridPopover.classList.contains('hidden');
+
+          if (isHide) {
+            this.closeModal();
+          } else {
+            this._listPaneDataGridPopover.classList.add('hidden');
+          }
         }
       }
     });
+  }
+
+  setListPaneDataGridPopover() {
+    this._listPaneDataGridPopover = document.querySelector(
+      '#myModalShowTable #ListPaneDataGrid_popover'
+    );
   }
 
   setModalInsert() {

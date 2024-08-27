@@ -9,6 +9,10 @@ class EventManager {
     const { target, type } = ev;
     const { nodeName } = target;
 
+    console.log('target:', target);
+    console.log('nodeName:', nodeName);
+    console.log('type:', type);
+
     if (type === 'click') {
       this.#handleClick(target, nodeName);
     }
@@ -188,13 +192,6 @@ class EventManagerCopy {
 
 function getValueLocalStorage() {
   const storedState = localStorage.getItem('storedStateHide');
-
-  const configurationInitial = {
-    'copy-table': { name: 'Copiar Tabla', hide: false },
-    'insert-item': { name: 'Insertar Item', hide: true },
-    'copy-item': { name: 'Copiar Item', hide: true },
-    'counter-row': { name: 'Contar Filas', hide: false },
-  };
 
   return JSON.parse(storedState) ?? configurationInitial;
 }

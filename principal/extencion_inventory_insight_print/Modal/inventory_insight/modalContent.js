@@ -30,12 +30,12 @@ const validateProperty = (value, property) => {
   }
 
   const mapCase = {
-    className: config.hide ? 'hidden' : '',
+    className: config.hide ? 'hidden' : 'show',
     iconName: config.hide ? 'hide' : 'show',
   };
 
   if (!mapCase[property]) {
-    console.warn(`Propiedad no válida: ${property}`);
+    console.warn(`Propiedad no válida: [${property}]`);
     return '';
   }
 
