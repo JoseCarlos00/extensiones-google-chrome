@@ -1,20 +1,23 @@
 class EventManager {
-  constructor({ updateRowCounter, tableContent }) {
+  constructor({ updateRowCounter, tableContent, list }) {
     this._tableContent = tableContent;
     this._uiIggridIndicator = new UiIggridIndicator();
     this._updateRowCounter = updateRowCounter;
+    this._list = list;
   }
 
   handleEvent({ ev }) {
     const { target, type } = ev;
     const { nodeName } = target;
 
-    console.log('target:', target);
-    console.log('nodeName:', nodeName);
-    console.log('type:', type);
+    const isHide = this._list.classList.contains('hidden');
 
     if (type === 'click') {
-      this.#handleClick(target, nodeName);
+      if (isHide) {
+        this.#handleClick(target, nodeName);
+      } else {
+        this._list.classList.add('hidden');
+      }
     }
   }
 

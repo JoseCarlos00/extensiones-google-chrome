@@ -173,9 +173,15 @@ class ModalHandler {
       const eventManager = new EventManager({
         updateRowCounter: this._updateRowCounter,
         tableContent: this._tableContent,
+        list: this._listPaneDataGridPopover,
       });
 
       this._tableContent.addEventListener('click', e => eventManager.handleEvent({ ev: e }));
+      this._modal.querySelector('.modal-content').addEventListener('click', e => {
+        if (e.target.classList.contains('modal-content')) {
+          eventManager.handleEvent({ ev: e });
+        }
+      });
     } catch (error) {
       console.warn(
         'Error: Ha ocurrido un error al crear el Evento click en #tableContent: ',
