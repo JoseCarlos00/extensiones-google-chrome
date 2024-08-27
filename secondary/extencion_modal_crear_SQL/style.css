@@ -144,6 +144,12 @@ pre.postition-relative:hover > .btn-copy-code {
   outline: 2px solid red !important;
 }
 
+pre code .input {
+  display: inline-block;
+  box-shadow: 0px 0px 3px 0px #000;
+  width: 50px;
+}
+
 .btn-copy-code:hover .copy,
 .copy:hover {
   background-color: #000 !important;

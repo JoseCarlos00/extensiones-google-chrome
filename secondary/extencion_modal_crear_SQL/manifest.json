@@ -53,10 +53,24 @@
         "ModalManager.js",
         "ToastAlert.js",
         "ModaCreateHTML.js",
-        "shipment_line_insight/ModalManagerShippingContainer.js",
+        "shipment_line_insight/ModalManagerShipmentLineInsight.js",
         "shipment_line_insight/ModalHandler.js",
         "shipment_line_insight/modalContent.js",
         "shipment_line_insight/main.js"
+      ],
+      "css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
+      "js": [
+        "ButtonOpenModal.js",
+        "ModalManager.js",
+        "ToastAlert.js",
+        "ModaCreateHTML.js",
+        "shipment_insight/ModalManagerShipmentInsight.js",
+        "shipment_insight/ModalHandler.js",
+        "shipment_insight/modalContent.js",
+        "shipment_insight/main.js"
       ],
       "css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
     }

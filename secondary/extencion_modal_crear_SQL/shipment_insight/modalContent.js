@@ -16,11 +16,12 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
   </button>`;
 
   const contenModal = `
-<pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipment_detail
+<pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipment_header
   <span class="hljs-keyword">SET</span> 
-    status1 <span class="hljs-operator">=</span> <span class="hljs-number input" id="status1" contenteditable="true"></span>
-<span class="hljs-keyword">WHERE</span> internal_shipment_line_num 
-  <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal_shipment_line_num" contenteditable="true"></span>
+    trailing_sts <span class="hljs-operator">=</span> <span class="hljs-number input" id="trailing_sts" contenteditable="true" style="margin-bottom: 6px;"></span>
+    leading_sts <span class="hljs-operator">=</span> <span class="hljs-number input" id="leading" contenteditable="true"></span>
+<span class="hljs-keyword">WHERE</span> internal_shipment_num 
+  <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal_shipment_num" contenteditable="true"></span>
   );</code>
 </pre>
 `;
