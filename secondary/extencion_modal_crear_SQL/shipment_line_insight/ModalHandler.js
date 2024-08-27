@@ -12,11 +12,12 @@ class ModalHandler {
     this.modal = null;
     this.tbody = document.querySelector('#ListPaneDataGrid > tbody');
     this.internalDataSelector = {
-      internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
+      internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_LINE_NUM']",
     };
     this.prefix = '#myModal .modal-content ';
     this.internalShipmentNum = null;
     this.status1 = null;
+    this._selectedRows = [];
   }
 
   #setinternalShipmentNum() {
@@ -27,42 +28,56 @@ class ModalHandler {
     this.status1 = document.querySelector(`${this.prefix} #status1`);
   }
 
-  async #getInternalData(rows) {
+  #resetInternalNumber() {
+    this.internalShipmentNum.textContent = '';
+  }
+
+  async #getRowsSelected() {
+    const rows = Array.from(this.tbody.rows);
+
     if (rows.length === 0) {
-      console.error('No se enontraron filas');
+      console.warn('No se encontraron th[data-role="checkbox"]');
+      return null;
+    }
+
+    const selectedRows = rows.filter(row => {
+      const checkbox = row.querySelector('th span[name="chk"]');
+
+      if (checkbox) {
+        const { chk } = checkbox.dataset;
+        return chk === 'on';
+      }
+    });
+
+    this._selectedRows = selectedRows;
+  }
+
+  async #getInternalData() {
+    if (!this._selectedRows.length === 0) {
+      console.warn('No se enontraron filas');
       return;
     }
 
-    const internalData = rows
-      .map(item => {
-        const internalNumber = item
-          .querySelector(this.internalDataSelector.internalNumber)
-          ?.textContent.trim();
-
-        return `'${internalNumber}'`;
-      })
+    const internalNumbers = this._selectedRows
+      .map(row => row.querySelector(this.internalDataSelector.internalNumber)?.textContent.trim())
       .filter(Boolean)
-      .join('\n');
+      .map((text, index) => {
+        const prefix = index === 0 ? `\n  ` : `  `;
 
-    return internalData;
+        return `${prefix}'${text}'`;
+      });
+
+    return internalNumbers;
   }
 
   async #setInternalData() {
-    const internalData = await this.#getInternalData();
-  }
+    this.#resetInternalNumber();
 
-  async #processInternalTableData() {
-    if (!this.tbody) {
-      throw new Error('No se encontro el elemento <tbody>');
+    const internalNumbers = await this.#getInternalData();
+
+    if (internalNumbers.length > 0) {
+      this.internalShipmentNum.textContent = internalNumbers.join(',\n');
     }
-
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-
-    if (rows.length === 0) {
-      throw new Error('No se encontraron filas en el <tbody>');
-    }
-
-    await this.#getInternalData(rows);
   }
 
   async #openModal() {
@@ -87,6 +102,8 @@ class ModalHandler {
     try {
       await this.#openModal();
       this.status1.focus();
+      await this.#getRowsSelected();
+      await this.#setInternalData();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error}`);
     }
@@ -94,14 +111,16 @@ class ModalHandler {
 
   handleCopyToClipBoar() {
     try {
-      const texto = '';
-      const codeText = document.querySelector('code.language-sql')?.textContent;
+      const codeText = document.querySelector('code.language-sql');
+      const texto = codeText ? codeText.textContent : '';
 
-      if (texto) {
-        copyToClipboard(texto);
+      if (!texto) {
+        console.warn('El texto generado está vacío');
+        ToastAlert.showAlertFullTop('No se pudo generar texto para copiar', 'warning');
+        return;
       }
 
-      console.log('codeText\n', codeText);
+      copyToClipboard(texto);
     } catch (error) {
       console.error(`Error en handleCopyToClipBoar: ${error}`);
       return;
