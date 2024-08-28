@@ -113,8 +113,7 @@ const buttons = `
         data-id="item-location"
         aria-label="Item y Location" 
         data-balloon-pos="up">
-        Copiar Tabla
-         <i class="far fa-copy"></i>
+        <i class="far fa-copy"></i> Copiar Tabla
       </button>
 
       <button id='insertItemModal' 
