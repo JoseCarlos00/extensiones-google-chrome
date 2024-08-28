@@ -66,9 +66,7 @@ class ModalHandlerInsertItem {
       return;
     }
 
-    const sentece = `SELECT DISTINCT item\nFROM item_location_assignment\nWHERE item\nIN (
-    ${items}
-    )`;
+    const sentece = `SELECT DISTINCT item\n\nFROM item_location_assignment\n\nWHERE item\nIN (\n${items}\n  );`;
 
     return sentece;
   }
@@ -89,7 +87,7 @@ class ModalHandlerInsertItem {
       return;
     }
 
-    const texto = this.#generateSentenceSQL({ rows });
+    const texto = await this.#generateSentenceSQL({ rows });
 
     if (!texto) {
       console.warn('El texto generado está vacío');
