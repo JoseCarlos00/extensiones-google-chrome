@@ -79,7 +79,7 @@ const hideMenu = `
               'copy-item',
               'iconName'
             )}"></span>
-            <span class="value">Copiar Item</span>
+            <span class="value">Generar SQL</span>
           </li>
           <li class="ui-iggrid-featurechooser-separator"></li>
 
@@ -123,14 +123,43 @@ const buttons = `
         data-balloon-pos="up">
           <i class="far fa-plus"></i>
       </button>
+      
+      <div class="tooltip-container">
 
       <button id='copy-items' 
         class="copy-item ${validateProperty('copy-item', 'className')}" 
-        data-id="item-sql" 
-        aria-label="Copy Item SQL" 
-        data-balloon-pos="up">
+        data-id="item-sql"
+        >
           <i class="far fa-database"></i>
       </button>
+       
+      <div class="tooltip-content">
+          <div class="button-container">
+            <button class="button" data-tooltip="Update Capacity" data-id="update-capacity">
+              <i class="far fa-code"></i>
+              <i class="far fa-location-arrow"></i>
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+
+          <div class="button-container">
+            <button class="button" data-tooltip="Items Exist Assignment" data-id="item-exist">
+              <i class="far fa-code"></i>
+              <i class="far fa-location-arrow"></i>
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+
+          <div class="button-container">
+            <button class="button" data-tooltip="Items Formato SQL" data-id="item-sql">
+              <i class="far fa-code"></i>
+              <i class="far fa-location-arrow"></i>
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
 
       <span id="rowCounter" class="row-counter ${validateProperty(
         'counter-row',

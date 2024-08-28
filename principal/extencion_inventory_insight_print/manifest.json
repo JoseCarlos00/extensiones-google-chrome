@@ -43,7 +43,12 @@
         "modal/inventory_insight/Moda_Insert_Item/modalContent.js",
         "modal/inventory_insight/Moda_Insert_Item/main.js"
       ],
-      "css": ["style.css", "balloon.css", "modal/inventory_insight/hide.css"]
+      "css": [
+        "style.css",
+        "balloon.css",
+        "modal/inventory_insight/hide.css",
+        "modal/inventory_insight/tooltip.css"
+      ]
     }
   ],
   "web_accessible_resources": [

@@ -141,28 +141,37 @@ class ModalHandler {
 
   _setEventsForCopyButtons() {
     const copytable = document.querySelector(`${this._prefix} #copy-table`);
-    const copyItems = document.querySelector(`${this._prefix} #copy-items`);
 
-    const eventManager = new EventManagerCopy();
+    const tooltipContainer = document.querySelector(
+      `${this._prefix} .tooltip-container .tooltip-content`
+    );
+
+    const eventManager = new EventManagerCopy({
+      list: this._listPaneDataGridPopover,
+      tableContent: this._tableContent,
+    });
 
     if (!eventManager) {
       throw new Error('No se encontró el EventManager');
     }
 
     if (copytable) {
-      copytable.addEventListener('click', e =>
-        eventManager.handleEvent({ ev: e, tableContent: this._tableContent })
-      );
+      copytable.addEventListener('click', e => eventManager.handleEvent({ ev: e }));
     } else {
       console.warn('No se encontró el elemento #copy-table');
     }
 
-    if (copyItems) {
-      copyItems.addEventListener('click', e =>
-        eventManager.handleEvent({ ev: e, tableContent: this._tableContent })
-      );
+    if (tooltipContainer) {
+      tooltipContainer.addEventListener('click', e => {
+        const { target } = e;
+        const { nodeName } = target;
+
+        if (nodeName === 'BUTTON') {
+          eventManager.handleEvent({ ev: e });
+        }
+      });
     } else {
-      console.warn('No se encontró el elemento #copy-items');
+      console.warn('No se encontró el elemento .tooltip-container .tooltip-content');
     }
   }
 

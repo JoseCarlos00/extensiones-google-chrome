@@ -78,16 +78,17 @@ class EventManager {
 }
 
 class EventManagerCopy {
-  elemetSelected = null;
-  tableContent = null;
-  selector = {
-    item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
-    location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
-  };
-
-  handleEvent({ ev, tableContent }) {
+  constructor({ list, tableContent }) {
+    this._list = list;
     this.tableContent = tableContent;
+    this.elemetSelected = null;
+    this.selector = {
+      item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
+      location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
+    };
+  }
 
+  handleEvent({ ev }) {
     const { target: element, type } = ev;
     const { nodeName } = ev.target;
 
@@ -98,6 +99,7 @@ class EventManagerCopy {
         this.elemetSelected = element;
       }
 
+      this._list.classList.add('hidden');
       this.#handleOnClick();
     }
   }
@@ -133,9 +135,21 @@ class EventManagerCopy {
         .filter(Boolean)
         .join('\n');
 
+    const itemExist = () => {
+      const items = itemSql();
+      return `SELECT DISTINCT item\n\nFROM item_location_assignment\n\nWHERE item\nIN (\n${items}\n  );`;
+    };
+
+    const updateCapacity = () => {
+      const items = itemSql();
+      return `UPDATE item_location_capacity\nSET\nMAXIMUM_QTY = 2,\nQUANTITY_UM = 'CJ',\nMINIMUM_RPLN_PCT = 50\n\nWHERE location_type = 'Generica Permanente S'\nAND item IN (\n${items}\n  );`;
+    };
+
     const handleCopyMap = {
       'item-sql': itemSql,
       'item-location': itemLocation,
+      'item-exist': itemExist,
+      'update-capacity': updateCapacity,
     };
 
     // Verifica si el id es válido
@@ -163,6 +177,10 @@ class EventManagerCopy {
 
   async #handleCopyToClipBoar(id) {
     try {
+      if (!this.tableContent) {
+        throw new Error('Error:[handleCopyToClipBoar] No se encontro la pripiedad [tableContent]');
+      }
+
       const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
 
       if (rows.length <= 1) {
