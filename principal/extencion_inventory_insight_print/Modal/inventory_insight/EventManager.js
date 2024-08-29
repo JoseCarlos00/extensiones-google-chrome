@@ -241,6 +241,7 @@ class EventManagerHideElement {
     this.elementsMap = {
       'copy-table': document.querySelector(`${this.#prefix} #copy-table`),
       'insert-item': document.querySelector(`${this.#prefix} #insertItemModal`),
+      'insert-row': document.querySelector(`${this.#prefix} #insertRow`),
       'copy-item': document.querySelector(`${this.#prefix} #copy-items`),
       'counter-row': document.querySelector(`${this.#prefix} #rowCounter`),
     };

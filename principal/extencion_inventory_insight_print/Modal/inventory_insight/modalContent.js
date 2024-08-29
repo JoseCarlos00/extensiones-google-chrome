@@ -9,6 +9,10 @@ const configurationInitial = {
     name: 'Insertar Item',
     hide: true,
   },
+  'insert-row': {
+    name: 'Insertar Fila',
+    hide: true,
+  },
   'copy-item': {
     name: 'Copiar Item',
     hide: true,
@@ -74,6 +78,15 @@ const hideMenu = `
           </li>
           <li class="ui-iggrid-featurechooser-separator"></li>
 
+           <li class="li-item" data-hide="insert-row" title="Ocultar">
+            <span class="ui-icon ui-iggrid-icon-${validateProperty(
+              'insert-row',
+              'iconName'
+            )}"></span>
+            <span class="value">Insertar Fila</span>
+          </li>
+          <li class="ui-iggrid-featurechooser-separator"></li>
+
           <li class="li-item" data-hide="copy-item" title="Ocultar">
             <span class="ui-icon ui-iggrid-icon-${validateProperty(
               'copy-item',
@@ -120,6 +133,14 @@ const buttons = `
         class="insert-item ${validateProperty('insert-item', 'className')}"
         data-id="item-sql" 
         aria-label="Insertar Item" 
+        data-balloon-pos="up">
+          <i class="far fa-plus"></i>
+      </button>
+
+      <button id='insertRow' 
+        class="insert-item ${validateProperty('insert-row', 'className')}"
+        data-id="insert-row" 
+        aria-label="Insertar Fila" 
         data-balloon-pos="up">
           <i class="far fa-plus"></i>
       </button>
