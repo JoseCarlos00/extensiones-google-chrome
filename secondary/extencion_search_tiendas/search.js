@@ -11,15 +11,13 @@ class SearchStore {
       this.#initializeVariables();
       this.#addEventListeners();
     } catch (error) {
-      console.error('Error: Ha ocurido un error al inicializar [Search Store]');
+      console.error('Error: Ha ocurido un error al inicializar [Search Store]:', error);
     }
   }
 
   #insertElemet() {
     return new Promise((resolve, reject) => {
-      const ul = document.querySelector(
-        '#topNavigationBar > nav > ul.nav.navbar-nav.navbar-right.navbarposition.navbarmargin.insight'
-      );
+      const ul = document.querySelector('#topNavigationBar > nav > ul.nav.navbar-nav.navbar-right');
 
       if (!ul) {
         reject('No se enotro el elemento a insertar <ul>');
