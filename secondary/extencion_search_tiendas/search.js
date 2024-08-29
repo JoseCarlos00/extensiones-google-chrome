@@ -1,0 +1,1 @@
+// window.addEventListener('load', () => new ContextMenuHandler(), { once: true });
