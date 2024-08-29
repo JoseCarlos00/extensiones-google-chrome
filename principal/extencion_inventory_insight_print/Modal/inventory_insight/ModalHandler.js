@@ -40,7 +40,8 @@ class ModalHandler {
       const newTbody = document.createElement('tbody');
 
       if (rows.length === 0) {
-        newTbody.innerHTML = '<tr><td colspan="3">No hay datos para mostrar</td></tr>';
+        newTbody.innerHTML =
+          '<tr><td colspan="3">No hay datos para mostrar <div class="delete-row"></div></td></tr>';
         return newTbody;
       }
 
@@ -220,6 +221,81 @@ class ModalHandler {
     }
   }
 
+  async _createNewRow() {
+    const tr = document.createElement('tr');
+
+    const tdItem = document.createElement('td');
+    tdItem.innerHTML = `<input value="" tabindex="0" class="input-text">`;
+    tdItem.setAttribute('aria-describedby', 'ListPaneDataGrid_ITEM');
+    tr.prepend(tdItem);
+
+    const tdLoc = document.createElement('td');
+    tdLoc.innerHTML = `<input value="" tabindex="0" class="input-text">`;
+    tdLoc.setAttribute('aria-describedby', 'ListPaneDataGrid_LOCATION');
+    tr.appendChild(tdLoc);
+
+    const tdItemDesc = document.createElement('td');
+    tdItemDesc.innerHTML = `<input value="" class="input-text exclude" tabindex="-1">`;
+    tdItemDesc.setAttribute('aria-describedby', 'ListPaneDataGrid_ITEM_DESC');
+
+    const divDelete = document.createElement('div');
+    divDelete.className = 'delete-row';
+    tdItemDesc.appendChild(divDelete);
+
+    tr.appendChild(tdItemDesc);
+
+    return tr;
+  }
+
+  #isTableEmptyOrSingleRow() {
+    return new Promise(resolve => {
+      const firsrRow = this._tableContent.querySelector('td');
+      const txt = firsrRow ? firsrRow.textContent.trim().toLowerCase() : '';
+
+      if (!firsrRow || txt.includes('no hay datos')) {
+        firsrRow.remove();
+        resolve(true);
+        return;
+      }
+
+      resolve(false);
+    });
+  }
+
+  async _insertNewRow() {
+    try {
+      await this._valitateElementsTable();
+
+      const tbodyExist = this._tableContent.querySelector('tbody');
+      const newRow = await this._createNewRow();
+
+      if (tbodyExist) {
+        await this.#isTableEmptyOrSingleRow();
+        tbodyExist.appendChild(newRow);
+      } else {
+        const newTbody = document.createElement('tbody');
+        newTbody.appendChild(newRow);
+        this._tableContent.appendChild(newTbody);
+      }
+    } catch (error) {
+      console.error(
+        'Error: [insertNewRow] Ha Ocurrido un error al insertar una nueva fila:',
+        error
+      );
+    }
+  }
+
+  _setEventInsertRow() {
+    const btnInsertRow = document.querySelector(`${this._prefix} #insertRow`);
+
+    if (!btnInsertRow) {
+      console.warn('No se encontró el elemento #insert-row');
+      return;
+    }
+
+    btnInsertRow.addEventListener('click', e => this._insertNewRow());
+  }
+
   async setModalElement(modal) {
     try {
       if (!modal) {
@@ -231,6 +307,7 @@ class ModalHandler {
       await this._setEventClickModalTable();
       this._setEventsForCopyButtons();
       this._setEventHideElement();
+      this._setEventInsertRow();
     } catch (error) {
       console.error(`Error en setModalElement: ${error}`);
     }
