@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/*"],
-      "js": ["search.js"],
+      "js": ["search.js", "htmlTemplate.js"],
       "css": ["style.css"]
     }
   ],
