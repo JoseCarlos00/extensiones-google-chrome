@@ -13,8 +13,6 @@ class ModalHandlerInsertItem {
     this.formItem = null;
     this.inserItem = null;
     this.datos = [];
-    this.btnGetSentence = null;
-    this.tableContent = null;
   }
 
   datosReset() {
@@ -24,79 +22,6 @@ class ModalHandlerInsertItem {
   async initialVatiables() {
     this.formItem = document.getElementById('formInsertItem');
     this.inserItem = this.formItem.inserItem;
-    this.btnGetSentence = document.getElementById('get-sentece');
-    this.tableContent = document.querySelector('#myModalShowTable #tableContent');
-  }
-
-  #isTableEmptyOrSingleRow() {
-    return new Promise(resolve => {
-      const firsrRow = this.tableContent.querySelector('td');
-      const txt = firsrRow ? firsrRow.textContent.trim().toLowerCase() : '';
-
-      if (!firsrRow || txt.includes('no hay datos')) {
-        resolve(true);
-        return;
-      }
-
-      resolve(false);
-    });
-  }
-
-  #getItemsFromTable({ rows }) {
-    const itemSelector = `td[aria-describedby='ListPaneDataGrid_ITEM'] input`;
-
-    const getElementValue = (element, selector) => {
-      const el = element.querySelector(selector);
-      return el ? el.value.trim() : '';
-    };
-
-    const itemSql = rows
-      .map(row => `'${getElementValue(row, itemSelector)}'`)
-      .filter(Boolean)
-      .join(',\n');
-
-    return itemSql;
-  }
-
-  async #generateSentenceSQL({ rows }) {
-    const items = await this.#getItemsFromTable({ rows });
-
-    if (!items) {
-      console.warn('No se encontreo contenido para la consulta');
-      return;
-    }
-
-    const sentece = `SELECT DISTINCT item\n\nFROM item_location_assignment\n\nWHERE item\nIN (\n${items}\n  );`;
-
-    return sentece;
-  }
-
-  async #obtenerSentencia(e) {
-    e.preventDefault();
-
-    const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
-
-    if (rows.length <= 1) {
-      const result = await this.#isTableEmptyOrSingleRow();
-
-      if (result) {
-        console.warn('No hay filas en la tabla');
-        ToastAlert.showAlertFullTop('No hay filas en la tabla', 'info');
-      }
-
-      return;
-    }
-
-    const texto = await this.#generateSentenceSQL({ rows });
-
-    if (!texto) {
-      console.warn('El texto generado está vacío');
-      ToastAlert.showAlertFullTop('No se pudo generar texto para copiar', 'warning');
-      return;
-    }
-
-    // Copia el texto al portapapeles
-    copyToClipboard(texto);
   }
 
   #insertarItems() {
@@ -170,12 +95,6 @@ class ModalHandlerInsertItem {
       this.formItem.addEventListener('submit', e => this.#registrarDatos(e));
     } else {
       console.error('No se encontro el formulario #formInsertItem');
-    }
-
-    if (this.btnGetSentence) {
-      this.btnGetSentence.addEventListener('click', e => this.#obtenerSentencia(e));
-    } else {
-      throw new Error('No se encontro el boton #btnGetSentence');
     }
   }
 

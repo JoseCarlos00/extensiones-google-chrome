@@ -1,10 +1,8 @@
 async function getHtmlContentItem({ sectionContainerClass, modalId }) {
   const modalContent = `
     <form id="formInsertItem" class="insertar-item">
-      <label for="inserItem"> Insertar Item 
-        <button type="button" id="get-sentece" class="get-sentence" aria-label="Generar Consulta SQL" data-balloon-pos="up">
-          <i class="far fa-database"></i>
-        </button>
+      <label for="inserItem"> 
+        Insertar Item 
       </label>
 
       <textarea id="inserItem"  name="inserItem" required placeholder="9413-6209-34996,"></textarea>

@@ -142,6 +142,15 @@ const buttons = `
             </button>
           </div>
 
+           <div class="button-container">
+            <button class="button" data-tooltip="Show Capacity For Item" data-id="show-capacity">
+              <i class="far fa-code"></i>
+              <i class="far fa-location-arrow"></i>
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+       
+
           <div class="button-container">
             <button class="button" data-tooltip="Items Exist Assignment" data-id="item-exist">
               <i class="far fa-code"></i>
@@ -151,7 +160,7 @@ const buttons = `
           </div>
 
           <div class="button-container">
-            <button class="button" data-tooltip="Items Formato SQL" data-id="item-sql">
+            <button class="button" data-tooltip="Items Format SQL" data-id="item-sql">
               <i class="far fa-code"></i>
               <i class="far fa-location-arrow"></i>
               <i class="far fa-copy"></i>

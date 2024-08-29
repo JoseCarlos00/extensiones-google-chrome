@@ -137,7 +137,7 @@ class EventManagerCopy {
 
     const itemExist = () => {
       const items = itemSql();
-      return `SELECT DISTINCT item\n\nFROM item_location_assignment\n\nWHERE item\nIN (\n${items}\n  );`;
+      return `SELECT DISTINCT\n item\n\nFROM item_location_assignment\n\nWHERE item\nIN (\n${items}\n  );`;
     };
 
     const updateCapacity = () => {
@@ -145,11 +145,23 @@ class EventManagerCopy {
       return `UPDATE item_location_capacity\nSET\nMAXIMUM_QTY = 2,\nQUANTITY_UM = 'CJ',\nMINIMUM_RPLN_PCT = 50\n\nWHERE location_type = 'Generica Permanente S'\nAND item IN (\n${items}\n  );`;
     };
 
+    const showCapacity = () => {
+      const items = itemSql();
+      const SELECT = `SELECT DISTINCT\n  I.item,\n  I.item_color,\n  CAST(ILC.MAXIMUM_QTY AS INT) AS MAXIMUM_QTY,\n  ILC.quantity_um,\n  ILC.MINIMUM_RPLN_PCT,\n  ILC.location_type`;
+      const FROM = `FROM item I\nLEFT JOIN item_location_capacity ILC  ON  ILC.item = I.item`;
+      const AND1 = `AND (I.item_category1 <> 'Bulk' OR I.item_category1 IS NULL)`;
+      const AND2 = `AND (ILC.location_type NOT LIKE 'Generica Permanente R' OR  ILC.location_type IS NULL)`;
+      const AND3 = `AND I.item IN (\n${items}\n  )`;
+      const WHERE = `WHERE I.company='FM'\n${AND1}\n${AND2}\n${AND3}\n`;
+      return `${SELECT}\n\n${FROM}\n\n${WHERE}\nORDER BY 1;`;
+    };
+
     const handleCopyMap = {
       'item-sql': itemSql,
       'item-location': itemLocation,
       'item-exist': itemExist,
       'update-capacity': updateCapacity,
+      'show-capacity': showCapacity,
     };
 
     // Verifica si el id es válido
