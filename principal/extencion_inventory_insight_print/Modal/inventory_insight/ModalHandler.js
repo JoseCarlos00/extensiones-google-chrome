@@ -16,7 +16,7 @@ class ModalHandler {
     this._prefix = '#myModalShowTable';
   }
 
-  async _valitateElementsTable() {
+  async #valitateElementsTable() {
     return new Promise((resolve, reject) => {
       if (!this._tbodyTable) {
         reject('No se encontro el elemento <tbody>');
@@ -30,9 +30,9 @@ class ModalHandler {
     });
   }
 
-  async _createTbody() {
+  async #createTbody() {
     try {
-      await this._valitateElementsTable();
+      await this.#valitateElementsTable();
 
       const rows = Array.from(this._tbodyTable.rows);
 
@@ -90,11 +90,11 @@ class ModalHandler {
     }
   }
 
-  async _insertTbody() {
+  async #insertTbody() {
     try {
-      await this._valitateElementsTable();
+      await this.#valitateElementsTable();
 
-      const newTbody = await this._createTbody();
+      const newTbody = await this.#createTbody();
 
       const tbodyExist = this._tableContent.querySelector('tbody');
       tbodyExist && tbodyExist.remove();
@@ -105,7 +105,7 @@ class ModalHandler {
     }
   }
 
-  async _initialVariables() {
+  async #initialVariables() {
     this._tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
     this._tableContent = document.querySelector(`${this._prefix} #tableContent`);
     this._listPaneDataGridPopover = document.querySelector(
@@ -136,11 +136,11 @@ class ModalHandler {
     }
   }
 
-  async _openModal() {
+  async #openModal() {
     this._modal.style.display = 'block';
   }
 
-  _setEventsForCopyButtons() {
+  #setEventsForCopyButtons() {
     const copytable = document.querySelector(`${this._prefix} #copy-table`);
 
     const tooltipContainer = document.querySelector(
@@ -176,9 +176,9 @@ class ModalHandler {
     }
   }
 
-  async _setEventClickModalTable() {
+  async #setEventClickModalTable() {
     try {
-      await this._valitateElementsTable();
+      await this.#valitateElementsTable();
 
       const eventManager = new EventManager({
         updateRowCounter: this._updateRowCounter,
@@ -200,7 +200,7 @@ class ModalHandler {
     }
   }
 
-  _setEventHideElement() {
+  #setEventHideElement() {
     const btnHideElement = document.querySelector(`${this._prefix} #hide-elements`);
 
     const ulList = document.querySelector(`${this._prefix} #list-elements`);
@@ -221,7 +221,7 @@ class ModalHandler {
     }
   }
 
-  async _createNewRow() {
+  async #createNewRow() {
     const tr = document.createElement('tr');
 
     const tdItem = document.createElement('td');
@@ -262,12 +262,12 @@ class ModalHandler {
     });
   }
 
-  async _insertNewRow() {
+  async #insertNewRow() {
     try {
-      await this._valitateElementsTable();
+      await this.#valitateElementsTable();
 
       const tbodyExist = this._tableContent.querySelector('tbody');
-      const newRow = await this._createNewRow();
+      const newRow = await this.#createNewRow();
 
       if (tbodyExist) {
         await this.#isTableEmptyOrSingleRow();
@@ -285,7 +285,7 @@ class ModalHandler {
     }
   }
 
-  _setEventInsertRow() {
+  #setEventInsertRow() {
     const btnInsertRow = document.querySelector(`${this._prefix} #insertRow`);
 
     if (!btnInsertRow) {
@@ -293,7 +293,25 @@ class ModalHandler {
       return;
     }
 
-    btnInsertRow.addEventListener('click', e => this._insertNewRow());
+    btnInsertRow.addEventListener('click', e => this.#insertNewRow());
+  }
+
+  #setEventKeydownsForTableContent() {
+    try {
+      if (!this._tableContent) {
+        console.warn('No se encontró el elemento #table-content');
+        return;
+      }
+
+      const eventManager = new EventManagerKeydown();
+
+      this._tableContent.addEventListener('keydown', e => eventManager.handleEvent({ ev: e }));
+    } catch (error) {
+      console.warn(
+        'Error: Ha ocurrido un error al crear el Evento Keydowns en #tableContent: ',
+        error
+      );
+    }
   }
 
   async setModalElement(modal) {
@@ -303,79 +321,15 @@ class ModalHandler {
       }
 
       this._modal = modal;
-      await this._initialVariables();
-      await this._setEventClickModalTable();
-      this._setEventsForCopyButtons();
-      this._setEventHideElement();
-      this._setEventInsertRow();
+      await this.#initialVariables();
+      await this.#setEventClickModalTable();
+      this.#setEventKeydownsForTableContent();
+      this.#setEventsForCopyButtons();
+      this.#setEventHideElement();
+      this.#setEventInsertRow();
     } catch (error) {
       console.error(`Error en setModalElement: ${error}`);
     }
-  }
-
-  /**
-   * TODO: Refactorizar
-   */
-  async _setEventTeclas() {
-    try {
-      await this._valitateElementsTable();
-      const inputs = Array.from(this._tableContent.querySelectorAll('td[aria-describedby] input'));
-
-      if (inputs.length == 0) {
-        console.warn(
-          '[setEventTeclas]: No se encontraron elementos td[aria-describedby] input:not(.exclude)'
-        );
-        return;
-      }
-
-      inputs.forEach(cell => {
-        // cell.setAttribute('tabindex', '0');
-        cell.addEventListener('keydown', handleKeydown);
-      });
-
-      function handleKeydown(event) {
-        const cell = event.target;
-        const row = cell.parentElement.parentElement;
-        const colIndex = Array.from(row.children).indexOf(cell.parentElement);
-
-        let nextCell;
-
-        switch (event.key) {
-          case 'ArrowRight':
-            nextCell = getNextCell(row, colIndex + 1);
-            break;
-          case 'ArrowLeft':
-            nextCell = getNextCell(row, colIndex - 1);
-            break;
-          case 'ArrowDown':
-            nextCell = getCellBelow(row, colIndex);
-            break;
-          case 'ArrowUp':
-            nextCell = getCellAbove(row, colIndex);
-            break;
-        }
-
-        if (nextCell) {
-          event.preventDefault();
-          nextCell?.focus();
-          nextCell?.select();
-        }
-      }
-
-      function getNextCell(row, colIndex) {
-        return row.children[colIndex]?.querySelector('input');
-      }
-
-      function getCellBelow(row, colIndex) {
-        const nextRow = row.nextElementSibling;
-        return nextRow?.children[colIndex]?.querySelector('input');
-      }
-
-      function getCellAbove(row, colIndex) {
-        const prevRow = row.previousElementSibling;
-        return prevRow?.children[colIndex]?.querySelector('input');
-      }
-    } catch (error) {}
   }
 
   async _updateRowCounter() {
@@ -394,9 +348,8 @@ class ModalHandler {
 
   async handleOpenModal() {
     try {
-      await this._insertTbody();
-      await this._setEventTeclas();
-      await this._openModal();
+      await this.#insertTbody();
+      await this.#openModal();
       await this._updateRowCounter();
       UiIggridIndicator.deleteAllIdicator();
       this._focusFirstInput();

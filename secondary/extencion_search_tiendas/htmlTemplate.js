@@ -52,7 +52,7 @@ const datalist = `
 
 const liContent = `
 <div class="ui-state-default"
-    style="width: 91%;height: 25px;text-align: center;display: block;margin-top: 8px;">
+    style="width: 100%;height: 25px;text-align: center;display: block;margin-top: 8px;">
 
     <div class="ui-igedit-button-common ui-unselectable ui-igedit-button-ltr ui-state-default ui-igedit-cleararea"
       title="Borrar valor" role="button" id="search_store_clearButton" tabindex="-1" data-localeid="clearTitle"
@@ -60,7 +60,7 @@ const liContent = `
       <div class="ui-igedit-buttonimage ui-icon-circle-close ui-icon ui-igedit-buttondefault"></div>
 
     </div>
-    <div class="ui-igeditor-input-container">
+    <div class="ui-igeditor-input-container" title="Crtr + b">
       <input list="stores" id="search_store_input" class="ignore ui-igedit-input ui-igedit-placeholder blurLabel" type="text" placeholder="Buscar Tienda"
         role="textbox" style="height: 100%;text-align: left;color: #fff;">
 
