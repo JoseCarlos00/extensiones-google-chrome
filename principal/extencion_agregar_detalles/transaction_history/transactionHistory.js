@@ -6,6 +6,7 @@ console.log('[transactionHistory.js]');
  * User name
  */
 
+// Copiado
 function inicio() {
   const tbody = document.querySelector('#ListPaneDataGrid > tbody') ?? null;
 
@@ -61,6 +62,7 @@ function setEventTeclas(tbody) {
   });
 }
 
+// Copiado
 const extraerDatosInternos = {
   workUnit: "[aria-describedby='ListPaneDataGrid_WorkUnit']",
   containerId: "[aria-describedby='ListPaneDataGrid_ContainerId']",
@@ -68,6 +70,7 @@ const extraerDatosInternos = {
   referenceId: "[aria-describedby='ListPaneDataGrid_ReferenceId']",
 };
 
+// Copiado
 function extraerDatosDeTr(tr) {
   console.log('[extraerDatosDeTr]');
   if (!tr) return;
@@ -92,6 +95,7 @@ function extraerDatosDeTr(tr) {
   });
 }
 
+// Copiado
 function observacion(tbody) {
   console.log('[Observacion]');
   // Función que se ejecutará cuando ocurra una mutación en el DOM
@@ -119,6 +123,7 @@ function observacion(tbody) {
   observer.observe(tbody, observerConfig);
 }
 
+// Copiado
 function insertarInfo(info) {
   console.log('[Insertar Info]');
   limpiarPaneldeDetalles();
@@ -140,6 +145,7 @@ function insertarInfo(info) {
   customerElement && referenceId && insertarTienda(customerElement, referenceId);
 }
 
+// Copiado
 function limpiarPaneldeDetalles() {
   // Obtener elementos del DOM
   const workUnitElement = document.querySelector(selectorId.workUnit);
@@ -154,6 +160,7 @@ function limpiarPaneldeDetalles() {
   customerElement && (customerElement.innerHTML = '');
 }
 
+// Copiado
 function insertarTienda(element, shipmentId) {
   const clave = shipmentId.trim().split('-')[0];
 
@@ -166,6 +173,7 @@ function insertarTienda(element, shipmentId) {
   }
 }
 
+// Copiado ↓
 const htmlWorkUnit = `
 <div class="ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row">
   <label class="detailpaneheaderlabel" for="DetailPaneHeaderWorkUnit"
