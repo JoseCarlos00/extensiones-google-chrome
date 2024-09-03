@@ -69,7 +69,6 @@ class ManangerPanelDetail {
         const trDataId = tr.getAttribute('data-id');
 
         if (this.lastSelectedId !== trDataId) {
-          console.log('Nuevo elemento seleccionado:');
           this.lastSelectedId = trDataId;
         }
         this.#extraerDatosDeTr(tr);
@@ -81,7 +80,7 @@ class ManangerPanelDetail {
       const { key } = e;
 
       if (key === 'ArrowUp' || key === 'ArrowDown') {
-        const tr = tbody.querySelector('tr[aria-selected="true"]');
+        const tr = this.tbody.querySelector('tr[aria-selected="true"]');
         tr && this.#extraerDatosDeTr(tr);
       }
     });

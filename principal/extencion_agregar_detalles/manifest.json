@@ -53,15 +53,11 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
-      "js": [
-        "transaction_history/HandleTransactionHistory.js",
-        "transaction_history/ManangerTansactionHistory.js",
-        "transaction_history/main.js"
-      ]
+      "js": ["transaction_history/HandleTransactionHistory.js", "transaction_history/main.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
-      "js": ["inventory_insight/inventoryInsight.js"]
+      "js": ["inventory_insight/main.js", "inventory_insight/HandleInventory.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"],

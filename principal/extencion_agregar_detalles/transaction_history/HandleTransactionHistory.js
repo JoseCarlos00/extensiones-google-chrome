@@ -38,7 +38,7 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
 
       if (missingOptions.length > 0) {
         reject(
-          `No se encontraron los elementos necesarios para inicializar el menú contextual: [${missingOptions.join(
+          `No se encontraron los elementos necesarios para inicializar el HandlePanelDetail: [${missingOptions.join(
             ', '
           )}]`
         );
@@ -51,7 +51,6 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
   }
 
   _extraerDatosDeTr(tr) {
-    console.log('[extraerDatosDeTr]');
     if (!tr) return;
 
     // Obtener elementos del DOM
@@ -76,14 +75,6 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
       insert,
       referenceId,
     });
-  }
-
-  async _limpiarPaneldeDetalles() {
-    for (const key in this.panelElements) {
-      const element = this.panelElements[key];
-
-      element && (element.innerHTML = '');
-    }
   }
 
   _insertarInfo({ insert = [], referenceId }) {

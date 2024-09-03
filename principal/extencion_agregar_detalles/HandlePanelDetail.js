@@ -1,8 +1,11 @@
 class HandlePanelDetail {
   constructor() {
     this.selectorsId = {};
+    this.externalPanelElements = {};
     this.panelElements = {};
     this.internalData = {};
+
+    this.backgroundMessage = '';
 
     this.tiendas = {
       3407: 'Tol-Centro',
@@ -60,7 +63,6 @@ class HandlePanelDetail {
   }
 
   _extraerDatosDeTr(tr) {
-    console.log('[extraerDatosDeTr]');
     if (!tr) return;
   }
 
@@ -95,5 +97,51 @@ class HandlePanelDetail {
         this.panelElements.customer.innerHTML = this.tiendas[clave];
       }
     }
+  }
+
+  _waitFordata() {
+    const text = '1346-863-28886...';
+
+    for (const key in this.externalPanelElements) {
+      const element = this.externalPanelElements[key];
+
+      if (element) {
+        element.innerHTML = text;
+        element.classList.add('wait');
+      }
+    }
+  }
+
+  _removeClassWait() {
+    const text = 'No encontrado';
+    for (const key in this.externalPanelElements) {
+      const element = this.externalPanelElements[key];
+
+      if (element) {
+        element.innerHTML = text;
+        element.classList.remove('wait');
+      }
+    }
+  }
+
+  _actualizarInterfaz(datos) {
+    // Actualizar la interfaz con los datos recibidos
+  }
+
+  _listeningToBackgroundMessages() {
+    // Escuchar los mensajes enviados desde el script de fondo
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      console.log('listeningToBackgroundMessages 1');
+
+      if (message.action === this.backgroundMessage) {
+        // Actualizar la interfaz de usuario con los datos recibidos
+        const datos = message.datos;
+        this._actualizarInterfaz(datos);
+      } else if (message.action === 'datos_no_encontrados') {
+        const errorMessage = message.datos;
+        console.log('No encotrado:', errorMessage);
+        this._removeClassWait();
+      }
+    });
   }
 }

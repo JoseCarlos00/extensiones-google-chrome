@@ -1,11 +1,11 @@
 class ElementsHtml {
-  static async verMas() {
+  static seeMoreInformation() {
     const div = document.createElement('div');
     div.id = 'ScreenControlHyperlink36456';
     div.className = 'ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row';
 
     const a = document.createElement('a');
-    a.id = 'verMasInfomacion';
+    a.id = 'seeMoreInformation';
     a.className = 'detailpaneheaderlabel ScreenControlHyperlink';
     a.setAttribute('role', 'buttton');
     a.style = 'cursor: auto; pointer-events: auto;';
