@@ -37,10 +37,12 @@
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
       "js": [
-        "transaction_history/main.js",
-        "transaction_history/ManangerTansactionHistory,js",
+        "HandlePanelDetail.js",
         "ManangerPanelDetail.js",
-        "ElementsHtml.js"
+        "ElementsHtml.js",
+        "transaction_history/HandleTransactionHistory.js",
+        "transaction_history/ManangerTansactionHistory.js",
+        "transaction_history/main.js"
       ],
       "css": ["style.css"]
     },

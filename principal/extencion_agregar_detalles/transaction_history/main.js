@@ -8,10 +8,16 @@ window.addEventListener('load', async () => {
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1076');
 
     const elementsHtmlToInsert = [htmlWorkUnit, htmlContainerId, htmlUserName, htmlCustomer];
-    const manangerPanelDetail = new ManangerHistory({ panelDetail, elementsHtmlToInsert });
+    const handlePanelDetail = new HandlePanelDetailTransactionHistory();
+
+    const manangerPanelDetail = new ManangerPanelDetail({
+      panelDetail,
+      elementsHtmlToInsert,
+      handlePanelDetail,
+    });
 
     await manangerPanelDetail.initialize();
   } catch (error) {
-    console.error('Error al crear Mananger apnel Detail:', error);
+    console.error('Error al crear ManangerPanelDetail:', error);
   }
 });
