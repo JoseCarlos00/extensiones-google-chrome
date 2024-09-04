@@ -32,6 +32,7 @@
       ],
       "js": [
         "HandlePanelDetail.js",
+        "HandlePanelDetailDataExternal.js",
         "ManangerPanelDetail.js",
         "ElementsHtml.js",
         "ToastAlert.js",

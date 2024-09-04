@@ -1,4 +1,4 @@
-class HandlePanelDetailInventory extends HandlePanelDetail {
+class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
   constructor() {
     super();
     this.backgroundMessage = 'actualizar_datos_de_inventory_detail';
@@ -64,39 +64,6 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     };
   }
 
-  _initializePanelElements() {
-    return new Promise((resolve, reject) => {
-      const internalElements = this._initializeInternalPanelElements();
-      const externalElements = this._initializeExternalPanelElements();
-
-      // Combina todos los elementos
-      const allElements = {
-        ...internalElements,
-        ...externalElements,
-        seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
-      };
-
-      const missingOptions = Object.entries(allElements)
-        .filter(([key, value]) => !value)
-        .map(([key]) => key);
-
-      if (missingOptions.length > 0) {
-        reject(
-          `No se encontraron los elementos necesarios para inicializar HandlePanelDetail: [${missingOptions.join(
-            ', '
-          )}]`
-        );
-      }
-
-      // Asigna los elementos validados a sus respectivos objetos
-      this.internalPanelElements = internalElements;
-      this.externalPanelElements = externalElements;
-      this.panelElements = allElements;
-
-      setTimeout(resolve, 50);
-    });
-  }
-
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
@@ -118,16 +85,6 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     this._insertInfo({
       insert,
     });
-  }
-
-  _insertInfo({ insert = [] }) {
-    super._insertInfo({ insert });
-    const { seeMoreInformation } = this.panelElements;
-
-    if (seeMoreInformation) {
-      seeMoreInformation.classList.remove('disabled');
-      seeMoreInformation.innerHTML = 'Ver mas info...';
-    }
   }
 
   _getDataExternal() {
@@ -197,14 +154,5 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
         element.classList.remove('wait');
       }
     });
-  }
-
-  async _initializeHandlePanelDetail() {
-    try {
-      await this._initializePanelElements();
-      this._initializeDataExternal();
-    } catch (error) {
-      console.error('Error: ha ocurrido un error al inizicailar HandleInventory:', error);
-    }
   }
 }

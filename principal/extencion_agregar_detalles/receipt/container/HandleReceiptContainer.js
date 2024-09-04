@@ -1,35 +1,28 @@
-class HandleReceiptContainer extends HandlePanelDetail {
+class HandleReceiptContainer extends HandlePanelDetailDataExternal {
   constructor() {
     super();
-    this.backgroundMessage = 'actualizar_datos_de_inventory_detail';
+    this.backgroundMessage = 'actualizar_datos_de_receipt_container_detail';
 
     this.selectorsId = {
-      internalLocationInv: '#DetailPaneHeaderinternalLocationInv',
-      logisticsUnit: '#DetailPaneHeaderlogisticsUnit',
-      parentLogisticsUnit: '#DetailPaneHeaderParentLogisticsUnit',
-      receiptDateTime: '#DetailPaneHeaderReceiptDateTime',
+      receiptId: '#DetailPaneHeaderReceiptId',
+      parent: '#DetailPaneHeaderParent',
+      receiptDate: '#DetailPaneHeaderReceiptDate',
+      checkIn: '#DetailPaneHeaderCheckIn',
       userStamp: '#DetailPaneHeaderUserStamp',
-      dateTimeStamp: '#DetailPaneHeaderDateTimeStamp',
-      allocation: '#DetailPaneHeaderAllocation',
-      locating: '#DetailPaneHeaderLocating',
-      workZone: '#DetailPaneHeaderWorkZone',
-      attribute1: '#DetailPaneHeaderAttribute1',
+      trailerId: '#DetailPaneHeaderTrailerId',
       seeMoreInformation: '#seeMoreInformation',
     };
 
     this.externalPanelElements = {
+      parent: null,
+      receiptDate: null,
+      checkIn: null,
       userStamp: null,
-      dateTimeStamp: null,
-      allocation: null,
-      locating: null,
-      workZone: null,
-      attribute1: null,
+      trailerId: null,
     };
 
     this.internalPanelElements = {
-      internalLocationInv: null,
-      logisticsUnit: null,
-      parentLogisticsUnit: null,
+      receiptId: null,
     };
 
     this.panelElements = {
@@ -39,80 +32,33 @@ class HandleReceiptContainer extends HandlePanelDetail {
     };
 
     this.internalData = {
-      internalLocationInv: "[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
-      logisticsUnit: "[aria-describedby='ListPaneDataGrid_LOGISTICS_UNIT']",
-      parentLogisticsUnit: "[aria-describedby='ListPaneDataGrid_PARENT_LOGISTICS_UNIT']",
+      receiptId: "[aria-describedby='ListPaneDataGrid_RECEIPT_ID']",
     };
   }
 
   _initializeInternalPanelElements() {
     return {
-      internalLocationInv: document.querySelector(this.selectorsId.internalLocationInv),
-      logisticsUnit: document.querySelector(this.selectorsId.logisticsUnit),
-      parentLogisticsUnit: document.querySelector(this.selectorsId.parentLogisticsUnit),
+      receiptId: document.querySelector(this.selectorsId.receiptId),
     };
   }
 
   _initializeExternalPanelElements() {
     return {
+      parent: document.querySelector(this.selectorsId.parent),
+      receiptDate: document.querySelector(this.selectorsId.receiptId),
+      checkIn: document.querySelector(this.selectorsId.checkIn),
       userStamp: document.querySelector(this.selectorsId.userStamp),
-      dateTimeStamp: document.querySelector(this.selectorsId.dateTimeStamp),
-      allocation: document.querySelector(this.selectorsId.allocation),
-      locating: document.querySelector(this.selectorsId.locating),
-      workZone: document.querySelector(this.selectorsId.workZone),
-      attribute1: document.querySelector(this.selectorsId.attribute1),
+      trailerId: document.querySelector(this.selectorsId.trailerId),
     };
-  }
-
-  _initializePanelElements() {
-    return new Promise((resolve, reject) => {
-      const internalElements = this._initializeInternalPanelElements();
-      const externalElements = this._initializeExternalPanelElements();
-
-      // Combina todos los elementos
-      const allElements = {
-        ...internalElements,
-        ...externalElements,
-        seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
-      };
-
-      const missingOptions = Object.entries(allElements)
-        .filter(([key, value]) => !value)
-        .map(([key]) => key);
-
-      if (missingOptions.length > 0) {
-        reject(
-          `No se encontraron los elementos necesarios para inicializar HandlePanelDetail: [${missingOptions.join(
-            ', '
-          )}]`
-        );
-      }
-
-      // Asigna los elementos validados a sus respectivos objetos
-      this.internalPanelElements = internalElements;
-      this.externalPanelElements = externalElements;
-      this.panelElements = allElements;
-
-      setTimeout(resolve, 50);
-    });
   }
 
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    const internalNumElement = tr.querySelector(this.internalData.internalLocationInv);
-    const logisticsUnitElement = tr.querySelector(this.internalData.logisticsUnit);
-    const ParentLPElement = tr.querySelector(this.internalData.parentLogisticsUnit);
+    const receiptIdElement = tr.querySelector(this.internalData.receiptId);
+    const receiptId = receiptIdElement ? receiptIdElement.textContent.trim() : '';
 
-    const internalLocationInv = internalNumElement ? internalNumElement.textContent.trim() : '';
-    const logisticsUnit = logisticsUnitElement ? logisticsUnitElement.textContent.trim() : '';
-    const parentLogisticsUnit = ParentLPElement ? ParentLPElement.textContent.trim() : '';
-
-    const insert = [
-      { element: this.panelElements.internalLocationInv, value: internalLocationInv },
-      { element: this.panelElements.logisticsUnit, value: logisticsUnit },
-      { element: this.panelElements.parentLogisticsUnit, value: parentLogisticsUnit },
-    ];
+    const insert = [{ element: this.panelElements.receiptId, value: receiptId }];
 
     // Llamar a insertarInfo con los datos extraídos
     this._insertInfo({
@@ -120,19 +66,8 @@ class HandleReceiptContainer extends HandlePanelDetail {
     });
   }
 
-  _insertInfo({ insert = [] }) {
-    super._insertInfo({ insert });
-    const { seeMoreInformation } = this.panelElements;
-
-    if (seeMoreInformation) {
-      seeMoreInformation.classList.remove('disabled');
-      seeMoreInformation.innerHTML = 'Ver mas info...';
-    }
-  }
-
   _getDataExternal() {
-    const { internalLocationInv: internalLocationInvElement, seeMoreInformation } =
-      this.panelElements;
+    const { receiptId: internalLocationInvElement, seeMoreInformation } = this.panelElements;
 
     const internalNumberText = internalLocationInvElement
       ? internalLocationInvElement.textContent.trim()
@@ -182,11 +117,11 @@ class HandleReceiptContainer extends HandlePanelDetail {
     const elementsToUpdate = [
       { element: this.panelElements.receivedDateTime, value: receivedDateTime },
       { element: this.panelElements.userStamp, value: userStamp },
-      { element: this.panelElements.dateTimeStamp, value: dateTimeStamp },
-      { element: this.panelElements.allocation, value: allocation },
-      { element: this.panelElements.locating, value: locating },
+      { element: this.panelElements.parent, value: dateTimeStamp },
+      { element: this.panelElements.receiptDate, value: allocation },
+      { element: this.panelElements.checkIn, value: locating },
       { element: this.panelElements.workZone, value: workZone },
-      { element: this.panelElements.attribute1, value: attribute1 },
+      { element: this.panelElements.trailerId, value: attribute1 },
     ];
 
     // Iterar sobre elementsToUpdate
@@ -197,14 +132,5 @@ class HandleReceiptContainer extends HandlePanelDetail {
         element.classList.remove('wait');
       }
     });
-  }
-
-  async _initializeHandlePanelDetail() {
-    try {
-      await this._initializePanelElements();
-      this._initializeDataExternal();
-    } catch (error) {
-      console.error('Error: ha ocurrido un error al inizicailar HandleInventory:', error);
-    }
   }
 }
