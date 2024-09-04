@@ -134,14 +134,16 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     const { internalLocationInv: internalLocationInvElement, seeMoreInformation } =
       this.panelElements;
 
-    if (internalLocationInvElement) {
-      const internalNumberText = internalLocationInvElement.textContent.trim();
+    const internalNumberText = internalLocationInvElement
+      ? internalLocationInvElement.textContent.trim()
+      : '';
 
-      if (internalNumberText === '-1' || internalNumberText === '0') {
-        alert(`Internal Number: ${internalNumberText}`);
-        return;
-      }
+    if (internalNumberText === '-1' || internalNumberText === '0') {
+      ToastAlert.showAlertMinTop(`Internal Location Inv Invalido: [${internalNumberText}]`);
+      return;
+    }
 
+    if (internalNumberText) {
       this._waitFordata();
       this.setIsCancelGetDataExternal(false);
 
@@ -157,8 +159,10 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
         }
       );
     } else {
-      alert('No se encontró el Internal Location Inv, por favor active la columna.');
-      console.log('No se encontró el Internal Location Inv');
+      ToastAlert.showAlertFullTop(
+        'No se encontró la columna [Internal Location Inv], por favor active la columna.'
+      );
+      console.error('No se encontró el Internal Location Inv');
       if (seeMoreInformation) seeMoreInformation.classList.remove('disabled'); // Reactivar el botón
     }
   }

@@ -113,6 +113,22 @@ class ToastAlert {
     }
   }
 
+  static showAlertMinTop(message, type = 'error') {
+    try {
+      const configuration = {
+        message: message,
+        type: type,
+        time: 5000,
+        _className: 'toast-top-min-width',
+      };
+
+      const toastAlert = new ToastAlert(configuration);
+      toastAlert.createToast();
+    } catch (error) {
+      console.error('Error: a surgido un problema al crear una alerta', error);
+    }
+  }
+
   static showAlertMinBotton(message, type = 'error') {
     try {
       const configuration = {
