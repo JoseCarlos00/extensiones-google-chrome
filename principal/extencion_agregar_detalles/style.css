@@ -14,16 +14,16 @@
   }
 }
 
-#seeMoreInformation {
+.anchorPanelDetail {
   cursor: pointer;
   pointer-events: auto;
 }
 
-#seeMoreInformation:hover {
+.anchorPanelDetail:hover {
   text-decoration: underline;
 }
 
-#seeMoreInformation.disabled {
+.anchorPanelDetail.disabled {
   pointer-events: none !important;
   opacity: 0.8 !important;
   text-decoration: line-through;

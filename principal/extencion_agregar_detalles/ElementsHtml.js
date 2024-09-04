@@ -6,7 +6,22 @@ class ElementsHtml {
 
     const a = document.createElement('a');
     a.id = 'seeMoreInformation';
-    a.className = 'detailpaneheaderlabel ScreenControlHyperlink';
+    a.className = 'detailpaneheaderlabel ScreenControlHyperlink anchorPanelDetail';
+    a.setAttribute('role', 'buttton');
+    a.href = 'javascript:void(0);';
+
+    div.appendChild(a);
+    return div;
+  }
+
+  static createElementAnchor({ id }) {
+    const div = document.createElement('div');
+    div.id = 'ScreenControlHyperlink36456';
+    div.className = 'ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row';
+
+    const a = document.createElement('a');
+    a.id = id;
+    a.className = 'detailpaneheaderlabel ScreenControlHyperlink, anchorPanelDetail';
     a.setAttribute('role', 'buttton');
     a.href = 'javascript:void(0);';
 

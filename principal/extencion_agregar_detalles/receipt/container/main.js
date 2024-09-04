@@ -2,20 +2,17 @@ window.addEventListener('load', async () => {
   try {
     // ELEMENTOS INTERNOS
     const htmlReceiptId = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderinternalLocationInv',
-    });
-    const htmlParent = ElementsHtml.createElement({ id: 'DetailPaneHeaderlogisticsUnit' });
-    const htmlReceiptDate = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderParentLogisticsUnit',
+      id: 'DetailPaneHeaderReceiptId',
+      bold: true,
+      color: true,
     });
 
     // ELEMENTOS EXTERNOS
-    const htmlCheckIn = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderReceiptDateTime',
-    });
+    const htmlParent = ElementsHtml.createElement({ id: 'DetailPaneHeaderParent' });
+    const htmlReceiptDate = ElementsHtml.createElement({ id: 'DetailPaneHeaderReceiptDate' });
+    const htmlCheckIn = ElementsHtml.createElement({ id: 'DetailPaneHeaderCheckIn' });
     const htmlUserStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderUserStamp' });
-    const htmlTrailerId = ElementsHtml.createElement({ id: 'DetailPaneHeaderDateTimeStamp' });
-
+    const htmlTrailerId = ElementsHtml.createElementAnchor({ id: 'DetailPaneHeaderTrailerId' });
     const htmlVerMas = ElementsHtml.seeMoreInformation();
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1046');

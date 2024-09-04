@@ -18,7 +18,7 @@ window.addEventListener('load', async () => {
     ];
     const handlePanelDetail = new HandleReceipLineInsigth();
 
-    const manangerPanelDetail = new ManangerPanelDetailReceiptDetail({
+    const manangerPanelDetail = new ManangerPanelDetail({
       panelDetail,
       elementsHtmlToInsert,
       handlePanelDetail,
