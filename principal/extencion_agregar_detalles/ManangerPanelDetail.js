@@ -26,7 +26,7 @@ class ManangerPanelDetail {
       }
 
       await this.#insertElementsHtml();
-      await this.#initializePanelElements();
+      await this.#initializeHandlePanelDetail();
       this.#setEventsListeners();
       this.#observation();
     } catch (error) {
@@ -34,8 +34,8 @@ class ManangerPanelDetail {
     }
   }
 
-  async #initializePanelElements() {
-    await this.handlePanelDetail._initializePanelElements();
+  async #initializeHandlePanelDetail() {
+    await this.handlePanelDetail._initializeHandlePanelDetail();
   }
 
   #extraerDatosDeTr(tr) {
@@ -89,6 +89,7 @@ class ManangerPanelDetail {
   #observation() {
     // Función que se ejecutará cuando ocurra una mutación en el DOM
     const handleMutation = mutationsList => {
+      this.handlePanelDetail._cleanDetailPanel();
       if (mutationsList[0]) {
         const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]');
         trSelected && this.#extraerDatosDeTr(trSelected);

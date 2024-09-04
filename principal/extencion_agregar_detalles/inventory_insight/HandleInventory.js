@@ -1,7 +1,7 @@
 class HandlePanelDetailInventory extends HandlePanelDetail {
   constructor() {
     super();
-    this.backgroundMessage = 'actualizar_datos_de_inventory_detai';
+    this.backgroundMessage = 'actualizar_datos_de_inventory_detail';
 
     this.selectorsId = {
       internalLocationInv: '#DetailPaneHeaderinternalLocationInv',
@@ -43,8 +43,6 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
       logisticsUnit: "[aria-describedby='ListPaneDataGrid_LOGISTICS_UNIT']",
       parentLogisticsUnit: "[aria-describedby='ListPaneDataGrid_PARENT_LOGISTICS_UNIT']",
     };
-
-    this._listeningToBackgroundMessages();
   }
 
   _initializeInternalPanelElements() {
@@ -99,6 +97,15 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     });
   }
 
+  async _initializeHandlePanelDetail() {
+    try {
+      await this._initializePanelElements();
+      this._initializeDataExternal();
+    } catch (error) {
+      console.error('Error: ha ocurrido un error al inizicailar HandleInventory:', error);
+    }
+  }
+
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
@@ -117,28 +124,18 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     ];
 
     // Llamar a insertarInfo con los datos extraídos
-    this._insertarInfo({
+    this._insertInfo({
       insert,
     });
   }
 
-  _insertarInfo({ insert = [] }) {
-    super._insertarInfo({ insert });
+  _insertInfo({ insert = [] }) {
+    super._insertInfo({ insert });
     const { seeMoreInformation } = this.panelElements;
 
     if (seeMoreInformation) {
+      seeMoreInformation.classList.remove('disabled');
       seeMoreInformation.innerHTML = 'Ver mas info...';
-
-      // Elimina cualquier event listener previo
-      seeMoreInformation.removeEventListener('click', this._handleSeeMoreInformationClick);
-
-      // Define la función manejadora por separado
-      this._handleSeeMoreInformationClick = () => this._solicitarDatosExternos();
-
-      // Agrega el event listener una vez
-      seeMoreInformation.addEventListener('click', this._handleSeeMoreInformationClick, {
-        once: true,
-      });
     }
   }
 
@@ -146,15 +143,11 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     const { internalLocationInv: internalLocationInvElement, seeMoreInformation } =
       this.panelElements;
 
-    // Deshabilitar temporalmente el botón para evitar múltiples llamadas
-    if (seeMoreInformation) seeMoreInformation.disabled = true;
-
     if (internalLocationInvElement) {
       const internalNumberText = internalLocationInvElement.textContent.trim();
 
       if (internalNumberText === '-1' || internalNumberText === '0') {
         alert(`Internal Number: ${internalNumberText}`);
-        if (seeMoreInformation) seeMoreInformation.disabled = false; // Reactivar el botón
         return;
       }
 
@@ -169,13 +162,12 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
         },
         response => {
           console.log('Respuesta de background.js:', response.status);
-          if (seeMoreInformation) seeMoreInformation.disabled = false; // Reactivar el botón
         }
       );
     } else {
       alert('No se encontró el Internal Location Inv, por favor active la columna.');
       console.log('No se encontró el Internal Location Inv');
-      if (seeMoreInformation) seeMoreInformation.disabled = false; // Reactivar el botón
+      if (seeMoreInformation) seeMoreInformation.classList.remove('disabled'); // Reactivar el botón
     }
   }
 
@@ -209,5 +201,24 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
         element.classList.remove('wait');
       }
     });
+  }
+
+  _setEventSeeMore() {
+    const { seeMoreInformation } = this.panelElements;
+    // Agregar evento al botón "Ver más"
+    if (!seeMoreInformation) {
+      console.warn('No se encontró el botón "Ver más"');
+      return;
+    }
+
+    seeMoreInformation.addEventListener('click', e => {
+      seeMoreInformation.classList.add('disabled');
+      this._solicitarDatosExternos();
+    });
+  }
+
+  _initializeDataExternal() {
+    this._listeningToBackgroundMessages();
+    this._setEventSeeMore();
   }
 }

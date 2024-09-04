@@ -50,6 +50,14 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
     });
   }
 
+  async _initializeHandlePanelDetail() {
+    try {
+      await this._initializePanelElements();
+    } catch (error) {
+      console.error('Error: ha ocurrido un error al inizicailar HandleInventory:', error);
+    }
+  }
+
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 

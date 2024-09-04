@@ -62,11 +62,19 @@ class HandlePanelDetail {
     return new Promise(resolve => setTimeout(resolve, 50));
   }
 
+  async _initializeHandlePanelDetail() {
+    try {
+      await this._initializePanelElements();
+    } catch (error) {
+      console.error('Error: ha ocurrido un error al inizicailar HandlePanelDetail:', error);
+    }
+  }
+
   _extraerDatosDeTr(tr) {
     if (!tr) return;
   }
 
-  async _limpiarPaneldeDetalles() {
+  async _cleanDetailPanel() {
     for (const key in this.panelElements) {
       const element = this.panelElements[key];
 
@@ -74,8 +82,8 @@ class HandlePanelDetail {
     }
   }
 
-  async _insertarInfo({ insert = [] }) {
-    await this._limpiarPaneldeDetalles();
+  async _insertInfo({ insert = [] }) {
+    await this._cleanDetailPanel();
 
     // Asignar valores a los elementos del DOM si existen
     if (insert.length === 0) {
@@ -130,10 +138,10 @@ class HandlePanelDetail {
 
   _listeningToBackgroundMessages() {
     // Escuchar los mensajes enviados desde el script de fondo
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log('listeningToBackgroundMessages 1');
+    const { backgroundMessage } = this;
 
-      if (message.action === this.backgroundMessage) {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === backgroundMessage) {
         // Actualizar la interfaz de usuario con los datos recibidos
         const datos = message.datos;
         this._actualizarInterfaz(datos);

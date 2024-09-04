@@ -14,7 +14,17 @@
   }
 }
 
-#seeMoreInformation[disabled='true'] {
-  pointer-events: none;
-  opacity: 0.8;
+#seeMoreInformation {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+#seeMoreInformation:hover {
+  text-decoration: underline;
+}
+
+#seeMoreInformation.disabled {
+  pointer-events: none !important;
+  opacity: 0.8 !important;
+  text-decoration: line-through;
 }

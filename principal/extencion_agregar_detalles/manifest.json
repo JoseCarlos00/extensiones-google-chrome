@@ -30,7 +30,13 @@
         "https://wms.fantasiasmiguel.com.mx/scale/insights/2780*",
         "https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"
       ],
-      "js": ["HandlePanelDetail.js", "ManangerPanelDetail.js", "ElementsHtml.js", "ToastAlert.js"],
+      "js": [
+        "HandlePanelDetail.js",
+        "ManangerPanelDetail.js",
+        "ElementsHtml.js",
+        "ToastAlert.js",
+        "funcionesGlobales.js"
+      ],
       "css": ["style.css"]
     },
     {

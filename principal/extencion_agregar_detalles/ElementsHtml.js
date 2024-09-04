@@ -8,7 +8,6 @@ class ElementsHtml {
     a.id = 'seeMoreInformation';
     a.className = 'detailpaneheaderlabel ScreenControlHyperlink';
     a.setAttribute('role', 'buttton');
-    a.style = 'cursor: auto; pointer-events: auto;';
     a.href = 'javascript:void(0);';
 
     div.appendChild(a);
