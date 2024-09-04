@@ -97,15 +97,6 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     });
   }
 
-  async _initializeHandlePanelDetail() {
-    try {
-      await this._initializePanelElements();
-      this._initializeDataExternal();
-    } catch (error) {
-      console.error('Error: ha ocurrido un error al inizicailar HandleInventory:', error);
-    }
-  }
-
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
@@ -139,7 +130,7 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     }
   }
 
-  _solicitarDatosExternos() {
+  _getDataExternal() {
     const { internalLocationInv: internalLocationInvElement, seeMoreInformation } =
       this.panelElements;
 
@@ -152,6 +143,7 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
       }
 
       this._waitFordata();
+      this.setIsCancelGetDataExternal(false);
 
       const internalLocationInv = internalNumberText + '&active=active';
 
@@ -171,7 +163,7 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     }
   }
 
-  _actualizarInterfaz(datos) {
+  _updateDetailsPanelInfo(datos) {
     // Actualizar la interfaz con los datos recibidos
     const {
       receivedDateTime,
@@ -203,22 +195,12 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     });
   }
 
-  _setEventSeeMore() {
-    const { seeMoreInformation } = this.panelElements;
-    // Agregar evento al botón "Ver más"
-    if (!seeMoreInformation) {
-      console.warn('No se encontró el botón "Ver más"');
-      return;
+  async _initializeHandlePanelDetail() {
+    try {
+      await this._initializePanelElements();
+      this._initializeDataExternal();
+    } catch (error) {
+      console.error('Error: ha ocurrido un error al inizicailar HandleInventory:', error);
     }
-
-    seeMoreInformation.addEventListener('click', e => {
-      seeMoreInformation.classList.add('disabled');
-      this._solicitarDatosExternos();
-    });
-  }
-
-  _initializeDataExternal() {
-    this._listeningToBackgroundMessages();
-    this._setEventSeeMore();
   }
 }

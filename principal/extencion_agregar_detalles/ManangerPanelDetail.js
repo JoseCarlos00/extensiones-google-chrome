@@ -7,8 +7,6 @@ class ManangerPanelDetail {
     this.handlePanelDetail = handlePanelDetail;
 
     this.lastSelectedId = null;
-    // this.pedirMasDetalles = false;
-    // this.isColumnExist = false;
   }
 
   async initialize() {
@@ -62,8 +60,14 @@ class ManangerPanelDetail {
 
   #setEventsListeners() {
     this.tbody.addEventListener('click', e => {
-      const tr = e.target.closest('tr[data-id]');
-      // console.log('e.target:', tr);
+      const { target } = e;
+
+      if (!target) {
+        console.warn('[ManangerDetail setEventsListeners]No se encontro el elemento');
+        return;
+      }
+
+      const tr = target.closest('tr[data-id]');
 
       if (tr) {
         const trDataId = tr.getAttribute('data-id');
@@ -71,6 +75,8 @@ class ManangerPanelDetail {
         if (this.lastSelectedId !== trDataId) {
           this.lastSelectedId = trDataId;
         }
+
+        this.handlePanelDetail.setIsCancelGetDataExternal();
         this.#extraerDatosDeTr(tr);
       }
     });
@@ -81,7 +87,11 @@ class ManangerPanelDetail {
 
       if (key === 'ArrowUp' || key === 'ArrowDown') {
         const tr = this.tbody.querySelector('tr[aria-selected="true"]');
-        tr && this.#extraerDatosDeTr(tr);
+
+        if (tr) {
+          this.handlePanelDetail.setIsCancelGetDataExternal();
+          this.#extraerDatosDeTr(tr);
+        }
       }
     });
   }
@@ -90,6 +100,8 @@ class ManangerPanelDetail {
     // Función que se ejecutará cuando ocurra una mutación en el DOM
     const handleMutation = mutationsList => {
       this.handlePanelDetail._cleanDetailPanel();
+      this.handlePanelDetail.setIsCancelGetDataExternal();
+
       if (mutationsList[0]) {
         const trSelected = mutationsList[0].target.querySelector('tr[aria-selected="true"]');
         trSelected && this.#extraerDatosDeTr(trSelected);
