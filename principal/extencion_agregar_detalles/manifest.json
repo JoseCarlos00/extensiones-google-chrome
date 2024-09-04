@@ -70,24 +70,24 @@
       "js": ["inventory_insight/inventoryDetail.js"]
     },
     {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
+      "js": ["receipt/detail/main.js", "receipt/detail/HandleReceipLineInsigth.js"]
+    },
+    {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
-      "js": ["receipt_detail/receiptInsigh.js"]
+      "js": ["receipt/insigth/main.js", "receipt/insigth/HandleReceiptInsigth.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
-      "js": ["receipt_detail/receiptContainerInsight.js"]
+      "js": ["receipt/container/main.js", "receipt/insigth/HandleReceiptContainer.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"],
-      "js": ["receipt_detail/containerDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
-      "js": ["receipt_detail/receiptLineInsight.js"]
+      "js": ["receipt/container/containerDetail.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receipt/*"],
-      "js": ["receipt_detail/receiptDetail.js"]
+      "js": ["receipt/container/receiptDetail.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],

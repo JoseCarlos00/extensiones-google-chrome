@@ -177,7 +177,7 @@ async function main() {
     const li = `
     <li class="navdetailpane visible-sm visible-md visible-lg">
       <a id='openModalBtn' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Abrir Modal" data-balloon-pos="right">
-        <i class="far fa-clipboard navimage"></i>
+        <i class="far fa-door-open navimage"></i>
       </a>
     </li>
     `;

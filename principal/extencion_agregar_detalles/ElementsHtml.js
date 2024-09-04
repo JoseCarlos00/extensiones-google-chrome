@@ -14,7 +14,7 @@ class ElementsHtml {
     return div;
   }
 
-  static createElement({ id, bold = false }) {
+  static createElement({ id, bold = false, color = false }) {
     const div = document.createElement('div');
     div.className = 'ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row';
 
@@ -22,8 +22,12 @@ class ElementsHtml {
     label.id = id;
     label.className = 'detailpaneheaderlabel';
 
-    if (bold) {
+    if (bold && color) {
+      label.style = 'color: #4f93e4 !important; font-weight: bold;';
+    } else if (bold) {
       label.style = 'font-weight: bold; letter-spacing: 1px;';
+    } else if (color) {
+      label.style = 'color: #4f93e4';
     }
 
     div.appendChild(label);
