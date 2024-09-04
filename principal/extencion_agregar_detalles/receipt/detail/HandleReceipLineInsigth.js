@@ -12,8 +12,8 @@ class HandleReceipLineInsigth extends HandlePanelDetail {
     };
 
     this.internalData = {
-      receiptId: "[aria-describedby='ListPaneDataGrid_CUSTOMER']",
-      internalReceiptNumber: "[aria-describedby='ListPaneDataGrid_SHIP_TO']",
+      receiptId: "[aria-describedby='ListPaneDataGrid_RECEIPT_ID']",
+      internalReceiptNumber: "[aria-describedby='ListPaneDataGrid_INTERNAL_RECEIPT_NUM']",
     };
   }
 

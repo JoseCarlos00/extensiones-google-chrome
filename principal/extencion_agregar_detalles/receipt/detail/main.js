@@ -7,6 +7,7 @@ window.addEventListener('load', async () => {
     });
     const htmlInternalReceiptNumber = ElementsHtml.createElement({
       id: 'DetailPaneHeaderInternalReceiptNumber',
+      bold: true,
     });
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1061');
@@ -14,7 +15,7 @@ window.addEventListener('load', async () => {
     const elementsHtmlToInsert = [htmlReceiptId, htmlInternalReceiptNumber];
     const handlePanelDetail = new HandleReceipLineInsigth();
 
-    const manangerPanelDetail = new ManangerPanelDetail({
+    const manangerPanelDetail = new ManangerPanelDetailReceiptDetail({
       panelDetail,
       elementsHtmlToInsert,
       handlePanelDetail,

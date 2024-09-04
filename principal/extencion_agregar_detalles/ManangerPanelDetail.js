@@ -23,7 +23,7 @@ class ManangerPanelDetail {
         throw new Error('HandlePanelDetail element not found');
       }
 
-      await this.#insertElementsHtml();
+      await this._insertElementsHtml();
       await this.#initializeHandlePanelDetail();
       this.#setEventsListeners();
       this.#observation();
@@ -40,7 +40,7 @@ class ManangerPanelDetail {
     this.handlePanelDetail._extraerDatosDeTr(tr);
   }
 
-  #insertElementsHtml() {
+  _insertElementsHtml() {
     return new Promise((resolve, reject) => {
       if (this.elementsToInsert.length === 0) {
         reject('No se Encontraron elementos a insertar');
