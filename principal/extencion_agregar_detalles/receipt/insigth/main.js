@@ -16,10 +16,10 @@ window.addEventListener('load', async () => {
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1059');
 
     const elementsHtmlToInsert = [
-      htmlTrailingStatusNumeric,
-      htmlLeadingStatusNumeric,
-      htmlInternalReceiptNumber,
-      htmlTrailerId,
+      { element: htmlTrailingStatusNumeric },
+      { element: htmlLeadingStatusNumeric },
+      { element: htmlInternalReceiptNumber },
+      { element: htmlTrailerId },
     ];
     const handlePanelDetail = new HandlePlannedShipment();
 

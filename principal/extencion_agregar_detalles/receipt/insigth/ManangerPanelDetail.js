@@ -3,14 +3,6 @@ class ManangerPanelDetailReceiptInsigth extends ManangerPanelDetail {
     super(parameters);
   }
 
-  #insertElement({ insert, element: elementToInsert, position = 'beforeend' }) {
-    if (elementToInsert instanceof Element && elementToInsert) {
-      insert.insertAdjacentElement(position, elementToInsert);
-    } else {
-      console.warn('El elemento no es de tipo Html Element');
-    }
-  }
-
   _insertElementsHtml() {
     return new Promise((resolve, reject) => {
       if (this.elementsToInsert.length === 0) {
@@ -25,7 +17,7 @@ class ManangerPanelDetailReceiptInsigth extends ManangerPanelDetail {
       ] = this.elementsToInsert;
 
       if (this.panelDetail.children[2]) {
-        this.#insertElement({
+        this._insertElement({
           insert: this.panelDetail.children[2],
           element: htmlTrailingStatusNumeric,
           position: 'afterend',
@@ -33,24 +25,15 @@ class ManangerPanelDetailReceiptInsigth extends ManangerPanelDetail {
       }
 
       if (this.panelDetail.children[4]) {
-        this.#insertElement({
+        this._insertElement({
           insert: this.panelDetail.children[4],
           element: htmlLeadingStatusNumeric,
           position: 'afterend',
         });
       }
 
-      this.#insertElement({
-        insert: this.panelDetail,
-        element: htmlInternalReceiptNumber,
-        position: 'beforeend',
-      });
-
-      this.#insertElement({
-        insert: this.panelDetail,
-        element: htmlTrailerId,
-        position: 'beforeend',
-      });
+      this._insertElement({ insert: this.panelDetail, element: htmlInternalReceiptNumber });
+      this._insertElement({ insert: this.panelDetail, element: htmlTrailerId });
 
       setTimeout(resolve, 50);
     });

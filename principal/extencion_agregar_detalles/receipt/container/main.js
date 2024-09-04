@@ -1,41 +1,33 @@
 window.addEventListener('load', async () => {
   try {
     // ELEMENTOS INTERNOS
-    const htmlinternalLocationInv = ElementsHtml.createElement({
+    const htmlReceiptId = ElementsHtml.createElement({
       id: 'DetailPaneHeaderinternalLocationInv',
     });
-    const htmllogisticsUnit = ElementsHtml.createElement({ id: 'DetailPaneHeaderlogisticsUnit' });
-    const htmlParentLogisticsUnit = ElementsHtml.createElement({
+    const htmlParent = ElementsHtml.createElement({ id: 'DetailPaneHeaderlogisticsUnit' });
+    const htmlReceiptDate = ElementsHtml.createElement({
       id: 'DetailPaneHeaderParentLogisticsUnit',
     });
 
     // ELEMENTOS EXTERNOS
-    const htmlReceiptDateTime = ElementsHtml.createElement({
+    const htmlCheckIn = ElementsHtml.createElement({
       id: 'DetailPaneHeaderReceiptDateTime',
     });
     const htmlUserStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderUserStamp' });
-    const htmlDateTimeStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderDateTimeStamp' });
-    const htmlAllocation = ElementsHtml.createElement({ id: 'DetailPaneHeaderAllocation' });
-    const htmlLocating = ElementsHtml.createElement({ id: 'DetailPaneHeaderLocating' });
-    const htmlWorkZone = ElementsHtml.createElement({ id: 'DetailPaneHeaderWorkZone' });
-    const htmlAttribute1 = ElementsHtml.createElement({ id: 'DetailPaneHeaderAttribute1' });
+    const htmlTrailerId = ElementsHtml.createElement({ id: 'DetailPaneHeaderDateTimeStamp' });
 
     const htmlVerMas = ElementsHtml.seeMoreInformation();
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1046');
 
     const elementsHtmlToInsert = [
-      htmlinternalLocationInv,
-      htmllogisticsUnit,
-      htmlParentLogisticsUnit,
-      htmlReceiptDateTime,
-      htmlUserStamp,
-      htmlDateTimeStamp,
-      htmlAllocation,
-      htmlLocating,
-      htmlWorkZone,
-      htmlAttribute1,
-      htmlVerMas,
+      { element: htmlReceiptId, position: 'afterbegin' },
+      { element: htmlParent },
+      { element: htmlReceiptDate },
+      { element: htmlCheckIn },
+      { element: htmlUserStamp },
+      { element: htmlTrailerId },
+      { element: htmlVerMas },
     ];
 
     const handlePanelDetail = new HandlePanelDetailInventory();
@@ -52,21 +44,17 @@ window.addEventListener('load', async () => {
   }
 });
 
-/** Insetar en detalles
+/**
+ * Insetar en detalles
+ * - Receipt id
  *
- * DATES
- * - Received date time
- *
- * REFERENCE INFO
+ * Traer datos containerDetail
+ * - Parent
+ * - Receipt date
+ * - Check In - Date time stamp
  * - User stamp
- * - Date time stamp
  *
- * ZONES
- *  - Allocation
- *  - Locating
- *  - Work
  *
- * ATRIBUTES
- * - Attribute 1
- *
+ * Traer datos receiptDetail
+ * - Trailer id
  */

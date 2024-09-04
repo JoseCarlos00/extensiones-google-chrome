@@ -12,7 +12,10 @@ window.addEventListener('load', async () => {
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1061');
 
-    const elementsHtmlToInsert = [htmlReceiptId, htmlInternalReceiptNumber];
+    const elementsHtmlToInsert = [
+      { element: htmlReceiptId, position: 'afterbegin' },
+      { element: htmlInternalReceiptNumber },
+    ];
     const handlePanelDetail = new HandleReceipLineInsigth();
 
     const manangerPanelDetail = new ManangerPanelDetailReceiptDetail({

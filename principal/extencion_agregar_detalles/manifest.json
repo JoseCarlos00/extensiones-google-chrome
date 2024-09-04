@@ -71,11 +71,7 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
-      "js": [
-        "receipt/detail/main.js",
-        "receipt/detail/ManangerPanelDetail.js",
-        "receipt/detail/HandleReceipLineInsigth.js"
-      ]
+      "js": ["receipt/detail/main.js", "receipt/detail/HandleReceipLineInsigth.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],

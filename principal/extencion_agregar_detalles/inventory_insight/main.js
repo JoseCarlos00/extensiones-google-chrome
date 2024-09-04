@@ -25,17 +25,17 @@ window.addEventListener('load', async () => {
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1046');
 
     const elementsHtmlToInsert = [
-      htmlinternalLocationInv,
-      htmllogisticsUnit,
-      htmlParentLogisticsUnit,
-      htmlReceiptDateTime,
-      htmlUserStamp,
-      htmlDateTimeStamp,
-      htmlAllocation,
-      htmlLocating,
-      htmlWorkZone,
-      htmlAttribute1,
-      htmlVerMas,
+      { element: htmlinternalLocationInv },
+      { element: htmllogisticsUnit },
+      { element: htmlParentLogisticsUnit },
+      { element: htmlReceiptDateTime },
+      { element: htmlUserStamp },
+      { element: htmlDateTimeStamp },
+      { element: htmlAllocation },
+      { element: htmlLocating },
+      { element: htmlWorkZone },
+      { element: htmlAttribute1 },
+      { element: htmlVerMas },
     ];
 
     const handlePanelDetail = new HandlePanelDetailInventory();

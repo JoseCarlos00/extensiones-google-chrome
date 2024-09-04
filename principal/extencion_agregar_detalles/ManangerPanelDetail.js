@@ -40,18 +40,22 @@ class ManangerPanelDetail {
     this.handlePanelDetail._extraerDatosDeTr(tr);
   }
 
+  _insertElement({ insert, element: elementToInsert, position = 'beforeend' }) {
+    if (elementToInsert instanceof Element && elementToInsert) {
+      insert.insertAdjacentElement(position, elementToInsert);
+    } else {
+      console.warn('El elemento no es de tipo Html Element');
+    }
+  }
+
   _insertElementsHtml() {
     return new Promise((resolve, reject) => {
       if (this.elementsToInsert.length === 0) {
         reject('No se Encontraron elementos a insertar');
       }
 
-      this.elementsToInsert.forEach(element => {
-        if (element instanceof Element) {
-          this.panelDetail.appendChild(element);
-        } else {
-          console.warn('El elemento no es de tipo Html Element');
-        }
+      this.elementsToInsert.forEach(({ element, position = 'beforeend' }) => {
+        this._insertElement({ insert: this.panelDetail, element, position });
       });
 
       setTimeout(resolve, 50);

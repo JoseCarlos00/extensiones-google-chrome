@@ -7,7 +7,12 @@ window.addEventListener('load', async () => {
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1076');
 
-    const elementsHtmlToInsert = [htmlWorkUnit, htmlContainerId, htmlUserName, htmlCustomer];
+    const elementsHtmlToInsert = [
+      { element: htmlWorkUnit },
+      { element: htmlContainerId },
+      { element: htmlUserName },
+      { element: htmlCustomer },
+    ];
     const handlePanelDetail = new HandlePanelDetailTransactionHistory();
 
     const manangerPanelDetail = new ManangerPanelDetail({
