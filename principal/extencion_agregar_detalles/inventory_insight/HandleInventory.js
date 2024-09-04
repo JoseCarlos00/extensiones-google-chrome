@@ -146,13 +146,6 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
       { element: this.panelElements.attribute1, value: attribute1 },
     ];
 
-    // Iterar sobre elementsToUpdate
-    elementsToUpdate.forEach(({ element, value }) => {
-      // Actualizar el valor del elemento
-      if (element) {
-        element.innerText = value;
-        element.classList.remove('wait');
-      }
-    });
+    this._setDataExternal(elementsToUpdate);
   }
 }

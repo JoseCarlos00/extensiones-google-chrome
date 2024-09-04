@@ -92,21 +92,39 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 
   _listeningToBackgroundMessages() {
     // Escuchar los mensajes enviados desde el script de fondo
-    const { backgroundMessage } = this;
+    const { backgroundMessage = 'invalidate' } = this;
 
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.action === backgroundMessage) {
-        // Actualizar la interfaz de usuario con los datos recibidos
-        if (this.isCancelGetDataExternal) {
-          return;
-        }
+    const messageMap = {
+      [backgroundMessage]: datos => this._updateDetailsPanelInfo(datos),
+      datos_no_encontrados: () => this._removeClassWait(),
+    };
 
+    chrome.runtime.onMessage.addListener(message => {
+      if (this.isCancelGetDataExternal) {
+        return;
+      }
+
+      if (messageMap[message.action]) {
         const datos = message.datos;
-        this._updateDetailsPanelInfo(datos);
-      } else if (message.action === 'datos_no_encontrados') {
-        const errorMessage = message.datos;
-        console.log('No encotrado:', errorMessage);
-        this._removeClassWait();
+        messageMap[message.action](datos);
+      } else {
+        console.error('unknown background response message:', message.action);
+      }
+    });
+  }
+
+  _setDataExternal(elementsToUpdate = []) {
+    if (elementsToUpdate.length === 0) {
+      console.warn('[setDataExternal]: [elementsToUpdate] esta vacio');
+      return;
+    }
+
+    // Iterar sobre elementsToUpdate
+    elementsToUpdate.forEach(({ element, value }) => {
+      // Actualizar el valor del elemento
+      if (element && value) {
+        element.innerText = value;
+        element.classList.remove('wait');
       }
     });
   }
