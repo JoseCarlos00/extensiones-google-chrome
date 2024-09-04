@@ -50,14 +50,6 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
     });
   }
 
-  async _initializeHandlePanelDetail() {
-    try {
-      await this._initializePanelElements();
-    } catch (error) {
-      console.error('Error: ha ocurrido un error al inizicailar HandleInventory:', error);
-    }
-  }
-
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
@@ -67,10 +59,10 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
     const userNameElement = tr.querySelector(this.internalData.userName);
     const referenceIdElement = tr.querySelector(this.internalData.referenceId);
 
-    const workUnit = workUnitElement ? workUnitElement.innerText : '';
-    const containerId = containerIdElement ? containerIdElement.innerText : '';
-    const userName = userNameElement ? userNameElement.innerText : '';
-    const referenceId = referenceIdElement ? referenceIdElement.innerText : '';
+    const workUnit = workUnitElement ? workUnitElement.textContent.trim() : '';
+    const containerId = containerIdElement ? containerIdElement.textContent.trim() : '';
+    const userName = userNameElement ? userNameElement.textContent.trim() : '';
+    const referenceId = referenceIdElement ? referenceIdElement.textContent.trim() : '';
 
     const insert = [
       { element: this.panelElements.workUnit, value: workUnit },
@@ -79,14 +71,14 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
     ];
 
     // Llamar a insertarInfo con los datos extraídos
-    this._insertarInfo({
+    this._insertInfo({
       insert,
       referenceId,
     });
   }
 
-  _insertarInfo({ insert = [], referenceId }) {
-    super._insertarInfo({ insert });
+  _insertInfo({ insert = [], referenceId }) {
+    super._insertInfo({ insert });
 
     // Insertar tienda si hay un ID de envío
     this._insertarTienda(referenceId);

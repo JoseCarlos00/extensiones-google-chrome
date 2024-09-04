@@ -14,13 +14,17 @@ class ElementsHtml {
     return div;
   }
 
-  static createElement({ id }) {
+  static createElement({ id, bold = false }) {
     const div = document.createElement('div');
     div.className = 'ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row';
 
     const label = document.createElement('label');
     label.id = id;
     label.className = 'detailpaneheaderlabel';
+
+    if (bold) {
+      label.style = 'font-weight: bold; letter-spacing: 1px;';
+    }
 
     div.appendChild(label);
 

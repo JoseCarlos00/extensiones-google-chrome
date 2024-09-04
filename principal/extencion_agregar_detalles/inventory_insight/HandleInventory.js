@@ -104,9 +104,9 @@ class HandlePanelDetailInventory extends HandlePanelDetail {
     const logisticsUnitElement = tr.querySelector(this.internalData.logisticsUnit);
     const ParentLPElement = tr.querySelector(this.internalData.parentLogisticsUnit);
 
-    const internalLocationInv = internalNumElement ? internalNumElement.innerText : '';
-    const logisticsUnit = logisticsUnitElement ? logisticsUnitElement.innerText : '';
-    const parentLogisticsUnit = ParentLPElement ? ParentLPElement.innerText : '';
+    const internalLocationInv = internalNumElement ? internalNumElement.textContent.trim() : '';
+    const logisticsUnit = logisticsUnitElement ? logisticsUnitElement.textContent.trim() : '';
+    const parentLogisticsUnit = ParentLPElement ? ParentLPElement.textContent.trim() : '';
 
     const insert = [
       { element: this.panelElements.internalLocationInv, value: internalLocationInv },

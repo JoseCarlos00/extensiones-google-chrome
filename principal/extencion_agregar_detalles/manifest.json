@@ -59,7 +59,7 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
-      "js": ["transaction_history/HandleTransactionHistory.js", "transaction_history/main.js"]
+      "js": ["transaction_history/main.js", "transaction_history/HandleTransactionHistory.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
@@ -115,7 +115,10 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"],
-      "js": ["planned_shipment_insight/plannedShipmentInsight.js"]
+      "js": [
+        "planned_shipment_insight/main.js",
+        "planned_shipment_insight/HandlePlannedShipment.js"
+      ]
     },
     {
       "matches": [
