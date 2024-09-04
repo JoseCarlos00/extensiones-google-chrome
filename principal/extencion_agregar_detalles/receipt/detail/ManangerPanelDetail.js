@@ -3,24 +3,33 @@ class ManangerPanelDetailReceiptDetail extends ManangerPanelDetail {
     super(parameters);
   }
 
+  #insertElement({ insert, element: elementToInsert, position = 'beforeend' }) {
+    if (elementToInsert instanceof Element && elementToInsert) {
+      insert.insertAdjacentElement(position, elementToInsert);
+    } else {
+      console.warn('El elemento no es de tipo Html Element');
+    }
+  }
+
   _insertElementsHtml() {
     return new Promise((resolve, reject) => {
-      const [htmlReceiptId, htmlInternalReceiptNumber] = this.elementsToInsert;
       if (this.elementsToInsert.length === 0) {
         reject('No se Encontraron elementos a insertar');
       }
 
-      if (htmlReceiptId instanceof Element) {
-        this.panelDetail.insertAdjacentElement('afterbegin', htmlReceiptId);
-      } else {
-        console.warn('El elemento no es de tipo Html Element');
-      }
+      const [htmlReceiptId, htmlInternalReceiptNumber] = this.elementsToInsert;
 
-      if (htmlInternalReceiptNumber instanceof Element) {
-        this.panelDetail.insertAdjacentElement('beforeend', htmlInternalReceiptNumber);
-      } else {
-        console.warn('El elemento no es de tipo Html Element');
-      }
+      this.#insertElement({
+        insert: this.panelDetail,
+        element: htmlReceiptId,
+        position: 'afterbegin',
+      });
+
+      this.#insertElement({
+        insert: this.panelDetail,
+        element: htmlInternalReceiptNumber,
+        position: 'beforeend',
+      });
 
       setTimeout(resolve, 50);
     });

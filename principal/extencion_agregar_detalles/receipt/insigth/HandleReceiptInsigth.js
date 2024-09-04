@@ -2,30 +2,34 @@ class HandleReceiptInsigth extends HandlePanelDetail {
   constructor() {
     super();
     this.selectorsId = {
-      customer: '#DetailPaneHeaderCustomer',
-      shipTo: '#DetailPaneHeaderShipTo',
-      internalShipmentNum: '#DetailPaneHeaderInternalShipmentNumber',
+      TrailingSts: '#DetailPaneHeaderTrailingStatusNumeric',
+      LeadingSts: '#DetailPaneHeaderLeadingStatusNumeric',
+      InternalNumber: '#DetailPaneHeaderInternalReceiptNumber',
+      TrailerId: '#DetailPaneHeaderTrailerId',
     };
 
     this.panelElements = {
-      customer: null,
-      shipTo: null,
-      internalShipmentNum: null,
+      TrailingSts: null,
+      LeadingSts: null,
+      InternalNumber: null,
+      TrailerId: null,
     };
 
     this.internalData = {
-      customer: "[aria-describedby='ListPaneDataGrid_CUSTOMER']",
-      shipTo: "[aria-describedby='ListPaneDataGrid_SHIP_TO']",
-      internalShipmentNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_NUM']",
+      TrailingSts: "[aria-describedby='ListPaneDataGrid_TRAILINGSTS']",
+      LeadingSts: "[aria-describedby='ListPaneDataGrid_LEADINGSTS']",
+      InternalNumber: "[aria-describedby='ListPaneDataGrid_INTERNAL_RECEIPT_NUM']",
+      TrailerId: "[aria-describedby='ListPaneDataGrid_TRAILER_ID']",
     };
   }
 
   _initializePanelElements() {
     return new Promise((resolve, reject) => {
       const elements = {
-        customer: document.querySelector(this.selectorsId.customer),
-        shipTo: document.querySelector(this.selectorsId.shipTo),
-        internalShipmentNum: document.querySelector(this.selectorsId.internalShipmentNum),
+        TrailingSts: document.querySelector(this.selectorsId.TrailingSts),
+        LeadingSts: document.querySelector(this.selectorsId.LeadingSts),
+        InternalNumber: document.querySelector(this.selectorsId.InternalNumber),
+        TrailerId: document.querySelector(this.selectorsId.TrailerId),
       };
 
       const missingOptions = Object.entries(elements)
@@ -50,20 +54,21 @@ class HandleReceiptInsigth extends HandlePanelDetail {
     if (!tr) return;
 
     // Obtener elementos del DOM
-    const customerElement = tr.querySelector(this.internalData.customer);
-    const shipToElement = tr.querySelector(this.internalData.shipTo);
-    const internalShipmentNumElement = tr.querySelector(this.internalData.internalShipmentNum);
+    const trailingStsElement = tr.querySelector(this.internalData.TrailingSts);
+    const leadingStsElement = tr.querySelector(this.internalData.LeadingSts);
+    const internalNumElement = tr.querySelector(this.internalData.InternalNumber);
+    const trailerIdElement = tr.querySelector(this.internalData.TrailerId);
 
-    const customer = customerElement ? customerElement.textContent.trim() : '';
-    const shipTo = shipToElement ? shipToElement.textContent.trim() : '';
-    const internalShipmentNum = internalShipmentNumElement
-      ? internalShipmentNumElement.textContent.trim()
-      : '';
+    const trailingSts = trailingStsElement ? trailingStsElement.textContent.trim() : '';
+    const leadingSts = leadingStsElement ? leadingStsElement.textContent.trim() : '';
+    const internalReceiptNum = internalNumElement ? internalNumElement.textContent.trim() : '';
+    const trailerId = trailerIdElement ? trailerIdElement.textContent.trim() : '';
 
     const insert = [
-      { element: this.panelElements.customer, value: customer },
-      { element: this.panelElements.shipTo, value: shipTo },
-      { element: this.panelElements.internalShipmentNum, value: internalShipmentNum },
+      { element: this.panelElements.TrailingSts, value: trailingSts },
+      { element: this.panelElements.LeadingSts, value: leadingSts },
+      { element: this.panelElements.InternalNumber, value: internalReceiptNum },
+      { element: this.panelElements.TrailerId, value: trailerId },
     ];
 
     // Llamar a insertarInfo con los datos extraídos
