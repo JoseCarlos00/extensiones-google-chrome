@@ -153,7 +153,7 @@ class HandleLineInsight extends HandlePanelDetailDataExternal {
 
       const elementsToUpdate = [
         { element: this.externalPanelElements.dateCreate, value: date },
-        { element: this.externalPanelElements.waveNumber, value: waveNumber },
+        { element: this.externalPanelElements.waveNumber, value: `Wave: ${waveNumber}` },
       ];
 
       if (
