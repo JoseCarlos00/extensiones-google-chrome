@@ -9,17 +9,13 @@ class ManangerPanelDetailReceiptInsigth extends ManangerPanelDetail {
         reject('No se Encontraron elementos a insertar');
       }
 
-      const [
-        htmlTrailingStatusNumeric,
-        htmlLeadingStatusNumeric,
-        htmlInternalReceiptNumber,
-        htmlTrailerId,
-      ] = this.elementsToInsert;
+      const [trailingStatusNumeric, leadingStatusNumeric, internalReceiptNumber, trailerId] =
+        this.elementsToInsert;
 
       if (this.panelDetail.children[2]) {
         this._insertElement({
           insert: this.panelDetail.children[2],
-          element: htmlTrailingStatusNumeric,
+          element: trailingStatusNumeric.element,
           position: 'afterend',
         });
       }
@@ -27,13 +23,13 @@ class ManangerPanelDetailReceiptInsigth extends ManangerPanelDetail {
       if (this.panelDetail.children[4]) {
         this._insertElement({
           insert: this.panelDetail.children[4],
-          element: htmlLeadingStatusNumeric,
+          element: leadingStatusNumeric.element,
           position: 'afterend',
         });
       }
 
-      this._insertElement({ insert: this.panelDetail, element: htmlInternalReceiptNumber });
-      this._insertElement({ insert: this.panelDetail, element: htmlTrailerId });
+      this._insertElement({ insert: this.panelDetail, element: internalReceiptNumber.element });
+      this._insertElement({ insert: this.panelDetail, element: trailerId.element });
 
       setTimeout(resolve, 50);
     });

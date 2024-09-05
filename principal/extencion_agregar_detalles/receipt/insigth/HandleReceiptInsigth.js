@@ -62,7 +62,7 @@ class HandleReceiptInsigth extends HandlePanelDetail {
     const trailingSts = trailingStsElement ? trailingStsElement.textContent.trim() : '';
     const leadingSts = leadingStsElement ? leadingStsElement.textContent.trim() : '';
     const internalReceiptNum = internalNumElement ? internalNumElement.textContent.trim() : '';
-    const trailerId = trailerIdElement ? trailerIdElement.textContent.trim() : '';
+    const trailerId = trailerIdElement ? trailerIdElement.textContent.trim() : '—';
 
     const insert = [
       { element: this.panelElements.TrailingSts, value: trailingSts },

@@ -21,7 +21,7 @@ window.addEventListener('load', async () => {
       { element: htmlInternalReceiptNumber },
       { element: htmlTrailerId },
     ];
-    const handlePanelDetail = new HandlePlannedShipment();
+    const handlePanelDetail = new HandleReceiptInsigth();
 
     const manangerPanelDetail = new ManangerPanelDetailReceiptInsigth({
       panelDetail,
