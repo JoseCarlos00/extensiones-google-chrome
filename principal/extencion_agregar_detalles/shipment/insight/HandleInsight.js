@@ -64,7 +64,8 @@ class HandleInsight extends HandlePanelDetailDataExternal {
     // Uso de la función auxiliar para extraer y limpiar valores
     const loadNumber = this._extractAndTrim(tr.querySelector(this.internalData.loadNumber));
     const userDefineFile3 = this._extractAndTrim(
-      tr.querySelector(this.internalData.userDefineFile3)
+      tr.querySelector(this.internalData.userDefineFile3),
+      '—'
     );
     const internalShipmentNum = this._extractAndTrim(
       tr.querySelector(this.internalData.internalShipmentNum)

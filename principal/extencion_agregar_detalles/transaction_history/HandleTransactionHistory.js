@@ -53,16 +53,10 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    // Obtener elementos del DOM
-    const workUnitElement = tr.querySelector(this.internalData.workUnit);
-    const containerIdElement = tr.querySelector(this.internalData.containerId);
-    const userNameElement = tr.querySelector(this.internalData.userName);
-    const referenceIdElement = tr.querySelector(this.internalData.referenceId);
-
-    const workUnit = workUnitElement ? workUnitElement.textContent.trim() : '';
-    const containerId = containerIdElement ? containerIdElement.textContent.trim() : '';
-    const userName = userNameElement ? userNameElement.textContent.trim() : '';
-    const referenceId = referenceIdElement ? referenceIdElement.textContent.trim() : '';
+    const workUnit = this._extractAndTrim(tr.querySelector(this.internalData.workUnit));
+    const containerId = this._extractAndTrim(tr.querySelector(this.internalData.containerId));
+    const userName = this._extractAndTrim(tr.querySelector(this.internalData.userName));
+    const referenceId = this._extractAndTrim(tr.querySelector(this.internalData.referenceId));
 
     const insert = [
       { element: this.panelElements.workUnit, value: workUnit },

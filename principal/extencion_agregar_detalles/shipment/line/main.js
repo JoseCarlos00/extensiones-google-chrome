@@ -1,40 +1,52 @@
 window.addEventListener('load', async () => {
   try {
     // ELEMENTOS INTERNOS
-    const htmlinternalLocationInv = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderinternalLocationInv',
+    const htmlShipmentId = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderShiptmenID',
+      bold: true,
+      color: true,
     });
-    const htmllogisticsUnit = ElementsHtml.createElement({ id: 'DetailPaneHeaderlogisticsUnit' });
-    const htmlParentLogisticsUnit = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderParentLogisticsUnit',
+    const htmlCustomer = ElementsHtml.createElement({ id: 'DetailPaneHeaderCustomer' });
+    const htmlInternalShipmentNum = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderInternalShipmetNum',
+      bold: true,
+    });
+    const htmlInternalShipmentLineNum = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderInternalShipmetLineNum',
+    });
+
+    // Html STATUS
+    const htmlStatus1 = ElementsHtml.createElement({ id: 'DetailPaneHeaderStatus1' });
+    const htmlStatus1Number = ElementsHtml.createElement({ id: 'DetailPaneHeaderStatus1Number' });
+    const htmlTraingSts = ElementsHtml.createElement({ id: 'DetailPaneHeaderTraingSts' });
+    const htmlTrailingStsNumber = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderTrailingStsNumber',
+    });
+    const htmlLeadingSts = ElementsHtml.createElement({ id: 'DetailPaneHeaderLeadingSts' });
+    const htmlLeadingStsNumber = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderLeadingStsNumber',
     });
 
     // ELEMENTOS EXTERNOS
-    const htmlReceiptDateTime = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderReceiptDateTime',
-    });
-    const htmlUserStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderUserStamp' });
-    const htmlDateTimeStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderDateTimeStamp' });
-    const htmlAllocation = ElementsHtml.createElement({ id: 'DetailPaneHeaderAllocation' });
-    const htmlLocating = ElementsHtml.createElement({ id: 'DetailPaneHeaderLocating' });
-    const htmlWorkZone = ElementsHtml.createElement({ id: 'DetailPaneHeaderWorkZone' });
-    const htmlAttribute1 = ElementsHtml.createElement({ id: 'DetailPaneHeaderAttribute1' });
-
+    const htmlWaveNumber = ElementsHtml.createElement({ id: 'DetailPaneHeaderWaveNumber' });
+    const htmlDateCreate = ElementsHtml.createElement({ id: 'DetailPaneHeaderDateCreate' });
     const htmlVerMas = ElementsHtml.seeMoreInformation();
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1066');
 
     const elementsHtmlToInsert = [
-      { element: htmlinternalLocationInv },
-      { element: htmllogisticsUnit },
-      { element: htmlParentLogisticsUnit },
-      { element: htmlReceiptDateTime },
-      { element: htmlUserStamp },
-      { element: htmlDateTimeStamp },
-      { element: htmlAllocation },
-      { element: htmlLocating },
-      { element: htmlWorkZone },
-      { element: htmlAttribute1 },
+      { element: htmlShipmentId, position: 'afterbegin' },
+      { element: htmlCustomer },
+      { element: htmlInternalShipmentNum },
+      { element: htmlInternalShipmentLineNum },
+      { element: htmlStatus1 },
+      { element: htmlStatus1Number },
+      { element: htmlTraingSts },
+      { element: htmlTrailingStsNumber },
+      { element: htmlLeadingSts },
+      { element: htmlLeadingStsNumber },
+      { element: htmlWaveNumber },
+      { element: htmlDateCreate },
       { element: htmlVerMas },
     ];
 
