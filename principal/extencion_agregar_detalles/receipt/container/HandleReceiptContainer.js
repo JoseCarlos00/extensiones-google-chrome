@@ -223,11 +223,42 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
     }
   }
 
+  _removeClassWait(elementsObj) {
+    const text = 'No encontrado';
+    for (const key in elementsObj) {
+      const element = elementsObj[key];
+
+      if (element) {
+        element.innerHTML = text;
+        element.classList.remove('wait');
+      }
+    }
+  }
+
+  _handleDataNotFound(datos) {
+    const { header } = datos;
+
+    const sinTrailerId = Object.fromEntries(
+      Object.entries(this.externalPanelElements).filter(([key, value]) => key !== 'trailerId')
+    );
+
+    // Trailer Id
+    if (header === 'Receipt Detail') {
+      const { trailerId } = this.externalPanelElements;
+      trailerId.innerHTML = 'No encontrado';
+      trailerId.classList.remove('wait');
+      trailerId.classList.remove('disabled');
+      trailerIdElement.style.pointerEvents = 'none';
+    } else if (header === 'Receipt Container Detail') {
+      this._removeClassWait(sinTrailerId);
+    }
+  }
+
   _listeningToBackgroundMessages() {
     const messageMap = {
       actualizar_datos_de_receipt_container_detail: datos => this._updateContainerDetail(datos),
       actualizar_datos_de_receipt_detail: datos => this._updateReceiptDetail(datos),
-      datos_no_encontrados: () => this._removeClassWait(),
+      datos_no_encontrados: datos => this._handleDataNotFound(datos),
     };
 
     chrome.runtime.onMessage.addListener(message => {

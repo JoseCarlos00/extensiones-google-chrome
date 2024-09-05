@@ -17,7 +17,7 @@ class ElementsHtml {
   static createElementAnchor({ id }) {
     const div = document.createElement('div');
     div.id = 'ScreenControlHyperlink36456';
-    div.className = 'ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row';
+    div.className = 'summarypaneheadermediumlabel hideemptydiv row';
 
     const a = document.createElement('a');
     a.id = id;
