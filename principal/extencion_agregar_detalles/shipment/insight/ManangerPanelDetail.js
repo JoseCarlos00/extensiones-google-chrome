@@ -1,4 +1,4 @@
-class ManangerPanelDetailReceiptInsight extends ManangerPanelDetail {
+class ManangerPanelDetailShiptmentInsight extends ManangerPanelDetail {
   constructor(parameters) {
     super(parameters);
   }
@@ -9,27 +9,31 @@ class ManangerPanelDetailReceiptInsight extends ManangerPanelDetail {
         reject('No se Encontraron elementos a insertar');
       }
 
-      const [trailingStatusNumeric, leadingStatusNumeric, internalReceiptNumber, trailerId] =
-        this.elementsToInsert;
+      const [trailingStatusNumeric, leadingStatusNumeric, ...rest] = this.elementsToInsert;
+      const trailingElment = this.panelDetail.querySelector('#ScreenControlLabel38608');
+      const leadingElement = this.panelDetail.querySelector('#ScreenControlLabel38609');
 
-      if (this.panelDetail.children[2]) {
+      if (trailingElment) {
         this._insertElement({
-          insert: this.panelDetail.children[2],
+          insert: trailingElment,
           element: trailingStatusNumeric.element,
           position: 'afterend',
         });
       }
 
-      if (this.panelDetail.children[4]) {
+      if (leadingElement) {
         this._insertElement({
-          insert: this.panelDetail.children[4],
+          insert: leadingElement,
           element: leadingStatusNumeric.element,
           position: 'afterend',
         });
       }
 
-      this._insertElement({ insert: this.panelDetail, element: internalReceiptNumber.element });
-      this._insertElement({ insert: this.panelDetail, element: trailerId.element });
+      if (rest.length > 0) {
+        rest.forEach(({ element }) => {
+          this._insertElement({ insert: this.panelDetail, element });
+        });
+      }
 
       setTimeout(resolve, 50);
     });

@@ -67,13 +67,13 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    const internalNumElement = tr.querySelector(this.internalData.internalLocationInv);
-    const logisticsUnitElement = tr.querySelector(this.internalData.logisticsUnit);
-    const ParentLPElement = tr.querySelector(this.internalData.parentLogisticsUnit);
-
-    const internalLocationInv = internalNumElement ? internalNumElement.textContent.trim() : '';
-    const logisticsUnit = logisticsUnitElement ? logisticsUnitElement.textContent.trim() : '';
-    const parentLogisticsUnit = ParentLPElement ? ParentLPElement.textContent.trim() : '';
+    const internalLocationInv = this._extractAndTrim(
+      tr.querySelector(this.internalData.internalLocationInv)
+    );
+    const logisticsUnit = this._extractAndTrim(tr.querySelector(this.internalData.logisticsUnit));
+    const parentLogisticsUnit = this._extractAndTrim(
+      tr.querySelector(this.internalData.parentLogistics)
+    );
 
     const insert = [
       { element: this.panelElements.internalLocationInv, value: internalLocationInv },

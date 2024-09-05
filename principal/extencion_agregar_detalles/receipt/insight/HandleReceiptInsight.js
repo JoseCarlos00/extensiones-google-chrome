@@ -53,16 +53,12 @@ class HandleReceiptInsight extends HandlePanelDetail {
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    // Obtener elementos del DOM
-    const trailingStsElement = tr.querySelector(this.internalData.TrailingSts);
-    const leadingStsElement = tr.querySelector(this.internalData.LeadingSts);
-    const internalNumElement = tr.querySelector(this.internalData.InternalNumber);
-    const trailerIdElement = tr.querySelector(this.internalData.TrailerId);
-
-    const trailingSts = trailingStsElement ? trailingStsElement.textContent.trim() : '';
-    const leadingSts = leadingStsElement ? leadingStsElement.textContent.trim() : '';
-    const internalReceiptNum = internalNumElement ? internalNumElement.textContent.trim() : '';
-    const trailerId = trailerIdElement ? trailerIdElement.textContent.trim() : '—';
+    const trailingSts = this._extractAndTrim(tr.querySelector(this.internalData.TrailingSts));
+    const leadingSts = this._extractAndTrim(tr.querySelector(this.internalData.LeadingSts));
+    const internalReceiptNum = this._extractAndTrim(
+      tr.querySelector(this.internalData.InternalNumber)
+    );
+    const trailerId = this._extractAndTrim(tr.querySelector(this.internalData.TrailerId), '—');
 
     const insert = [
       { element: this.panelElements.TrailingSts, value: trailingSts },

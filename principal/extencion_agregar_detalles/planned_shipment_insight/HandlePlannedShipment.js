@@ -49,16 +49,11 @@ class HandlePlannedShipment extends HandlePanelDetail {
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    // Obtener elementos del DOM
-    const customerElement = tr.querySelector(this.internalData.customer);
-    const shipToElement = tr.querySelector(this.internalData.shipTo);
-    const internalShipmentNumElement = tr.querySelector(this.internalData.internalShipmentNum);
-
-    const customer = customerElement ? customerElement.textContent.trim() : '';
-    const shipTo = shipToElement ? shipToElement.textContent.trim() : '';
-    const internalShipmentNum = internalShipmentNumElement
-      ? internalShipmentNumElement.textContent.trim()
-      : '';
+    const customer = this._extractAndTrim(tr.querySelector(this.internalData.customer));
+    const shipTo = this._extractAndTrim(tr.querySelector(this.internalData.shipTo));
+    const internalShipmentNum = this._extractAndTrim(
+      tr.querySelector(this.internalData.internalShipmentNum)
+    );
 
     const insert = [
       { element: this.panelElements.customer, value: customer },

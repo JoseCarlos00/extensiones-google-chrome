@@ -9,27 +9,32 @@ class ManangerPanelDetailReceiptInsight extends ManangerPanelDetail {
         reject('No se Encontraron elementos a insertar');
       }
 
-      const [trailingStatusNumeric, leadingStatusNumeric, internalReceiptNumber, trailerId] =
-        this.elementsToInsert;
+      const [trailingStsNum, leadingStsNum, ...rest] = this.elementsToInsert;
 
-      if (this.panelDetail.children[2]) {
+      const trailingElment = this.panelDetail.querySelector('#ScreenControlLabel36193');
+      const leadingElement = this.panelDetail.querySelector('#ScreenControlLabel36194');
+
+      if (trailingElment) {
         this._insertElement({
-          insert: this.panelDetail.children[2],
-          element: trailingStatusNumeric.element,
+          insert: trailingElment,
+          element: trailingStsNum.element,
           position: 'afterend',
         });
       }
 
-      if (this.panelDetail.children[4]) {
+      if (leadingElement) {
         this._insertElement({
-          insert: this.panelDetail.children[4],
-          element: leadingStatusNumeric.element,
+          insert: leadingElement,
+          element: leadingStsNum.element,
           position: 'afterend',
         });
       }
 
-      this._insertElement({ insert: this.panelDetail, element: internalReceiptNumber.element });
-      this._insertElement({ insert: this.panelDetail, element: trailerId.element });
+      if (rest.length > 0) {
+        rest.forEach(({ element }) => {
+          this._insertElement({ insert: this.panelDetail, element });
+        });
+      }
 
       setTimeout(resolve, 50);
     });

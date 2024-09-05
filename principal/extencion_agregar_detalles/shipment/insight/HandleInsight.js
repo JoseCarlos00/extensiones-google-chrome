@@ -62,23 +62,23 @@ class HandleInsight extends HandlePanelDetailDataExternal {
     if (!tr) return;
 
     // Uso de la función auxiliar para extraer y limpiar valores
-    const loadNumber = this._extractAndTrim(tr.querySelector(this.selectorsId.loadNumber));
+    const loadNumber = this._extractAndTrim(tr.querySelector(this.internalData.loadNumber));
     const userDefineFile3 = this._extractAndTrim(
-      tr.querySelector(this.selectorsId.userDefineFile3)
+      tr.querySelector(this.internalData.userDefineFile3)
     );
     const internalShipmentNum = this._extractAndTrim(
-      tr.querySelector(this.selectorsId.internalShipmentNum)
+      tr.querySelector(this.internalData.internalShipmentNum)
     );
-    const trailingNum = this._extractAndTrim(tr.querySelector(this.selectorsId.trailingNum));
+    const trailingNum = this._extractAndTrim(tr.querySelector(this.internalData.trailingNum));
+    const leadingNum = this._extractAndTrim(tr.querySelector(this.internalData.leadingNum));
 
     const insert = [
       { element: this.internalPanelElements.loadNumber, value: loadNumber },
       { element: this.internalPanelElements.userDefineFile3, value: userDefineFile3 },
       { element: this.internalPanelElements.internalShipmentNum, value: internalShipmentNum },
       { element: this.internalPanelElements.trailingNum, value: trailingNum },
+      { element: this.internalPanelElements.leadingNum, value: leadingNum },
     ];
-
-    console.log('[_extraerDatosDeTr]:', insert);
 
     // Llamar a insertarInfo con los datos extraídos
     this._insertInfo({

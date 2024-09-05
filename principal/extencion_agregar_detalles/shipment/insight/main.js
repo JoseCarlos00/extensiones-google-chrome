@@ -32,24 +32,24 @@ window.addEventListener('load', async () => {
     );
 
     const elementsHtmlToInsert = [
+      { element: htmlTrailingStsNumber },
+      { element: htmlLeadingStsNumber },
       { element: htmlLoadNumber },
       { element: htmlUserDefineFile3 },
       { element: htmlinternalShipmentNum },
       { element: htmlDockDoor },
-      { element: htmlTrailingStsNumber },
-      { element: htmlLeadingStsNumber },
       { element: htmlVerMas },
     ];
 
     const handlePanelDetail = new HandleInsight();
 
-    const manangerPanelDetail = new ManangerPanelDetail({
+    const manangerPanelDetail = new ManangerPanelDetailShiptmentInsight({
       panelDetail,
       elementsHtmlToInsert,
       handlePanelDetail,
     });
 
-    // await manangerPanelDetail.initialize();
+    await manangerPanelDetail.initialize();
   } catch (error) {
     console.error('Error al crear ManangerPanelDetail:', error);
   }

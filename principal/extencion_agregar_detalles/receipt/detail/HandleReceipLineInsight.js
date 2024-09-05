@@ -45,12 +45,10 @@ class HandleReceipLineInsight extends HandlePanelDetail {
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    // Obtener elementos del DOM
-    const receiptIdElement = tr.querySelector(this.internalData.receiptId);
-    const internalNumbElement = tr.querySelector(this.internalData.internalReceiptNumber);
-
-    const receiptId = receiptIdElement ? receiptIdElement.textContent.trim() : '';
-    const internalReceiptNumber = internalNumbElement ? internalNumbElement.textContent.trim() : '';
+    const receiptId = this._extractAndTrim(tr.querySelector(this.internalData.receiptId));
+    const internalReceiptNumber = this._extractAndTrim(
+      tr.querySelector(this.internalData.internalReceiptNumber)
+    );
 
     const insert = [
       { element: this.panelElements.receiptId, value: receiptId },

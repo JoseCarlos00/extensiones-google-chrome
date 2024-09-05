@@ -9,7 +9,11 @@ window.addEventListener('load', async () => {
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1053');
 
-    const elementsHtmlToInsert = [htmlCustomer, htmlShipTo, htmlInternalShipmentNumber];
+    const elementsHtmlToInsert = [
+      { element: htmlCustomer },
+      { element: htmlShipTo },
+      { element: htmlInternalShipmentNumber },
+    ];
     const handlePanelDetail = new HandlePlannedShipment();
 
     const manangerPanelDetail = new ManangerPanelDetail({

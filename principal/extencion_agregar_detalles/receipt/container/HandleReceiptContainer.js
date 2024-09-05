@@ -75,26 +75,25 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    const receiptIdElement = tr.querySelector(this.internalData.receiptId);
-    const receiptId = receiptIdElement ? receiptIdElement.textContent.trim() : '';
-
-    const internalNum = tr.querySelector(this.internalData.internalReceiptNumber);
-    const internalNumValue = internalNum?.textContent.trim() ?? '';
-
-    const internalConNum = tr.querySelector(this.internalData.internalRecContNumber);
-    const internalConNumValue = internalConNum?.textContent.trim() ?? '';
+    const receiptId = this._extractAndTrim(tr.querySelector(this.internalData.receiptId));
+    const internalReceiptNumber = this._extractAndTrim(
+      tr.querySelector(this.internalData.internalReceiptNumber)
+    );
+    const internalRecContNumber = this._extractAndTrim(
+      tr.querySelector(this.internalData.internalRecContNumber)
+    );
 
     const insert = [{ element: this.panelElements.receiptId, value: receiptId }];
 
     // Llamar a insertarInfo con los datos extraídos
     this._insertInfo({
       insert,
-      internalNumValue,
-      internalConNumValue,
+      internalReceiptNumber,
+      internalRecContNumber,
     });
   }
 
-  _insertInfo({ insert = [], internalNumValue, internalConNumValue }) {
+  _insertInfo({ insert = [], internalReceiptNumber, internalRecContNumber }) {
     super._insertInfo({ insert });
     const { trailerId } = this.panelElements;
 
@@ -104,8 +103,8 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
       trailerId.innerHTML = 'Trailer Id...';
     }
 
-    this.internalPanelValue.internalReceiptNumber = internalNumValue;
-    this.internalPanelValue.internalRecContNumber = internalConNumValue;
+    this.internalPanelValue.internalReceiptNumber = internalReceiptNumber;
+    this.internalPanelValue.internalRecContNumber = internalRecContNumber;
   }
 
   _waitFordata(value) {
