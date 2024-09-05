@@ -1,4 +1,4 @@
-class HandleReceiptInsigth extends HandlePanelDetail {
+class HandleReceiptInsight extends HandlePanelDetail {
   constructor() {
     super();
     this.selectorsId = {

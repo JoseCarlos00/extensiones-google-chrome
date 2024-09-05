@@ -74,6 +74,11 @@ class HandlePanelDetail {
     }
   }
 
+  // Función auxiliar para extraer y limpiar valores de un elemento del DOM
+  _extractAndTrim(selector, fallback = '') {
+    return selector?.textContent.trim() ?? fallback;
+  }
+
   _extraerDatosDeTr(tr) {
     if (!tr) return;
   }

@@ -16,7 +16,7 @@ window.addEventListener('load', async () => {
       { element: htmlReceiptId, position: 'afterbegin' },
       { element: htmlInternalReceiptNumber },
     ];
-    const handlePanelDetail = new HandleReceipLineInsigth();
+    const handlePanelDetail = new HandleReceipLineInsight();
 
     const manangerPanelDetail = new ManangerPanelDetail({
       panelDetail,

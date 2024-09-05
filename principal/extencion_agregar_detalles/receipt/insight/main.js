@@ -21,9 +21,9 @@ window.addEventListener('load', async () => {
       { element: htmlInternalReceiptNumber },
       { element: htmlTrailerId },
     ];
-    const handlePanelDetail = new HandleReceiptInsigth();
+    const handlePanelDetail = new HandleReceiptInsight();
 
-    const manangerPanelDetail = new ManangerPanelDetailReceiptInsigth({
+    const manangerPanelDetail = new ManangerPanelDetailReceiptInsight({
       panelDetail,
       elementsHtmlToInsert,
       handlePanelDetail,

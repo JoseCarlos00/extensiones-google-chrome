@@ -1,4 +1,4 @@
-class HandleInsigth extends HandlePanelDetailDataExternal {
+class HandleLineInsight extends HandlePanelDetailDataExternal {
   constructor() {
     super();
     this.backgroundMessage = 'actualizar_datos_de_inventory_detail';

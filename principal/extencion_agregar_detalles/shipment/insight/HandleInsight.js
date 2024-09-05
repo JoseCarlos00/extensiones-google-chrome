@@ -1,35 +1,29 @@
-class HandleLineInsigth extends HandlePanelDetailDataExternal {
+class HandleInsight extends HandlePanelDetailDataExternal {
   constructor() {
     super();
-    this.backgroundMessage = 'actualizar_datos_de_inventory_detail';
+    this.backgroundMessage = 'actualizar_datos_de_load_detail';
 
     this.selectorsId = {
-      internalLocationInv: '#DetailPaneHeaderinternalLocationInv',
-      logisticsUnit: '#DetailPaneHeaderlogisticsUnit',
-      parentLogisticsUnit: '#DetailPaneHeaderParentLogisticsUnit',
-      receiptDateTime: '#DetailPaneHeaderReceiptDateTime',
-      userStamp: '#DetailPaneHeaderUserStamp',
-      dateTimeStamp: '#DetailPaneHeaderDateTimeStamp',
-      allocation: '#DetailPaneHeaderAllocation',
-      locating: '#DetailPaneHeaderLocating',
-      workZone: '#DetailPaneHeaderWorkZone',
-      attribute1: '#DetailPaneHeaderAttribute1',
+      loadNumber: '#DetailPaneHeaderLoadNumber',
+      userDefineFile3: '#DetailPaneHeaderUserDefineFile3',
+      internalShipmentNum: '#DetailPaneHeaderinternalShipmentNum',
+      trailingNum: '#DetailPaneHeaderTrailingStsNumber',
+      leadingNum: '#DetailPaneHeaderLeadingStsNumber',
+      dockDoor: '#DetailPaneHeaderDockDoor',
       ...this.seeMoreInformationSelector,
     };
 
     this.externalPanelElements = {
-      userStamp: null,
-      dateTimeStamp: null,
-      allocation: null,
-      locating: null,
-      workZone: null,
-      attribute1: null,
+      dockDoor: null,
     };
 
     this.internalPanelElements = {
-      internalLocationInv: null,
-      logisticsUnit: null,
-      parentLogisticsUnit: null,
+      loadNumber: null,
+      userDefineFile3: null,
+      internalShipmentNum: null,
+      trailingNum: null,
+      leadingNum: null,
+      dockDoor: null,
     };
 
     this.panelElements = {
@@ -39,47 +33,52 @@ class HandleLineInsigth extends HandlePanelDetailDataExternal {
     };
 
     this.internalData = {
-      internalLocationInv: "[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
-      logisticsUnit: "[aria-describedby='ListPaneDataGrid_LOGISTICS_UNIT']",
-      parentLogisticsUnit: "[aria-describedby='ListPaneDataGrid_PARENT_LOGISTICS_UNIT']",
+      loadNumber: "[aria-describedby='ListPaneDataGrid_SHIPPING_LOAD_NUM']",
+      userDefineFile3: "[aria-describedby='ListPaneDataGrid_SHIPMENT_HEADER_USER_DEF3']",
+      internalShipmentNum: "[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_NUM']",
+      trailingNum: "[aria-describedby='ListPaneDataGrid_TRAILINGSTS']",
+      leadingNum: "[aria-describedby='ListPaneDataGrid_LEADINGSTS']",
     };
   }
 
   _initializeInternalPanelElements() {
     return {
-      internalLocationInv: document.querySelector(this.selectorsId.internalLocationInv),
-      logisticsUnit: document.querySelector(this.selectorsId.logisticsUnit),
-      parentLogisticsUnit: document.querySelector(this.selectorsId.parentLogisticsUnit),
+      loadNumber: document.querySelector(this.selectorsId.loadNumber),
+      userDefineFile3: document.querySelector(this.selectorsId.userDefineFile3),
+      internalShipmentNum: document.querySelector(this.selectorsId.internalShipmentNum),
+      trailingNum: document.querySelector(this.selectorsId.trailingNum),
+      leadingNum: document.querySelector(this.selectorsId.leadingNum),
+      dockDoor: document.querySelector(this.selectorsId.dockDoor),
     };
   }
 
   _initializeExternalPanelElements() {
     return {
-      userStamp: document.querySelector(this.selectorsId.userStamp),
-      dateTimeStamp: document.querySelector(this.selectorsId.dateTimeStamp),
-      allocation: document.querySelector(this.selectorsId.allocation),
-      locating: document.querySelector(this.selectorsId.locating),
-      workZone: document.querySelector(this.selectorsId.workZone),
-      attribute1: document.querySelector(this.selectorsId.attribute1),
+      dockDoor: document.querySelector(this.selectorsId.dockDoor),
     };
   }
 
   _extraerDatosDeTr(tr) {
     if (!tr) return;
 
-    const internalNumElement = tr.querySelector(this.internalData.internalLocationInv);
-    const logisticsUnitElement = tr.querySelector(this.internalData.logisticsUnit);
-    const ParentLPElement = tr.querySelector(this.internalData.parentLogisticsUnit);
-
-    const internalLocationInv = internalNumElement ? internalNumElement.textContent.trim() : '';
-    const logisticsUnit = logisticsUnitElement ? logisticsUnitElement.textContent.trim() : '';
-    const parentLogisticsUnit = ParentLPElement ? ParentLPElement.textContent.trim() : '';
+    // Uso de la función auxiliar para extraer y limpiar valores
+    const loadNumber = this._extractAndTrim(tr.querySelector(this.selectorsId.loadNumber));
+    const userDefineFile3 = this._extractAndTrim(
+      tr.querySelector(this.selectorsId.userDefineFile3)
+    );
+    const internalShipmentNum = this._extractAndTrim(
+      tr.querySelector(this.selectorsId.internalShipmentNum)
+    );
+    const trailingNum = this._extractAndTrim(tr.querySelector(this.selectorsId.trailingNum));
 
     const insert = [
-      { element: this.panelElements.internalLocationInv, value: internalLocationInv },
-      { element: this.panelElements.logisticsUnit, value: logisticsUnit },
-      { element: this.panelElements.parentLogisticsUnit, value: parentLogisticsUnit },
+      { element: this.internalPanelElements.loadNumber, value: loadNumber },
+      { element: this.internalPanelElements.userDefineFile3, value: userDefineFile3 },
+      { element: this.internalPanelElements.internalShipmentNum, value: internalShipmentNum },
+      { element: this.internalPanelElements.trailingNum, value: trailingNum },
     ];
+
+    console.log('[_extraerDatosDeTr]:', insert);
 
     // Llamar a insertarInfo con los datos extraídos
     this._insertInfo({

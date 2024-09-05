@@ -1,4 +1,4 @@
-class ManangerPanelDetailReceiptInsigth extends ManangerPanelDetail {
+class ManangerPanelDetailReceiptInsight extends ManangerPanelDetail {
   constructor(parameters) {
     super(parameters);
   }

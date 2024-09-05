@@ -38,7 +38,7 @@ window.addEventListener('load', async () => {
       { element: htmlVerMas },
     ];
 
-    const handlePanelDetail = new HandleLineInsigth();
+    const handlePanelDetail = new HandleLineInsight();
 
     const manangerPanelDetail = new ManangerPanelDetail({
       panelDetail,
