@@ -42,21 +42,21 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
-      "js": ["shipment_detail/shipmentLineInsight.js", "funcionesGlobales.js"],
-      "css": ["shipment_detail/style.css"]
+      "js": ["shipment/line/main.js", "shipment/line/HandleLineInsight.js"],
+      "css": ["shipment/style.css"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"],
-      "js": ["shipment_detail/shipmentDetail.js"]
+      "js": ["shipment/line/shipmentDetail.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
-      "js": ["shipment_detail/shipmentInsight.js"],
-      "css": ["shipment_detail/style.css"]
+      "js": ["shipment/insight/main.js", "shipment/insight/HandleLineInsight.js"],
+      "css": ["shipment/style.css"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/*"],
-      "js": ["shipment_detail/loadDetail.js"]
+      "js": ["shipment/insight/loadDetail.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
