@@ -1,13 +1,9 @@
 class HandlePanelDetailDataExternal extends HandlePanelDetail {
   constructor() {
     super();
+    this.seeMoreInformationSelector = { seeMoreInformation: '#seeMoreInformation' };
     this.externalPanelElements = {};
     this.internalPanelElements = {};
-    this.isCancelGetDataExternal = false;
-  }
-
-  setIsCancelGetDataExternal(value = true) {
-    this.isCancelGetDataExternal = value;
   }
 
   _initializeInternalPanelElements() {
@@ -122,7 +118,7 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
     // Iterar sobre elementsToUpdate
     elementsToUpdate.forEach(({ element, value }) => {
       // Actualizar el valor del elemento
-      if (element && value) {
+      if (element) {
         element.innerText = value;
         element.classList.remove('wait');
       }

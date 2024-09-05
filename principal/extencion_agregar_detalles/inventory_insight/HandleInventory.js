@@ -14,7 +14,7 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
       locating: '#DetailPaneHeaderLocating',
       workZone: '#DetailPaneHeaderWorkZone',
       attribute1: '#DetailPaneHeaderAttribute1',
-      seeMoreInformation: '#seeMoreInformation',
+      ...this.seeMoreInformationSelector,
     };
 
     this.externalPanelElements = {
@@ -125,7 +125,6 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
   }
 
   _updateDetailsPanelInfo(datos) {
-    // Actualizar la interfaz con los datos recibidos
     const {
       receivedDateTime,
       attribute1,
@@ -137,13 +136,13 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
     } = datos;
 
     const elementsToUpdate = [
-      { element: this.panelElements.receivedDateTime, value: receivedDateTime },
-      { element: this.panelElements.userStamp, value: userStamp },
-      { element: this.panelElements.dateTimeStamp, value: dateTimeStamp },
-      { element: this.panelElements.allocation, value: allocation },
-      { element: this.panelElements.locating, value: locating },
-      { element: this.panelElements.workZone, value: workZone },
-      { element: this.panelElements.attribute1, value: attribute1 },
+      { element: this.externalPanelElements.receivedDateTime, value: receivedDateTime },
+      { element: this.externalPanelElements.userStamp, value: userStamp },
+      { element: this.externalPanelElements.dateTimeStamp, value: dateTimeStamp },
+      { element: this.externalPanelElements.allocation, value: allocation },
+      { element: this.externalPanelElements.locating, value: locating },
+      { element: this.externalPanelElements.workZone, value: workZone },
+      { element: this.externalPanelElements.attribute1, value: attribute1 },
     ];
 
     this._setDataExternal(elementsToUpdate);

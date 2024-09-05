@@ -26,5 +26,5 @@
 .anchorPanelDetail.disabled {
   pointer-events: none !important;
   opacity: 0.8 !important;
-  text-decoration: line-through;
+  text-decoration: line-through !important;
 }

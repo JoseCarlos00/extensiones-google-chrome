@@ -5,6 +5,7 @@ class HandlePanelDetail {
     this.internalData = {};
 
     this.backgroundMessage = '';
+    this.isCancelGetDataExternal = false;
 
     this.tiendas = {
       3407: 'Tol-Centro',
@@ -55,6 +56,10 @@ class HandlePanelDetail {
       364: 'Yuc-Merida',
       4344: 'ME-Maestros',
     };
+  }
+
+  setIsCancelGetDataExternal(value = true) {
+    this.isCancelGetDataExternal = value;
   }
 
   _initializePanelElements() {

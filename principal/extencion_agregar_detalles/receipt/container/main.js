@@ -15,7 +15,7 @@ window.addEventListener('load', async () => {
     const htmlTrailerId = ElementsHtml.createElementAnchor({ id: 'DetailPaneHeaderTrailerId' });
     const htmlVerMas = ElementsHtml.seeMoreInformation();
 
-    const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1046');
+    const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1060');
 
     const elementsHtmlToInsert = [
       { element: htmlReceiptId, position: 'afterbegin' },
@@ -27,7 +27,7 @@ window.addEventListener('load', async () => {
       { element: htmlVerMas },
     ];
 
-    const handlePanelDetail = new HandlePanelDetailInventory();
+    const handlePanelDetail = new HandleReceiptContainer();
 
     const manangerPanelDetail = new ManangerPanelDetail({
       panelDetail,

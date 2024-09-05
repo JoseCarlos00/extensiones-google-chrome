@@ -9,7 +9,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
       checkIn: '#DetailPaneHeaderCheckIn',
       userStamp: '#DetailPaneHeaderUserStamp',
       trailerId: '#DetailPaneHeaderTrailerId',
-      seeMoreInformation: '#seeMoreInformation',
+      ...this.seeMoreInformationSelector,
     };
 
     this.externalPanelElements = {
@@ -51,7 +51,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
   _initializeExternalPanelElements() {
     return {
       parent: document.querySelector(this.selectorsId.parent),
-      receiptDate: document.querySelector(this.selectorsId.receiptId),
+      receiptDate: document.querySelector(this.selectorsId.receiptDate),
       checkIn: document.querySelector(this.selectorsId.checkIn),
       userStamp: document.querySelector(this.selectorsId.userStamp),
       trailerId: document.querySelector(this.selectorsId.trailerId),
@@ -59,7 +59,15 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
   }
 
   async _cleanDetailPanel() {
-    super._cleanDetailPanel();
+    for (const key in this.panelElements) {
+      const element = this.panelElements[key];
+
+      if (element) {
+        element.innerHTML = '';
+        element.classList.remove('wait');
+      }
+    }
+
     this.internalPanelValue.internalReceiptNumber = '';
     this.internalPanelValue.internalRecContNumber = '';
   }
@@ -71,38 +79,50 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
     const receiptId = receiptIdElement ? receiptIdElement.textContent.trim() : '';
 
     const internalNum = tr.querySelector(this.internalData.internalReceiptNumber);
-    this.internalPanelValue.internalReceiptNumber = internalNum?.textContent.trim();
+    const internalNumValue = internalNum?.textContent.trim() ?? '';
 
     const internalConNum = tr.querySelector(this.internalData.internalRecContNumber);
-    this.internalPanelValue.internalRecContNumber = internalConNum?.textContent.trim();
+    const internalConNumValue = internalConNum?.textContent.trim() ?? '';
 
     const insert = [{ element: this.panelElements.receiptId, value: receiptId }];
 
     // Llamar a insertarInfo con los datos extraídos
     this._insertInfo({
       insert,
+      internalNumValue,
+      internalConNumValue,
     });
   }
 
-  _insertInfo({ insert = [] }) {
+  _insertInfo({ insert = [], internalNumValue, internalConNumValue }) {
     super._insertInfo({ insert });
     const { trailerId } = this.panelElements;
 
     if (trailerId) {
       trailerId.classList.remove('disabled');
+      trailerId.style.pointerEvents = 'auto';
       trailerId.innerHTML = 'Trailer Id...';
     }
+
+    this.internalPanelValue.internalReceiptNumber = internalNumValue;
+    this.internalPanelValue.internalRecContNumber = internalConNumValue;
   }
 
   _waitFordata(value) {
     const text = '1346-863-28886...';
 
-    const sinTrailerId = Object.entries(this.externalPanelElements)
-      .filter(([key, value]) => key !== 'trailerId')
-      .map(([key, value]) => ({ key, value }));
+    if (value === 'trailerId') {
+      const { trailerId } = this.externalPanelElements;
+      trailerId.classList.add('wait');
+      return;
+    }
 
-    for (const key in this.externalPanelElements) {
-      const element = this.externalPanelElements[key];
+    const sinTrailerId = Object.fromEntries(
+      Object.entries(this.externalPanelElements).filter(([key, value]) => key !== 'trailerId')
+    );
+
+    for (const key in sinTrailerId) {
+      const element = sinTrailerId[key];
 
       if (element) {
         element.innerHTML = text;
@@ -111,7 +131,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
     }
   }
 
-  _pedirDatosdeContainerDetail() {
+  _getDataFromContainerDetail() {
     const { internalRecContNumber } = this.internalPanelValue;
 
     if (internalRecContNumber) {
@@ -135,7 +155,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
     }
   }
 
-  _pedirDatosdeReceiptDetail() {
+  _getDataFromReceiptDetail() {
     const { internalReceiptNumber } = this.internalPanelValue;
 
     if (internalReceiptNumber) {
@@ -159,8 +179,15 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
     }
   }
 
-  _getDataExternal() {
+  _getDataExternal(value) {
     this.setIsCancelGetDataExternal(false);
+
+    if (value === 'trailerId') {
+      this - this._getDataFromReceiptDetail();
+      return;
+    }
+
+    this._getDataFromContainerDetail();
   }
 
   _setEventTrailerId() {
@@ -177,24 +204,24 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
   _initializeDataExternal() {
     this._listeningToBackgroundMessages();
     this._setEventSeeMore();
+    this._setEventTrailerId();
   }
 
-  _actualizarContainerDetail(datos) {
+  _updateContainerDetail(datos) {
     // console.log(datos);
     const { parent, receiptDate, userStamp, checkIn } = datos;
     // Obtener elementos del DOM
     const elementsToUpdate = [
-      { element: this.panelElements.parent, value: parent },
-      { element: this.panelElements.receiptDate, value: receiptDate },
-      { element: this.panelElements.userStamp, value: userStamp },
-      { element: this.panelElements.checkIn, value: `Check In: ${checkIn}` },
+      { element: this.externalPanelElements.parent, value: parent },
+      { element: this.externalPanelElements.receiptDate, value: receiptDate },
+      { element: this.externalPanelElements.userStamp, value: userStamp },
+      { element: this.externalPanelElements.checkIn, value: `Check In: ${checkIn}` },
     ];
 
     this._setDataExternal(elementsToUpdate);
   }
 
-  _actualizarReceiptDetail(datos) {
-    // console.log(datos);
+  _updateReceiptDetail(datos) {
     const { trailerId } = datos;
     const { trailerId: trailerIdElement } = this.externalPanelElements;
 
@@ -202,17 +229,15 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
     if (trailerIdElement) {
       trailerIdElement.innerHTML = `${trailerId}`;
       trailerIdElement.classList.remove('wait');
+      trailerIdElement.classList.remove('disabled');
+      trailerIdElement.style.pointerEvents = 'none';
     }
-  }
-
-  _updateDetailsPanelInfo(datos) {
-    // Actualizar la interfaz con los datos recibidos
   }
 
   _listeningToBackgroundMessages() {
     const messageMap = {
-      actualizar_datos_de_receipt_container_detail: datos => this._actualizarContainerDetail(datos),
-      actualizar_datos_de_receipt_detail: datos => this._actualizarReceiptDetail(datos),
+      actualizar_datos_de_receipt_container_detail: datos => this._updateContainerDetail(datos),
+      actualizar_datos_de_receipt_detail: datos => this._updateReceiptDetail(datos),
       datos_no_encontrados: () => this._removeClassWait(),
     };
 
