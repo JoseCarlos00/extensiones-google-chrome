@@ -125,63 +125,44 @@ class HandleLineInsight extends HandlePanelDetailDataExternal {
   }
 
   _getDataExternal() {
-    const { internalLocationInv: internalLocationInvElement, seeMoreInformation } =
-      this.panelElements;
+    try {
+      const { internalShipmentNum } = this.internalPanelElements;
 
-    const internalNumberText = internalLocationInvElement
-      ? internalLocationInvElement.textContent.trim()
-      : '';
+      if (internalShipmentNum) {
+        this._waitFordata();
+        this.setIsCancelGetDataExternal(false);
 
-    if (internalNumberText === '-1' || internalNumberText === '0') {
-      ToastAlert.showAlertMinTop(`Internal Location Inv Invalido: [${internalNumberText}]`);
-      return;
-    }
-
-    if (internalNumberText) {
-      this._waitFordata();
-      this.setIsCancelGetDataExternal(false);
-
-      const internalLocationInv = internalNumberText + '&active=active';
-
-      chrome.runtime.sendMessage(
-        {
-          action: 'some_action',
-          url: `https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=${internalLocationInv}`,
-        },
-        response => {
-          console.log('Respuesta de background.js:', response.status);
-        }
-      );
-    } else {
-      ToastAlert.showAlertFullTop(
-        'No se encontró la columna [Internal Location Inv], por favor active la columna.'
-      );
-      console.error('No se encontró el Internal Location Inv');
-      if (seeMoreInformation) seeMoreInformation.classList.remove('disabled'); // Reactivar el botón
+        const url = `https://wms.fantasiasmiguel.com.mx/scale/details/shipment/${internalShipmentNum.textContent.trim()}?active=active`;
+        this._sendBackgroundMessage(url);
+      } else {
+        ToastAlert.showAlertFullTop(
+          'No se encontró la Columna [Internal shipment Number], por favor active la columna.'
+        );
+        console.log('No se encontró el Internal shipment Number');
+      }
+    } catch (error) {
+      console.error('Error al obtener datos externos:', error);
     }
   }
 
   _updateDetailsPanelInfo(datos) {
-    const {
-      receivedDateTime,
-      attribute1,
-      allocation,
-      locating,
-      workZone,
-      userStamp,
-      dateTimeStamp,
-    } = datos;
+    console.log('_updateDetailsPanelInfo: line ', datos);
 
-    const elementsToUpdate = [
-      { element: this.externalPanelElements.receivedDateTime, value: receivedDateTime },
-      { element: this.externalPanelElements.userStamp, value: userStamp },
-      { element: this.externalPanelElements.dateTimeStamp, value: dateTimeStamp },
-      { element: this.externalPanelElements.allocation, value: allocation },
-      { element: this.externalPanelElements.locating, value: locating },
-      { element: this.externalPanelElements.workZone, value: workZone },
-      { element: this.externalPanelElements.attribute1, value: attribute1 },
-    ];
+    try {
+      const { date, internalShipmentNumber, waveNumber } = datos;
 
-    this._setDataExternal(elementsToUpdate);
+      const elementsToUpdate = [
+        { element: this.externalPanelElements.dateCreate, value: date },
+        { element: this.externalPanelElements.waveNumber, value: waveNumber },
+      ];
+
+      if (
+        this.internalPanelElements.internalShipmentNum.textContent.trim() === internalShipmentNumber
+      ) {
+        this._setDataExternal(elementsToUpdate);
+      }
+    } catch (error) {
+      console.error('Error al actualizar detalles del panel:', error);
+    }
   }
 }

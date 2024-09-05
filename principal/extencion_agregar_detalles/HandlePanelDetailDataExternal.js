@@ -125,6 +125,18 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
     });
   }
 
+  _sendBackgroundMessage(urlParams) {
+    chrome.runtime.sendMessage(
+      {
+        action: 'some_action',
+        url: urlParams,
+      },
+      response => {
+        console.log('Respuesta de background.js:', response.status);
+      }
+    );
+  }
+
   _getDataExternal() {
     // Obtener los datos de la API externa
   }

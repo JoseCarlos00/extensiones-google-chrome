@@ -135,17 +135,10 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 
     if (internalRecContNumber) {
       this._waitFordata('detail');
-      const receipt = internalRecContNumber + '?active=active';
 
-      chrome.runtime.sendMessage(
-        {
-          action: 'some_action',
-          url: `https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/${receipt}`,
-        },
-        response => {
-          console.log('Respuesta de background.js:', response.status);
-        }
-      );
+      const url = `https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/${internalRecContNumber}?active=active`;
+
+      this._sendBackgroundMessage(url);
     } else {
       ToastAlert.showAlertFullTop(
         'No se encontró la columna [Internal Container Number], por favor active la columna.'
@@ -159,17 +152,10 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 
     if (internalReceiptNumber) {
       this._waitFordata('trailerId');
-      const receipt = internalReceiptNumber + '?active=active';
 
-      chrome.runtime.sendMessage(
-        {
-          action: 'some_action',
-          url: `https://wms.fantasiasmiguel.com.mx/scale/details/receipt/${receipt}`,
-        },
-        response => {
-          console.log('Respuesta de background.js:', response.status);
-        }
-      );
+      const url = `https://wms.fantasiasmiguel.com.mx/scale/details/receipt/${internalReceiptNumber}?active=active`;
+
+      this._sendBackgroundMessage(url);
     } else {
       ToastAlert.showAlertFullTop(
         'No se encontró la Columna [Internal Receipt Number], por favor active la columna.'
@@ -179,14 +165,18 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
   }
 
   _getDataExternal(value) {
-    this.setIsCancelGetDataExternal(false);
+    try {
+      this.setIsCancelGetDataExternal(false);
 
-    if (value === 'trailerId') {
-      this - this._getDataFromReceiptDetail();
-      return;
+      if (value === 'trailerId') {
+        this - this._getDataFromReceiptDetail();
+        return;
+      }
+
+      this._getDataFromContainerDetail();
+    } catch (error) {
+      console.error('Error al obtener datos externos:', error);
     }
-
-    this._getDataFromContainerDetail();
   }
 
   _setEventTrailerId() {

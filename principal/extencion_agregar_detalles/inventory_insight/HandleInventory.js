@@ -88,39 +88,34 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
   }
 
   _getDataExternal() {
-    const { internalLocationInv: internalLocationInvElement, seeMoreInformation } =
-      this.panelElements;
+    try {
+      const { internalLocationInv: internalLocationInvElement, seeMoreInformation } =
+        this.panelElements;
 
-    const internalNumberText = internalLocationInvElement
-      ? internalLocationInvElement.textContent.trim()
-      : '';
+      const internalNumberText = internalLocationInvElement
+        ? internalLocationInvElement.textContent.trim()
+        : '';
 
-    if (internalNumberText === '-1' || internalNumberText === '0') {
-      ToastAlert.showAlertMinTop(`Internal Location Inv Invalido: [${internalNumberText}]`);
-      return;
-    }
+      if (internalNumberText === '-1' || internalNumberText === '0') {
+        ToastAlert.showAlertMinTop(`Internal Location Inv Invalido: [${internalNumberText}]`);
+        return;
+      }
 
-    if (internalNumberText) {
-      this._waitFordata();
-      this.setIsCancelGetDataExternal(false);
+      if (internalNumberText) {
+        this._waitFordata();
+        this.setIsCancelGetDataExternal(false);
 
-      const internalLocationInv = internalNumberText + '&active=active';
-
-      chrome.runtime.sendMessage(
-        {
-          action: 'some_action',
-          url: `https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=${internalLocationInv}`,
-        },
-        response => {
-          console.log('Respuesta de background.js:', response.status);
-        }
-      );
-    } else {
-      ToastAlert.showAlertFullTop(
-        'No se encontró la columna [Internal Location Inv], por favor active la columna.'
-      );
-      console.error('No se encontró el Internal Location Inv');
-      if (seeMoreInformation) seeMoreInformation.classList.remove('disabled'); // Reactivar el botón
+        const url = `https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=${internalNumberText}&active=active`;
+        this._sendBackgroundMessage(url);
+      } else {
+        ToastAlert.showAlertFullTop(
+          'No se encontró la columna [Internal Location Inv], por favor active la columna.'
+        );
+        console.error('No se encontró el Internal Location Inv');
+        if (seeMoreInformation) seeMoreInformation.classList.remove('disabled'); // Reactivar el botón
+      }
+    } catch (error) {
+      console.error('Error al obtener datos externos:', error);
     }
   }
 
