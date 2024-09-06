@@ -82,7 +82,7 @@ class HandlePanelDetailWorkInsight extends HandlePanelDetailDataExternal {
     const insert = [
       { element: this.internalPanelElements.referenceId, value: referenceId },
       { element: this.internalPanelElements.assignedUser, value: assignedUser },
-      { element: this.internalPanelElements.waveNumber, value: waveNumber },
+      { element: this.internalPanelElements.waveNumber, value: `Wave: ${waveNumber}` },
       { element: this.internalPanelElements.internalNum, value: internalNum },
       { element: this.internalPanelElements.completedByUser, value: completedByUser },
     ];
@@ -111,7 +111,7 @@ class HandlePanelDetailWorkInsight extends HandlePanelDetailDataExternal {
         return;
       }
 
-      if (loadNumberElement) {
+      if (internalElement) {
         this._waitFordata();
         this.setIsCancelGetDataExternal(false);
 

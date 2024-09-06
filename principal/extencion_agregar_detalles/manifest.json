@@ -108,7 +108,7 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"],
-      "js": ["wave_insight/waveInsight.js"]
+      "js": ["wave_insight/main.js", "wave_insight/HandleWaveInsight.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/*"],
