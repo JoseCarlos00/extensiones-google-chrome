@@ -1,4 +1,4 @@
-class ManangerPanelDetailShiptmentInsight extends ManangerPanelDetail {
+class ManangerPanelDetailNAME extends ManangerPanelDetail {
   constructor(parameters) {
     super(parameters);
   }

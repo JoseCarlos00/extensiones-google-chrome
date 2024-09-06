@@ -110,9 +110,8 @@ class HandlePanelDetail {
     if (this.panelElements.customer && shipmentId) {
       const clave = shipmentId.trim().split('-')[0];
 
-      if (this.tiendas.hasOwnProperty(clave)) {
-        this.panelElements.customer.innerHTML = this.tiendas[clave];
-      }
+      const tienda = this.tiendas.hasOwnProperty(clave) ? this.tiendas[clave] : '—';
+      this.panelElements.customer.innerHTML = tienda;
     }
   }
 }

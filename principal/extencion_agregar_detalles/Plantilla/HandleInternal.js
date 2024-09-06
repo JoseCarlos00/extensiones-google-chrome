@@ -1,4 +1,4 @@
-class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
+class HandlePanelDetailNAME extends HandlePanelDetail {
   constructor() {
     super();
     this.selectorsId = {

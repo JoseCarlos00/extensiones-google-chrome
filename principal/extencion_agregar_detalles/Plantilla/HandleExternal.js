@@ -1,4 +1,4 @@
-class HandleInsight extends HandlePanelDetailDataExternal {
+class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
   constructor() {
     super();
     this.backgroundMessage = 'NAME';

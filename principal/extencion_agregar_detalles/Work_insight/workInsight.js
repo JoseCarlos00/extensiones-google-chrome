@@ -370,6 +370,7 @@ const selectorId = {
   assignedUser: '#DetailPaneHeaderAssignedUser',
   internalNum: '#DetailPaneHeaderInternalInstructionNum',
   completedByUser: '#DetailPaneHeaderCompleteByUser',
+  waveNumber: '#DetailPaneHeaderWaveNumber',
   customer: '#DetailPaneHeaderCustomer',
   fromZone: '#DetailPaneHeaderFromZone',
   toZone: '#DetailPaneHeaderToZone',

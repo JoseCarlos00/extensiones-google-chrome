@@ -116,7 +116,7 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
-      "js": ["work_insight/workInsight.js"]
+      "js": ["work_insight/main.js", "work_insight/HandleWorkInsight.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/workinstruction/*"],
