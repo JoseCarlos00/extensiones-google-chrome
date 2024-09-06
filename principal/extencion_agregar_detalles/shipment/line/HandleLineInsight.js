@@ -146,8 +146,6 @@ class HandleLineInsight extends HandlePanelDetailDataExternal {
   }
 
   _updateDetailsPanelInfo(datos) {
-    console.log('_updateDetailsPanelInfo: line ', datos);
-
     try {
       const { date, internalShipmentNumber, waveNumber } = datos;
 

@@ -116,7 +116,6 @@ class HandleInsight extends HandlePanelDetailDataExternal {
   }
 
   _updateDetailsPanelInfo(datos) {
-    console.log('_updateDetailsPanelInfo: insight ', datos);
     const { dockDoor } = datos;
 
     const elementsToUpdate = [
