@@ -1,20 +1,24 @@
-class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
+class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
   constructor() {
     super();
-    this.backgroundMessage = 'NAME';
+    this.backgroundMessage = 'actualizar_datos_de_wave_detail';
 
     this.selectorsId = {
-      internal: '#idInternal',
-      external: '#idExternal',
+      waveNumber: '#DetailPaneHeaderWaveNumber',
+      waveFlow: '#DetailPaneHeaderFlow',
+      endDataTime: '#DetailPaneHeaderEndedDateTime',
+      userStamp: '#DetailPaneHeaderUserStamp',
       ...this.seeMoreInformationSelector,
     };
 
     this.externalPanelElements = {
-      external: null,
+      userStamp: null,
     };
 
     this.internalPanelElements = {
-      internal: null,
+      waveNumber: null,
+      waveFlow: null,
+      endDataTime: null,
     };
 
     this.panelElements = {
@@ -24,19 +28,22 @@ class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
     };
 
     this.internalData = {
-      internal: "[aria-describedby='ListPaneDataGrid_SHIPPING_LOAD_NUM']",
+      waveFlow: "[aria-describedby='ListPaneDataGrid_WAVE_FLOW']",
+      endDataTime: "[aria-describedby='ListPaneDataGrid_WAVE_DATE_TIME_ENDED']",
     };
   }
 
   _initializeInternalPanelElements() {
     return {
-      internal: document.querySelector(this.selectorsId.internal),
+      waveFlow: document.querySelector(this.selectorsId.waveFlow),
+      endDataTime: document.querySelector(this.selectorsId.endDataTime),
+      waveNumber: document.querySelector(this.selectorsId.waveNumber),
     };
   }
 
   _initializeExternalPanelElements() {
     return {
-      external: document.querySelector(this.selectorsId.external),
+      userStamp: document.querySelector(this.selectorsId.userStamp),
     };
   }
 
@@ -44,9 +51,13 @@ class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
     if (!tr) return;
 
     // Uso de la función auxiliar para extraer y limpiar valores
-    const internalData = this._extractAndTrim(tr.querySelector(this.internalData.internal));
+    const waveFlow = this._extractAndTrim(tr.querySelector(this.internalData.waveFlow));
+    const endDataTime = this._extractAndTrim(tr.querySelector(this.internalData.endDataTime), '—');
 
-    const insert = [{ element: this.internalPanelElements.internal, value: internalData }];
+    const insert = [
+      { element: this.internalPanelElements.waveFlow, value: waveFlow },
+      { element: this.internalPanelElements.endDataTime, value: endDataTime },
+    ];
 
     // Llamar a insertarInfo con los datos extraídos
     this._insertInfo({
@@ -56,21 +67,26 @@ class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
 
   _getDataExternal() {
     try {
-      const { internal: internalElement } = this.internalPanelElements;
+      const { waveNumber: internalElement } = this.internalPanelElements;
 
-      const internalNumber = internalElement ? String(internalElement.textContent.trim()) : '';
+      const waveNumber = internalElement ? Number(internalElement.textContent.trim()) : '';
 
-      if (loadNumberElement) {
+      if (!waveNumber) {
+        ToastAlert.showAlertMinTop(`Wave Invalido: [${waveNumber}]`);
+        return;
+      }
+
+      if (internalElement) {
         this._waitFordata();
         this.setIsCancelGetDataExternal(false);
 
-        const url = `https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/${internalNumber}?active=active`;
+        const url = `https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/${waveNumber}?active=active`;
         this._sendBackgroundMessage(url);
       } else {
         ToastAlert.showAlertFullTop(
-          'No se encontró la Columna [NAME], por favor active la columna.'
+          'No se encontró la Columna [Wave], por favor active la columna.'
         );
-        console.log('No se encontró el NAME');
+        console.log('No se encontró el Wave');
       }
     } catch (error) {
       console.error('Error al obtener datos externos:', error);
@@ -78,10 +94,10 @@ class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
   }
 
   _updateDetailsPanelInfo(datos) {
-    const { dataExternal } = datos;
+    const { userStamp } = datos;
 
     const elementsToUpdate = [
-      { element: this.externalPanelElements.external, value: `${dataExternal}` },
+      { element: this.externalPanelElements.userStamp, value: `${userStamp}` },
     ];
 
     this._setDataExternal(elementsToUpdate);

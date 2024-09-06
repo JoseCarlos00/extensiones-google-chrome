@@ -91,9 +91,9 @@ class HandleInsight extends HandlePanelDetailDataExternal {
     try {
       const { loadNumber: loadNumberElement } = this.internalPanelElements;
 
-      const loadNumber = loadNumberElement ? String(loadNumberElement.textContent.trim()) : '';
+      const loadNumber = loadNumberElement ? Number(loadNumberElement.textContent.trim()) : '';
 
-      if (loadNumber === '0') {
+      if (!loadNumber) {
         ToastAlert.showAlertMinTop(`Shipping load Invalido: [${loadNumber}]`);
         return;
       }

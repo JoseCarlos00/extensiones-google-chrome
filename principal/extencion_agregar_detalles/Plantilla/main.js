@@ -11,7 +11,7 @@ window.addEventListener('load', async () => {
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1046');
     const handlePanelDetail = new HandlePanelDetailNAME();
 
-    const manangerPanelDetail = new HandlePanelDetail({
+    const manangerPanelDetail = new ManangerPanelDetail({
       panelDetail,
       elementsHtmlToInsert,
       handlePanelDetail,

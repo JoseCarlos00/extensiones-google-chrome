@@ -2,16 +2,22 @@ window.addEventListener('load', async () => {
   try {
     // ELEMENTOS INTERNOS
 
-    const htmlUserDefineFile3 = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderUserDefineFile3',
-    });
+    const htmlParentFlow = ElementsHtml.createElement({ id: 'DetailPaneHeaderFlow' });
+    const htmlEndedDateTime = ElementsHtml.createElement({ id: 'DetailPaneHeaderEndedDateTime' });
+    const htmlUserStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderUserStamp' });
+    const htmlVerMas = ElementsHtml.seeMoreInformation();
 
-    const elementsHtmlToInsert = [{ element: htmlUserDefineFile3 }];
+    const elementsHtmlToInsert = [
+      { element: htmlParentFlow },
+      { element: htmlEndedDateTime },
+      { element: htmlUserStamp },
+      { element: htmlVerMas },
+    ];
 
-    const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1046');
-    const handlePanelDetail = new HandlePanelDetailNAME();
+    const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1079');
+    const handlePanelDetail = new HandlePanelDetailWaveInsight();
 
-    const manangerPanelDetail = new HandlePanelDetail({
+    const manangerPanelDetail = new ManangerPanelDetail({
       panelDetail,
       elementsHtmlToInsert,
       handlePanelDetail,
@@ -22,3 +28,12 @@ window.addEventListener('load', async () => {
     console.error('Error al crear ManangerPanelDetail:', error);
   }
 });
+
+/**
+ * DATOS INTERNOS
+ * - Flow
+ * - Ended Date Time - **_Date Time Stamp_**
+ *
+ * REFERENCE INFO
+ * - User Stamp
+ */

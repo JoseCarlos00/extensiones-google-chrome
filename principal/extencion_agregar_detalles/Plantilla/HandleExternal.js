@@ -60,7 +60,7 @@ class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
 
       const internalNumber = internalElement ? String(internalElement.textContent.trim()) : '';
 
-      if (loadNumberElement) {
+      if (internalElement) {
         this._waitFordata();
         this.setIsCancelGetDataExternal(false);
 
