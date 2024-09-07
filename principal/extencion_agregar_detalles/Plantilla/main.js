@@ -1,7 +1,6 @@
 window.addEventListener('load', async () => {
   try {
     // ELEMENTOS INTERNOS
-
     const htmlUserDefineFile3 = ElementsHtml.createElement({
       id: 'DetailPaneHeaderUserDefineFile3',
     });
