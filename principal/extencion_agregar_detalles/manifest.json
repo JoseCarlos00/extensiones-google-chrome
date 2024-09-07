@@ -35,8 +35,7 @@
         "HandlePanelDetailDataExternal.js",
         "ManangerPanelDetail.js",
         "ElementsHtml.js",
-        "ToastAlert.js",
-        "funcionesGlobales.js"
+        "ToastAlert.js"
       ],
       "css": ["style.css"]
     },
@@ -100,7 +99,11 @@
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
-      "js": ["shipping_container/shippingContainerInsight.js"]
+      "js": [
+        "shipping_container/main.js",
+        "shipping_container/HandleShippingContainer.js",
+        "shipping_container/ManangerPanelDetail.js"
+      ]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"],
@@ -130,9 +133,7 @@
       ]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error=MSG_SECURITYVIOLATION*"
-      ],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error*"],
       "js": ["errrorSegurity.js"]
     }
   ],
