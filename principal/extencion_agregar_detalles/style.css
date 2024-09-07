@@ -3,7 +3,8 @@
   height: 12.14px;
   vertical-align: middle;
   cursor: wait;
-  background-color: currentcolor;
+  color: #fff !important;
+  background-color: #fff !important;
   opacity: 0.5;
   animation: wait 2s ease-in-out infinite;
 }
@@ -12,4 +13,26 @@
   50% {
     opacity: 0.2;
   }
+}
+
+.anchorPanelDetail {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.anchorPanelDetail:not(.wait) {
+  color: #4f93e4 !important;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+}
+
+.anchorPanelDetail:hover {
+  text-decoration: underline;
+}
+
+.anchorPanelDetail.disabled {
+  pointer-events: none !important;
+  opacity: 0.8;
+  text-decoration: line-through !important;
 }

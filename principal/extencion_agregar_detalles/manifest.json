@@ -17,125 +17,123 @@
   "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
   "content_scripts": [
     {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
-      "js": ["shipment_detail/shipmentLineInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css", "shipment_detail/style.css"]
+      "matches": [
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2723*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2735*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2757*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2773*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2774*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2777*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2779*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2780*",
+        "https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"
+      ],
+      "js": [
+        "HandlePanelDetail.js",
+        "HandlePanelDetailDataExternal.js",
+        "ManangerPanelDetail.js",
+        "ElementsHtml.js",
+        "ToastAlert.js"
+      ],
+      "css": ["style.css"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"
-      ],
-      "js": ["shipment_detail/shipmentDetail.js"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
+      "js": ["shipment/line/main.js", "shipment/line/HandleLineInsight.js"],
+      "css": ["shipment/style.css"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"],
+      "js": ["shipment/line/shipmentDetail.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
-      "js": ["shipment_detail/shipmentInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css", "shipment_detail/style.css"]
+      "js": [
+        "shipment/insight/main.js",
+        "shipment/insight/HandleInsight.js",
+        "shipment/insight/ManangerPanelDetail.js"
+      ],
+      "css": ["shipment/style.css"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/*"
-      ],
-      "js": ["shipment_detail/loadDetail.js"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/*"],
+      "js": ["shipment/insight/loadDetail.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
-      "js": [
-        "transaction_history/transactionHistory.js",
-        "funcionesGlobales.js"
-      ],
-      "css": ["style.css"]
+      "js": ["transaction_history/main.js", "transaction_history/HandleTransactionHistory.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
-      "js": ["inventory_insight/inventoryInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css"]
+      "js": ["inventory_insight/main.js", "inventory_insight/HandleInventory.js"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"
-      ],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"],
       "js": ["inventory_insight/inventoryDetail.js"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
+      "js": ["receipt/detail/main.js", "receipt/detail/HandleReceipLineInsight.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
       "js": [
-        "receipt_detail/receiptInsigh.js",
-        "funcionesGlobales.js"
-      ],
-      "css": ["style.css"]
+        "receipt/insight/main.js",
+        "receipt/insight/ManangerPanelDetail.js",
+        "receipt/insight/HandleReceiptInsight.js"
+      ]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
-      "js": [
-        "receipt_detail/receiptContainerInsight.js",
-        "funcionesGlobales.js"
-      ],
-      "css": ["style.css"]
+      "js": ["receipt/container/main.js", "receipt/container/HandleReceiptContainer.js"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"
-      ],
-      "js": ["receipt_detail/containerDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
-      "js": ["receipt_detail/receiptLineInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"],
+      "js": ["receipt/container/containerDetail.js"]
     },
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receipt/*"],
-      "js": ["receipt_detail/receiptDetail.js"]
+      "js": ["receipt/container/receiptDetail.js"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"
-      ],
-      "js": ["shipping_container/shippingContainerInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
+      "js": [
+        "shipping_container/main.js",
+        "shipping_container/HandleShippingContainer.js",
+        "shipping_container/ManangerPanelDetail.js"
+      ]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"
-      ],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"],
       "js": ["shipping_container/containerDetail.js"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"
-      ],
-      "js": ["wave_insight/waveInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"],
+      "js": ["wave_insight/main.js", "wave_insight/HandleWaveInsight.js"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/*"
-      ],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/*"],
       "js": ["wave_insight/waveDetail.js"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"
-      ],
-      "js": ["work_insight/workInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
+      "js": ["work_insight/main.js", "work_insight/HandleWorkInsight.js"]
     },
     {
-      "matches":[
-        "https://wms.fantasiasmiguel.com.mx/scale/details/workinstruction/*"
-      ],
-      "js":["work_insight/workDetail.js"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/workinstruction/*"],
+      "js": ["work_insight/workDetail.js"]
     },
     {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"
-      ],
-      "js": ["planned_shipment_insight/plannedShipmentInsight.js", "funcionesGlobales.js"],
-      "css": ["style.css"]
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"],
+      "js": [
+        "planned_shipment_insight/main.js",
+        "planned_shipment_insight/HandlePlannedShipment.js"
+      ]
     },
     {
-      "matches":["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error=MSG_SECURITYVIOLATION*"],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error*"],
       "js": ["errrorSegurity.js"]
     }
   ],
