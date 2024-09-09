@@ -39,6 +39,8 @@ class HandleInsight extends HandlePanelDetailDataExternal {
       trailingNum: "[aria-describedby='ListPaneDataGrid_TRAILINGSTS']",
       leadingNum: "[aria-describedby='ListPaneDataGrid_LEADINGSTS']",
     };
+
+    this.anchorLoad = 'https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/';
   }
 
   _initializeInternalPanelElements() {
@@ -72,6 +74,10 @@ class HandleInsight extends HandlePanelDetailDataExternal {
     );
     const trailingNum = this._extractAndTrim(tr.querySelector(this.internalData.trailingNum));
     const leadingNum = this._extractAndTrim(tr.querySelector(this.internalData.leadingNum));
+
+    if (this.internalPanelElements.loadNumber) {
+      this.internalPanelElements.loadNumber.href = `${this.anchorLoad + loadNumber}`;
+    }
 
     const insert = [
       { element: this.internalPanelElements.loadNumber, value: loadNumber },

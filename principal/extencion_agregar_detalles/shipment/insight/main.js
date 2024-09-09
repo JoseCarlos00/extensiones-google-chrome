@@ -1,7 +1,7 @@
 window.addEventListener('load', async () => {
   try {
     // ELEMENTOS INTERNOS
-    const htmlLoadNumber = ElementsHtml.createElement({
+    const htmlLoadNumber = ElementsHtml.createElementAnchor({
       id: 'DetailPaneHeaderLoadNumber',
       bold: true,
       color: true,
