@@ -3,26 +3,32 @@ window.addEventListener('load', async () => {
     // ELEMENTOS INTERNOS
     const htmlLoadNumber = ElementsHtml.createElementAnchor({
       id: 'DetailPaneHeaderLoadNumber',
+      title: 'Load Number',
       bold: true,
       color: true,
     });
     const htmlUserDefineFile3 = ElementsHtml.createElement({
       id: 'DetailPaneHeaderUserDefineFile3',
+      title: 'User Define File 3',
     });
     const htmlinternalShipmentNum = ElementsHtml.createElement({
       id: 'DetailPaneHeaderinternalShipmentNum',
+      title: 'Internal Shipment Number',
       bold: true,
     });
     const htmlTrailingStsNumber = ElementsHtml.createElement({
       id: 'DetailPaneHeaderTrailingStsNumber',
+      title: 'Trailing Status Number',
     });
     const htmlLeadingStsNumber = ElementsHtml.createElement({
       id: 'DetailPaneHeaderLeadingStsNumber',
+      title: 'Leading Status Number',
     });
 
     // ELEMENTOS EXTERNOS
     const htmlDockDoor = ElementsHtml.createElement({
       id: 'DetailPaneHeaderDockDoor',
+      title: 'Dock Door',
     });
 
     const htmlVerMas = ElementsHtml.seeMoreInformation();

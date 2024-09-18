@@ -3,26 +3,34 @@ window.addEventListener('load', async () => {
     // ELEMENTOS INTERNOS
     const htmlParentContainerId = ElementsHtml.createElement({
       id: 'DetailPaneHeaderParentContainerId',
+      title: 'Parent Container Id',
       bold: true,
       color: true,
     });
     const htmlStatusNumeric = ElementsHtml.createElement({
       id: 'DetailPaneHeaderStatusNumeric',
+      title: 'Status Numeric',
       bold: true,
     });
     const htmlShipmentId = ElementsHtml.createElement({
       id: 'DetailPaneHeaderShipmentID',
+      title: 'Shipment ID',
       bold: true,
       color: true,
     });
     const htmlInternalShipmentNum = ElementsHtml.createElement({
       id: 'DetailPaneHeaderIntenalShipmetNum',
+      title: 'Internal Shipment Number',
       bold: true,
     });
     const htmlInternalContainerNum = ElementsHtml.createElement({
       id: 'DetailPaneHeaderIntenalContainerNum',
+      title: 'Internal Container Number',
     });
-    const htmlCustomer = ElementsHtml.createElement({ id: 'DetailPaneHeaderCustomer' });
+    const htmlCustomer = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderCustomer',
+      title: 'Customer',
+    });
 
     const elementsHtmlToInsert = [
       { element: htmlStatusNumeric },

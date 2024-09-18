@@ -2,11 +2,13 @@ window.addEventListener('load', async () => {
   try {
     const htmlReceiptId = ElementsHtml.createElement({
       id: 'DetailPaneHeaderReceiptId',
+      title: 'Receipt ID',
       bold: true,
       color: true,
     });
     const htmlInternalReceiptNumber = ElementsHtml.createElement({
       id: 'DetailPaneHeaderInternalReceiptNumber',
+      title: 'Internal Receipt Number',
       bold: true,
     });
 

@@ -3,22 +3,46 @@ window.addEventListener('load', async () => {
     // ELEMENTOS INTERNOS
     const htmlinternalLocationInv = ElementsHtml.createElement({
       id: 'DetailPaneHeaderinternalLocationInv',
+      title: 'Internal Location Inv',
     });
-    const htmllogisticsUnit = ElementsHtml.createElement({ id: 'DetailPaneHeaderlogisticsUnit' });
+    const htmllogisticsUnit = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderlogisticsUnit',
+      title: 'Logistics Unit',
+    });
     const htmlParentLogisticsUnit = ElementsHtml.createElement({
       id: 'DetailPaneHeaderParentLogisticsUnit',
+      title: 'Parent Logistics Unit',
     });
 
     // ELEMENTOS EXTERNOS
     const htmlReceiptDateTime = ElementsHtml.createElement({
       id: 'DetailPaneHeaderReceiptDateTime',
+      title: 'Receipt Date Time',
     });
-    const htmlUserStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderUserStamp' });
-    const htmlDateTimeStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderDateTimeStamp' });
-    const htmlAllocation = ElementsHtml.createElement({ id: 'DetailPaneHeaderAllocation' });
-    const htmlLocating = ElementsHtml.createElement({ id: 'DetailPaneHeaderLocating' });
-    const htmlWorkZone = ElementsHtml.createElement({ id: 'DetailPaneHeaderWorkZone' });
-    const htmlAttribute1 = ElementsHtml.createElement({ id: 'DetailPaneHeaderAttribute1' });
+    const htmlUserStamp = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderUserStamp',
+      title: 'User Stamp',
+    });
+    const htmlDateTimeStamp = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderDateTimeStamp',
+      title: 'Date Time Stamp',
+    });
+    const htmlAllocation = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderAllocation',
+      title: 'Allocation',
+    });
+    const htmlLocating = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderLocating',
+      title: 'Locating',
+    });
+    const htmlWorkZone = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderWorkZone',
+      title: 'Work Zone',
+    });
+    const htmlAttribute1 = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderAttribute1',
+      title: 'Attribute 1',
+    });
 
     const htmlVerMas = ElementsHtml.seeMoreInformation();
 

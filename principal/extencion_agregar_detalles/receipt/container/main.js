@@ -3,16 +3,32 @@ window.addEventListener('load', async () => {
     // ELEMENTOS INTERNOS
     const htmlReceiptId = ElementsHtml.createElement({
       id: 'DetailPaneHeaderReceiptId',
+      title: 'Receipt Id',
       bold: true,
       color: true,
     });
 
     // ELEMENTOS EXTERNOS
-    const htmlParent = ElementsHtml.createElement({ id: 'DetailPaneHeaderParent' });
-    const htmlReceiptDate = ElementsHtml.createElement({ id: 'DetailPaneHeaderReceiptDate' });
-    const htmlCheckIn = ElementsHtml.createElement({ id: 'DetailPaneHeaderCheckIn' });
-    const htmlUserStamp = ElementsHtml.createElement({ id: 'DetailPaneHeaderUserStamp' });
-    const htmlTrailerId = ElementsHtml.createElementAnchor({ id: 'DetailPaneHeaderTrailerId' });
+    const htmlParent = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderParent',
+      title: 'Parent',
+    });
+    const htmlReceiptDate = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderReceiptDate',
+      title: 'Receipt Date',
+    });
+    const htmlCheckIn = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderCheckIn',
+      title: 'Check In',
+    });
+    const htmlUserStamp = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderUserStamp',
+      title: 'User Stamp',
+    });
+    const htmlTrailerId = ElementsHtml.createElementAnchor({
+      id: 'DetailPaneHeaderTrailerId',
+      title: 'Trailer Id',
+    });
     const htmlVerMas = ElementsHtml.seeMoreInformation();
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1060');

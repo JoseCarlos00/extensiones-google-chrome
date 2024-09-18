@@ -3,15 +3,21 @@ window.addEventListener('load', async () => {
     // Elementos HTML
     const htmlTrailingStatusNumeric = ElementsHtml.createElement({
       id: 'DetailPaneHeaderTrailingStatusNumeric',
+      title: 'Trailing Status Numeric',
     });
     const htmlLeadingStatusNumeric = ElementsHtml.createElement({
       id: 'DetailPaneHeaderLeadingStatusNumeric',
+      title: 'Leading Status Numeric',
     });
     const htmlInternalReceiptNumber = ElementsHtml.createElement({
       id: 'DetailPaneHeaderInternalReceiptNumber',
+      title: 'Internal Receipt Number',
       bold: true,
     });
-    const htmlTrailerId = ElementsHtml.createElement({ id: 'DetailPaneHeaderTrailerId' });
+    const htmlTrailerId = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderTrailerId',
+      title: 'Trailer ID',
+    });
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1059');
 

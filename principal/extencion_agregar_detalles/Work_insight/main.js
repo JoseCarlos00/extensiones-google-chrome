@@ -3,21 +3,41 @@ window.addEventListener('load', async () => {
     // ELEMENTOS INTERNOS
     const htmlReferenceId = ElementsHtml.createElement({
       id: 'DetailPaneHeaderReferenceId',
+      title: 'Reference ID',
       color: true,
       bold: true,
     });
-    const htmlAssignedUser = ElementsHtml.createElement({ id: 'DetailPaneHeaderAssignedUser' });
+    const htmlAssignedUser = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderAssignedUser',
+      title: 'Assigned User',
+    });
     const htmlInternalInstructionNum = ElementsHtml.createElement({
       id: 'DetailPaneHeaderInternalInstructionNum',
+      title: 'Internal Instruction Number',
       bold: true,
     });
-    const htmlCompleteByUser = ElementsHtml.createElement({ id: 'DetailPaneHeaderCompleteByUser' });
-    const htmlWaveNumber = ElementsHtml.createElement({ id: 'DetailPaneHeaderWaveNumber' });
-    const htmlCustomer = ElementsHtml.createElement({ id: 'DetailPaneHeaderCustomer' });
+    const htmlCompleteByUser = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderCompleteByUser',
+      title: 'Complete By User',
+    });
+    const htmlWaveNumber = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderWaveNumber',
+      title: 'Wave Number',
+    });
+    const htmlCustomer = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderCustomer',
+      title: 'Customer',
+    });
 
     // Datos Externos
-    const htmlFromZone = ElementsHtml.createElement({ id: 'DetailPaneHeaderFromZone' });
-    const htmlToZone = ElementsHtml.createElement({ id: 'DetailPaneHeaderToZone' });
+    const htmlFromZone = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderFromZone',
+      title: 'From Zone',
+    });
+    const htmlToZone = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderToZone',
+      title: 'To Zone',
+    });
     const htmlVerMas = ElementsHtml.seeMoreInformation();
 
     const elementsHtmlToInsert = [

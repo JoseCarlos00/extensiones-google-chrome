@@ -1,9 +1,21 @@
 window.addEventListener('load', async () => {
   try {
-    const htmlWorkUnit = ElementsHtml.createElement({ id: 'DetailPaneHeaderWorkUnit' });
-    const htmlContainerId = ElementsHtml.createElement({ id: 'DetailPaneHeaderContainerId' });
-    const htmlUserName = ElementsHtml.createElement({ id: 'DetailPaneHeaderUserStamp' });
-    const htmlCustomer = ElementsHtml.createElement({ id: 'DetailPaneHeaderCustomer' });
+    const htmlWorkUnit = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderWorkUnit',
+      title: 'Work Unit',
+    });
+    const htmlContainerId = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderContainerId',
+      title: 'Container ID',
+    });
+    const htmlUserName = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderUserStamp',
+      title: 'User Stamp',
+    });
+    const htmlCustomer = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderCustomer',
+      title: 'Customer',
+    });
 
     const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1076');
 

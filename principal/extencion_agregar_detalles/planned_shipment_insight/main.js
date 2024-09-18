@@ -1,9 +1,16 @@
 window.addEventListener('load', async () => {
   try {
-    const htmlCustomer = ElementsHtml.createElement({ id: 'DetailPaneHeaderCustomer' });
-    const htmlShipTo = ElementsHtml.createElement({ id: 'DetailPaneHeaderShipTo' });
+    const htmlCustomer = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderCustomer',
+      title: 'Custumer',
+    });
+    const htmlShipTo = ElementsHtml.createElement({
+      id: 'DetailPaneHeaderShipTo',
+      title: 'Ship To',
+    });
     const htmlInternalShipmentNumber = ElementsHtml.createElement({
       id: 'DetailPaneHeaderInternalShipmentNumber',
+      title: 'Internal Shipment Number',
       bold: true,
     });
 
