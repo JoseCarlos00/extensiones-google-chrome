@@ -1,4 +1,4 @@
-import { eventoClickCheckBox, createFiltersCheckbox } from './checkBox.js';
+import { CheckBoxManangerColumn, CheckBoxManangerRow } from './CheckBoxMananger.js';
 console.log('Print.js');
 
 async function main() {
@@ -30,16 +30,7 @@ async function main() {
     table.insertAdjacentElement('beforeend', tbodyElement);
 
     await cleanThead();
-
-    eventoClickCheckBox()
-      .then(msg => {
-        console.log(msg);
-
-        const showColumns = [4, 5, 6, 7, 8].map(index => index - 1);
-
-        createFiltersCheckbox(showColumns, true);
-      })
-      .catch(err => console.error('Error al crear el evento click mostrar:', err));
+    await createCheckBox();
 
     setTimeout(() => window.print(), 500);
   } catch (error) {
@@ -84,5 +75,43 @@ function cleanThead() {
   });
 }
 
+async function createCheckBox() {
+  const showColumns = [4, 5, 6, 7, 8].map(index => index - 1);
+
+  const checkBoxManangerCol = new CheckBoxManangerColumn();
+  checkBoxManangerCol.eventoClickCheckBox();
+  await checkBoxManangerCol.createFiltersCheckbox(showColumns, true);
+
+  await hiddenRows();
+}
+
 // Espera a que la página haya cargado antes de ejecutar la función inicio
 window.addEventListener('load', main, { once: true });
+
+async function hiddenRows() {
+  const table = document.getElementById('content');
+  const position = 9;
+
+  const rowsGroup = Array.from(table.querySelectorAll(`tbody tr td:nth-child(${position})`));
+
+  if (!rowsGroup || !table) {
+    reject('No se encontraron los elementos <table> and <tbody>');
+    return;
+  }
+
+  if (rowsGroup.length === 0) {
+    reject('No hay filas en el <tbody>');
+    return;
+  }
+
+  const valuesGroup = rowsGroup.map(td => td.textContent.trim());
+  const uniqueGroup = [...new Set(valuesGroup)];
+
+  const checkBoxManangerRow = new CheckBoxManangerRow({ positionRow: position });
+  checkBoxManangerRow.eventoClickCheckBox();
+  await checkBoxManangerRow.createFiltersCheckbox({
+    rowsDefault: ['100'],
+    showColumns: true,
+    uniqueRows: uniqueGroup,
+  });
+}
