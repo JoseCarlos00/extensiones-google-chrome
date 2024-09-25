@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Print</title>
-  <link rel="stylesheet" href="./print.css">
-  <link rel="stylesheet" href="./Checkboox.css">
+  <link rel="stylesheet" href="../../utils/print.css">
+  <link rel="stylesheet" href="../../utils/checkboox.css">
 </head>
 
 <body>
@@ -33,11 +33,13 @@
           stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
           <path d="M12 19v-7m0 0V5m0 7H5m7 0h7"></path>
         </svg>
-        Mostrar/Ocultar Grupos
+        Mostrar/Ocultar Status
       </span>
     </button>
 
-    <div id="checkboxContainerRow" class="mostrar"></div>
+    <div id="checkboxContainerRow" class="mostrar"
+      style=" grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); width: 300px; align-self: start; "></div>
+
   </section>
 
   <table id="content"></table>
