@@ -24,28 +24,32 @@ function inicio() {
 }
 
 function getDataForToPrint() {
-  // Lógica para obtener el contenido a imprimir de la página actual
-  const theadToPrint = document.querySelector('#ListPaneDataGrid_headers thead');
-  const tbodyToPrint = document.querySelector('#ListPaneDataGrid tbody');
+  try {
+    // Lógica para obtener el contenido a imprimir de la página actual
+    const theadToPrint = document.querySelector('#ListPaneDataGrid_headers thead');
+    const tbodyToPrint = document.querySelector('#ListPaneDataGrid tbody');
 
-  if (!theadToPrint) {
-    console.error('No se encotro el elemento <theadToPrint>');
-  }
+    if (!theadToPrint) {
+      console.error('No se encotro el elemento <theadToPrint>');
+    }
 
-  if (!tbodyToPrint) {
-    console.error('No se encotro el elemento <tbodyToPrint>');
-  }
+    if (!tbodyToPrint) {
+      console.error('No se encotro el elemento <tbodyToPrint>');
+    }
 
-  const config = {
-    command: 'openNewTab',
-    urlPrefix: 'shipment_detail/',
-    theadToPrint: theadToPrint.innerHTML,
-    tbodyToPrint: tbodyToPrint.innerHTML,
-  };
+    const config = {
+      command: 'openNewTab',
+      urlPrefix: 'shipment_detail/',
+      theadToPrint: theadToPrint.innerHTML,
+      tbodyToPrint: tbodyToPrint.innerHTML,
+    };
 
-  // Envía un mensaje al script de fondo para solicitar la apertura de una nueva pestaña
-  if (chrome.runtime) {
-    chrome.runtime.sendMessage(config);
+    // Envía un mensaje al script de fondo para solicitar la apertura de una nueva pestaña
+    if (chrome.runtime) {
+      chrome.runtime.sendMessage(config);
+    }
+  } catch (error) {
+    console.error('Error al obtener el contenido a imprimir:', error);
   }
 }
 window.addEventListener('load', inicio);

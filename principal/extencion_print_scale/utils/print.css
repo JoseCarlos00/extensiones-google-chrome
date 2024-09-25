@@ -47,6 +47,12 @@ table {
     pointer-events: none;
     cursor: text;
   }
+
+  tr td.hidden,
+  tr th.hidden,
+  tr.hidden {
+    animation: fade-out 0.2s forwards;
+  }
 }
 
 .ocultar {
@@ -67,6 +73,12 @@ table {
 
 .hidden {
   display: none !important;
+}
+
+@keyframes fade-out {
+  to {
+    display: none;
+  }
 }
 
 @media print {

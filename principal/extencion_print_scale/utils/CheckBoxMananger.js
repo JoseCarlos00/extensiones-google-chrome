@@ -30,16 +30,22 @@ class CheckBoxMananger {
       }
 
       // Verificar si la clase 'mostrar' está presente en el checkboxContainer
-      if (!checkboxContainer.classList.contains('mostrar')) {
+      if (!checkboxContainer.classList.contains('show')) {
         // Si no está presente, la agregamos
-        checkboxContainer.classList.add('mostrar');
-        // Cambiar el atributo "d" del path SVG para representar un símbolo de menos(-)
-        togglePath.setAttribute('d', 'M5 12h14');
+        checkboxContainer.classList.add('show');
+        // Cambiar el atributo "d" del path SVG para representar un símbolo de menos(- ⋀)
+        togglePath.setAttribute(
+          'd',
+          'M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z'
+        );
       } else {
         // Si está presente, la eliminamos
-        checkboxContainer.classList.remove('mostrar');
-        // Cambiar el atributo "d" del path SVG para representar un símbolo de más(+)
-        togglePath.setAttribute('d', 'M12 19v-7m0 0V5m0 7H5m7 0h7');
+        checkboxContainer.classList.remove('show');
+        // Cambiar el atributo "d" del path SVG para representar un símbolo de más(+ ⋁)
+        togglePath.setAttribute(
+          'd',
+          'M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'
+        );
       }
     };
 
@@ -303,10 +309,10 @@ export class CheckBoxManangerRow extends CheckBoxMananger {
     }
 
     rows.forEach(tr => {
-      const grupoElement = tr.querySelector(`td:nth-child(${this.positionRow})`);
+      const rowSelected = tr.querySelector(`td:nth-child(${this.positionRow})`);
 
-      if (grupoElement && checkboxContainer) {
-        const grupoText = grupoElement.textContent.trim();
+      if (rowSelected && checkboxContainer) {
+        const grupoText = rowSelected.textContent.trim();
 
         if (grupoText === value) {
           tr.classList.toggle('hidden', !target.checked);
