@@ -121,6 +121,10 @@ class EventManagerCopy {
       return el ? el.value.trim() : '';
     };
 
+    /**
+     * Format [ 'item', ]
+     * @returns {String}
+     */
     const itemSql = () =>
       rows
         .map(row => `'${getElementValue(row, itemSelector)}'`)
@@ -156,12 +160,34 @@ class EventManagerCopy {
       return `${SELECT}\n\n${FROM}\n\n${WHERE}\nORDER BY 1;`;
     };
 
+    const insertInto = () => {
+      const MAXIMUM_QTY = 2;
+      const QUANTITY_UM = 50;
+      // ('valor1 ', 'FM', 'Generica Permanente S', 'valor2', 'CJ', 'valor3', 'JoseCarlos', DATEADD(HOUR, 6, GETDATE()), '100', '0'),
+
+      const INSERT_INTO = `INSERT INTO item_location_capacity  (ITEM, COMPANY, LOCATION_TYPE, MAXIMUM_QTY, QUANTITY_UM, MINIMUM_RPLN_PCT, USER_STAMP, DATE_TIME_STAMP, MAXIMUM_RPLN_FILL_PCT, MINIMUM_TOPOFF_RPLN_PCT)\nVALUES\n`;
+
+      const VALUES = rows
+        .map(
+          row =>
+            ` ('${getElementValue(
+              row,
+              itemSelector
+            )}', 'FM', 'Generica Permanente S', '${MAXIMUM_QTY}', 'CJ', '${QUANTITY_UM}', 'JoseCarlos', DATEADD(HOUR, 6, GETDATE()), '100', '0')`
+        )
+        .filter(Boolean)
+        .join(',\n');
+
+      return INSERT_INTO + VALUES;
+    };
+
     const handleCopyMap = {
       'item-sql': itemSql,
       'item-location': itemLocation,
       'item-exist': itemExist,
       'update-capacity': updateCapacity,
       'show-capacity': showCapacity,
+      'insert-into': insertInto,
     };
 
     // Verifica si el id es válido

@@ -13,6 +13,7 @@ class ModalHandler {
     this._tbodyTable = null;
     this._tableContent = null;
     this._listPaneDataGridPopover = null;
+    this.btnCopySenteceSql = null;
     this._prefix = '#myModalShowTable';
   }
 
@@ -112,6 +113,8 @@ class ModalHandler {
       `${this._prefix} #ListPaneDataGrid_popover`
     );
 
+    this.btnCopySenteceSql = document.querySelector(`${this._prefix} #copy-items`);
+
     if (!this._tbodyTable) {
       throw new Error('No se encontro el elemento #ListPaneDataGrid tbody');
     }
@@ -194,7 +197,25 @@ class ModalHandler {
       });
     } catch (error) {
       console.warn(
-        'Error: Ha ocurrido un error al crear el Evento click en #tableContent: ',
+        'Error: Ha ocurrido un error al crear el Evento click en #setEventClickModalTable(): ',
+        error
+      );
+    }
+  }
+
+  async #setEventClick() {
+    try {
+      if (!this.btnCopySenteceSql) {
+        console.warn('No se encontró el elemento #copy-sentence-sql');
+        return;
+      }
+
+      this.btnCopySenteceSql.addEventListener('click', () => {
+        this.btnCopySenteceSql.classList.toggle('active');
+      });
+    } catch (error) {
+      console.warn(
+        'Error: Ha ocurrido un error al crear el Evento click en #setEventClick(): ',
         error
       );
     }
@@ -323,6 +344,7 @@ class ModalHandler {
       this._modal = modal;
       await this.#initialVariables();
       await this.#setEventClickModalTable();
+      await this.#setEventClick();
       this.#setEventKeydownsForTableContent();
       this.#setEventsForCopyButtons();
       this.#setEventHideElement();

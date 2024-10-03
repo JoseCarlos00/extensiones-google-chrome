@@ -46,7 +46,7 @@ const validateProperty = (value, property) => {
   return mapCase[property];
 };
 
-const hideMenu = `
+const hideMenu = /*html*/ `
  <a id="hide-elements" role="button" tabindex="0" href="javascript:void(0)" title="Ocultar elementos">
     <span class="ui-iggrid-featurechooserbutton ui-icon ui-icon-gear"></span>
   </a>
@@ -112,7 +112,7 @@ const hideMenu = `
   </div>
 `;
 
-const buttons = `
+const buttons = /*html*/ `
     <button id='printButtonModal' aria-label="Imprimir Tabla" data-balloon-pos="up" class="print-button-modal" style="display: none;">
         <i class="far fa-print"></i>
     </button>
@@ -187,8 +187,16 @@ const buttons = `
               <i class="far fa-copy"></i>
             </button>
           </div>
-        </div>
+          
+          <div class="button-container">
+            <button class="button" data-tooltip="Insert Into Capacity" data-id="insert-into">
+              <i class="far fa-code"></i>
+              <i class="far fa-location-arrow"></i>
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
 
+        </div>
       </div>
 
       <span id="rowCounter" class="row-counter ${validateProperty(
