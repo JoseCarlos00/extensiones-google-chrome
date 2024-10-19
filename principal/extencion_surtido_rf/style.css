@@ -54,6 +54,7 @@
 
 			.btn {
 				width: fit-content;
+				height: 30px;
 				padding: 4px 8px;
 				border-radius: 5px;
 				border: 2px outset #e0e1e4;

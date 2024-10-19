@@ -1,8 +1,8 @@
 class Configuration {
 	constructor() {
-		this.autocomplete = true;
+		this.autoComplete = true;
 		this.confirmOk = false;
-		this.confirmDelay = 1000;
+		this.confirmDelay = 500;
 		this.selector = "menu-config";
 
 		this.init();
@@ -20,27 +20,29 @@ class Configuration {
 
 	// Recuperar configuraciones almacenadas en localStorage
 	recoverSettingsStorage() {
-		const storedSettings = JSON.parse(localStorage.getItem("settings-user"));
-		if (storedSettings) {
-			this.autocomplete = storedSettings.autocomplete;
-			this.confirmOk = storedSettings.confirmOk;
-			this.confirmDelay = storedSettings.confirmDelay;
-		}
+		const savedAutocomplete = localStorage.getItem("autoComplete");
+		const savedConfirmOk = localStorage.getItem("confirmOk");
+		const savedConfirmDelay = localStorage.getItem("confirmDelay");
+
+		this.autoComplete = savedAutocomplete === null ? this.autoComplete : JSON.parse(savedAutocomplete);
+		this.confirmOk = savedConfirmOk === null ? this.confirmOk : JSON.parse(savedConfirmOk);
+		this.confirmDelay = savedConfirmDelay === null ? this.confirmDelay : parseInt(savedConfirmDelay, 10);
 	}
 
 	// Configurar eventos para guardar cambios en localStorage
 	handleInputEvents = (e) => {
 		e.preventDefault();
 
-		const { autocompleteToggle, confirmToggle, confirmDelayInput } = e.target;
-		const settings = {
-			autocomplete: autocompleteToggle.checked,
-			confirmOk: confirmToggle.checked,
-			confirmDelay: 500,
-		};
+		const { autoCompleteToggle, confirmToggle, confirmDelayInput } = e.target;
 
-		// Guardar camnios en localStorgae
-		localStorage.setItem("settings-user", JSON.stringify(settings));
+		this.autoComplete = autoCompleteToggle.checked;
+		localStorage.setItem("autocomplete", JSON.stringify(this.autoComplete));
+
+		this.confirmOk = confirmToggle.checked;
+		localStorage.setItem("confirmOk", JSON.stringify(this.confirmOk));
+
+		this.confirmDelay = parseFloat(confirmDelayInput.value);
+		localStorage.setItem("confirmDelay", this.confirmDelay * 1000);
 	};
 
 	setEventListener() {
@@ -49,17 +51,25 @@ class Configuration {
 		if (!form) return;
 		form.addEventListener("submit", this.handleInputEvents);
 
-		const { confirmToggle, confirmDelayInput } = form.elements;
+		const { confirmToggle, confirmDelayInput, autoCompleteToggle } = form.elements;
+
+		autoCompleteToggle?.addEventListener("change", () => {
+			this.autoComplete = autoCompleteToggle.checked;
+			localStorage.setItem("autoComplete", JSON.stringify(this.autoComplete));
+		});
 
 		confirmToggle?.addEventListener("change", () => {
 			confirmDelayInput.disabled = !confirmToggle.checked;
+
+			this.confirmOk = confirmToggle.checked;
+			localStorage.setItem("confirmOk", JSON.stringify(this.confirmOk));
 		});
 
 		const resetButton = document.getElementById("reset-button");
 		if (!resetButton) return;
 
 		resetButton.addEventListener("click", () => {
-			const { autocompleteToggle, confirmToggle, confirmDelayInput } = form;
+			const { autoCompleteToggle, confirmToggle, confirmDelayInput } = form;
 
 			const settings = {
 				autocomplete: true,
@@ -67,10 +77,16 @@ class Configuration {
 				confirmDelay: 500,
 			};
 
-			// Guardar camnios en localStorgae
-			localStorage.setItem("settings-user", JSON.stringify(settings));
+			this.autoComplete = settings.autocomplete;
+			localStorage.setItem("autoComplete", JSON.stringify(this.autoComplete));
 
-			autocompleteToggle.checked = true;
+			this.confirmOk = settings.confirmOk;
+			localStorage.setItem("confirmOk", JSON.stringify(this.confirmOk));
+
+			this.confirmDelay = 0.5;
+			localStorage.setItem("confirmDelay", 500);
+
+			autoCompleteToggle.checked = true;
 			confirmToggle.checked = false;
 			confirmDelayInput.value = 0.5;
 			confirmDelayInput.disabled = true;
@@ -109,7 +125,7 @@ class Configuration {
 								<li>
 									<label class="switch input-container">
 										<span class="tittle-label">Auto Completar</span>
-										<input name="autocompleteToggle"  type="checkbox"  ${checked(this.autocomplete)}>
+										<input name="autoCompleteToggle"  type="checkbox"  ${checked(this.autoComplete)}>
 
 
 										<span class="slider"></span>
