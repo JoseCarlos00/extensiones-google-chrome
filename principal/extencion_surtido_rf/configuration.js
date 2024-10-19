@@ -1,18 +1,16 @@
 class Configuration {
 	constructor() {
 		this.autocomplete = true;
-		this.confirmOk = true;
+		this.confirmOk = false;
 		this.confirmDelay = 1000;
 		this.selector = "menu-config";
 
-		this.recoverSettingsStorage();
-		window.addEventListener("load", () => this.init(), {
-			once: true,
-		});
+		this.init();
 	}
 
 	async init() {
 		try {
+			this.recoverSettingsStorage();
 			await this.insertMenuConfiguration();
 			this.setEventListener();
 		} catch (error) {
@@ -22,94 +20,61 @@ class Configuration {
 
 	// Recuperar configuraciones almacenadas en localStorage
 	recoverSettingsStorage() {
-		const savedAutocomplete = localStorage.getItem("config-autocomplete");
-		const savedConfirmOk = localStorage.getItem("config-confirmOk");
-		const savedConfirmDelay = localStorage.getItem("config-confirmDelay");
-
-		this.autocomplete = savedAutocomplete === null ? this.autocomplete : JSON.parse(savedAutocomplete);
-		this.confirmOk = savedConfirmOk === null ? this.confirmOk : JSON.parse(savedConfirmOk);
-		this.confirmDelay = savedConfirmDelay === null ? this.confirmDelay : parseInt(savedConfirmDelay, 10);
+		const storedSettings = JSON.parse(localStorage.getItem("settings-user"));
+		if (storedSettings) {
+			this.autocomplete = storedSettings.autocomplete;
+			this.confirmOk = storedSettings.confirmOk;
+			this.confirmDelay = storedSettings.confirmDelay;
+		}
 	}
 
 	// Configurar eventos para guardar cambios en localStorage
-	setEventListener() {
-		const autoCompleteToggle = document.getElementById("autocompleteToggle");
-		const confirmToggle = document.getElementById("confirmToggle");
-		const confirmDelayInput = document.getElementById("confirmDelayInput");
-
-		if (autoCompleteToggle) {
-			autoCompleteToggle.addEventListener("change", () => {
-				this.autocomplete = autoCompleteToggle.checked;
-				localStorage.setItem("config-autocomplete", JSON.stringify(this.autocomplete));
-			});
-		}
-
-		if (confirmToggle) {
-			confirmToggle.addEventListener("change", () => {
-				this.confirmOk = confirmToggle.checked;
-				localStorage.setItem("config-confirmOk", JSON.stringify(this.confirmOk));
-
-				// Habilitar o deshabilitar el campo `confirmDelayInput`
-				if (confirmToggle.checked) {
-					confirmDelayInput.removeAttribute("disabled");
-				} else {
-					confirmDelayInput.setAttribute("disabled", true);
-				}
-			});
-		}
-
-		if (confirmDelayInput) {
-			confirmDelayInput.addEventListener("focus", () => this.setEventInput(confirmDelayInput));
-		}
-	}
-
-	clearEventInput(element) {
-		if (!element) {
-			return;
-		}
-
-		element.removeEventListener("keydown", this.handleInputEvents);
-		element.removeEventListener("blur", this.handleInputEvents);
-	}
-
 	handleInputEvents = (e) => {
 		e.preventDefault();
 
-		const { target: input } = e;
-		const { currentValue, updateField } = input.dataset;
+		const { autocompleteToggle, confirmToggle, confirmDelayInput } = e.target;
+		const settings = {
+			autocomplete: autocompleteToggle.checked,
+			confirmOk: confirmToggle.checked,
+			confirmDelay: 500,
+		};
 
-		if (e.type === "blur" || e.key === "Enter") {
-			const newValue = input.value.trim();
-
-			console.log("New value:", newValue);
-
-			if (!isNaN(Number(newValue)) && Number(newValue) < 0) {
-				return;
-			}
-
-			if (newValue === currentValue) {
-				this.clearEventInput(input);
-				return;
-			}
-
-			// this.editContent(updateField, newValue);
-		}
-
-		if (e.key === "Escape") {
-			this.clearEventInput(input);
-		}
+		// Guardar camnios en localStorgae
+		localStorage.setItem("settings-user", JSON.stringify(settings));
 	};
 
-	setEventInput(confirmDelayInput) {
-		console.log("Eventos creados");
+	setEventListener() {
+		const form = document.getElementById("form-config");
 
-		// confirmDelayInput.addEventListener("input", () => {
-		// 	this.confirmDelay = parseFloat(confirmDelayInput.value);
-		// 	localStorage.setItem("config-confirmDelay", this.confirmDelay * 1000);
-		// });
+		if (!form) return;
+		form.addEventListener("submit", this.handleInputEvents);
 
-		confirmDelayInput.addEventListener("blur", this.handleInputEvents);
-		confirmDelayInput.addEventListener("keydown", this.handleInputEvents);
+		const { confirmToggle, confirmDelayInput } = form.elements;
+
+		confirmToggle?.addEventListener("change", () => {
+			confirmDelayInput.disabled = !confirmToggle.checked;
+		});
+
+		const resetButton = document.getElementById("reset-button");
+		if (!resetButton) return;
+
+		resetButton.addEventListener("click", () => {
+			const { autocompleteToggle, confirmToggle, confirmDelayInput } = form;
+
+			const settings = {
+				autocomplete: true,
+				confirmOk: false,
+				confirmDelay: 500,
+			};
+
+			// Guardar camnios en localStorgae
+			localStorage.setItem("settings-user", JSON.stringify(settings));
+
+			autocompleteToggle.checked = true;
+			confirmToggle.checked = false;
+			confirmDelayInput.value = 0.5;
+			confirmDelayInput.disabled = true;
+		});
 	}
 
 	async insertMenuConfiguration() {
@@ -140,31 +105,41 @@ class Configuration {
               </h3>
             </header>
             <ul>
-              <li>
-                <label class="switch input-container">
-                  <span class="tittle-label">Auto Completar</span>
-                  <input id="autocompleteToggle"  type="checkbox"  ${checked(this.autocomplete)}>
+              <form id="form-config">
+								<li>
+									<label class="switch input-container">
+										<span class="tittle-label">Auto Completar</span>
+										<input name="autocompleteToggle"  type="checkbox"  ${checked(this.autocomplete)}>
 
 
-                  <span class="slider"></span>
-                </label>
-              </li>
-              <li>
-                <label class="switch input-container">
-                  <span class="tittle-label">Confirmar</span>
-                  <input id="confirmToggle" type="checkbox" ${checked(this.confirmOk)}>
-                  <span class="slider"></span>
-                </label>
-              </li>
-              <li>
-                <label class="input-number input-container">
-                  <span class="tittle-label">Tiempo</span>
-                  <input id="confirmDelayInput" type="number" value="${
-										this.confirmDelay / 1000
-									}" min="1" max="60" ${disabled(this.confirmOk)}>
-                  <span class="suffix">S</span>
-                </label>
-              </li>
+										<span class="slider"></span>
+									</label>
+								</li>
+								<li>
+									<label class="switch input-container">
+										<span class="tittle-label">Confirmar</span>
+										<input name="confirmToggle" type="checkbox" ${checked(this.confirmOk)}>
+										<span class="slider"></span>
+									</label>
+								</li>
+								<li>
+									<label class="input-number input-container">
+										<span class="tittle-label">Tiempo</span>
+										<input 
+											name="confirmDelayInput" 
+											type="number" 
+											value="${parseFloat(this.confirmDelay / 1000)}"
+											step="0.01" min="0.1" max="60" 
+											${disabled(this.confirmOk)}>
+										<span class="suffix">S</span>
+									</label>
+								</li>
+
+									<div class="container-buttons">
+										<button type="submit" class="btn submit">Guardar</button>
+										<button id="reset-button" type="button" class="btn reset">Reestablecer</button>
+									</div>
+							</form>
             </ul>
         </nav>
       </div>
@@ -179,4 +154,6 @@ class Configuration {
 }
 
 // Crear una instancia de la clase y ejecutar la inicialización
-new Configuration();
+window.addEventListener("load", () => new Configuration(), {
+	once: true,
+});
