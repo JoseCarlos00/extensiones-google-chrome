@@ -1,10 +1,16 @@
 function inicio() {
-  const menuNav = document.querySelector('#ScreenGroupMenu12068');
+	const menuNav = document.querySelector("#ScreenGroupMenu12068");
 
-  const html = `
+	// Verificar si hay un estado guardado en el localStorage al cargar la página
+	const switchState = localStorage.getItem("newWaveActive");
+
+	const isChecked = switchState === "true" ? "checked=true" : "";
+
+	const html = /*html*/ `
   <div class="switch-toggle-container">
     <div class="checkbox-wrapper-35">
-    <input value="private" name="switch" id="switch" type="checkbox" class="switch">
+    <input value="private" name="switch" id="switch" type="checkbox" class="switch" ${isChecked}>
+
     <label for="switch">
       <span class="switch-x-text">New Wave: </span>
       <span class="switch-x-toggletext">
@@ -16,30 +22,24 @@ function inicio() {
   </div>
   `;
 
-  if (!menuNav) return;
-  menuNav.insertAdjacentHTML('beforeend', html);
+	if (!menuNav) return;
+	menuNav.insertAdjacentHTML("beforeend", html);
 
-  switchToggle();
+	setTimeout(switchToggle, 50);
 }
 
 function switchToggle() {
-  // Obtener el elemento del interruptor
-  const switchElement = document.getElementById('switch');
+	// Obtener el elemento del interruptor
+	const switchElement = document.getElementById("switch");
 
-  // Agregar un evento de cambio al interruptor
-  switchElement.addEventListener('change', function () {
-    if (this.checked === true) {
-      localStorage.setItem('newWaveActive', true);
-    } else {
-      localStorage.removeItem('newWaveActive');
-    }
-  });
-
-  // Verificar si hay un estado guardado en el localStorage al cargar la página
-  const switchState = localStorage.getItem('newWaveActive');
-  if (switchState === 'true') {
-    switchElement.checked = true;
-  }
+	// Agregar un evento de cambio al interruptor
+	switchElement.addEventListener("change", function () {
+		if (this.checked === true) {
+			localStorage.setItem("newWaveActive", true);
+		} else {
+			localStorage.removeItem("newWaveActive", false);
+		}
+	});
 }
 
-window.addEventListener('load', inicio, { once: true });
+window.addEventListener("load", inicio, { once: true });
