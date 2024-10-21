@@ -21,6 +21,11 @@
 			],
 			"js": ["SurtidoRF.js", "configuration.js"],
 			"css": ["style.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/*"],
+			"js": ["darkMode.js"],
+			"css": ["darkTheme.CSS"]
 		}
 	],
 	"action": {

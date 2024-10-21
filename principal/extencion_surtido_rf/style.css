@@ -4,7 +4,7 @@
 	top: 20px;
 	left: 20px;
 
-	width: 230px;
+	width: 250px;
 	height: auto;
 	color: #e3e3e3;
 	background-color: #212121;
@@ -96,7 +96,7 @@
 
 		.tittle-label {
 			display: inline-flex;
-			width: 136px;
+			width: 180px;
 			height: 30px;
 			align-items: center;
 			user-select: none;

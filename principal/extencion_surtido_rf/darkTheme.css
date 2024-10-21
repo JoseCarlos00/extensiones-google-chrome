@@ -1,0 +1,444 @@
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* styleGobalCSS */
+[data-bs-theme="dark"] {
+	body,
+	.rfOverlay,
+	#wrapper1 {
+		background-color: #0d1117 !important;
+		color: #e6edf3 !important;
+	}
+	input[type="button"],
+	input[type="submit"] {
+		cursor: pointer;
+	}
+
+	/* Boton Verde */
+	[value="OK"],
+	#registraUbicaciones,
+	#removeButton {
+		background-color: rgb(35, 134, 54) !important;
+		color: #e6edf3 !important;
+		padding: 10px;
+		font-size: 24px;
+		border: 1px solid rgb(35, 134, 54);
+		font-weight: 400;
+		background-color: #000 !important;
+		color: rgb(35, 134, 54) !important;
+	}
+
+	[value="OK"]:hover,
+	#registraUbicaciones:hover,
+	#removeButton:hover {
+		background-color: rgb(46, 160, 67) !important;
+		color: #000 !important;
+		transform: scale(1.1);
+	}
+
+	#removeButton {
+		border-radius: 0.2rem;
+		padding: 0.25rem 0.5rem;
+		border: 1px solid;
+		font-size: 18px;
+	}
+
+	/* Boton Naranja */
+	[value="Cancel"],
+	[value="Short"],
+	#cancelar,
+	#overrideButton,
+	[value="Logout"] {
+		background-color: #000 !important;
+		color: #ff8000 !important;
+		border: 1px solid #ff8000;
+		border-radius: 0.2rem;
+		padding: 0.25rem 0.5rem;
+	}
+
+	[value="Cancel"]:hover,
+	#cancelar:hover,
+	[name="locate"]:hover,
+	#pausar:hover,
+	#buttonBorrar:hover,
+	#buttonSubmit:hover,
+	#ButtonSearch:hover,
+	#ButtonClear:hover,
+	#ButtonInvMgmt:hover,
+	#InventoryAttributeOverlayButton:hover,
+	#buttonNest:hover,
+	#buttonRemove:hover,
+	#Btn_Nest:hover,
+	#Btn_Combine:hover,
+	[value="Ok/close"]:hover,
+	[value="Pass"]:hover,
+	#bSkip:hover,
+	#overrideButton:hover,
+	[value="Full"]:hover,
+	[value="View picks"]:hover,
+	[value="Continue"]:hover,
+	[value="Done"]:hover,
+	[value="Locate"]:hover,
+	[value="Short"]:hover,
+	[value="Select"]:hover,
+	[value="Logout"]:hover {
+		opacity: 0.8;
+		transform: scale(1.1);
+	}
+
+	[value="Cancel"]:disabled,
+	#cancelar:disabled,
+	[name="locate"]:disabled,
+	#pausar:disabled,
+	#buttonBorrar:disabled,
+	#buttonSubmit:disabled,
+	#registraUbicaciones:disabled,
+	#buttonNest:disabled,
+	#buttonRemove:disabled,
+	#removeButton:disabled {
+		opacity: 0.32;
+	}
+
+	[value="Ok/close"] {
+		margin-left: 8px;
+	}
+
+	/* Botton Azul */
+	[value="Ok/close"],
+	[value="Pass"],
+	[value="Full"],
+	[value="View picks"],
+	[value="Continue"],
+	[value="Done"],
+	[value="Locate"],
+	[value="Select"],
+	#pausar,
+	#bSkip {
+		background-color: #000 !important;
+		color: #09f !important;
+		border-radius: 0.2rem;
+		padding: 0.25rem 0.5rem;
+		border: 1px solid #09f;
+	}
+
+	#button_id[name="logoutButton"] {
+		box-shadow: 0 0 5px 1px #3d3d3d;
+	}
+
+	#FORM1,
+	form[name="Form1"] {
+		#button_id,
+		#cancel {
+			color: #e6edf3;
+			background-color: rgb(35, 134, 54);
+			cursor: pointer;
+			padding: 0.25rem 0.5rem;
+			border: 1px solid rgba(240, 246, 252, 0.1);
+		}
+		#button_id:hover,
+		#cancel:hover {
+			background-color: rgb(46, 160, 67);
+			transform: scale(1.1);
+		}
+		.touchscreen-spacing {
+			color: rgb(201, 209, 217);
+			background-color: rgb(33, 38, 45);
+			border: 1px solid #7575a3;
+			border-radius: 6px;
+			font-weight: 500;
+		}
+		.touchscreen-spacing:hover {
+			background-color: rgb(48, 54, 61);
+			border-color: rgba(139, 148, 158, 0.976);
+		}
+		.touchscreen-spacing:focus-visible {
+			box-shadow: none;
+			outline: rgb(47, 129, 247) solid 2px;
+			outline-offset: -2px;
+		}
+	}
+
+	/* Padding boton OK*/
+	[name="form1"] #table1 tbody :nth-last-child(1) td,
+	[name="Form1"] table tbody :nth-last-child(1) td,
+	[name="form1"] table tbody :nth-last-child(1) td {
+		padding-top: 8px;
+	}
+
+	[name="RFALLLOCATIONS"] {
+		opacity: 0.8;
+	}
+	input:where([type="TEXT"]),
+	select.dropdown,
+	[name="location"],
+	[name="fromLoc"],
+	[name="itemNum"] {
+		background-color: #000 !important;
+		border: 1px solid #7575a3;
+		color: #e6edf3 !important;
+		border-radius: 4px;
+		text-transform: uppercase;
+	}
+
+	/*  Input text focus*/
+	input[type="TEXT"]:focus-visible,
+	input[type="TEXT"]:active,
+	input[type="TEXT"]:focus,
+	select.dropdown:focus,
+	[name="itemNum"]:focus,
+	select:focus {
+		outline: 1px solid gold !important;
+		outline-offset: -1px;
+	}
+
+	select.dropdow option:hover {
+		background-color: red;
+	}
+
+	select.dropdown,
+	select {
+		font-size: 14px;
+		background-color: #000;
+		border: 1px solid #7575a3;
+		color: #e6edf3;
+	}
+
+	#wrapper1 {
+		margin: 0 auto;
+		width: min-content !important;
+		#buttonSelect {
+			padding: 0.2rem 0.5rem;
+		}
+	}
+	#wrapper,
+	#wrapper1 {
+		width: fit-content;
+		color: #e6edf3 !important;
+
+		#header {
+			color: #e6edf3 !important;
+		}
+
+		.formDivider {
+			height: 0px;
+		}
+
+		#buttonSubmit,
+		#buttonCancel,
+		#buttonClose,
+		#buttonBorrar,
+		#ButtonSearch,
+		#ButtonClear,
+		#ButtonInvMgmt,
+		#InventoryAttributeOverlayButton,
+		#buttonNest,
+		#buttonRemove,
+		#Btn_Nest,
+		#Btn_Combine {
+			background-color: #000 !important;
+			border-radius: 0.2rem;
+			padding: 0.25rem 0.5rem;
+			border: 1px solid;
+		}
+
+		#buttonSubmit,
+		#buttonClose,
+		#ButtonSearch,
+		#ButtonClear,
+		#ButtonInvMgmt,
+		#InventoryAttributeOverlayButton,
+		#buttonNest,
+		#buttonRemove,
+		#Btn_Nest,
+		#Btn_Combine {
+			color: #09f !important;
+			border-color: #09f;
+		}
+		#buttonCancel,
+		#buttonBorrar {
+			color: #ff8000 !important;
+			border-color: #ff8000;
+		}
+
+		.mainTable {
+			td,
+			td.displayOnlyTextContentColumn {
+				color: #e2e2e2;
+			}
+		}
+
+		td.labelColumn {
+			color: #e6edf3 !important;
+		}
+	}
+
+	td.displayOnlyTextContentColumn {
+		color: #fff;
+	}
+
+	#statusBox {
+		background-color: #000;
+		color: #e6edf3;
+	}
+
+	#actual,
+	.btn-v:after,
+	.btn-ctrl::after,
+	.btn-supr::after {
+		color: #e6edf3 !important;
+	}
+
+	.btn-ctrl::after {
+		top: 0 !important;
+	}
+
+	.bnt-tranfer {
+		background-color: #000;
+		color: #000;
+		opacity: 0.9;
+	}
+	.bnt-tranfer::before {
+		background-color: #e6edf3;
+	}
+
+	.bnt-tranfer:hover span {
+		color: #e6edf3;
+	}
+
+	#registroForm,
+	.container-contenedores {
+		label {
+			color: #e6edf3 !important;
+		}
+		.formDivider {
+			height: 0px;
+		}
+		::placeholder {
+			color: #e6edf3 !important;
+		}
+		textarea {
+			background-color: transparent;
+			color: #e6edf3 !important;
+			border-color: #7575a3;
+		}
+	}
+
+	.checkbox-wrapper-35 .switch + label {
+		color: #fff !important;
+	}
+}
+
+.dark-mode-toggle-container {
+	position: fixed;
+	right: 50px;
+
+	.switch {
+		font-size: 17px;
+		position: relative;
+		display: inline-block;
+		width: 64px;
+		height: 34px;
+	}
+
+	.switch input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #73c0fc;
+		transition: 0.4s;
+		border-radius: 30px;
+	}
+
+	.slider:before {
+		position: absolute;
+		content: "";
+		height: 30px;
+		width: 30px;
+		border-radius: 20px;
+		left: 2px;
+		bottom: 2px;
+		z-index: 2;
+		background-color: #e8e8e8;
+		transition: 0.4s;
+	}
+
+	.sun svg {
+		position: absolute;
+		top: 6px;
+		left: 36px;
+		z-index: 1;
+		width: 24px;
+		height: 24px;
+	}
+
+	.moon svg {
+		fill: #73c0fc;
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		z-index: 1;
+		width: 24px;
+		height: 24px;
+	}
+
+	/* .switch:hover */
+	.moon svg {
+		animation: tilt 5s linear infinite;
+	}
+
+	/* .switch:hover */
+	.sun svg {
+		animation: rotate 15s linear infinite;
+	}
+
+	.input:checked + .slider {
+		background-color: #183153;
+	}
+
+	.input:focus + .slider {
+		box-shadow: 0 0 1px #183153;
+	}
+
+	.input:checked + .slider:before {
+		transform: translateX(30px);
+	}
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes tilt {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	25% {
+		transform: rotate(-10deg);
+	}
+
+	75% {
+		transform: rotate(10deg);
+	}
+
+	100% {
+		transform: rotate(0deg);
+	}
+}

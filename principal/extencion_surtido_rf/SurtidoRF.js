@@ -30,7 +30,7 @@ class SurtidoRF {
 		// Title Surtido
 		this.tittleSurtido = document.getElementsByTagName("h3")[0]?.textContent?.trim() ?? "";
 		this.regex = /\d{3,4}-[TCMI]-\d{3}-\d+/;
-		this.isValideShitment = this.regex(this.tittleSurtido);
+		this.isValideShitment = this.regex.test(this.tittleSurtido);
 
 		this.recoverSettingsStorage();
 	}
