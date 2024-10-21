@@ -10,14 +10,14 @@
 		"48": "images/inventory48.png",
 		"128": "images/inventory128.png"
 	},
-	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/RF*"],
+	"host_permissions": ["https://qawms.fantasiasmiguel.com.mx/RF*"],
 	"content_scripts": [
 		{
 			"matches": [
-				"https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRF.aspx*",
-				"https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?VALIDATE=Y*",
-				"https://wms.fantasiasmiguel.com.mx/RF/WorkProfileSelectionRF.aspx?UseProfile=Y*",
-				"https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?*"
+				"https://qawms.fantasiasmiguel.com.mx/RF/ConfirmationRF.aspx*",
+				"https://qawms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?VALIDATE=Y*",
+				"https://qawms.fantasiasmiguel.com.mx/RF/WorkProfileSelectionRF.aspx?UseProfile=Y*",
+				"https://qawms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?*"
 			],
 			"js": ["SurtidoRF.js", "configuration.js"],
 			"css": ["style.css"]

@@ -27,6 +27,9 @@ class SurtidoRF {
 		this.confirmOk = false;
 		this.confirmDelay = 500;
 
+		// Title Surtido
+		this.tittleSurtido = document.getElementsByTagName("h3")[0]?.textContent?.trim() ?? "";
+
 		this.recoverSettingsStorage();
 	}
 
@@ -69,30 +72,19 @@ class SurtidoRF {
 		}
 	}
 
-	saveCurrentUrl() {
-		if (this.btnOK) {
-			// Verificamos si existe this.btnOK
-			const currentUrl = window.location.href; // Obtenemos la URL de la página actual
-
-			// Recuperamos las URLs guardadas anteriormente en localStorage
-			let storedUrls = JSON.parse(localStorage.getItem("uniqueUrls")) || [];
-
-			// Comprobamos si la URL ya está guardada
-			if (!storedUrls.includes(currentUrl)) {
-				storedUrls.push(currentUrl); // Si no está, la añadimos
-				localStorage.setItem("uniqueUrls", JSON.stringify(storedUrls)); // Guardamos en localStorage
-			}
-
-			console.log("URL guardada:", currentUrl);
-		}
-	}
-
 	submitForm() {
 		if (!this.confirmOk || !this.btnOK) return;
 
-		setTimeout(() => {
-			this.btnOK.click();
-		}, this.confirmDelay);
+		let regex = /\d{3,4}-[TCMI]-\d{3}-\d+/;
+
+		const isContainerActive = this.inputContainer?.value !== "" && this.inputContainer ? true : false;
+
+		if (isContainerActive && regex.test(this.tittleSurtido)) {
+			setTimeout(() => {
+				console.warn("Confirmar button OK");
+				this.btnOK.click();
+			}, this.confirmDelay);
+		}
 	}
 
 	static inputsHiddenTest() {
@@ -107,9 +99,6 @@ class SurtidoRF {
 		this.submitForm();
 
 		console.log("Button OK: [", this.confirmOk, "]", this.btnOK);
-		if (this.btnOK) {
-			this.saveCurrentUrl();
-		}
 	}
 }
 
