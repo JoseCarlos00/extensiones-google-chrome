@@ -29,6 +29,8 @@ class SurtidoRF {
 
 		// Title Surtido
 		this.tittleSurtido = document.getElementsByTagName("h3")[0]?.textContent?.trim() ?? "";
+		this.regex = /\d{3,4}-[TCMI]-\d{3}-\d+/;
+		this.isValideShitment = this.regex(this.tittleSurtido);
 
 		this.recoverSettingsStorage();
 	}
@@ -39,8 +41,22 @@ class SurtidoRF {
 		const savedConfirmOk = localStorage.getItem("confirmOk");
 		const savedConfirmDelay = localStorage.getItem("confirmDelay");
 
+		// Recuperar y verificar si confirmOk es válido (no ha pasado más de 1 hora)
+		if (savedConfirmOk !== null) {
+			const confirmOkData = JSON.parse(savedConfirmOk);
+			const currentTime = Date.now();
+			const oneHour = 60 * 60 * 1000; // 1 hora en milisegundos
+
+			// Verificar si ha pasado más de 1 hora
+			if (currentTime - confirmOkData.timestamp > oneHour) {
+				localStorage.removeItem("confirmOk"); // Eliminar de localStorage
+				this.confirmOk = false; // Restaurar valor predeterminado
+			} else {
+				this.confirmOk = confirmOkData.value;
+			}
+		}
+
 		this.autoComplete = savedAutocomplete === null ? this.autoComplete : JSON.parse(savedAutocomplete);
-		this.confirmOk = savedConfirmOk === null ? this.confirmOk : JSON.parse(savedConfirmOk);
 		this.confirmDelay = savedConfirmDelay === null ? this.confirmDelay : parseInt(savedConfirmDelay, 10);
 	}
 
@@ -59,6 +75,8 @@ class SurtidoRF {
 
 		if (this.inputItem && this.inputItemHidden) {
 			this.inputItem.value = this.inputItemHidden.value;
+
+			this.inputContainer?.focus();
 		}
 
 		this.insertContenedor();
@@ -75,11 +93,9 @@ class SurtidoRF {
 	submitForm() {
 		if (!this.confirmOk || !this.btnOK) return;
 
-		let regex = /\d{3,4}-[TCMI]-\d{3}-\d+/;
-
 		const isContainerActive = this.inputContainer?.value !== "" && this.inputContainer ? true : false;
 
-		if (isContainerActive && regex.test(this.tittleSurtido)) {
+		if (isContainerActive && this.isValideShitment) {
 			setTimeout(() => {
 				console.warn("Confirmar button OK");
 				this.btnOK.click();

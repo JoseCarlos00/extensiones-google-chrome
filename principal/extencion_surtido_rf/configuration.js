@@ -24,8 +24,22 @@ class Configuration {
 		const savedConfirmOk = localStorage.getItem("confirmOk");
 		const savedConfirmDelay = localStorage.getItem("confirmDelay");
 
+		// Recuperar y verificar si confirmOk es válido (no ha pasado más de 1 hora)
+		if (savedConfirmOk !== null) {
+			const confirmOkData = JSON.parse(savedConfirmOk);
+			const currentTime = Date.now();
+			const oneHour = 60 * 60 * 1000; // 1 hora en milisegundos
+
+			// Verificar si ha pasado más de 1 hora
+			if (currentTime - confirmOkData.timestamp > oneHour) {
+				localStorage.removeItem("confirmOk"); // Eliminar de localStorage
+				this.confirmOk = false; // Restaurar valor predeterminado
+			} else {
+				this.confirmOk = confirmOkData.value;
+			}
+		}
+
 		this.autoComplete = savedAutocomplete === null ? this.autoComplete : JSON.parse(savedAutocomplete);
-		this.confirmOk = savedConfirmOk === null ? this.confirmOk : JSON.parse(savedConfirmOk);
 		this.confirmDelay = savedConfirmDelay === null ? this.confirmDelay : parseInt(savedConfirmDelay, 10);
 	}
 
@@ -39,7 +53,14 @@ class Configuration {
 		localStorage.setItem("autocomplete", JSON.stringify(this.autoComplete));
 
 		this.confirmOk = confirmToggle.checked;
-		localStorage.setItem("confirmOk", JSON.stringify(this.confirmOk));
+		// Guardar confirmOk y la hora de activación
+		localStorage.setItem(
+			"confirmOk",
+			JSON.stringify({
+				value: this.confirmOk,
+				timestamp: Date.now(), // Guarda la marca de tiempo actual
+			})
+		);
 
 		this.confirmDelay = parseFloat(confirmDelayInput.value);
 		localStorage.setItem("confirmDelay", this.confirmDelay * 1000);
@@ -51,7 +72,7 @@ class Configuration {
 		if (!form) return;
 		form.addEventListener("submit", this.handleInputEvents);
 
-		const { confirmToggle, confirmDelayInput, autoCompleteToggle } = form.elements;
+		const { confirmToggle, confirmDelayInput, autoCompleteToggle } = form;
 
 		autoCompleteToggle?.addEventListener("change", () => {
 			this.autoComplete = autoCompleteToggle.checked;
@@ -60,9 +81,16 @@ class Configuration {
 
 		confirmToggle?.addEventListener("change", () => {
 			confirmDelayInput.disabled = !confirmToggle.checked;
-
 			this.confirmOk = confirmToggle.checked;
-			localStorage.setItem("confirmOk", JSON.stringify(this.confirmOk));
+
+			// Guardar confirmOk y la hora de activación
+			localStorage.setItem(
+				"confirmOk",
+				JSON.stringify({
+					value: this.confirmOk,
+					timestamp: Date.now(), // Guarda la marca de tiempo actual
+				})
+			);
 		});
 
 		const resetButton = document.getElementById("reset-button");
