@@ -16,75 +16,11 @@ function inicio() {
 	let stAdj = getAdjType(form1.adjType.selectedIndex) ?? undefined;
 
 	if (stAdj == "Ajuste Positivo") {
-		/**Estilos */
-		document.querySelector("head").insertAdjacentHTML(
-			"beforeend",
-			`
-    <style>
-    #registroForm {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      width: 500px;
-
-      animation: entradaElemento 0.5s ease-in-out;
-
-      div {
-        margin: 0 auto;
-      }
-
-      & button:nth-child(2) {
-        align-self: center;
-        width: 90px;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 10px;
-        text-align: center;
-        background-color: #0dd406;
-      }
-
-      & button:nth-child(2):hover {
-        background: #0dd406d6;
-      }
-      
-      & button:nth-child(2):active {
-        background: #0dd406bf;
-      }
-    }
-
-    .contadores-container {
-      position: fixed;
-      bottom: 0;
-      width: 200px;
-      font-size: 1.12rem;
-
-      animation: entradaElemento 0.5s ease-in-out;
-
-      spam {
-        font-weight: bold;
-        padding-left: 4px;
-      }
-    }
-
-    @keyframes entradaElemento {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /** Otros estilos */
-    #table1 > tbody > tr:nth-child(9) > td {
-      padding: 12px 0 0 19px;
-    }
-    </style>
-    `
-		);
-
 		const body = document.querySelector("body");
 
 		/** Insertar Ubicaciones */
-		const formulario = `
-      <form id="registroForm">
+		const formulario = /*html*/ `
+      <form id="registroForm" class="registroForm adjustment">
         <label for="ubicaciones">Item, Qty y Ubicacion:</label>
         <textarea id="ubicaciones" name="ubicaciones" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbicacion\tLP(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\tFMA0002376952"></textarea>
         

@@ -1,153 +1,145 @@
 {
-  "manifest_version": 3,
-  "name": "Detalles Scale",
-  "version": "1.0",
-  "author": "Jose Carlos Aguirre Romero>",
-  "description": "Agrega detalles al panel de detalles en SCALE",
-  "permissions": ["scripting", "activeTab", "storage", "tabs"],
-  "icons": {
-    "16": "images/clipBoar16.png",
-    "32": "images/clipBoar32.png",
-    "48": "images/clipBoar48.png",
-    "128": "images/clipBoar128.png"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/4026*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2723*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2735*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2757*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2773*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2774*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2776*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2777*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2779*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2780*",
-        "https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"
-      ],
-      "js": [
-        "HandlePanelDetail.js",
-        "HandlePanelDetailDataExternal.js",
-        "ManangerPanelDetail.js",
-        "ElementsHtml.js",
-        "ToastAlert.js"
-      ],
-      "css": ["style.css"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
-      "js": ["shipment/line/HandleLineInsight.js", "shipment/line/main.js"],
-      "css": ["shipment/style.css"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"],
-      "js": ["shipment/line/shipmentDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
-      "js": [
-        "shipment/insight/HandleInsight.js",
-        "shipment/insight/ManangerPanelDetail.js",
-        "shipment/insight/main.js"
-      ],
-      "css": ["shipment/style.css"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/*"],
-      "js": ["shipment/insight/loadDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
-      "js": ["transaction_history/HandleTransactionHistory.js", "transaction_history/main.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
-      "js": ["inventory_insight/HandleInventory.js", "inventory_insight/main.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"],
-      "js": ["inventory_insight/inventoryDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
-      "js": ["receipt/detail/HandleReceipLineInsight.js", "receipt/detail/main.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
-      "js": [
-        "receipt/insight/ManangerPanelDetail.js",
-        "receipt/insight/HandleReceiptInsight.js",
-        "receipt/insight/main.js"
-      ]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
-      "js": ["receipt/container/HandleReceiptContainer.js", "receipt/container/main.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"],
-      "js": ["receipt/container/containerDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receipt/*"],
-      "js": ["receipt/container/receiptDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
-      "js": [
-        "shipping_container/ManangerPanelDetail.js",
-        "shipping_container/HandleShippingContainer.js",
-        "shipping_container/main.js"
-      ]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"],
-      "js": ["shipping_container/containerDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"],
-      "js": ["wave_insight/HandleWaveInsight.js", "wave_insight/main.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/*"],
-      "js": ["wave_insight/waveDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
-      "js": ["work_insight/HandleWorkInsight.js", "work_insight/main.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/workinstruction/*"],
-      "js": ["work_insight/workDetail.js"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"],
-      "js": [
-        "planned_shipment_insight/HandlePlannedShipment.js",
-        "planned_shipment_insight/main.js"
-      ]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error*"],
-      "js": ["errrorSegurity.js"]
-    }
-  ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "images/clipBoar16.png",
-      "32": "images/clipBoar32.png",
-      "48": "images/clipBoar48.png",
-      "128": "images/clipBoar128.png"
-    }
-  },
-  "content_security_policy": {
-    "script-src": ["'self'", "'unsafe-inline'"],
-    "object-src": "'self'"
-  }
+	"manifest_version": 3,
+	"name": "Detalles Scale",
+	"version": "1.0",
+	"author": "Jose Carlos Aguirre Romero",
+	"description": "Agrega detalles dinámicos al panel de detalles en SCALE, mejorando la visualización de la información seleccionada.",
+	"permissions": ["tabs"],
+	"icons": {
+		"16": "images/clipBoar16.png",
+		"32": "images/clipBoar32.png",
+		"48": "images/clipBoar48.png",
+		"128": "images/clipBoar128.png"
+	},
+	"background": {
+		"service_worker": "background.js"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/4026*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2723*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2735*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2757*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2773*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2774*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2776*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2777*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2779*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2780*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"
+			],
+			"js": [
+				"HandlePanelDetail.js",
+				"HandlePanelDetailDataExternal.js",
+				"ManangerPanelDetail.js",
+				"ElementsHtml.js",
+				"ToastAlert.js"
+			],
+			"css": ["style.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
+			"js": ["shipment/line/HandleLineInsight.js", "shipment/line/main.js"],
+			"css": ["shipment/style.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shipment/*"],
+			"js": ["shipment/line/shipmentDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
+			"js": [
+				"shipment/insight/HandleInsight.js",
+				"shipment/insight/ManangerPanelDetail.js",
+				"shipment/insight/main.js"
+			],
+			"css": ["shipment/style.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/*"],
+			"js": ["shipment/insight/loadDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"],
+			"js": ["transaction_history/HandleTransactionHistory.js", "transaction_history/main.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
+			"js": ["inventory_insight/HandleInventory.js", "inventory_insight/main.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=*"],
+			"js": ["inventory_insight/inventoryDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
+			"js": ["receipt/detail/HandleReceipLineInsight.js", "receipt/detail/main.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
+			"js": [
+				"receipt/insight/ManangerPanelDetail.js",
+				"receipt/insight/HandleReceiptInsight.js",
+				"receipt/insight/main.js"
+			]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
+			"js": ["receipt/container/HandleReceiptContainer.js", "receipt/container/main.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receiptcontainer/*"],
+			"js": ["receipt/container/containerDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/receipt/*"],
+			"js": ["receipt/container/receiptDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
+			"js": [
+				"shipping_container/ManangerPanelDetail.js",
+				"shipping_container/HandleShippingContainer.js",
+				"shipping_container/main.js"
+			]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"],
+			"js": ["shipping_container/containerDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"],
+			"js": ["wave_insight/HandleWaveInsight.js", "wave_insight/main.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/*"],
+			"js": ["wave_insight/waveDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
+			"js": ["work_insight/HandleWorkInsight.js", "work_insight/main.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/workinstruction/*"],
+			"js": ["work_insight/workDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"],
+			"js": ["planned_shipment_insight/HandlePlannedShipment.js", "planned_shipment_insight/main.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error*"],
+			"js": ["errrorSegurity.js"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "images/clipBoar16.png",
+			"32": "images/clipBoar32.png",
+			"48": "images/clipBoar48.png",
+			"128": "images/clipBoar128.png"
+		}
+	}
 }
