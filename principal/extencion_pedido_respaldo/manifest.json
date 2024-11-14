@@ -1,0 +1,52 @@
+{
+	"manifest_version": 3,
+	"name": "Pedidos Respaldo",
+	"version": "1.0",
+	"description": "Pega el contenido del portapapeles  ",
+	"permissions": ["scripting"],
+	"icons": {
+		"16": "images/inventory16.png",
+		"32": "images/inventory32.png",
+		"48": "images/inventory48.png",
+		"128": "images/inventory128.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["http://fmpedidos.dnsalias.com/Pedidos/pedidonuevo.aspx*"],
+			"js": [
+				"ManagerContent.js",
+				"pedido.js",
+				"Modal/ButtonOpenModal.js",
+				"Modal/ModaCreateHTML.js",
+				"Modal/pedidos/modalContent.js",
+				"Modal/pedidos/ModalHandler.js",
+				"Modal/ModalManager.js",
+				"Modal/pedidos/main.js"
+			],
+			"css": ["style.css", "Modal/modal.css"]
+		},
+		{
+			"matches": ["http://fmpedidos.dnsalias.com/Pedidos/trasladonuevo.aspx*"],
+			"js": [
+				"ManagerContent.js",
+				"traslado.js",
+				"Modal/ButtonOpenModal.js",
+				"Modal/ModaCreateHTML.js",
+				"Modal/traslados/modalContent.js",
+				"Modal/traslados/ModalHandler.js",
+				"Modal/ModalManager.js",
+				"Modal/traslados/main.js"
+			],
+			"css": ["style.css", "Modal/modal.css"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"defaul_icon": {
+			"16": "images/inventory16.png",
+			"32": "images/inventory32.png",
+			"48": "images/inventory48.png",
+			"128": "images/inventory128.png"
+		}
+	}
+}
