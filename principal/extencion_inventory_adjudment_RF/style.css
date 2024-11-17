@@ -11,7 +11,7 @@
 		margin: 0 auto;
 	}
 
-	& #registraUbicaciones {
+	& button.insertData {
 		align-self: center;
 		width: 90px;
 		cursor: pointer;

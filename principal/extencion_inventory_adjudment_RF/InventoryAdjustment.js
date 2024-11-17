@@ -1,46 +1,36 @@
 // Ajuste Positivo
 class InventoryAdjustment extends IventoryManager {
 	constructor({ formularioHTML, nameDataStorage }) {
-		console.log("InventoryAdjustment");
+		console.log("Class InventoryAdjustment");
 		super({ formularioHTML, nameDataStorage });
 	}
 
-	registrarDatos() {
+	registrarDatos({ lineas }) {
 		const datos = {};
-		const ubicaciones = document.getElementById("ubicaciones").value;
 
-		if (ubicaciones) {
-			// Dividir el texto en líneas
-			const lineas = ubicaciones.split("\n");
+		// Contador para asignar claves numéricas únicas
+		let contador = 0;
 
-			// Contador para asignar claves numéricas únicas
-			let contador = 0;
+		// Procesar cada línea
+		lineas.forEach((linea) => {
+			const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
+			if (match) {
+				const item = match[1] ?? null;
+				const qty = Number(match[2]) ?? null;
+				const ubicacion = match[3] ?? null;
+				const LP = match[4] ?? null;
 
-			// Procesar cada línea
-			lineas.forEach((linea) => {
-				const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
-				if (match) {
-					const item = match[1] ?? null;
-					const qty = Number(match[2]) ?? null;
-					const ubicacion = match[3] ?? null;
-					const LP = match[4] ?? null;
-					// console.log('lp:', LP);
+				if (!item || !qty || !ubicacion) return;
 
-					if (!item || !qty || !ubicacion) return;
+				// Agregar datos al objeto usando el contador como clave
+				datos[contador++] = { item, qty, ubicacion, LP };
+			}
+		});
 
-					// Agregar datos al objeto usando el contador como clave
-					datos[contador++] = { item, qty, ubicacion, LP };
-				}
-			});
-
-			// Limpiar el campo de texto
-			document.getElementById("ubicaciones").value = "";
-
-			// Insertar datos
-			// console.log(datos);
-			insertarDatos(datos);
-		}
-	} // End Ubicaciones
+		// Insertar datos
+		console.log("datos:", datos);
+		// insertarDatos(datos);
+	}
 
 	insertarDatos({ datos }) {
 		// Obtener las claves (números de artículo) del objeto datos
@@ -96,7 +86,7 @@ class InventoryAdjustment extends IventoryManager {
 const formularioHTML = /*html*/ `
 <form id="registroForm" class="registroForm adjustment">
   <label for="dataToInsert">Item, Qty y Ubicacion:</label>
-  <textarea id="dataToInsert" name="dataToInsert" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbicacion\tLP(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\tFMA0002376952"></textarea>
+  <textarea  id="dataToInsert" name="dataToInsert" class="textarea" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbicacion\tLP(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\tFMA0002376952"></textarea>
   
   <div>
     <button id="pause" type="button"  tabindex="-1">Pausar</button>
