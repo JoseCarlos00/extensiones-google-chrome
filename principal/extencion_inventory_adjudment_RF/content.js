@@ -217,4 +217,4 @@ function inicio() {
 	}
 }
 
-window.addEventListener("load", inicio, { once: true });
+// window.addEventListener("load", inicio, { once: true });
