@@ -14,13 +14,18 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/InventoryManagementRF.aspx*"],
-			"js": ["IventoryManager.js", "InventoryAdjustment.js", "InventoryTransfer.js", "popup.js"],
+			"js": ["popup.js", "content.js"],
 			"css": ["style.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ToContainerRF.aspx?*"],
 			"js": ["tranfer_to_container/tranfer_to_container_RF.js", "tranfer_to_container/formularioUnaVez.js"],
 			"css": ["tranfer_to_container/tranfer_to_container_RF.css", "buttons.css"]
+		},
+		{
+			"matches": ["https://qawms.fantasiasmiguel.com.mx/RF/InventoryManagementRF.aspx*"],
+			"js": ["IventoryManager.js", "InventoryAdjustment.js", "InventoryTransfer.js"],
+			"css": ["style.css"]
 		}
 	],
 	"action": {
