@@ -213,7 +213,7 @@ class IventoryManager {
 		this.insertarDatos({ data: datosStorage });
 	}
 
-	submitFormData() {
+	submitFormData(callback) {
 		if (this.pauseSubmmit) {
 			console.warn("El envio de datos se encuentra en pausa");
 			return;
@@ -225,6 +225,7 @@ class IventoryManager {
 			const btnSubmit = document.querySelector("#submit1");
 
 			if (btnSubmit) {
+				callback && callback();
 				btnSubmit.click();
 			} else {
 				console.log("No se encontró el botón de #submit1");

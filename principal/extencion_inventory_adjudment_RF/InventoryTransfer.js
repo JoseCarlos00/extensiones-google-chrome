@@ -1,8 +1,8 @@
 // Transferencia Manual
 class InventoryTransfer extends IventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType }) {
-		console.log("Class InventoryTransfer");
 		super({ formularioHTML, nameDataStorage, adjType });
+		console.log("Class InventoryTransfer");
 	}
 
 	registrarDatos({ lineas }) {

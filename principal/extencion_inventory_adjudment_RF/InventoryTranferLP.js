@@ -1,8 +1,8 @@
-// Ajuste Positivo
-class InventoryAdjustment extends IventoryManager {
+// Transferencia Manual LP
+class InventoryTransferLP extends IventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType }) {
 		super({ formularioHTML, nameDataStorage, adjType });
-		console.log("Class InventoryAdjustment");
+		console.log("Class InventoryTransfer LP");
 	}
 
 	registrarDatos({ lineas }) {
@@ -13,19 +13,21 @@ class InventoryAdjustment extends IventoryManager {
 
 		// Procesar cada línea
 		lineas.forEach((linea) => {
-			const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
-			if (match) {
-				const item = match[1] ?? "";
-				const qty = Number(match[2]) ?? "";
-				const ubicacion = match[3] ?? "";
-				const LP = match[4] ?? "";
+			const match = linea.match(/^(\S+)\s+(\S+)(?:\s+(\S+))?/);
 
-				if (!item || !qty || !ubicacion) return;
+			if (match) {
+				const LPOrigen = match[1] ?? null;
+				const toLoc = match[2] ?? null;
+				const LPDestino = match[3] ?? null;
+
+				if (!LPOrigen || !LPOrigen) return;
 
 				// Agregar datos al objeto usando el contador como clave
-				data[contador++] = { item, qty, ubicacion, LP };
+				data[contador++] = { LPOrigen, toLoc, LPDestino };
 			}
 		});
+
+		// Limpiar el campo de texto
 
 		// Insertar datos
 		console.log("datos:", data);
@@ -38,7 +40,6 @@ class InventoryAdjustment extends IventoryManager {
 			// Obtener las claves (números de artículo) del objeto datos
 			const rows = Object.keys(data);
 			this.updateCounter(rows.length);
-
 			// Verificar si hay datos para procesar
 			if (rows.length === 0) {
 				console.log("No hay datos para insertar.");
@@ -53,28 +54,35 @@ class InventoryAdjustment extends IventoryManager {
 			}
 
 			// Asignar valores al formulario
-			const { item, company, quantity, location, RFLOGISTICSUNIT } = form1;
+			const { RFLOGISTICSUNIT, toLoc } = form1;
 
-			item.value = firstRow?.item;
-			company.value = "FM";
-			quantity.value = firstRow?.qty;
-			location.value = firstRow?.ubicacion;
-			if (firstRow?.LP) RFLOGISTICSUNIT.value = firstRow?.LP;
+			if (RFLOGISTICSUNIT && firstRow?.LPOrigen) {
+				RFLOGISTICSUNIT.value = firstRow?.LPOrigen;
+				console.log("RFLOGISTICSUNIT", RFLOGISTICSUNIT);
+				console.log("RFLOGISTICSUNIT TO:", firstRow?.LPOrigen);
+			}
 
-			delete data[rows[0]];
+			if (toLoc && firstRow?.toLoc) {
+				toLoc.value = firstRow?.toLoc;
+				console.log("toLoc", toLoc);
+				console.log("toLoc TO:", firstRow?.toLoc);
+			}
 
 			this.saveDataToSessionStorage(data);
-			this.submitFormData();
+			this.submitFormData(() => {
+				delete data[rows[0]];
+				this.saveDataToSessionStorage(data);
+			});
 		} catch (error) {
 			console.error("Error al insertar datos:", error.message);
 		}
 	}
 }
 
-const formularioHTMLAdjustment = /*html*/ `
+const formularioHTMLTranferLP = /*html*/ `
 <form id="registroForm" class="registroForm adjustment">
-  <label for="dataToInsert">Item, Qty y Ubicacion:</label>
-  <textarea  id="dataToInsert" name="dataToInsert" class="textarea" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbicacion\tLP(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\tFMA0002376952"></textarea>
+<label for="dataToInsert">Item, To Ubicacion, LP:</label>
+<textarea id="dataToInsert" name="dataToInsert" rows="4" cols="50" required placeholder="LP Origen\tUbi. destino\tLP destino(Opcional)\nFMA-ORIGEN\t1-25-02-AA-01\tFMA-DESTINO"></textarea>
   
   <div>
     <button id="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
@@ -84,17 +92,17 @@ const formularioHTMLAdjustment = /*html*/ `
 </form>`;
 
 window.addEventListener("load", async () => {
-	const nameDataStorage = "datosAdjustment"; // Nombre del objeto en el almacenamiento local
+	const nameDataStorage = "datosToTranferLP"; // Nombre del objeto en el almacenamiento local
 
 	try {
-		const iventoryManager = new InventoryAdjustment({
-			formularioHTML: formularioHTMLAdjustment,
+		const iventoryManager = new InventoryTransferLP({
+			formularioHTML: formularioHTMLTranferLP,
 			nameDataStorage,
-			adjType: "Ajuste Positivo",
+			adjType: "Transferencia Manual LP",
 		});
 
 		iventoryManager.render();
 	} catch (error) {
-		console.error("Error al cargar el componente InventoryAdjustment:", error.message);
+		console.error("Error al cargar el componente InventoryTranferLP:", error.message);
 	}
 });
