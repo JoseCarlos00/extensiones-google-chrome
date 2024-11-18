@@ -1,7 +1,7 @@
 // Transferencia Manual
 class InventoryTransfer extends IventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType }) {
-		console.log("Class InventoryAdjustment");
+		console.log("Class InventoryTransfer");
 		super({ formularioHTML, nameDataStorage, adjType });
 	}
 
@@ -41,7 +41,7 @@ class InventoryTransfer extends IventoryManager {
 		try {
 			// Obtener las claves (números de artículo) del objeto datos
 			const rows = Object.keys(data);
-			contador(rows.length);
+			this.updateCounter(rows.length);
 			// Verificar si hay datos para procesar
 			if (rows.length === 0) {
 				console.log("No hay datos para insertar.");
@@ -63,7 +63,13 @@ class InventoryTransfer extends IventoryManager {
 			item.value = firstRow?.item;
 			company.value = "FM";
 			quantity.value = firstRow?.qty;
-			QTYUM.value = "PZ (1,00)";
+
+			if (QTYUM) {
+				QTYUM.options[0].value = "PZ (1,00)";
+				QTYUM.options[0].innerHTML = "PZ (1,00)";
+				QTYUM.value = "PZ (1,00)";
+			}
+
 			fromLoc.value = firstRow?.fromLoc;
 			toLoc.value = firstRow?.toLoc;
 
@@ -81,11 +87,11 @@ class InventoryTransfer extends IventoryManager {
 
 const formularioHTMLTranfer = /*html*/ `
 <form id="registroForm" class="registroForm adjustment">
-<label for="ubicaciones">Item, Qty, From Ubicacion, To Ubicacion, LP:</label>
-<textarea id="ubicaciones" name="ubicaciones" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbi. origen\tUbi. destino\tLP origen(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\t1-25-02-AA-01\tFMA0002376952"></textarea>
+<label for="dataToInsert">Item, Qty, From Ubicacion, To Ubicacion, LP:</label>
+<textarea id="dataToInsert" name="dataToInsert" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbi. origen\tUbi. destino\tLP origen(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\t1-25-02-AA-01\tFMA0002376952"></textarea>
   
   <div>
-    <button id="pause" type="button"  tabindex="-1">Pausa: off</button>
+    <button id="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
     <button id="insertData" type="submit">Registrar</button>
     <button id="cancel" type="button">Cancelar</button>
   </div>

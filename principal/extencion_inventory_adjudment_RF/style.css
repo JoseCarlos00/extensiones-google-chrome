@@ -28,6 +28,11 @@
 			background: #0dd406bf;
 		}
 	}
+
+	button[pause-active="on"] {
+		border-color: red;
+		font-weight: bold;
+	}
 }
 
 /* ============= */

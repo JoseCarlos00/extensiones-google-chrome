@@ -151,6 +151,7 @@ class IventoryManager {
 
 	setPauseValuenInDOM(pause) {
 		const pauseSubmmit = this.pauseSubmmit ? "on" : "off";
+		pause.setAttribute("pause-active", pauseSubmmit);
 		pause.innerHTML = `Pausa: ${pauseSubmmit}`;
 	}
 
@@ -197,6 +198,10 @@ class IventoryManager {
 		if (dataStorageLenght <= 0) {
 			console.warn("No hay datos guardados en la sesión");
 			return;
+		}
+
+		if (this.pauseSubmmit) {
+			alert("Tiene activado la pausa, por favor desactivarla enviar formulario");
 		}
 
 		document.querySelector("#dataToInsert")?.setAttribute("disabled", true);

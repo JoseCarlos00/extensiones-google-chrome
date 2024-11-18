@@ -77,7 +77,7 @@ const formularioHTMLAdjustment = /*html*/ `
   <textarea  id="dataToInsert" name="dataToInsert" class="textarea" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbicacion\tLP(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\tFMA0002376952"></textarea>
   
   <div>
-    <button id="pause" type="button"  tabindex="-1">Pausa: off</button>
+    <button id="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
     <button id="insertData" type="submit">Registrar</button>
     <button id="cancel" type="button">Cancelar</button>
   </div>
