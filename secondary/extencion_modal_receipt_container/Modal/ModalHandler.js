@@ -14,11 +14,22 @@ class ModalHandler {
 		this._tableContent = null;
 		this._prefix = "#myModalShowTable";
 
-		this.trailerId = "No encotrado";
+		this.trailerId = this.getTrailerId();
 		this.dataInternal = {
 			LP: "td[aria-describedby='ListPaneDataGrid_LICENSE_PLATE_ID'] input",
 			receiptId: "td[aria-describedby='ListPaneDataGrid_RECEIPT_ID'] input",
 		};
+	}
+
+	getTrailerId() {
+		try {
+			const trailerId = JSON.parse(sessionStorage.getItem("2779advanceCriteriaJson")) ?? "";
+
+			return "No encotrado";
+		} catch (error) {
+			console.error("Ha ocurrido un error al obtener el trailerId:", error);
+			return "No encotrado";
+		}
 	}
 
 	async #valitateElementsTable() {
