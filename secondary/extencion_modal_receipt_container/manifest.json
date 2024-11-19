@@ -15,20 +15,26 @@
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
 			"js": ["content.js"],
-			"css": ["style.css", "balloon.css"]
+			"css": ["CSS/style.css", "CSS/balloon.css"]
 		},
 		{
 			"matches": ["https://qawms.fantasiasmiguel.com.mx/scale/insights/2779*"],
 			"js": [
+				"utils/ToasAlert.js",
 				"Modal/ButtonOpenModal.js",
-				"EventManager.js",
+				"Modal/EventManager.js",
 				"Modal/ModalHandler.js",
 				"Modal/ModaCreateHTML.js",
 				"Modal/ModalManager.js",
-				"modalContent.js",
-				"main.js"
+				"Modal/modalContent.js",
+				"mainModal.js"
 			],
-			"css": ["style.css", "balloon.css"]
+			"css": ["CSS/style.css", "CSS/balloon.css"]
+		},
+		{
+			"matches": ["https://qawms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
+			"js": ["RF/ReceiptManager.js", "RF/ReceiptConfiguration.js"],
+			"css": ["CSS/Receipt.css"]
 		}
 	],
 	"action": {

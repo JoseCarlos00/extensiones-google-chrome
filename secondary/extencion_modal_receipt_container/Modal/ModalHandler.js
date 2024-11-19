@@ -1,12 +1,3 @@
-/**
- * Manejador de Modal
- *
- * Funciones Obligatorias:
- * 1. setModalElement -> initialVariables
- * 2  handleOpenModal
- * 3  handleCopyToClipBoar
- */
-
 class ModalHandler {
 	constructor() {
 		this._modal = null;
@@ -15,20 +6,24 @@ class ModalHandler {
 		this._prefix = "#myModalShowTable";
 
 		this.trailerId = this.getTrailerId();
-		this.dataInternal = {
-			LP: "td[aria-describedby='ListPaneDataGrid_LICENSE_PLATE_ID'] input",
-			receiptId: "td[aria-describedby='ListPaneDataGrid_RECEIPT_ID'] input",
-		};
 	}
 
 	getTrailerId() {
 		try {
-			const trailerId = JSON.parse(sessionStorage.getItem("2779advanceCriteriaJson")) ?? "";
+			const advanceCriteriaJson = JSON.parse(sessionStorage.getItem("2779advanceCriteriaJson")) || [];
 
-			return "No encotrado";
+			if (!Array.isArray(advanceCriteriaJson)) {
+				console.warn("El contenido de advanceCriteriaJson no es una matriz:", advanceCriteriaJson);
+				return "No encontrado";
+			}
+
+			// Buscar el valor del trailerId
+			const trailerId = advanceCriteriaJson.find(({ FieldIdentifier }) => FieldIdentifier === "TRAILER_ID")?.Value;
+
+			return trailerId || "No encontrado";
 		} catch (error) {
-			console.error("Ha ocurrido un error al obtener el trailerId:", error);
-			return "No encotrado";
+			console.error("Error al obtener el trailerId:", error.message, error);
+			return "No encontrado";
 		}
 	}
 
