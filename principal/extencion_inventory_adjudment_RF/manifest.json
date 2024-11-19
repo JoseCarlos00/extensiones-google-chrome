@@ -13,11 +13,6 @@
 	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
 	"content_scripts": [
 		{
-			"matches": ["https://qawms.fantasiasmiguel.com.mx/RF/InventoryManagementRF.aspx*"],
-			"js": ["popup.js", "content.js"],
-			"css": ["style.css"]
-		},
-		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ToContainerRF.aspx?*"],
 			"js": ["tranfer_to_container/tranfer_to_container_RF.js", "tranfer_to_container/formularioUnaVez.js"],
 			"css": ["tranfer_to_container/tranfer_to_container_RF.css", "buttons.css"]

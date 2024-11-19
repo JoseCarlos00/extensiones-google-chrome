@@ -63,13 +63,7 @@ class InventoryTransfer extends IventoryManager {
 			item.value = firstRow?.item;
 			company.value = "FM";
 			quantity.value = firstRow?.qty;
-
-			if (QTYUM) {
-				QTYUM.options[0].value = "PZ (1,00)";
-				QTYUM.options[0].innerHTML = "PZ (1,00)";
-				QTYUM.value = "PZ (1,00)";
-			}
-
+			QTYUM?.value = "PZ (1,00)";
 			fromLoc.value = firstRow?.fromLoc;
 			toLoc.value = firstRow?.toLoc;
 

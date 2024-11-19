@@ -6,23 +6,41 @@ class Configuration {
 		this.selector = "menu-config";
 
 		this.nameStorageContainer = "dataContainers";
+
+		this.nameStorage = {
+			autoComplete: "autoCompleteReceipt",
+			confirmOk: "confirmOkReceipt",
+			confirmDelay: "confirmDelayReceipt",
+		};
+
+		this.dataContainerStorage = this.getSaveStorageData();
 	}
 
 	async init() {
 		try {
 			this.recoverSettingsStorage();
 			await this.insertMenuConfiguration();
-			// this.setEventListener();
+			this.setEventListener();
 		} catch (error) {
 			console.error("Ha ocurrio un error al inicializar el panel de Configuracion:", error);
 		}
 	}
 
+	getSaveStorageData() {
+		const saveData = LocalStorageHelper.get(this.nameStorageContainer);
+
+		if (!saveData) {
+			return {};
+		}
+
+		return saveData;
+	}
+
 	// Recuperar configuraciones almacenadas en localStorage
 	recoverSettingsStorage() {
-		const savedAutocomplete = localStorage.getItem("autoComplete");
-		const savedConfirmOk = localStorage.getItem("confirmOk");
-		const savedConfirmDelay = localStorage.getItem("confirmDelay");
+		const savedAutocomplete = localStorage.getItem(this.nameStorage.autoComplete);
+		const savedConfirmOk = localStorage.getItem(this.nameStorage.confirmOk);
+		const savedConfirmDelay = localStorage.getItem(this.nameStorage.confirmDelay);
 
 		// Recuperar y verificar si confirmOk es válido (no ha pasado más de 1 hora)
 		if (savedConfirmOk !== null) {
@@ -32,7 +50,7 @@ class Configuration {
 
 			// Verificar si ha pasado más de 1 hora
 			if (currentTime - confirmOkData.timestamp > oneHour) {
-				localStorage.removeItem("confirmOk"); // Eliminar de localStorage
+				localStorage.removeItem(this.nameStorage.confirmOk); // Eliminar de localStorage
 				this.confirmOk = false; // Restaurar valor predeterminado
 			} else {
 				this.confirmOk = confirmOkData.value;
@@ -50,12 +68,12 @@ class Configuration {
 		const { autoCompleteToggle, confirmToggle, confirmDelayInput } = e.target;
 
 		this.autoComplete = autoCompleteToggle.checked;
-		localStorage.setItem("autocomplete", JSON.stringify(this.autoComplete));
+		localStorage.setItem(this.nameStorage.autoComplete, JSON.stringify(this.autoComplete));
 
 		this.confirmOk = confirmToggle.checked;
 		// Guardar confirmOk y la hora de activación
 		localStorage.setItem(
-			"confirmOk",
+			this.nameStorage.confirmOk,
 			JSON.stringify({
 				value: this.confirmOk,
 				timestamp: Date.now(), // Guarda la marca de tiempo actual
@@ -63,7 +81,7 @@ class Configuration {
 		);
 
 		this.confirmDelay = parseFloat(confirmDelayInput.value);
-		localStorage.setItem("confirmDelay", this.confirmDelay * 1000);
+		localStorage.setItem(this.nameStorage.confirmDelay, this.confirmDelay * 1000);
 	};
 
 	setEventListener() {
@@ -76,7 +94,7 @@ class Configuration {
 
 		autoCompleteToggle?.addEventListener("change", () => {
 			this.autoComplete = autoCompleteToggle.checked;
-			localStorage.setItem("autoComplete", JSON.stringify(this.autoComplete));
+			localStorage.setItem(this.nameStorage.autoComplete, JSON.stringify(this.autoComplete));
 		});
 
 		confirmToggle?.addEventListener("change", () => {
@@ -85,7 +103,7 @@ class Configuration {
 
 			// Guardar confirmOk y la hora de activación
 			localStorage.setItem(
-				"confirmOk",
+				this.nameStorage.confirmOk,
 				JSON.stringify({
 					value: this.confirmOk,
 					timestamp: Date.now(), // Guarda la marca de tiempo actual
@@ -106,13 +124,13 @@ class Configuration {
 			};
 
 			this.autoComplete = settings.autocomplete;
-			localStorage.setItem("autoComplete", JSON.stringify(this.autoComplete));
+			localStorage.setItem(this.nameStorage.autoComplete, JSON.stringify(this.autoComplete));
 
 			this.confirmOk = settings.confirmOk;
-			localStorage.setItem("confirmOk", JSON.stringify(this.confirmOk));
+			localStorage.setItem(this.nameStorage.confirmOk, JSON.stringify(this.confirmOk));
 
 			this.confirmDelay = 0.5;
-			localStorage.setItem("confirmDelay", 500);
+			localStorage.setItem(this.nameStorage.confirmDelay, 500);
 
 			autoCompleteToggle.checked = true;
 			confirmToggle.checked = false;
@@ -184,6 +202,11 @@ class Configuration {
 										<button id="reset-button" type="button" class="btn reset">Reestablecer</button>
 									</div>
 							</form>
+
+							<form id="form-get-data">
+								<label></label>
+								<button id="get-data"  disabled type="button" name="get-data">Obtener datos</button>
+							</form>
             </ul>
         </nav>
       </div>
@@ -209,6 +232,10 @@ window.addEventListener("load", () => {
 		const configurationManager = new Configuration();
 		console.log(configurationManager);
 		configurationManager.init();
+
+		const receiptManager = new ReceitManagerRF();
+		console.log(receiptManager);
+		receiptManager.init();
 	} catch (error) {
 		console.error("Error: no se pudo crear ReceitManagerRF", error.message);
 	}

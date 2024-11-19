@@ -6,8 +6,7 @@ class ReceitManagerRF {
 			// Inputs Hidden
 
 			// Inputs
-			this.inputItem = document.querySelector("#FORM1 > table > tbody input[name=itemNum]");
-			this.inputContainer = document.querySelector("#FORM1 > table > tbody input[name=TRANSCONTID]");
+			this.inputContainer = Form1?.TRAILERID;
 
 			// buttons action
 			this.btnOK = document.querySelector("input[type=submit][value=OK]");
@@ -29,9 +28,9 @@ class ReceitManagerRF {
 
 	// Recuperar configuraciones almacenadas en localStorage
 	recoverSettingsStorage() {
-		const savedAutocomplete = localStorage.getItem("autoComplete");
-		const savedConfirmOk = localStorage.getItem("confirmOk");
-		const savedConfirmDelay = localStorage.getItem("confirmDelay");
+		const savedAutocomplete = localStorage.getItem("autoCompleteReceipt");
+		const savedConfirmOk = localStorage.getItem("confirmOkReceipt");
+		const savedConfirmDelay = localStorage.getItem("confirmDelayReceipt");
 
 		// Recuperar y verificar si confirmOk es válido (no ha pasado más de 1 hora)
 		if (savedConfirmOk !== null) {
@@ -41,7 +40,7 @@ class ReceitManagerRF {
 
 			// Verificar si ha pasado más de 1 hora
 			if (currentTime - confirmOkData.timestamp > oneHour) {
-				localStorage.removeItem("confirmOk"); // Eliminar de localStorage
+				localStorage.removeItem("confirmOkReceipt"); // Eliminar de localStorage
 				this.confirmOk = false; // Restaurar valor predeterminado
 			} else {
 				this.confirmOk = confirmOkData.value;
@@ -95,12 +94,6 @@ class ReceitManagerRF {
 		}
 	}
 
-	static inputsHiddenTest() {
-		document.querySelectorAll("input[type=hidden]").forEach((button) => {
-			console.log(`${button.name} => ${button.value}`);
-		});
-	}
-
 	init() {
 		// Eventos
 		// this.autocompleteForm();
@@ -109,19 +102,3 @@ class ReceitManagerRF {
 		console.log("Button OK: [", this.confirmOk, "]", this.btnOK);
 	}
 }
-
-window.addEventListener("load", () => {
-	try {
-		const inputHiddenReceiptPreference = Form1?.HIDDENRECPREF ?? "";
-
-		if (inputHiddenReceiptPreference?.value !== "TRASLADOS") {
-			throw new Error(`La preferencia de recibo actual: [${inputHiddenReceiptPreference?.value}]. No es [TRASLADOS]`);
-		}
-
-		const receiptManager = new ReceitManagerRF();
-		console.log(receiptManager);
-		receiptManager.init();
-	} catch (error) {
-		console.error("Error: no se pudo crear ReceitManagerRF", error.message);
-	}
-});
