@@ -33,6 +33,13 @@ window.addEventListener(
 			await modalManager.initialize();
 		} catch (error) {
 			console.error("Error: al inicializar el modal ", error);
+		} finally {
+			try {
+				const saveDataContainer = new SaveDataContainer();
+				saveDataContainer.init();
+			} catch (error) {
+				console.error("Error: al inicializar SaveDataContainer", error.message);
+			}
 		}
 	},
 	{ once: true }

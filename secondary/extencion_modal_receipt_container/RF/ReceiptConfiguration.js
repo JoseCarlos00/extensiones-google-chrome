@@ -5,14 +5,14 @@ class Configuration {
 		this.confirmDelay = 500;
 		this.selector = "menu-config";
 
-		this.init();
+		this.nameStorageContainer = "dataContainers";
 	}
 
 	async init() {
 		try {
 			this.recoverSettingsStorage();
 			await this.insertMenuConfiguration();
-			this.setEventListener();
+			// this.setEventListener();
 		} catch (error) {
 			console.error("Ha ocurrio un error al inicializar el panel de Configuracion:", error);
 		}
@@ -198,6 +198,18 @@ class Configuration {
 }
 
 // Crear una instancia de la clase y ejecutar la inicialización
-window.addEventListener("load", () => new Configuration(), {
-	once: true,
+window.addEventListener("load", () => {
+	try {
+		const inputHiddenReceiptPreference = Form1?.HIDDENRECPREF ?? "";
+
+		if (inputHiddenReceiptPreference?.value !== "TRASLADOS") {
+			throw new Error(`La preferencia de recibo actual: [${inputHiddenReceiptPreference?.value}]. No es [TRASLADOS]`);
+		}
+
+		const configurationManager = new Configuration();
+		console.log(configurationManager);
+		configurationManager.init();
+	} catch (error) {
+		console.error("Error: no se pudo crear ReceitManagerRF", error.message);
+	}
 });

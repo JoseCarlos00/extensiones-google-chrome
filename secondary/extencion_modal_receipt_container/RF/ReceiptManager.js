@@ -10,7 +10,7 @@ class ReceitManagerRF {
 			this.inputContainer = document.querySelector("#FORM1 > table > tbody input[name=TRANSCONTID]");
 
 			// buttons action
-			this.btnOK = document.getElementById("bOK");
+			this.btnOK = document.querySelector("input[type=submit][value=OK]");
 
 			// Configuracion inicial
 			this.autoComplete = true;
@@ -19,7 +19,7 @@ class ReceitManagerRF {
 
 			// Title Surtido
 			this.tittleSurtido = document.getElementsByTagName("h3")[0]?.textContent?.trim() ?? "";
-			this.isValideTrailerIdTitle = this.tittleSurtido.toLocaleLowerCase.includes("traile id");
+			this.isValideTrailerIdTitle = this.tittleSurtido === "Trailer id";
 
 			this.recoverSettingsStorage();
 		} catch (error) {
