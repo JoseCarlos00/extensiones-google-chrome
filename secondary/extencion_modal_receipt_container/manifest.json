@@ -14,11 +14,6 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
-			"js": ["content.js"],
-			"css": ["CSS/style.css", "CSS/balloon.css"]
-		},
-		{
-			"matches": ["https://qawms.fantasiasmiguel.com.mx/scale/insights/2779*"],
 			"js": [
 				"utils/ToastAlert.js",
 				"utils/LocalStorageHelper.js",
@@ -34,7 +29,7 @@
 			"css": ["CSS/style.css", "CSS/balloon.css"]
 		},
 		{
-			"matches": ["https://qawms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
 			"js": ["RF/ReceiptManager.js", "RF/ReceiptConfiguration.js", "utils/LocalStorageHelper.js"],
 			"css": ["CSS/Receipt.css"]
 		}

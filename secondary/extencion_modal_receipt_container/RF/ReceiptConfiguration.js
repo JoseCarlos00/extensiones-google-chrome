@@ -45,7 +45,7 @@ class Configuration {
 			}
 
 			// Buscar el valor del trailerId
-			const trailerId = Object.values(this.dataContainerStorage)[0]?.trailerId;
+			const trailerId = this.dataContainerStorage?.[0]?.trailerId;
 
 			return trailerId || "No encontrado";
 		} catch (error) {

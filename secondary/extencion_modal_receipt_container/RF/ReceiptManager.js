@@ -7,9 +7,12 @@ class ReceitManagerRF {
 
 			// Inputs
 			this.inputTrailerId = Form1?.TRAILERID;
+			this.inputLicencePlate = Form1?.CONTID;
 
 			// buttons action
 			this.btnOK = document.querySelector("input[type=submit][value=OK]");
+
+			this.nameStorageContainer = "dataContainers";
 
 			this.nameStorage = {
 				autoComplete: "autoCompleteReceipt",
@@ -27,8 +30,10 @@ class ReceitManagerRF {
 			// Title Surtido
 			this.tittleSurtido = document.getElementsByTagName("h3")[0]?.textContent?.trim() ?? "";
 			this.messageInvaliteTrailerId = document.getElementsByTagName("h3")[1]?.textContent?.trim() ?? "";
+			this.messageInvaliteLicencePlate = document.getElementsByTagName("h3")[1]?.textContent?.trim() ?? "";
 
 			this.isValideTrailerIdTitle = this.tittleSurtido === "Trailer id";
+			this.isValideLicencePlate = this.tittleSurtido === "License plate";
 
 			this.recoverSettingsStorage();
 			this.dataContainerStorage = this.configurationManager?.getSaveStorageData();
@@ -68,35 +73,111 @@ class ReceitManagerRF {
 		this.confirmDelay = savedConfirmDelay === null ? this.confirmDelay : parseInt(savedConfirmDelay, 10);
 	}
 
-	autocompleteForm() {
-		if (!this.autoComplete) return;
+	setValueTrailerIdInput() {
+		const tralerId = this.configurationManager.getTrailerId();
+		console.log("[AutoComplete]: tralerId:", tralerId);
 
-		console.log("AutoComplete:", this.dataContainerStorage);
-		const storageLength = Object.keys(this.dataContainerStorage)?.length;
+		if (this.inputTrailerId && tralerId) {
+			this.inputTrailerId.value = tralerId;
+			this.submitForm();
+		}
+	}
 
-		if (!this.dataContainerStorage || storageLength === 0) {
-			console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
+	setValueLicencePlate() {
+		// Verifica si el array `dataContainerStorage` tiene elementos
+		if (this.dataContainerStorage.length === 0 && this.inputLicencePlate) {
+			console.log("No hay datos en dataContainerStorage.");
 			return;
 		}
 
-		console.log("Se ejecuto el metodo autocompleteForm()");
+		// Obtén el primer objeto del array
+		const firstObject = this.dataContainerStorage[0];
+
+		// Verifica si el objeto tiene un array `containers` válido
+		if (!firstObject.containers || firstObject.containers.length === 0) {
+			// Elimina el objeto si su `containers` está vacío
+			this.dataContainerStorage.shift();
+			console.log("El primer objeto fue eliminado porque `containers` está vacío.");
+			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+			console.log("dataContainerStorage:", this.dataContainerStorage);
+			alert("1: Ejecutar el DONE");
+			return;
+		}
+
+		// Obtén y procesa el primer elemento de `containers`
+		const firstLicencePlate = firstObject.containers.shift();
+		console.log(`Procesando placa: ${firstLicencePlate}`);
+		LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+		console.log("dataContainerStorage:", this.dataContainerStorage);
+		this.inputLicencePlate.value = firstLicencePlate;
+
+		// Si después de eliminar, el array `containers` está vacío, elimina el objeto completo
+		if (firstObject.containers.length === 0) {
+			this.dataContainerStorage.shift();
+			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+			console.log("dataContainerStorage:", this.dataContainerStorage);
+			console.log("El primer objeto fue eliminado porque `containers` quedó vacío.");
+			alert("2: Ejecutar el DONE");
+			return;
+		}
+
+		this.submitForm();
+	}
+
+	autocompleteForm() {
+		try {
+			if (!this.autoComplete) return;
+
+			console.log("[AutoComplete]:", this.dataContainerStorage);
+			const storageLength = Array.from(this.dataContainerStorage).length ?? 0;
+
+			if (!this.dataContainerStorage || storageLength === 0) {
+				console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
+				return;
+			}
+
+			console.log("Se ejecuto el metodo autocompleteForm()");
+
+			if (this.isValideTrailerIdTitle) {
+				this.setValueTrailerIdInput();
+				return;
+			}
+
+			if (this.isValideLicencePlate) {
+				this.setValueLicencePlate();
+				return;
+			}
+		} catch (error) {
+			console.error("Error: [AutoComplete]:", error);
+		}
 	}
 
 	submitForm() {
 		if (!this.confirmOk || !this.btnOK) return;
+		console.log("Se ejecuto el metodo submitForm()");
 
-		const isContainerActive = this.inputTrailerId?.value !== "" && this.inputTrailerId ? true : false;
-
-		if (isContainerActive && this.isValideShitment) {
-			setTimeout(() => {
-				console.warn("Confirmar button OK");
-				if (this.messageInvaliteTrailerId !== "Invalid Trailer ID." && this.inputTrailerId.value !== "") {
-					this.btnOK.click();
-				} else {
-					console.warn("Se cancelo la accion de confirmar el button OK");
-				}
-			}, this.confirmDelay);
+		if (
+			this.inputTrailerId?.value === "" &&
+			this.inputTrailerId &&
+			this.messageInvaliteTrailerId !== "Invalid Trailer ID."
+		) {
+			console.warn("Input Trailer ID vacío");
+			return;
 		}
+
+		if (
+			this.inputLicencePlate?.value === "" &&
+			this.inputLicencePlate &&
+			this.messageInvaliteLicencePlate !== "Configuracion"
+		) {
+			console.warn("Input Licence Plate vacío");
+			return;
+		}
+
+		setTimeout(() => {
+			console.warn("Confirmar button OK");
+			this.btnOK.click();
+		}, this.confirmDelay);
 	}
 
 	handleGetData() {
@@ -125,14 +206,11 @@ class ReceitManagerRF {
 
 	setEventListeners() {
 		this.setEventInitReceipt();
+		this.autocompleteForm();
 	}
 
 	init() {
 		// Eventos
 		this.setEventListeners();
-		// this.autocompleteForm();
-		// this.submitForm();
-
-		console.log("Button OK: [", this.confirmOk, "]", this.btnOK);
 	}
 }

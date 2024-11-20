@@ -165,10 +165,15 @@ class SaveDataContainer {
 			}
 
 			// Crear el objeto final con grupos
-			const data = groupedContainers.reduce((result, group, index) => {
-				result[`group${index + 1}`] = { trailerId, containers: group };
-				return result;
-			}, {});
+			// const data = groupedContainers.reduce((result, group, index) => {
+			// 	result[`group${index + 1}`] = { trailerId, containers: group };
+			// 	return result;
+			// }, {});
+
+			// Crear el arreglo final con grupos
+			const data = groupedContainers.map((group) => {
+				return { trailerId, containers: group };
+			});
 
 			console.log("Datos guardados:", data);
 			LocalStorageHelper.save(this.nameStorageContainer, data);
