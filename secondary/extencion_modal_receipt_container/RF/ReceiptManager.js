@@ -1,36 +1,53 @@
 console.log("Receit Manager RF Class");
 
 class ReceitManagerRF {
-	constructor() {
+	constructor({ configurationManager }) {
 		try {
-			// Inputs Hidden
+			this.configurationManager = configurationManager;
 
 			// Inputs
-			this.inputContainer = Form1?.TRAILERID;
+			this.inputTrailerId = Form1?.TRAILERID;
 
 			// buttons action
 			this.btnOK = document.querySelector("input[type=submit][value=OK]");
+
+			this.nameStorage = {
+				autoComplete: "autoCompleteReceipt",
+				confirmOk: "confirmOkReceipt",
+				confirmDelay: "confirmDelayReceipt",
+				initReceipt: "initReceipt",
+			};
 
 			// Configuracion inicial
 			this.autoComplete = true;
 			this.confirmOk = false;
 			this.confirmDelay = 500;
+			this.initReceipt = this.getInitReceiptStorage();
 
 			// Title Surtido
 			this.tittleSurtido = document.getElementsByTagName("h3")[0]?.textContent?.trim() ?? "";
+			this.messageInvaliteTrailerId = document.getElementsByTagName("h3")[1]?.textContent?.trim() ?? "";
+
 			this.isValideTrailerIdTitle = this.tittleSurtido === "Trailer id";
 
 			this.recoverSettingsStorage();
+			this.dataContainerStorage = this.configurationManager?.getSaveStorageData();
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar el objeto:", error.message);
 		}
 	}
 
+	getInitReceiptStorage() {
+		const initReceiptStorage = JSON.parse(sessionStorage.getItem(this.nameStorage.initReceipt));
+		console.log("[getInitReceiptStorage]:", typeof initReceiptStorage, initReceiptStorage);
+		return initReceiptStorage || false;
+	}
+
 	// Recuperar configuraciones almacenadas en localStorage
 	recoverSettingsStorage() {
-		const savedAutocomplete = localStorage.getItem("autoCompleteReceipt");
-		const savedConfirmOk = localStorage.getItem("confirmOkReceipt");
-		const savedConfirmDelay = localStorage.getItem("confirmDelayReceipt");
+		const savedAutocomplete = localStorage.getItem(this.nameStorage.autoComplete);
+		const savedConfirmOk = localStorage.getItem(this.nameStorage.confirmOk);
+		const savedConfirmDelay = localStorage.getItem(this.nameStorage.confirmDelay);
 
 		// Recuperar y verificar si confirmOk es válido (no ha pasado más de 1 hora)
 		if (savedConfirmOk !== null) {
@@ -40,7 +57,7 @@ class ReceitManagerRF {
 
 			// Verificar si ha pasado más de 1 hora
 			if (currentTime - confirmOkData.timestamp > oneHour) {
-				localStorage.removeItem("confirmOkReceipt"); // Eliminar de localStorage
+				localStorage.removeItem(this.nameStorage.confirmOk); // Eliminar de localStorage
 				this.confirmOk = false; // Restaurar valor predeterminado
 			} else {
 				this.confirmOk = confirmOkData.value;
@@ -51,51 +68,68 @@ class ReceitManagerRF {
 		this.confirmDelay = savedConfirmDelay === null ? this.confirmDelay : parseInt(savedConfirmDelay, 10);
 	}
 
-	insertContenedor() {
-		if (!this.previusTrText && !this.inputContainer) return;
-
-		const hasCont = this.previusTrText.includes("Cont:");
-		if (!hasCont) return;
-
-		const lp = this.previusTrText.replace("Cont:\n", "");
-		this.inputContainer.value = lp;
-	}
-
 	autocompleteForm() {
 		if (!this.autoComplete) return;
 
-		if (this.inputItem && this.inputItemHidden) {
-			this.inputItem.value = this.inputItemHidden.value;
+		console.log("AutoComplete:", this.dataContainerStorage);
+		const storageLength = Object.keys(this.dataContainerStorage)?.length;
 
-			this.inputContainer?.focus();
+		if (!this.dataContainerStorage || storageLength === 0) {
+			console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
+			return;
 		}
 
-		this.insertContenedor();
-
-		if (this.inputCheckDigit && this.inputCheckDigitHidden) {
-			this.inputCheckDigit.value = this.inputCheckDigitHidden.value;
-		}
-
-		if (this.inputToLoc && this.inputFromLocHidden) {
-			this.inputToLoc.value = this.inputFromLocHidden.value;
-		}
+		console.log("Se ejecuto el metodo autocompleteForm()");
 	}
 
 	submitForm() {
 		if (!this.confirmOk || !this.btnOK) return;
 
-		const isContainerActive = this.inputContainer?.value !== "" && this.inputContainer ? true : false;
+		const isContainerActive = this.inputTrailerId?.value !== "" && this.inputTrailerId ? true : false;
 
 		if (isContainerActive && this.isValideShitment) {
 			setTimeout(() => {
 				console.warn("Confirmar button OK");
-				this.btnOK.click();
+				if (this.messageInvaliteTrailerId !== "Invalid Trailer ID." && this.inputTrailerId.value !== "") {
+					this.btnOK.click();
+				} else {
+					console.warn("Se cancelo la accion de confirmar el button OK");
+				}
 			}, this.confirmDelay);
 		}
 	}
 
+	handleGetData() {
+		console.log("Se hizo click en el boton de obtener datos");
+
+		this.dataContainerStorage = this.configurationManager?.getSaveStorageData();
+		this.changeInitReceiptStorage();
+		this.autocompleteForm();
+	}
+
+	setEventInitReceipt() {
+		const btnInitReceipt = document.getElementById("init-receipt");
+
+		if (!btnInitReceipt) {
+			console.error('No se encontró el elemento con id "init-receipt".');
+			return;
+		}
+
+		btnInitReceipt.addEventListener("click", () => this.handleGetData());
+	}
+
+	changeInitReceiptStorage() {
+		this.initReceipt = true;
+		sessionStorage.setItem(this.nameStorage.initReceipt, JSON.stringify(true));
+	}
+
+	setEventListeners() {
+		this.setEventInitReceipt();
+	}
+
 	init() {
 		// Eventos
+		this.setEventListeners();
 		// this.autocompleteForm();
 		// this.submitForm();
 

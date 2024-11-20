@@ -11,9 +11,11 @@ class Configuration {
 			autoComplete: "autoCompleteReceipt",
 			confirmOk: "confirmOkReceipt",
 			confirmDelay: "confirmDelayReceipt",
+			initReceipt: "initReceipt",
 		};
 
 		this.dataContainerStorage = this.getSaveStorageData();
+		this.trailerId = this.getTrailerId();
 	}
 
 	async init() {
@@ -34,6 +36,22 @@ class Configuration {
 		}
 
 		return saveData;
+	}
+
+	getTrailerId() {
+		try {
+			if (!this.dataContainerStorage) {
+				return "No encontrado";
+			}
+
+			// Buscar el valor del trailerId
+			const trailerId = Object.values(this.dataContainerStorage)[0]?.trailerId;
+
+			return trailerId || "No encontrado";
+		} catch (error) {
+			console.error("Error al obtener el trailerId:", error.message, error);
+			return "No encontrado";
+		}
 	}
 
 	// Recuperar configuraciones almacenadas en localStorage
@@ -84,8 +102,41 @@ class Configuration {
 		localStorage.setItem(this.nameStorage.confirmDelay, this.confirmDelay * 1000);
 	};
 
+	handleStorageEvent() {
+		const trailerIdLabel = document.getElementById("trailer-id-label");
+		const btnInitReceipt = document.getElementById("init-receipt");
+		const btnCancelReceipt = document.getElementById("cancel-receipt");
+
+		window.addEventListener("storage", (event) => {
+			if (event.key === this.nameStorageContainer) {
+				console.log("Datos actualizados:", event.newValue);
+
+				this.dataContainerStorage = this.getSaveStorageData();
+				this.trailerId = this.getTrailerId();
+				trailerIdLabel.innerHTML = `Trailer Id: ${this.trailerId}`;
+
+				console.log("trailerId:", this.trailerId);
+
+				if (this.trailerId && this.trailerId !== "No encontrado") {
+					btnInitReceipt?.removeAttribute("disabled");
+					console.log("remove:", btnInitReceipt);
+				} else {
+					btnInitReceipt?.setAttribute("disabled", "");
+					console.log("set:", btnInitReceipt);
+				}
+			}
+		});
+
+		btnCancelReceipt?.addEventListener("click", () => {
+			console.log("Se elimino:", this.nameStorage.initReceipt);
+			sessionStorage.removeItem(this.nameStorage.initReceipt);
+			LocalStorageHelper.remove(this.nameStorageContainer);
+		});
+	}
+
 	setEventListener() {
 		const form = document.getElementById("form-config");
+		this.handleStorageEvent();
 
 		if (!form) return;
 		form.addEventListener("submit", this.handleInputEvents);
@@ -204,8 +255,11 @@ class Configuration {
 							</form>
 
 							<form id="form-get-data">
-								<label></label>
-								<button id="get-data"  disabled type="button" name="get-data">Obtener datos</button>
+								<label id="trailer-id-label">Trailer Id: ${this.trailerId}</label>
+								<button id="init-receipt" ${
+									this.trailerId && this.trailerId !== "No encontrado" ? "" : "disabled"
+								} type="button" name="init-receipt">Iniciar Recibo</button>
+								<button id="cancel-receipt"  type="button" name="cancel-receipt">Cancelar</button>
 							</form>
             </ul>
         </nav>
@@ -233,7 +287,7 @@ window.addEventListener("load", () => {
 		console.log(configurationManager);
 		configurationManager.init();
 
-		const receiptManager = new ReceitManagerRF();
+		const receiptManager = new ReceitManagerRF({ configurationManager });
 		console.log(receiptManager);
 		receiptManager.init();
 	} catch (error) {

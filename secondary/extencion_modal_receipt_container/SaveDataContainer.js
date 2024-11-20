@@ -74,6 +74,12 @@ class SaveDataContainer {
 
 		buttonSaveData.addEventListener("click", async (e) => this.handleSaveData(e));
 		buttonDeleteData.addEventListener("click", async (e) => this.handleDeleteData(e));
+
+		window.addEventListener("storage", (event) => {
+			if (event.key === this.nameStorageContainer) {
+				this.handleMarckSaveData();
+			}
+		});
 	}
 
 	getTrailerId() {
@@ -146,7 +152,7 @@ class SaveDataContainer {
 				let trailerName = prompt("Trailer id");
 
 				if (trailerName) {
-					trailerId = trailerName?.trim();
+					trailerId = trailerName?.trim().toUpperCase();
 				} else {
 					throw new Error("No se ingresó el id del trailer");
 				}
@@ -178,6 +184,7 @@ class SaveDataContainer {
 		const saveData = LocalStorageHelper.get(this.nameStorageContainer);
 
 		if (!saveData) {
+			this.markSaveData(true);
 			return;
 		}
 
