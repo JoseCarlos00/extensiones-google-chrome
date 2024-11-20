@@ -11,6 +11,7 @@ class ReceitManagerRF {
 
 			// buttons action
 			this.btnOK = document.querySelector("input[type=submit][value=OK]");
+			this.btnDone = document.querySelector("input[type=button][value=Done]");
 
 			this.nameStorageContainer = "dataContainers";
 
@@ -85,7 +86,7 @@ class ReceitManagerRF {
 
 	setValueLicencePlate() {
 		// Verifica si el array `dataContainerStorage` tiene elementos
-		if (this.dataContainerStorage.length === 0 && this.inputLicencePlate) {
+		if (this.dataContainerStorage?.length === 0 && this.inputLicencePlate) {
 			console.log("No hay datos en dataContainerStorage.");
 			return;
 		}
@@ -94,13 +95,14 @@ class ReceitManagerRF {
 		const firstObject = this.dataContainerStorage[0];
 
 		// Verifica si el objeto tiene un array `containers` válido
-		if (!firstObject.containers || firstObject.containers.length === 0) {
+		if (!firstObject?.containers || firstObject?.containers?.length === 0) {
 			// Elimina el objeto si su `containers` está vacío
-			this.dataContainerStorage.shift();
+			this.dataContainerStorage?.shift();
 			console.log("El primer objeto fue eliminado porque `containers` está vacío.");
 			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
 			console.log("dataContainerStorage:", this.dataContainerStorage);
-			alert("1: Ejecutar el DONE");
+			// alert("1: Ejecutar el DONE");
+			console.warn("No hay datos gurdados");
 			return;
 		}
 
@@ -109,19 +111,25 @@ class ReceitManagerRF {
 		console.log(`Procesando placa: ${firstLicencePlate}`);
 		LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
 		console.log("dataContainerStorage:", this.dataContainerStorage);
-		this.inputLicencePlate.value = firstLicencePlate;
 
 		// Si después de eliminar, el array `containers` está vacío, elimina el objeto completo
-		if (firstObject.containers.length === 0) {
+		if (firstObject.containers?.length === 0) {
 			this.dataContainerStorage.shift();
 			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
 			console.log("dataContainerStorage:", this.dataContainerStorage);
 			console.log("El primer objeto fue eliminado porque `containers` quedó vacío.");
-			alert("2: Ejecutar el DONE");
+			alert("2: Ejecutar el DONE: ELMINAR DATAS_STORAGE");
+		}
+
+		if (firstLicencePlate === "DONE") {
+			this.onclickButtonDonde();
 			return;
 		}
 
+		this.inputLicencePlate.value = firstLicencePlate;
+
 		this.submitForm();
+		console.log("CLick en oK");
 	}
 
 	autocompleteForm() {
@@ -150,6 +158,19 @@ class ReceitManagerRF {
 		} catch (error) {
 			console.error("Error: [AutoComplete]:", error);
 		}
+	}
+
+	onclickButtonDonde() {
+		console.log("[onclickButtonDonde]");
+
+		if (!this.confirmOk || !this.btnDone) {
+			console.error("No se encontró el botón DONE");
+			return;
+		}
+
+		setTimeout(() => {
+			this.btnDone.click();
+		}, this.confirmDelay);
 	}
 
 	submitForm() {

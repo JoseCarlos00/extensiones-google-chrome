@@ -1,35 +1,35 @@
 {
-  "manifest_version": 3,
-  "name": "Dock Door",
-  "version": "1.0",
-  "description": "Muestar una tabla de dock door disponibles",
-  "permissions": ["scripting", "activeTab", "storage"],
-  "icons": {
-    "16": "images/inventory16.png",
-    "32": "images/inventory32.png",
-    "48": "images/inventory48.png",
-    "128": "images/inventory128.png"
-  },
-  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
-  "content_scripts": [
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],
-      "js": ["ShippingLoadInsight.js"],
-      "css": ["style.css", "balloon.css"]
-    },
-    {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload*"],
-      "js": ["shippingload.js"],
-      "css": ["shippingLoad.css", "balloon.css"]
-    }
-  ],
-  "action": {
-    "default_popup": "popup.html",
-    "defaul_icon": {
-      "16": "images/inventory16.png",
-      "32": "images/inventory32.png",
-      "48": "images/inventory48.png",
-      "128": "images/inventory128.png"
-    }
-  }
+	"manifest_version": 3,
+	"name": "Dock Door",
+	"version": "1.0",
+	"description": "Muestar una tabla de dock door disponibles",
+	"permissions": ["scripting", "activeTab", "storage"],
+	"icons": {
+		"16": "images/inventory16.png",
+		"32": "images/inventory32.png",
+		"48": "images/inventory48.png",
+		"128": "images/inventory128.png"
+	},
+	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
+	"content_scripts": [
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],
+			"js": ["CONST.js", "utils/ToastAlert.js", "utils/LocalStorageHelper.js", "ShippingLoadInsight.js"],
+			"css": ["style.css", "balloon.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload*"],
+			"js": ["CONST.js", "utils/ToastAlert.js", "utils/LocalStorageHelper.js", "Shippingload.js"],
+			"css": ["shippingLoad.css", "balloon.css"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"defaul_icon": {
+			"16": "images/inventory16.png",
+			"32": "images/inventory32.png",
+			"48": "images/inventory48.png",
+			"128": "images/inventory128.png"
+		}
+	}
 }

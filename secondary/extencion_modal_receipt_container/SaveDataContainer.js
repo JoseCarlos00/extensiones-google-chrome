@@ -162,6 +162,7 @@ class SaveDataContainer {
 			const groupedContainers = [];
 			for (let i = 0; i < containersList.length; i += 5) {
 				groupedContainers.push(containersList.slice(i, i + 5));
+				groupedContainers.push(["DONE"]);
 			}
 
 			// Crear el objeto final con grupos
