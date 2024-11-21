@@ -45,7 +45,6 @@ class ReceitManagerRF {
 
 	getInitReceiptStorage() {
 		const initReceiptStorage = JSON.parse(sessionStorage.getItem(this.nameStorage.initReceipt));
-		console.log("[getInitReceiptStorage]:", typeof initReceiptStorage, initReceiptStorage);
 		return initReceiptStorage || false;
 	}
 
@@ -76,7 +75,7 @@ class ReceitManagerRF {
 
 	setValueTrailerIdInput() {
 		const tralerId = this.configurationManager.getTrailerId();
-		console.log("[AutoComplete]: tralerId:", tralerId);
+		console.log("[setValueTrailerIdInput]: tralerId:", tralerId);
 
 		if (this.inputTrailerId && tralerId) {
 			this.inputTrailerId.value = tralerId;
@@ -100,8 +99,6 @@ class ReceitManagerRF {
 			this.dataContainerStorage?.shift();
 			console.log("El primer objeto fue eliminado porque `containers` está vacío.");
 			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
-			console.log("dataContainerStorage:", this.dataContainerStorage);
-			// alert("1: Ejecutar el DONE");
 			console.warn("No hay datos gurdados");
 			return;
 		}
@@ -110,15 +107,12 @@ class ReceitManagerRF {
 		const firstLicencePlate = firstObject.containers.shift();
 		console.log(`Procesando placa: ${firstLicencePlate}`);
 		LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
-		console.log("dataContainerStorage:", this.dataContainerStorage);
 
 		// Si después de eliminar, el array `containers` está vacío, elimina el objeto completo
 		if (firstObject.containers?.length === 0) {
 			this.dataContainerStorage.shift();
 			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
-			console.log("dataContainerStorage:", this.dataContainerStorage);
 			console.log("El primer objeto fue eliminado porque `containers` quedó vacío.");
-			alert("2: Ejecutar el DONE: ELMINAR DATAS_STORAGE");
 		}
 
 		if (firstLicencePlate === "DONE") {
@@ -128,23 +122,20 @@ class ReceitManagerRF {
 
 		this.inputLicencePlate.value = firstLicencePlate;
 
+		console.log("Click en oK");
 		this.submitForm();
-		console.log("CLick en oK");
 	}
 
 	autocompleteForm() {
 		try {
 			if (!this.autoComplete) return;
 
-			console.log("[AutoComplete]:", this.dataContainerStorage);
 			const storageLength = Array.from(this.dataContainerStorage).length ?? 0;
 
 			if (!this.dataContainerStorage || storageLength === 0) {
 				console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
 				return;
 			}
-
-			console.log("Se ejecuto el metodo autocompleteForm()");
 
 			if (this.isValideTrailerIdTitle) {
 				this.setValueTrailerIdInput();
@@ -161,8 +152,6 @@ class ReceitManagerRF {
 	}
 
 	onclickButtonDonde() {
-		console.log("[onclickButtonDonde]");
-
 		if (!this.confirmOk || !this.btnDone) {
 			console.error("No se encontró el botón DONE");
 			return;
@@ -175,7 +164,6 @@ class ReceitManagerRF {
 
 	submitForm() {
 		if (!this.confirmOk || !this.btnOK) return;
-		console.log("Se ejecuto el metodo submitForm()");
 
 		if (
 			this.inputTrailerId?.value === "" &&
@@ -202,8 +190,6 @@ class ReceitManagerRF {
 	}
 
 	handleGetData() {
-		console.log("Se hizo click en el boton de obtener datos");
-
 		this.dataContainerStorage = this.configurationManager?.getSaveStorageData();
 		this.changeInitReceiptStorage();
 		this.autocompleteForm();

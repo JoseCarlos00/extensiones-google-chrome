@@ -1,5 +1,5 @@
-const tableDockContent = /*html*/ `
-<table id="content">
+const TABLE_DOCK_CONTENT = /*html*/ `
+<table id="tableDockDoor">
     <thead>
       <tr>
         <th colspan="5" align="center">EMB</th>
@@ -146,15 +146,15 @@ const tableDockContent = /*html*/ `
   </table>
 `;
 
-const tableHTML = /*html*/ `
+const TABLE_HTML = /*html*/ `
   <div class="table-content">
-    ${tableDockContent}
+    ${TABLE_DOCK_CONTENT}
   </div>
 `;
 
-const modalHTML = `
+const MODAL_HTML = `
 <section class="modal-container">
-  <div id="myModal" class="modal">
+  <div id="modalShowDockDoor" class="modal">
     <div class="modal-content">
 
     <button type="button" aria-label="Close" data-balloon-pos="left" class="close">
@@ -167,11 +167,11 @@ const modalHTML = `
           class="fa-primary"></path>
       </svg>
     </button>
-      ${tableDockContent}
+      ${TABLE_DOCK_CONTENT}
     </div>
   </div>
 
 </section>
 `;
 
-const nameDataStorgaeDoors = "doorAssigtmentList";
+const NAME_DATA_STORAGE_DOORS = "doorAssigtmentList";

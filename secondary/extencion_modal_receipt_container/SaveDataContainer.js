@@ -192,8 +192,6 @@ class SaveDataContainer {
 	}
 
 	markSaveData(isRemoveMark) {
-		console.log("markSaveData:", this.buttonSaveData);
-
 		if (!this.buttonSaveData) {
 			console.error("No existe el botón de guardar datos.");
 			return;

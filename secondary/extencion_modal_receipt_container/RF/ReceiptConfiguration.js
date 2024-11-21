@@ -107,31 +107,35 @@ class Configuration {
 		const btnInitReceipt = document.getElementById("init-receipt");
 		const btnCancelReceipt = document.getElementById("cancel-receipt");
 
-		window.addEventListener("storage", (event) => {
-			if (event.key === this.nameStorageContainer) {
-				console.log("Datos actualizados:", event.newValue);
+		const verifyTrailerId = () => {
+			this.dataContainerStorage = this.getSaveStorageData();
+			this.trailerId = this.getTrailerId();
+			trailerIdLabel.innerHTML = `Trailer Id: ${this.trailerId}`;
+			console.log("trailerId:", this.trailerId);
 
-				this.dataContainerStorage = this.getSaveStorageData();
-				this.trailerId = this.getTrailerId();
-				trailerIdLabel.innerHTML = `Trailer Id: ${this.trailerId}`;
+			if (this.trailerId && this.trailerId !== "No encontrado") {
+				btnInitReceipt?.removeAttribute("disabled");
+			} else {
+				btnInitReceipt?.setAttribute("disabled", "");
+			}
+		};
 
-				console.log("trailerId:", this.trailerId);
-
-				if (this.trailerId && this.trailerId !== "No encontrado") {
-					btnInitReceipt?.removeAttribute("disabled");
-					console.log("remove:", btnInitReceipt);
-				} else {
-					btnInitReceipt?.setAttribute("disabled", "");
-					console.log("set:", btnInitReceipt);
-				}
+		window.addEventListener("storage", ({ key, newValue }) => {
+			if (key === this.nameStorageContainer) {
+				verifyTrailerId();
 			}
 		});
 
-		btnCancelReceipt?.addEventListener("click", () => {
-			console.log("Se elimino:", this.nameStorage.initReceipt);
-			sessionStorage.removeItem(this.nameStorage.initReceipt);
-			LocalStorageHelper.remove(this.nameStorageContainer);
-		});
+		if (btnCancelReceipt) {
+			btnCancelReceipt.addEventListener("click", () => {
+				console.log("Se elimino:", this.nameStorage.initReceipt);
+				sessionStorage.removeItem(this.nameStorage.initReceipt);
+				LocalStorageHelper.remove(this.nameStorageContainer);
+				verifyTrailerId();
+			});
+		} else {
+			console.error("No se encontró el elemento btnCancelReceipt");
+		}
 	}
 
 	setEventListener() {
