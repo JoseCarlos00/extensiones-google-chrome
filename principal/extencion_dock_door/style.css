@@ -1,157 +1,186 @@
 .collapsepane.nav.navbar-nav li {
-  --balloon-color: #fff;
-  --balloon-bg-color: #487cc9;
-  --ballon-padding: 0.8em;
+	--balloon-color: #fff;
+	--balloon-bg-color: #487cc9;
+	--ballon-padding: 0.8em;
 
-  [aria-label][data-balloon-pos][data-balloon-pos='right']:before {
-    border-right-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos="right"]:before {
+		border-right-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos][data-balloon-pos^='down']:before {
-    border-bottom-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos^="down"]:before {
+		border-bottom-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos][data-balloon-pos='left']:before {
-    border-left-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos="left"]:before {
+		border-left-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos][data-balloon-pos='up']:before {
-    border-top-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
+		border-top-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos]:after {
-    background-color: var(--balloon-bg-color);
-    padding-top: var(--ballon-padding);
-    padding-bottom: var(--ballon-padding);
-  }
+	[aria-label][data-balloon-pos]:after {
+		background-color: var(--balloon-bg-color);
+		padding-top: var(--ballon-padding);
+		padding-bottom: var(--ballon-padding);
+	}
 
-  a:hover {
-    cursor: pointer;
+	a:hover {
+		cursor: pointer;
 
-    i {
-      transform: scale(1.1);
-    }
-  }
+		i {
+			transform: scale(1.1);
+		}
+	}
+
+	#openShowDockDoors.disabled {
+		pointer-events: none !important;
+		opacity: 0.5 !important;
+	}
 }
 
 /* The Modal (background) */
 .modal-container {
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1040;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.7);
-  }
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 1040;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgb(0, 0, 0);
+		background-color: rgba(0, 0, 0, 0.7);
+	}
 
-  /* Modal Content/Box */
-  .modal-content {
-    background-color: #fefefe;
-    margin: 100px auto;
-    padding: 20px;
-    border: 1px solid #888;
-    border-radius: 0.75em;
-    width: 80%;
-    width: fit-content;
+	/* Modal Content/Box */
+	.modal-content {
+		background-color: #fefefe;
+		margin: 100px auto;
+		padding: 20px;
+		border: 1px solid #888;
+		border-radius: 0.75em;
+		width: 80%;
+		width: fit-content;
 
-    button:active {
-      transform: scale(0.9);
-    }
-  }
+		button:active {
+			transform: scale(0.9);
+		}
+
+		.title-modal-container {
+			display: flex;
+			justify-content: space-evenly;
+
+			.title-modal {
+				&::after {
+					content: "";
+					display: inline-block;
+					width: 12px;
+					height: 12px;
+					margin-left: 4px;
+					border-radius: 50%;
+					clip-path: circle();
+					outline: 3px solid #000;
+					outline-offset: -3px;
+				}
+
+				&:nth-child(2)::after {
+					background-color: red;
+					outline-offset: 0;
+				}
+			}
+		}
+	}
 }
 
 /* Table */
 .modal-container table {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  border: 1px solid;
-  border-collapse: collapse;
-  font-size: 18px;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+		"Helvetica Neue", sans-serif;
+	border: 1px solid;
+	border-collapse: collapse;
+	font-size: 18px;
 
-  th {
-    text-align: center;
-  }
+	th {
+		text-align: center;
+	}
 
-  th,
-  td {
-    vertical-align: top;
-    border: 1px solid #000;
-    padding: 0.3rem 0.5rem;
-  }
+	th,
+	td {
+		vertical-align: top;
+		border: 1px solid #000;
+		padding: 0.3rem 0.5rem;
+	}
 
-  th {
-    background-color: #bebebe;
-  }
+	th {
+		background-color: #bebebe;
+	}
 
-  .not-available {
-    background-color: red;
-    color: #fff;
-    opacity: 0.8;
-  }
+	.not-available {
+		background-color: red;
+		color: #fff;
+		opacity: 0.8;
+	}
 }
 
 .modal-container button.close {
-  --white: #fff;
-  --width-button-close: 30px;
-  --with-close-times-color: var(--white);
-  --bg-color: rgb(24, 49, 83);
+	--white: #fff;
+	--width-button-close: 30px;
+	--with-close-times-color: var(--white);
+	--bg-color: rgb(24, 49, 83);
 
-  --fa-primary-color: var(--with-close-times-color);
-  --fa-secondary-color: rgb(24, 49, 83);
-  --fa-secondary-opacity: 1;
+	--fa-primary-color: var(--with-close-times-color);
+	--fa-secondary-color: rgb(24, 49, 83);
+	--fa-secondary-opacity: 1;
 
-  font-size: 30px;
-  width: var(--width-button-close);
-  height: var(--width-button-close);
+	font-size: 30px;
+	width: var(--width-button-close);
+	height: var(--width-button-close);
 
-  box-sizing: content-box;
-  position: absolute;
-  top: -0.5em;
-  right: -0.5em;
-  line-height: 1;
-  color: inherit;
-  color: var(--with-close-close-color);
-  font-size: calc(1em * 1.5);
-  font-size: var(--with-close-close-font-size);
+	box-sizing: content-box;
+	position: absolute;
+	top: -0.5em;
+	right: -0.5em;
+	line-height: 1;
+	color: inherit;
+	color: var(--with-close-close-color);
+	font-size: calc(1em * 1.5);
+	font-size: var(--with-close-close-font-size);
 
-  opacity: 1;
+	opacity: 1;
 
-  sgv {
-    width: var(--width-button-close);
-    height: var(--width-button-close);
-  }
+	sgv {
+		width: var(--width-button-close);
+		height: var(--width-button-close);
+	}
 
-  .fa-primary {
-    fill: var(--fa-primary-color, currentColor);
-    opacity: var(--fa-primary-opacity, 1);
-  }
+	.fa-primary {
+		fill: var(--fa-primary-color, currentColor);
+		opacity: var(--fa-primary-opacity, 1);
+	}
 
-  .fa-secondary {
-    fill: var(--fa-secondary-color, currentColor);
-    opacity: var(--fa-secondary-opacity, 0.4);
-  }
+	.fa-secondary {
+		fill: var(--fa-secondary-color, currentColor);
+		opacity: var(--fa-secondary-opacity, 0.4);
+	}
 
-  &:hover,
-  &:hover .fa-secondary,
-  &:focus {
-    text-decoration: none;
-    cursor: pointer;
-    color: rgb(224, 49, 49);
-    opacity: 1;
-    fill: rgb(224, 49, 49);
-  }
+	&:hover,
+	&:hover .fa-secondary,
+	&:focus {
+		text-decoration: none;
+		cursor: pointer;
+		color: rgb(224, 49, 49);
+		opacity: 1;
+		fill: rgb(224, 49, 49);
+	}
 
-  &:is(:focus, .focus, .focused) {
-    --focus-outline-width: calc(1em * 3 / 16);
-    --focus-outline-color: #74c0fc;
-    --focus-outline: solid var(--focus-outline-width) var(--focus-outline-color);
-    outline: var(--focus-outline);
-    outline-offset: calc(1em * 1 / 16);
-    outline-offset: var(--focus-outline-offset);
-  }
+	&:is(:focus, .focus, .focused) {
+		--focus-outline-width: calc(1em * 3 / 16);
+		--focus-outline-color: #74c0fc;
+		--focus-outline: solid var(--focus-outline-width) var(--focus-outline-color);
+		outline: var(--focus-outline);
+		outline-offset: calc(1em * 1 / 16);
+		outline-offset: var(--focus-outline-offset);
+	}
 }

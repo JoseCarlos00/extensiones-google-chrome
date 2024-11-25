@@ -3,27 +3,58 @@ class ShippingLoadInsight {
 		this.nameDataStorgaeDoors = NAME_DATA_STORAGE_DOORS;
 		this.dataStorgaeDoors = new Set();
 
+		this.idModal = "modalShowDockDoor";
 		this.idButtonOpenModal = "openShowDockDoors";
 		this.tbodyElement = document.querySelector("#ListPaneDataGrid > tbody");
+
+		if (!this.nameDataStorgaeDoors) {
+			throw new Error("NAME_DATA_STORAGE_DOORS is not defined");
+		}
+
+		if (!this.tbodyElement) {
+			throw new Error("tbodyElement is not defined");
+		}
+
+		// Tabla de datos en el Modal
+		this.tableDockDoorModal = null;
+	}
+
+	async preInit() {
+		const tableHeaders = document.querySelector("#ListPaneDataGrid_headers");
+
+		if (!tableHeaders) {
+			throw new Error("tableHeaders is not defined. [#ListPaneDataGrid_headers]");
+		}
+
+		this.verifiryDockDoorHeader();
+		this.observeChangesInTheDOM(tableHeaders, () => this.verifiryDockDoorHeader());
+	}
+
+	verifiryDockDoorHeader() {
+		const dockDoorHeader = document.querySelector("#ListPaneDataGrid_DOCK_DOOR_LOCATION");
+
+		if (dockDoorHeader) {
+			const btnOpenModal = document.getElementById(this.idButtonOpenModal);
+
+			btnOpenModal?.classList.remove("disabled");
+		} else {
+			const btnOpenModal = document.getElementById(this.idButtonOpenModal);
+			btnOpenModal?.classList.add("disabled");
+
+			ToastAlert.showAlertFullTop("Active la columna Dock Door", "error");
+		}
 	}
 
 	async init() {
 		try {
-			await this.insertModalInDOM();
-			this.initializeModalOpen();
-			// setLocalStorage([]);
+			await this.preInit(); // Valida elementos iniciales
+			await this.insertModalInDOM(); // Inserta el modal
+			this.initializeModalOpen(); // Configura eventos del modal
+			this.tableDockDoorModal = document.querySelector("#tableDockDoor");
+			this.setEventListeners(); // Configura eventos adicionales
 
-			// modalFunction();
-
-			// const tbody = tbody && observacion(tbody);
-
-			// const btnNewWave = document.querySelector("#ListPaneMenuActionNew");
-			// const btnEditWave = document.querySelector("#ListPaneMenuActionEdit");
-
-			// btnNewWave && btnNewWave.addEventListener("click", saveDoorToClick);
-			// btnEditWave && btnEditWave.addEventListener("click", saveDoorToClick);
-
-			// await verificarHeaderDockDoor(true);
+			// Asegura que el DOM esté cargado antes de ejecutar
+			setTimeout(() => this.setDoockDoorList(), 50);
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar [ShippingLoadInsight]:", error?.message, error);
 		}
@@ -42,10 +73,15 @@ class ShippingLoadInsight {
         `;
 
 			if (!ulElementoToInsert) {
-				reject("No se encontró el elemento <ul> a insertar");
+				reject("[insertModalInDOM] No se encontró el elemento <ul> a insertar");
+			}
+
+			if (!MODAL_HTML) {
+				reject("[insertModalInDOM] No se encontró el HTML de la modal");
 			}
 
 			ulElementoToInsert.insertAdjacentHTML("beforeend", li);
+			document.body.insertAdjacentHTML("beforeend", MODAL_HTML);
 
 			setTimeout(resolve, 50);
 		});
@@ -53,16 +89,16 @@ class ShippingLoadInsight {
 
 	initializeModalOpen() {
 		try {
-			const modal = document.getElementById("modalShowDockDoor");
+			const modal = document.getElementById(this.idModal);
 			const btnOpen = document.getElementById(this.idButtonOpenModal);
-			const btnClose = document.querySelector("#modalShowDockDoor .modal-container .close");
+			const btnClose = modal.querySelector(".close");
 
 			if (!modal) {
 				throw new Error("No se encontró el modal <div> con id '#modalShowDock'");
 			}
 
 			if (!btnOpen) {
-				throw new Error("No se encontró el botón openModal con id'${this.idButtonOpenModal'");
+				throw new Error(`No se encontró el botón openModal con id'${this.idButtonOpenModal}'`);
 			}
 
 			if (!btnClose) {
@@ -76,9 +112,16 @@ class ShippingLoadInsight {
 	}
 
 	setEventListenersModal({ modal, btnOpen, btnClose }) {
-		// const { modal } = elements;
+		// Cuando el usuario hace clic en el botón, abre el modal
+		btnOpen.addEventListener("click", () => {
+			this.showHiddenDoorInTableModal();
+			modal.style.display = "block";
+		});
 
-		setEventModalOpenClose(elements);
+		// Cuando el usuario hace clic en <span> (x), cierra el modal
+		btnClose.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
 
 		// Cuando el usuario hace clic fuera del modal, ciérralo
 		window.addEventListener("click", ({ target }) => {
@@ -98,56 +141,100 @@ class ShippingLoadInsight {
 		});
 	}
 
-	getDoockDoor() {
-		let door = [];
+	observeChangesInTheDOM(elementHTML, handleMutation) {
+		// Configuración del observer
+		const observerConfig = {
+			attributes: false, // Observar cambios en atributos
+			childList: true, // Observar cambios en la lista de hijos
+			subtree: false, // Observar cambios en los descendientes de los nodos objetivo
+		};
 
-		return new Promise((resolve) => {
-			const dock_doors = document.querySelectorAll('td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]');
+		// Crea una instancia de MutationObserver con la función de callback
+		const observer = new MutationObserver(handleMutation);
 
-			if (dock_doors.length === 0) {
-				resolve([]);
-				return;
-			}
-
-			dock_doors.forEach((doorElement) => {
-				const content = doorElement.innerHTML;
-
-				if (content) {
-					door.push(content.replace(/&nbsp;/, " "));
-				}
-			});
-
-			resolve(door);
-		});
+		// Inicia la observación del nodo objetivo y su configuración
+		observer.observe(elementHTML, observerConfig);
 	}
 
-	async insertDoockNotAvailable() {
-		console.log("[insertDoockNotAvailable]");
+	setEventListeners() {
+		if (!this.tbodyElement) {
+			throw new Error("No se encontró el elemento <tbody> con id #ListPaneDataGrid > tbody");
+		}
 
+		const btnNewWave = document.querySelector("#ListPaneMenuActionNew");
+		const btnEditWave = document.querySelector("#ListPaneMenuActionEdit");
+
+		this.observeChangesInTheDOM(this.tbodyElement, () => this.setDoockDoorList());
+
+		btnNewWave?.addEventListener("click", () => this.setDoockDoorList());
+		btnEditWave?.addEventListener("click", () => this.setDoockDoorList());
+	}
+
+	setDoockDoorList() {
+		const dockDoors = document.querySelectorAll('td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]');
+
+		if (!dockDoors || dockDoors.length === 0) {
+			console.warn("[setDoockDoorList]: No se encontraron elementos td[DOCK_DOOR_LOCATION]");
+			this.dataStorgaeDoors.clear();
+			LocalStorageHelper.remove(this.nameDataStorgaeDoors);
+			return;
+		}
+
+		// Función de normalización
+		const normalizeString = (str) => str?.normalize("NFKC").replace(/\s+/g, " ").trim();
+
+		// Vacía el conjunto actual
+		this.dataStorgaeDoors.clear();
+
+		dockDoors.forEach((doorElement) => {
+			const doorValue = normalizeString(doorElement?.textContent);
+
+			// Filtrar valores nulos, vacíos o solo espacios
+			if (doorValue) {
+				this.dataStorgaeDoors.add(doorValue);
+			}
+		});
+
+		// Guarda en localStorage
+		console.log("Guarda en localStorage:", this.nameDataStorgaeDoors, this.dataStorgaeDoors);
+		LocalStorageHelper.save(this.nameDataStorgaeDoors, Array.from(this.dataStorgaeDoors));
+	}
+
+	showHiddenDoorInTableModal() {
 		try {
-			const table = document.getElementById("content");
-			if (!table) return; // Asegurarse de que la tabla existe
+			if (!this.tableDockDoorModal) {
+				throw new Error("No existe el elemento a insertar la tabla de puertas no disponibles");
+			}
 
-			const rows = Array.from(table.querySelectorAll("tbody tr td"));
-			if (rows.length === 0) return; // Asegurarse de que hay filas en la tabla
+			const rows = Array.from(this.tableDockDoorModal.querySelectorAll("tbody tr td"));
 
-			const door = await getDoockDoor();
-
-			if (!Array.isArray(door) || door.length === 0) {
-				setLocalStorage(door);
-				await cleanClass("not-available");
-				return;
+			if (rows.length === 0) {
+				throw new Error("No hay filas en la tabla");
 			}
 
 			rows.forEach((td) => {
-				const content = td.innerHTML;
-				if (door.includes(content)) {
-					td.classList.add("not-available");
+				const doorValue = td?.textContent?.trim();
+
+				td?.classList?.remove("not-available");
+
+				if (this.dataStorgaeDoors.has(doorValue)) {
+					td?.classList?.add("not-available");
 				}
 			});
+
+			this.tableDockDoorModal.classList.remove("hidden");
 		} catch (error) {
-			console.error(error);
+			console.error("Error en showHiddenDoorInTableModal:", error.message, error);
 			return;
 		}
 	}
 }
+
+window.addEventListener("load", async () => {
+	try {
+		const loadManager = new ShippingLoadInsight();
+		loadManager.init();
+	} catch (error) {
+		console.error('Error al crear el objeto de la clase "ShippingLoadInsight"', error?.message, error);
+	}
+});

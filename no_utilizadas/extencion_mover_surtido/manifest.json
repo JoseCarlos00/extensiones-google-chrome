@@ -1,34 +1,33 @@
 {
-    "manifest_version": 3,
-    "name": "Mover Surtido 1.0",
-    "version": "1.0",
-    "description": "Agiliza el mover surtido, y pone automáticamente la palabra ETIQUETADO",
-    "permissions": [
-      "activeTab", "scripting"
-    ],
-    "icons": {
-      "16": "images/touch16.png",
-      "32": "images/touch32.png",
-      "48": "images/touch48.png",
-      "128": "images/touch128.png"
-    },
-    "content_scripts": [
-      {
-        "matches": ["https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?UseContainerIdOnWorkInstruction=True" ,
-        "https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?VALIDATE=Y",
-      "https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?UseContainerIdOnWorkInstruction=True"
-      ],
-        "js": ["content.js"]
-      }
-    ],
-    "action": {
-      "default_popup": "popup.html",
-      "defaul_icon" :  {
-        "16": "images/touch16.png",
-        "32": "images/touch32.png",
-        "48": "images/touch48.png",
-        "128": "images/touch128.png"
-      }
-    }
-  }
-  
+	"manifest_version": 3,
+	"name": "Mover Surtido 1.0",
+	"version": "1.0",
+	"description": "Agiliza el mover surtido, y pone automáticamente la palabra ETIQUETADO",
+	"permissions": ["activeTab", "scripting"],
+	"icons": {
+		"16": "images/touch16.png",
+		"32": "images/touch32.png",
+		"48": "images/touch48.png",
+		"128": "images/touch128.png"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRF.aspx*",
+				"https://wms.fantasiasmiguel.com.mx/RF/StartWorkRFHandling.aspx?VALIDATE=Y*",
+				"https://wms.fantasiasmiguel.com.mx/RF/WorkProfileSelectionRF.aspx?UseProfile=Y*",
+				"https://wms.fantasiasmiguel.com.mx/RF/ConfirmationRFHandling.aspx?*"
+			],
+			"js": ["content.js"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"defaul_icon": {
+			"16": "images/touch16.png",
+			"32": "images/touch32.png",
+			"48": "images/touch48.png",
+			"128": "images/touch128.png"
+		}
+	}
+}

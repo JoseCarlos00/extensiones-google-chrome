@@ -1,5 +1,5 @@
 const TABLE_DOCK_CONTENT = /*html*/ `
-<table id="tableDockDoor">
+<table id="tableDockDoor" class="hidden">
     <thead>
       <tr>
         <th colspan="5" align="center">EMB</th>
@@ -167,6 +167,12 @@ const MODAL_HTML = `
           class="fa-primary"></path>
       </svg>
     </button>
+
+    <div class="title-modal-container">
+      <label class="title-modal">Puertas Libres</label>
+      <label class="title-modal">Puertas asignadas</label>
+    </div>
+
       ${TABLE_DOCK_CONTENT}
     </div>
   </div>

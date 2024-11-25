@@ -5,15 +5,16 @@ class ShippingLoad {
 
 			this.dataStorgaeDoors = this.getStorageData();
 
-			if (this.dataStorgaeDoors.size === 0) {
-				throw new Error("No se encontraron datos en el almacenamiento local de", this.nameDataStorgaeDoors);
-			}
-
 			this.inputDockDoor = document.querySelector(
 				"#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input"
 			);
 
 			this.doorAssigned = this.inputDockDoor?.value ?? "";
+			this.isDataStorageDoors = this.dataStorgaeDoors.size > 0;
+
+			if (this.dataStorgaeDoors.size === 0) {
+				ToastAlert.showAlertFullTop("No se encontraron datos guardados de puertas asignadas", "info");
+			}
 
 			// Tabla de datos
 			this.tableDockDoor = null;
@@ -28,11 +29,24 @@ class ShippingLoad {
 		return new Set(Array.isArray(storedData) ? storedData : []);
 	}
 
+	verifyDataStorage() {
+		console.log("[verifyDataStorage]", this.isDataStorageDoors);
+
+		if (this.isDataStorageDoors && this.tableDockDoor) {
+			this.tableDockDoor.classList.remove("hidden");
+		} else {
+			this.tableDockDoor.classList.add("hidden");
+		}
+	}
+
 	async init() {
 		try {
 			await this.insertTableAvailebleDoors();
 			this.tableDockDoor = document.querySelector("#tableDockDoor");
-			await this.showHiddenDoorInTable();
+
+			this.verifyDataStorage();
+
+			this.showHiddenDoorInTable();
 
 			this.setEventListenerToSave();
 			this.setEventStorageChange();
@@ -62,11 +76,14 @@ class ShippingLoad {
 	}
 
 	setEventStorageChange() {
-		window.addEventListener("storage", ({ key }) => {
+		window.addEventListener("storage", async ({ key }) => {
 			if (key === this.nameDataStorgaeDoors) {
 				this.dataStorgaeDoors = this.getStorageData();
+				this.isDataStorageDoors = this.dataStorgaeDoors.size > 0;
 				this.hiddenDoorList();
 				this.showHiddenDoorInTable();
+				this.verifyDataStorage();
+				ToastAlert.showAlertFullTop("Información de puertas asignadas actualizada", "info");
 			}
 		});
 	}
@@ -83,7 +100,7 @@ class ShippingLoad {
 		});
 	}
 
-	async showHiddenDoorInTable() {
+	showHiddenDoorInTable() {
 		try {
 			if (!this.tableDockDoor) {
 				throw new Error("No existe el elemento a insertar la tabla de puertas no disponibles");
@@ -100,7 +117,7 @@ class ShippingLoad {
 				td?.classList?.remove("not-available");
 
 				if (this.dataStorgaeDoors.has(doorValue)) {
-					liElement?.classList?.add("not-available");
+					td?.classList?.add("not-available");
 				}
 			});
 		} catch (error) {
@@ -167,7 +184,7 @@ class ShippingLoad {
 			}
 
 			// Convertir el Set a un array y guardarlo en localStorage
-			LocalStorageHelper.add(this.nameDataStorgaeDoors, Array.from(this.dataStorgaeDoors));
+			LocalStorageHelper.save(this.nameDataStorgaeDoors, Array.from(this.dataStorgaeDoors));
 
 			console.log("Puertas guardadas exitosamente:");
 		} catch (error) {
