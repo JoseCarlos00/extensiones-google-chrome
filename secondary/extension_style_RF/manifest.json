@@ -1,0 +1,38 @@
+{
+	"manifest_version": 3,
+	"name": "Style RF",
+	"version": "1.0",
+	"description": "Agrega Styles al menu de scale RF",
+	"permissions": [],
+	"icons": {
+		"16": "icon/icon16.png",
+		"32": "icon/icon32.png",
+		"48": "icon/icon48.png",
+		"128": "icon/icon128.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/WorkProfileSelectionRF.aspx*"],
+			"js": ["workProfile.js"],
+			"css": ["switchHiddeOpction.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
+			"js": ["receivingRF.js"],
+			"css": ["switchHiddeOpction.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/*"],
+			"css": ["style.css"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"defaul_icon": {
+			"16": "icon/icon16.png",
+			"32": "icon/icon32.png",
+			"48": "icon/icon48.png",
+			"128": "icon/icon128.png"
+		}
+	}
+}

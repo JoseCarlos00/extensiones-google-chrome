@@ -68,10 +68,18 @@ class InventoryTransferLP extends IventoryManager {
 				console.log("toLoc TO:", firstRow?.toLoc);
 			}
 
+			const verifyForm = () => {
+				if (RFLOGISTICSUNIT?.value && toLoc?.value) {
+					this.submitFormData();
+				}
+			};
+
 			this.saveDataToSessionStorage(data);
 			this.submitFormData(() => {
 				delete data[rows[0]];
 				this.saveDataToSessionStorage(data);
+
+				setTimeout(() => setInterval(() => verifyForm(), 1000), 2000);
 			});
 		} catch (error) {
 			console.error("Error al insertar datos:", error.message);

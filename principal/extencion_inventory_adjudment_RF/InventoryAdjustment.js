@@ -63,8 +63,18 @@ class InventoryAdjustment extends IventoryManager {
 
 			delete data[rows[0]];
 
+			const verifyForm = () => {
+				if (item.value && company.value && quantity.value && location.value) {
+					if (firstRow?.LP && RFLOGISTICSUNIT?.value) {
+						return;
+					}
+
+					this.submitFormData();
+				}
+			};
+
 			this.saveDataToSessionStorage(data);
-			this.submitFormData();
+			this.submitFormData(() => setTimeout(() => setInterval(() => verifyForm(), 1000), 2000));
 		} catch (error) {
 			console.error("Error al insertar datos:", error.message);
 		}

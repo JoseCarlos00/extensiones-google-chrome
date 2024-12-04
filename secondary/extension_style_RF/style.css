@@ -1,0 +1,98 @@
+/* Menu Principal */
+form[action*="SignonMenuRF.aspx"] table {
+	tr:nth-child(4) td {
+		display: flex;
+		flex-wrap: wrap;
+		width: 850px;
+		gap: 12px;
+
+		.touchscreen-show {
+			display: none;
+		}
+
+		br {
+			display: none;
+		}
+
+		:is(a[href*="LinkClick(7)"], a[href*="LinkClick(9)"]) {
+			display: none;
+		}
+	}
+}
+
+/* Menu de WORK - TRABAJO */
+form[action*="WorkProfileSelectionRFHandling.aspx?accept=yes"] table,
+form[action*="ReceivingRF.aspx"] table {
+	tr:nth-child(5) td {
+		display: flex;
+		flex-wrap: wrap;
+		width: 900px;
+		gap: 12px;
+
+		br {
+			display: none;
+		}
+
+		.touchscreen-show {
+			display: none;
+		}
+
+		.touchscreen-position {
+			display: flex;
+		}
+	}
+}
+
+body[hidden-element="hide"] {
+	form[action*="WorkProfileSelectionRFHandling.aspx?accept=yes"]
+		table
+		tr:nth-child(5)
+		td
+		:is(
+			a[href*="value=2"],
+			a[href*="value=5"],
+			a[href*="value=6"],
+			a[href*="value=7"],
+			a[href*="value=11"],
+			a[href*="value=12"],
+			a[href*="value=13"],
+			a[href*="value=14"],
+			a[href*="value=15"],
+			a[href*="value=16"],
+			a[href*="value=17"],
+			a[href*="value=18"],
+			a[href*="value=19"],
+			a[href*="value=20"],
+			a[href*="value=21"],
+			a[href*="value=22"],
+			a[href*="value=23"],
+			a[href*="value=24"],
+			a[href*="value=25"],
+			a[href*="value=26"],
+			a[href*="value=27"],
+			a[href*="value=28"],
+			a[href*="value=29"],
+			a[href*="value=30"],
+			a[href*="value=31"],
+			a[href*="value=32"]
+		) {
+		display: none;
+	}
+
+	form[action*="ReceivingRF.aspx"]
+		table
+		tr:nth-child(5)
+		td
+		:is(
+			a[href*="value=3"],
+			a[href*="value=4"],
+			a[href*="value=5"],
+			a[href*="value=9"],
+			a[href*="value=10"],
+			a[href*="value=11"]
+		) {
+		display: none;
+	}
+}
+
+/* Menu de Receiving - Recibo */
