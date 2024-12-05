@@ -1,0 +1,28 @@
+{
+	"manifest_version": 3,
+	"name": "Style URC",
+	"version": "1.0",
+	"description": "Agrega estilo a los parrafos de tecto de texto y mas",
+	"permissions": [],
+	"icons": {
+		"16": "icon/icon16.png",
+		"32": "icon/icon32.png",
+		"48": "icon/icon48.png",
+		"128": "icon/icon128.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://urc.cdmx.gob.mx/*"],
+			"css": ["style.css"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"defaul_icon": {
+			"16": "icon/icon16.png",
+			"32": "icon/icon32.png",
+			"48": "icon/icon48.png",
+			"128": "icon/icon128.png"
+		}
+	}
+}

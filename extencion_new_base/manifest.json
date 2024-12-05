@@ -1,0 +1,29 @@
+{
+	"manifest_version": 3,
+	"name": "Nueva extension",
+	"version": "1.0",
+	"description": "Description",
+	"permissions": [],
+	"icons": {
+		"16": "icon/icon16.png",
+		"32": "icon/icon32.png",
+		"48": "icon/icon48.png",
+		"128": "icon/icon128.png"
+	},
+	"host_permissions": ["https://emperor-scan.com/*"],
+	"content_scripts": [
+		{
+			"matches": ["https://emperor-scan.com/*"],
+			"js": ["content.js"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"defaul_icon": {
+			"16": "icon/icon16.png",
+			"32": "icon/icon32.png",
+			"48": "icon/icon48.png",
+			"128": "icon/icon128.png"
+		}
+	}
+}
