@@ -1,0 +1,10 @@
+#confirmNegative:focus,
+#confirmNegative:active,
+#confirmNegative:focus-within,
+#confirmNegative:focus-visible,
+#confirmPositive:focus,
+#confirmPositive:active,
+#confirmPositive:focus-within,
+#confirmPositive:focus-visible {
+	outline: 1px solid !important;
+}

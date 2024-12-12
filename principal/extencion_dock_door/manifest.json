@@ -3,14 +3,13 @@
 	"name": "Dock Door",
 	"version": "1.0",
 	"description": "Muestar una tabla de dock door disponibles",
-	"permissions": ["scripting", "activeTab", "storage"],
+	"permissions": [],
 	"icons": {
 		"16": "images/inventory16.png",
 		"32": "images/inventory32.png",
 		"48": "images/inventory48.png",
 		"128": "images/inventory128.png"
 	},
-	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],

@@ -3,14 +3,13 @@
 	"name": "Surtido en RF",
 	"version": "1.0",
 	"description": "Surte el pedido de forma automatica",
-	"permissions": ["scripting", "activeTab", "storage"],
+	"permissions": [],
 	"icons": {
 		"16": "images/inventory16.png",
 		"32": "images/inventory32.png",
 		"48": "images/inventory48.png",
 		"128": "images/inventory128.png"
 	},
-	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/RF*"],
 	"content_scripts": [
 		{
 			"matches": [
@@ -26,6 +25,10 @@
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/*"],
 			"js": ["darkMode.js"],
 			"css": ["darkTheme.CSS"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/*"],
+			"css": ["scale.css"]
 		}
 	],
 	"action": {
