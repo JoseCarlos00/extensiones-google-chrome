@@ -47,6 +47,11 @@ window.addEventListener("load", async () => {
 
 		const htmlVerMas = ElementsHtml.seeMoreInformation();
 
+		const htmShowCapacityCJ = ElementsHtml.createElementAnchor({
+			id: "DetailPaneHeaderShowCapacityCJ",
+			title: "Capacidad Caja",
+		});
+
 		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderRow1Column1046");
 
 		const elementsHtmlToInsert = [
@@ -61,6 +66,7 @@ window.addEventListener("load", async () => {
 			{ element: htmlWorkZone },
 			{ element: htmlAttribute1 },
 			{ element: htmlVerMas },
+			{ element: htmShowCapacityCJ },
 		];
 
 		const handlePanelDetail = new HandlePanelDetailInventory();
