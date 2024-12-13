@@ -58,6 +58,10 @@ class HandlePanelDetail {
 		};
 	}
 
+	setIsCancelGetDataExternal(value = true) {
+		this.isCancelGetDataExternal = value;
+	}
+
 	_initializePanelElements() {
 		return new Promise((resolve) => setTimeout(resolve, 50));
 	}

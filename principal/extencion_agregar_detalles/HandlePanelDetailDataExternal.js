@@ -19,10 +19,6 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		};
 	}
 
-	setIsCancelGetDataExternal(value = true) {
-		this.isCancelGetDataExternal = value;
-	}
-
 	_initializeInternalPanelElements() {
 		// Retoran un Objeto de Elementos
 		throw new Error("El metodo _initializeInternalPanelElements no esta definido");
@@ -213,7 +209,7 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	}
 
 	updateCapacityCJ(datos) {
-		const { capacityCJ } = this.group2ExternalPanelElements;
+		const { capacityCJ } = this.externalPanelElements;
 		const { capacityCJ: capacityCJValue = "" } = datos;
 
 		if (!capacityCJ) {
@@ -229,7 +225,7 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 
 	fetchCapacityData(item) {
 		try {
-			const urlParams = `https://wms.fantasiasmiguel.com.mx/scale/trans/itemUOM?Item=${item}&Company=FM`;
+			const urlParams = `https://wms.fantasiasmiguel.com.mx/scale/trans/itemUOM?Item=${item}&Company=FM&active=active`;
 			this._sendBackgroundMessage(urlParams);
 		} catch (error) {
 			console.error("Error: ha ocurrido un error al obtener la capacidad de item:", error);

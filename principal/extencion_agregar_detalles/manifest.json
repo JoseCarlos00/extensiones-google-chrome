@@ -131,6 +131,10 @@
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error*"],
 			"js": ["errrorSegurity.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/itemUOM*"],
+			"js": ["global/itemUnitOfMeasure.js"]
 		}
 	],
 	"action": {
