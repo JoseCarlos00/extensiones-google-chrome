@@ -9,7 +9,7 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 		this.messageMap = {
 			[this.backgroundMessageGroup1]: (datos) => this._updateDetailsPanelInfo(datos),
 			[this.backgroundMessageGroup2]: (datos) => this.updateCapacityCJ(datos),
-			datos_no_encontrados: () => this._handleDataNotFound(datos),
+			datos_no_encontrados: (datos) => this._handleDataNotFound(datos),
 		};
 
 		this.selectorsId = {
