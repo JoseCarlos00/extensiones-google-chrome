@@ -30,7 +30,14 @@
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
-			"js": ["RF/ReceiptManager.js", "RF/ReceiptConfiguration.js", "utils/LocalStorageHelper.js"],
+			"js": [
+				"RF/ReceiptManager.js",
+				"RF/GetDataDevolucionesForm.js",
+				"RF/Devoluciones.js",
+				"RF/Traslados.js",
+				"RF/ReceiptConfiguration.js",
+				"utils/LocalStorageHelper.js"
+			],
 			"css": ["CSS/Receipt.css"]
 		}
 	],

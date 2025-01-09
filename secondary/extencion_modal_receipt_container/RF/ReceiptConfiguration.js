@@ -283,17 +283,26 @@ window.addEventListener("load", () => {
 	try {
 		const inputHiddenReceiptPreference = Form1?.HIDDENRECPREF ?? "";
 
-		if (inputHiddenReceiptPreference?.value !== "TRASLADOS") {
-			throw new Error(`La preferencia de recibo actual: [${inputHiddenReceiptPreference?.value}]. No es [TRASLADOS]`);
-		}
-
 		const configurationManager = new Configuration();
 		console.log(configurationManager);
 		configurationManager.init();
 
-		const receiptManager = new ReceitManagerRF({ configurationManager });
-		console.log(receiptManager);
-		receiptManager.init();
+		if (inputHiddenReceiptPreference?.value === "TRASLADOS") {
+			const receiptManager = new Traslados({ configurationManager });
+			console.log(receiptManager);
+			receiptManager.init();
+			return;
+		}
+
+		if (inputHiddenReceiptPreference?.value === "DEVOLUCIONES") {
+			const getDataForm = new GetDataDevolucionesForm({ nameDataStorage: "receiptContainerDataDevoluciones" });
+			getDataForm.render();
+
+			const receiptManager = new Devoluciones({ configurationManager });
+			console.log(receiptManager);
+			receiptManager.init();
+			return;
+		}
 	} catch (error) {
 		console.error("Error: no se pudo crear ReceitManagerRF", error.message);
 	}
