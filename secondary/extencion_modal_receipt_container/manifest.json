@@ -10,7 +10,12 @@
 		"48": "images/inventory48.png",
 		"128": "images/inventory128.png"
 	},
-	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
+	"web_accessible_resources": [
+		{
+			"resources": ["images/icons-alert.png"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
+		}
+	],
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
@@ -36,11 +41,13 @@
 				"RF/Devoluciones.js",
 				"RF/Traslados.js",
 				"RF/ReceiptConfiguration.js",
-				"utils/LocalStorageHelper.js"
+				"utils/LocalStorageHelper.js",
+				"utils/ToaAlertRF.js"
 			],
-			"css": ["CSS/Receipt.css"]
+			"css": ["CSS/Receipt.css", "CSS/toasAlert.css"]
 		}
 	],
+
 	"action": {
 		"default_popup": "popup.html",
 		"defaul_icon": {

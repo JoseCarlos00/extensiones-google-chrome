@@ -77,6 +77,7 @@ class GetDataDevolucionesForm {
 					}
 
 					this.registrarDatos({ lineas });
+					dataToInsert.value = "";
 				} catch (error) {
 					console.error("Error al manejar el evento handleSumitEvent", error.message);
 				}
@@ -192,10 +193,12 @@ class GetDataDevolucionesForm {
 
 		console.log("Datos guardados:", data);
 		LocalStorageHelper.save(this.nameDataStorage, data);
+		this.updateCounter(data.length);
+		this.alertDataSaved();
 	}
 
-	insertarDatos({ data }) {
-		throw new Error("insertarDatos() no implementado");
+	alertDataSaved() {
+		ToastAlertRF.showAlertMinBotton("Datos guardados", "success");
 	}
 
 	updateCounter(value) {
