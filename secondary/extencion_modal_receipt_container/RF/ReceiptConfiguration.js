@@ -300,7 +300,9 @@ window.addEventListener("load", () => {
 
 			const receiptManager = new Devoluciones({ configurationManager });
 			console.log(receiptManager);
-			receiptManager.init();
+			setTimeout(() => {
+				receiptManager.init();
+			}, 50);
 			return;
 		}
 	} catch (error) {

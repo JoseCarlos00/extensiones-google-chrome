@@ -31,7 +31,7 @@ class GetDataDevolucionesForm {
 		const contadores = `
       <div class="contadores-container">
         <p>
-        Restantes:<spam id="countRestante">${this.datosStorageLength}</spam>
+        Restantes:<spam id="countRestante">0</spam>
         </p>
       </div>
       `;
@@ -112,18 +112,13 @@ class GetDataDevolucionesForm {
 	handleCancelInsertData() {
 		const timeDelayReload = 250;
 
-		if (Object.keys(this.datosStorage).length <= 0) {
-			alert("No hay datos para cancelar");
-			return;
-		}
-
 		// Mostrar una alerta que permita al usuario cancelar la ejecución de la función
 		const confirmacion = confirm(`¿Quieres cancelar?\nSe borraran los datos ingresados`);
 
 		try {
 			if (confirmacion) {
 				// Si el usuario confirma, cancelar la ejecución de la función
-				this.deleteDataFromSessionStorage();
+				LocalStorageHelper.remove(this.nameDataStorage);
 
 				setTimeout(() => {
 					window.location.reload();

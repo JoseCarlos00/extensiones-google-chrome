@@ -131,7 +131,14 @@ class Devoluciones {
 		try {
 			if (!this.autoComplete) return;
 
-			const storageLength = Array.from(this.dataContainerStorage).length ?? 0;
+			const storageLength = this.dataContainerStorage?.length;
+
+			if (storageLength === 0) {
+				console.warn("No hay datos en dataContainerStorage.");
+				return;
+			}
+
+			this.updateCounter(storageLength);
 
 			if (!this.dataContainerStorage || storageLength === 0) {
 				console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
@@ -215,6 +222,15 @@ class Devoluciones {
 	setEventListeners() {
 		this.setEventInitReceipt();
 		this.autocompleteForm();
+	}
+
+	updateCounter(value) {
+		const countRestante = document.querySelector("#countRestante");
+		if (countRestante) {
+			countRestante.innerHTML = `${value ?? "0"}`;
+		} else {
+			console.warn("No se encontro el elemento #countRestante");
+		}
 	}
 
 	init() {

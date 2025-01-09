@@ -237,3 +237,17 @@
 		font-weight: bold;
 	}
 }
+
+.contadores-container {
+	position: fixed;
+	bottom: 0;
+	width: 200px;
+	font-size: 1.12rem;
+
+	animation: entradaElemento 0.5s ease-in-out;
+
+	spam {
+		font-weight: bold;
+		padding-left: 4px;
+	}
+}
