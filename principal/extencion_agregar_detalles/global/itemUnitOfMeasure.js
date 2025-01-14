@@ -26,12 +26,12 @@ class GetData {
 				action: this.msgError,
 				data: this.msgHeader,
 			});
-			// setTimeout(window.close, 50);
+			setTimeout(window.close, 50);
 			return;
 		}
 
 		chrome.runtime.sendMessage({ action: this.msgAction, datos: { capacityCJ } });
-		// setTimeout(window.close, 50);
+		setTimeout(window.close, 50);
 	}
 }
 
