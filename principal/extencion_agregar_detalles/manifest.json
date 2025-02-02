@@ -99,14 +99,14 @@
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
 			"js": [
-				"shipping_container/ManangerPanelDetail.js",
-				"shipping_container/HandleShippingContainer.js",
-				"shipping_container/main.js"
+				"shipping/container/ManangerPanelDetail.js",
+				"shipping/container/HandleShippingContainer.js",
+				"shipping/container/main.js"
 			]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"],
-			"js": ["shipping_container/containerDetail.js"]
+			"js": ["shipping/container/containerDetail.js"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"],
