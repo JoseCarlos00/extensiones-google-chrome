@@ -1,89 +1,102 @@
 class HandlePanelDetailNAME extends HandlePanelDetailDataExternal {
-  constructor() {
-    super();
-    this.backgroundMessage = 'NAME';
+	constructor({ selectorsId }) {
+		super();
+		this.backgroundMessage = "NAME";
 
-    this.selectorsId = {
-      internal: '#idInternal',
-      external: '#idExternal',
-      ...this.seeMoreInformationSelector,
-    };
+		this.messageMap = {
+			[this.backgroundMessage]: (datos) => this._updateDetailsPanelInfo(datos),
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
+			datos_no_encontrados: (datos) => this._handleDataNotFound(datos),
+		};
 
-    this.externalPanelElements = {
-      external: null,
-    };
+		this.selectorsId = {
+			...selectorsId,
+			...this.seeMoreInformationSelector,
+		};
 
-    this.internalPanelElements = {
-      internal: null,
-    };
+		this.externalPanelElements = {
+			external: null,
+		};
 
-    this.panelElements = {
-      ...this.internalPanelElements,
-      ...this.externalPanelElements,
-      seeMoreInformation: null,
-    };
+		this.internalPanelElements = {
+			internal: null,
+		};
 
-    this.internalData = {
-      internal: "[aria-describedby='ListPaneDataGrid_SHIPPING_LOAD_NUM']",
-    };
-  }
+		this.panelElements = {
+			...this.internalPanelElements,
+			...this.externalPanelElements,
+			seeMoreInformation: null,
+		};
 
-  _initializeInternalPanelElements() {
-    return {
-      internal: document.querySelector(this.selectorsId.internal),
-    };
-  }
+		this.internalData = {
+			internal: "[aria-describedby='ListPaneDataGrid_SHIPPING_LOAD_NUM']",
+		};
+	}
 
-  _initializeExternalPanelElements() {
-    return {
-      external: document.querySelector(this.selectorsId.external),
-    };
-  }
+	_initializeInternalPanelElements() {
+		return {
+			internal: document.querySelector(this.selectorsId.internal),
+		};
+	}
 
-  _extraerDatosDeTr(tr) {
-    if (!tr) return;
+	_initializeExternalPanelElements() {
+		return {
+			external: document.querySelector(this.selectorsId.external),
+		};
+	}
 
-    // Uso de la función auxiliar para extraer y limpiar valores
-    const internalData = this._extractAndTrim(tr.querySelector(this.internalData.internal));
+	_extraerDatosDeTr(tr) {
+		if (!tr) return;
 
-    const insert = [{ element: this.internalPanelElements.internal, value: internalData }];
+		// Uso de la función auxiliar para extraer y limpiar valores
+		const internalData = this._extractAndTrim(tr.querySelector(this.internalData.internal));
 
-    // Llamar a insertarInfo con los datos extraídos
-    this._insertInfo({
-      insert,
-    });
-  }
+		const insert = [{ element: this.internalPanelElements.internal, value: internalData }];
 
-  _getDataExternal() {
-    try {
-      const { internal: internalElement } = this.internalPanelElements;
+		// Llamar a insertarInfo con los datos extraídos
+		this._insertInfo({
+			insert,
+		});
+	}
 
-      const internalNumber = internalElement ? String(internalElement.textContent.trim()) : '';
+	_insertInfo({ insert = [], tiendaNum }) {
+		super._insertInfo({ insert });
+		this._insertSeeMoreInformation();
+		this.initializeCapacityCJText();
+	}
 
-      if (internalElement) {
-        this._waitFordata();
-        this.setIsCancelGetDataExternal(false);
+	_getDataExternal() {
+		try {
+			const { internal: internalElement } = this.internalPanelElements;
 
-        const url = `https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/${internalNumber}?active=active`;
-        this._sendBackgroundMessage(url);
-      } else {
-        ToastAlert.showAlertFullTop(
-          'No se encontró la Columna [NAME], por favor active la columna.'
-        );
-        console.log('No se encontró el NAME');
-      }
-    } catch (error) {
-      console.error('Error al obtener datos externos:', error);
-    }
-  }
+			const internalNumber = internalElement ? String(internalElement.textContent.trim()) : "";
 
-  _updateDetailsPanelInfo(datos) {
-    const { dataExternal } = datos;
+			if (internalElement) {
+				this._waitFordata();
+				this.setIsCancelGetDataExternal(false);
 
-    const elementsToUpdate = [
-      { element: this.externalPanelElements.external, value: `${dataExternal}` },
-    ];
+				const url = `https://wms.fantasiasmiguel.com.mx/scale/details/shippingload/${internalNumber}?active=active`;
+				this._sendBackgroundMessage(url);
+			} else {
+				ToastAlert.showAlertFullTop("No se encontró la Columna [NAME], por favor active la columna.");
+				console.log("No se encontró el NAME");
+			}
+		} catch (error) {
+			console.error("Error al obtener datos externos:", error);
+		}
+	}
 
-    this._setDataExternal(elementsToUpdate);
-  }
+	_updateDetailsPanelInfo(datos) {
+		const { dataExternal } = datos;
+
+		const elementsToUpdate = [{ element: this.externalPanelElements.external, value: `${dataExternal}` }];
+
+		this._setDataExternal(elementsToUpdate);
+	}
+
+	_initializeDataExternal() {
+		this._listeningToBackgroundMessages();
+		this._setEventSeeMore();
+		this.setClickEventCapacityCJ();
+	}
 }
