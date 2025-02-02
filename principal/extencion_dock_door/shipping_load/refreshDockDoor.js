@@ -69,10 +69,20 @@ class RefreshDockDoor {
 		try {
 			ToastAlert.showAlertFullTop("Actualizando Dock Doors", "info");
 			this.tableDockDoor?.classList?.add("hidden");
-			const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-			const data = await response.json();
+			LocalStorageHelper.remove(this.nameDataStorgaeDoors);
 
-			console.log("data", data);
+			let nuevaVentana = window.open(
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/3041?selectRows=Y",
+				"_blank",
+				"width=800,height=600"
+			);
+
+			// Enviar un mensaje a la nueva ventana para que cierre después de cargar
+			if (nuevaVentana) {
+				nuevaVentana.onload = () => {
+					nuevaVentana.postMessage("cerrar", "*");
+				};
+			}
 		} catch (error) {
 			console.error("Ha ocurrido un error al [refrescar dock door]", error?.message, error);
 		}

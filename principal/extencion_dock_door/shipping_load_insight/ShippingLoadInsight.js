@@ -1,5 +1,7 @@
 class ShippingLoadInsight {
 	constructor() {
+		// Constantes
+		this.closeWindow = false;
 		this.nameDataStorgaeDoors = NAME_DATA_STORAGE_DOORS;
 		this.dataStorgaeDoors = new Set();
 
@@ -17,6 +19,12 @@ class ShippingLoadInsight {
 
 		// Tabla de datos en el Modal
 		this.tableDockDoorModal = null;
+
+		window.addEventListener("message", ({ data }) => {
+			if (data === "cerrar") {
+				this.closeWindow = true;
+			}
+		});
 	}
 
 	async preInit() {
@@ -54,7 +62,7 @@ class ShippingLoadInsight {
 			this.setEventListeners(); // Configura eventos adicionales
 
 			// Asegura que el DOM esté cargado antes de ejecutar
-			setTimeout(() => this.setDoockDoorList(), 50);
+			setTimeout(() => this.setDoockDoorList(true), 50);
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar [ShippingLoadInsight]:", error?.message, error);
 		}
@@ -170,7 +178,7 @@ class ShippingLoadInsight {
 		btnEditWave?.addEventListener("click", () => this.setDoockDoorList());
 	}
 
-	setDoockDoorList() {
+	setDoockDoorList(closeWindow = false) {
 		const dockDoors = document.querySelectorAll('td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]');
 
 		if (!dockDoors || dockDoors.length === 0) {
@@ -198,6 +206,13 @@ class ShippingLoadInsight {
 		// Guarda en localStorage
 		console.log("Guarda en localStorage:", this.nameDataStorgaeDoors, this.dataStorgaeDoors);
 		LocalStorageHelper.save(this.nameDataStorgaeDoors, Array.from(this.dataStorgaeDoors));
+
+		// Cerrar ventanas
+		if (closeWindow || this.closeWindow) {
+			setTimeout(() => {
+				window.close();
+			}, 50);
+		}
 	}
 
 	showHiddenDoorInTableModal() {
