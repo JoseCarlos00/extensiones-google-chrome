@@ -5,6 +5,7 @@ window.addEventListener("load", async () => {
 			containerId: "#DetailPaneHeaderContainerId",
 			userName: "#DetailPaneHeaderUserStamp",
 			customer: "#DetailPaneHeaderCustomer",
+			activityDateTime: "#DetailPaneHeaderActivityDateTime",
 		};
 
 		const htmlWorkUnit = ElementsHtml.createElement({
@@ -23,6 +24,10 @@ window.addEventListener("load", async () => {
 			id: selectorsId.customer,
 			title: "Customer",
 		});
+		const htmlActivityDateTime = ElementsHtml.createElement({
+			id: selectorsId.activityDateTime,
+			title: "Activity Date Time",
+		});
 
 		const htmShowCapacityCJ = ElementsHtml.createElementAnchor({
 			id: "DetailPaneHeaderShowCapacityCJ",
@@ -36,6 +41,7 @@ window.addEventListener("load", async () => {
 			{ element: htmlContainerId },
 			{ element: htmlUserName },
 			{ element: htmlCustomer },
+			{ element: htmlActivityDateTime },
 			{ element: htmShowCapacityCJ },
 		];
 		const handlePanelDetail = new HandlePanelDetailTransactionHistory({ selectorsId });

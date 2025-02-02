@@ -50,18 +50,19 @@
 - **[Transaction History]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2783](https://wms.fantasiasmiguel.com.mx/scale/insights/2783)
 
-| Fila              | Agredas / original |
-| :---------------- | ------------------ |
-| Reference Id      | Original           |
-| Transaction Type  | Original           |
-| Location          | Original           |
-| Item              | Original           |
-| Item Desc         | Original           |
-| Company           | Original           |
-| Work Unit         |                    |
-| LP / Container Id |                    |
-| User Name         |                    |
-| Customer          |                    |
+| Fila               | Agredas / original |
+| :----------------- | ------------------ |
+| Reference Id       | Original           |
+| Transaction Type   | Original           |
+| Location           | Original           |
+| Item               | Original           |
+| Item Desc          | Original           |
+| Company            | Original           |
+| Work Unit          |                    |
+| LP / Container Id  |                    |
+| User Name          |                    |
+| Customer           |                    |
+| Activity date time |                    |
 
 ---
 
@@ -176,13 +177,14 @@
 - **[Wave Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2773](https://wms.fantasiasmiguel.com.mx/scale/insights/2773)
 
-| Fila                                                | Agredas / original |
-| :-------------------------------------------------- | ------------------ |
-| Wave                                                | Original           |
-| Name                                                | Original           |
-| Flow - **_Tipo de Ola_**                            |                    |
-| Ended Date Time - **_Time de Finalizacion de Ola_** |                    |
-| User Stamp                                          |                    |
+| Fila                                                    | Agredas / original |
+| :------------------------------------------------------ | ------------------ |
+| Wave                                                    | Original           |
+| Name                                                    | Original           |
+| Flow - **_Tipo de Ola_**                                |                    |
+| Started Date Time - **_Time de Inicialización de Ola_** |                    |
+| Ended Date Time - **_Time de Finalizacion de Ola_**     |                    |
+| User Stamp                                              |                    |
 
 ---
 

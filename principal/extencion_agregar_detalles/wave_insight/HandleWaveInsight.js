@@ -25,6 +25,7 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 		this.internalPanelElements = {
 			waveNumber: null,
 			waveFlow: null,
+			startDataTime: null,
 			endDataTime: null,
 		};
 
@@ -36,6 +37,7 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 
 		this.internalData = {
 			waveFlow: "[aria-describedby='ListPaneDataGrid_WAVE_FLOW']",
+			startDataTime: "[aria-describedby='ListPaneDataGrid_WAVE_DATE_TIME_STARTED']",
 			endDataTime: "[aria-describedby='ListPaneDataGrid_WAVE_DATE_TIME_ENDED']",
 		};
 	}
@@ -43,6 +45,7 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 	_initializeInternalPanelElements() {
 		return {
 			waveFlow: document.querySelector(this.selectorsId.waveFlow),
+			startDataTime: document.querySelector(this.selectorsId.startDataTime),
 			endDataTime: document.querySelector(this.selectorsId.endDataTime),
 			waveNumber: document.querySelector(this.selectorsId.waveNumber),
 		};
@@ -63,10 +66,12 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 
 		// Uso de la función auxiliar para extraer y limpiar valores
 		const waveFlow = this._extractAndTrim(tr.querySelector(this.internalData.waveFlow));
+		const startDataTime = this._extractAndTrim(tr.querySelector(this.internalData.startDataTime));
 		const endDataTime = this._extractAndTrim(tr.querySelector(this.internalData.endDataTime), "—");
 
 		const insert = [
 			{ element: this.internalPanelElements.waveFlow, value: waveFlow },
+			{ element: this.internalPanelElements.startDataTime, value: startDataTime },
 			{ element: this.internalPanelElements.endDataTime, value: endDataTime },
 		];
 

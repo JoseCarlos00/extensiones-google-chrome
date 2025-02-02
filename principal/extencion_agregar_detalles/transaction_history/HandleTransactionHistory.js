@@ -21,6 +21,7 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataExternal 
 			containerId: null,
 			userName: null,
 			customer: null,
+			activityDateTime: null,
 		};
 
 		this.panelElements = {
@@ -33,6 +34,7 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataExternal 
 			containerId: "[aria-describedby='ListPaneDataGrid_ContainerId']",
 			userName: "[aria-describedby='ListPaneDataGrid_UserName']",
 			referenceId: "[aria-describedby='ListPaneDataGrid_ReferenceId']",
+			activityDateTime: "[aria-describedby='ListPaneDataGrid_ActivityDateTime']",
 		};
 	}
 
@@ -42,6 +44,7 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataExternal 
 			containerId: document.querySelector(this.selectorsId.containerId),
 			userName: document.querySelector(this.selectorsId.userName),
 			customer: document.querySelector(this.selectorsId.customer),
+			activityDateTime: document.querySelector(this.selectorsId.activityDateTime),
 		};
 	}
 
@@ -58,11 +61,13 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataExternal 
 		const containerId = this._extractAndTrim(tr.querySelector(this.internalData.containerId));
 		const userName = this._extractAndTrim(tr.querySelector(this.internalData.userName));
 		const referenceId = this._extractAndTrim(tr.querySelector(this.internalData.referenceId));
+		const activityDateTime = this._extractAndTrim(tr.querySelector(this.internalData.activityDateTime));
 
 		const insert = [
 			{ element: this.panelElements.workUnit, value: workUnit },
-			{ element: this.panelElements.containerId, value: containerId },
+			{ element: this.panelElements.containerId, value: "LP: " + containerId },
 			{ element: this.panelElements.userName, value: userName },
+			{ element: this.panelElements.activityDateTime, value: activityDateTime },
 		];
 
 		// Llamar a insertarInfo con los datos extraídos

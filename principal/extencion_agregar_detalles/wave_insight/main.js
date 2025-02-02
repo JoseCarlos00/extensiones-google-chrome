@@ -3,6 +3,7 @@ window.addEventListener("load", async () => {
 		const selectorsId = {
 			waveNumber: "#DetailPaneHeaderWaveNumber",
 			waveFlow: "#DetailPaneHeaderFlow",
+			startDataTime: "#DetailPaneHeaderStartedDateTime",
 			endDataTime: "#DetailPaneHeaderEndedDateTime",
 			userStamp: "#DetailPaneHeaderUserStamp",
 		};
@@ -11,6 +12,10 @@ window.addEventListener("load", async () => {
 		const htmlParentFlow = ElementsHtml.createElement({
 			id: selectorsId.waveFlow,
 			title: "Parent Flow",
+		});
+		const htmlStartedDateTime = ElementsHtml.createElement({
+			id: selectorsId.startDataTime,
+			title: "Started DateTime",
 		});
 		const htmlEndedDateTime = ElementsHtml.createElement({
 			id: selectorsId.endDataTime,
@@ -24,6 +29,7 @@ window.addEventListener("load", async () => {
 
 		const elementsHtmlToInsert = [
 			{ element: htmlParentFlow },
+			{ element: htmlStartedDateTime },
 			{ element: htmlEndedDateTime },
 			{ element: htmlUserStamp },
 			{ element: htmlVerMas },
@@ -47,6 +53,7 @@ window.addEventListener("load", async () => {
 /**
  * DATOS INTERNOS
  * - Flow
+ * - Started Date Time
  * - Ended Date Time - **_Date Time Stamp_**
  *
  * REFERENCE INFO
