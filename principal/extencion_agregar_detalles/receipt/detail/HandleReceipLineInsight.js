@@ -1,63 +1,76 @@
-class HandleReceipLineInsight extends HandlePanelDetail {
-  constructor() {
-    super();
-    this.selectorsId = {
-      receiptId: '#DetailPaneHeaderReceiptId',
-      internalReceiptNumber: '#DetailPaneHeaderInternalReceiptNumber',
-    };
+class HandleReceipLineInsight extends HandlePanelDetailDataExternal {
+	constructor() {
+		super();
 
-    this.panelElements = {
-      receiptId: null,
-      internalReceiptNumber: null,
-    };
+		this.messageMap = {
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
+			datos_no_encontrados: (datos) => this.handleDataNoFoundCapacity(),
+		};
 
-    this.internalData = {
-      receiptId: "[aria-describedby='ListPaneDataGrid_RECEIPT_ID']",
-      internalReceiptNumber: "[aria-describedby='ListPaneDataGrid_INTERNAL_RECEIPT_NUM']",
-    };
-  }
+		this.selectorsId = {
+			receiptId: "#DetailPaneHeaderReceiptId",
+			internalReceiptNumber: "#DetailPaneHeaderInternalReceiptNumber",
+			capacityCJ: "#DetailPaneHeaderShowCapacityCJ",
+		};
 
-  _initializePanelElements() {
-    return new Promise((resolve, reject) => {
-      const elements = {
-        receiptId: document.querySelector(this.selectorsId.receiptId),
-        internalReceiptNumber: document.querySelector(this.selectorsId.internalReceiptNumber),
-      };
+		this.internalPanelElements = {
+			receiptId: null,
+			internalReceiptNumber: null,
+		};
 
-      const missingOptions = Object.entries(elements)
-        .filter(([key, value]) => !value)
-        .map(([key]) => key);
+		this.externalPanelElements = {
+			capacityCJ: null,
+		};
 
-      if (missingOptions.length > 0) {
-        reject(
-          `No se encontraron los elementos necesarios para inicializar el HandlePanelDetail: [${missingOptions.join(
-            ', '
-          )}]`
-        );
-      }
+		this.panelElements = {
+			...this.internalPanelElements,
+			...this.externalPanelElements,
+		};
 
-      // Asignar los elementos validados a `optionModal`
-      this.panelElements = elements;
-      setTimeout(resolve, 50);
-    });
-  }
+		this.internalData = {
+			receiptId: "[aria-describedby='ListPaneDataGrid_RECEIPT_ID']",
+			internalReceiptNumber: "[aria-describedby='ListPaneDataGrid_INTERNAL_RECEIPT_NUM']",
+		};
+	}
 
-  _extraerDatosDeTr(tr) {
-    if (!tr) return;
+	_initializeInternalPanelElements() {
+		return {
+			receiptId: document.querySelector(this.selectorsId.receiptId),
+			internalReceiptNumber: document.querySelector(this.selectorsId.internalReceiptNumber),
+		};
+	}
 
-    const receiptId = this._extractAndTrim(tr.querySelector(this.internalData.receiptId));
-    const internalReceiptNumber = this._extractAndTrim(
-      tr.querySelector(this.internalData.internalReceiptNumber)
-    );
+	_initializeExternalPanelElements() {
+		return {
+			capacityCJ: document.querySelector(this.selectorsId.capacityCJ),
+		};
+	}
 
-    const insert = [
-      { element: this.panelElements.receiptId, value: receiptId },
-      { element: this.panelElements.internalReceiptNumber, value: internalReceiptNumber },
-    ];
+	_extraerDatosDeTr(tr) {
+		if (!tr) return;
 
-    // Llamar a insertarInfo con los datos extraídos
-    this._insertInfo({
-      insert,
-    });
-  }
+		const receiptId = this._extractAndTrim(tr.querySelector(this.internalData.receiptId));
+		const internalReceiptNumber = this._extractAndTrim(tr.querySelector(this.internalData.internalReceiptNumber));
+
+		const insert = [
+			{ element: this.panelElements.receiptId, value: receiptId },
+			{ element: this.panelElements.internalReceiptNumber, value: internalReceiptNumber },
+		];
+
+		// Llamar a insertarInfo con los datos extraídos
+		this._insertInfo({
+			insert,
+		});
+	}
+
+	_insertInfo({ insert = [] }) {
+		// LLAMA A _cleanDetailPanel EN super._insertInfo
+		super._insertInfo({ insert });
+		this.initializeCapacityCJText();
+	}
+
+	_initializeDataExternal() {
+		this._listeningToBackgroundMessages();
+		this.setClickEventCapacityCJ();
+	}
 }

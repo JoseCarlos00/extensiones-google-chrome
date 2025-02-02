@@ -4,6 +4,7 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 
 		this.backgroundMessage = "invalidate";
 		this.headerDataExternalPrincipal = "not data";
+		this.backgroundMessageUOM = "actualizar_datos_de_item_unit_of_measure";
 
 		this.seeMoreInformationSelector = {
 			seeMoreInformation: "#seeMoreInformation",
@@ -38,7 +39,6 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 			const allElements = {
 				...internalElements,
 				...externalElements,
-				seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
 			};
 
 			const missingOptions = Object.entries(allElements)
@@ -73,15 +73,18 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		}
 	}
 
-	_insertInfo({ insert = [] }) {
-		// LLAMA A _cleanDetailPanel EN super._insertInfo
-		super._insertInfo({ insert });
+	_insertSeeMoreInformation() {
 		const { seeMoreInformation } = this.panelElements;
 
 		if (seeMoreInformation) {
 			seeMoreInformation.classList.remove("disabled");
 			seeMoreInformation.innerHTML = "Ver mas info...";
 		}
+	}
+
+	_insertInfo({ insert = [] }) {
+		// LLAMA A _cleanDetailPanel EN super._insertInfo
+		super._insertInfo({ insert });
 	}
 
 	_waitFordata(externalPanelElements) {
@@ -182,7 +185,7 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 			await this._initializePanelElements();
 			this._initializeDataExternal();
 		} catch (error) {
-			console.error("Error: ha ocurrido un error al inizicailar HandleInventory:", error);
+			console.error("Error: ha ocurrido un error al inizicailar HandlePanelDetailDataExternal:", error);
 		}
 	}
 
@@ -251,7 +254,9 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 			return;
 		}
 
-		this._waitFordata(this.group2ExternalPanelElements);
+		const { capacityCJ } = this.externalPanelElements;
+
+		this._waitFordata({ capacityCJ });
 		this.setIsCancelGetDataExternal(false);
 		this.fetchCapacityData(item);
 	}

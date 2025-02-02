@@ -79,6 +79,7 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 			locating: document.querySelector(this.selectorsId.locating),
 			workZone: document.querySelector(this.selectorsId.workZone),
 			attribute1: document.querySelector(this.selectorsId.attribute1),
+			seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
 			capacityCJ: document.querySelector(this.selectorsId.capacityCJ),
 		};
 	}
@@ -105,6 +106,7 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 	_insertInfo({ insert = [] }) {
 		// LLAMA A _cleanDetailPanel EN super._insertInfo
 		super._insertInfo({ insert });
+		this._insertSeeMoreInformation();
 		this.initializeCapacityCJText();
 	}
 
