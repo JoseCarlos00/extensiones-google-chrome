@@ -13,40 +13,40 @@ window.addEventListener("load", async () => {
 
 		// ELEMENTOS INTERNOS
 		const htmlReferenceId = ElementsHtml.createElement({
-			id: "DetailPaneHeaderReferenceId",
+			id: selectorsId.referenceId,
 			title: "Reference ID",
 			color: true,
 			bold: true,
 		});
 		const htmlAssignedUser = ElementsHtml.createElement({
-			id: "DetailPaneHeaderAssignedUser",
+			id: selectorsId.assignedUser,
 			title: "Assigned User",
 		});
 		const htmlInternalInstructionNum = ElementsHtml.createElement({
-			id: "DetailPaneHeaderInternalInstructionNum",
+			id: selectorsId.internalNum,
 			title: "Internal Instruction Number",
 			bold: true,
 		});
 		const htmlCompleteByUser = ElementsHtml.createElement({
-			id: "DetailPaneHeaderCompleteByUser",
+			id: selectorsId.completedByUser,
 			title: "Complete By User",
 		});
 		const htmlWaveNumber = ElementsHtml.createElement({
-			id: "DetailPaneHeaderWaveNumber",
+			id: selectorsId.waveNumber,
 			title: "Wave Number",
 		});
 		const htmlCustomer = ElementsHtml.createElement({
-			id: "DetailPaneHeaderCustomer",
+			id: selectorsId.customer,
 			title: "Customer",
 		});
 
 		// Datos Externos
 		const htmlFromZone = ElementsHtml.createElement({
-			id: "DetailPaneHeaderFromZone",
+			id: selectorsId.fromZone,
 			title: "From Zone",
 		});
 		const htmlToZone = ElementsHtml.createElement({
-			id: "DetailPaneHeaderToZone",
+			id: selectorsId.toZone,
 			title: "To Zone",
 		});
 		const htmlVerMas = ElementsHtml.seeMoreInformation();
@@ -69,7 +69,7 @@ window.addEventListener("load", async () => {
 		];
 
 		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderTypeConditionColumn11080");
-		const handlePanelDetail = new HandlePanelDetailWorkInsight();
+		const handlePanelDetail = new HandlePanelDetailWorkInsight({ selectorsId });
 
 		const manangerPanelDetail = new ManangerPanelDetail({
 			panelDetail,

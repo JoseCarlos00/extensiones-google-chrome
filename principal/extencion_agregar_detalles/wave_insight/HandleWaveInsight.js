@@ -19,6 +19,7 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 
 		this.externalPanelElements = {
 			...this.group1ExternalPanelElements,
+			seeMoreInformation: null,
 		};
 
 		this.internalPanelElements = {
@@ -73,6 +74,12 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 		this._insertInfo({
 			insert,
 		});
+	}
+
+	_insertInfo({ insert = [] }) {
+		// LLAMA A _cleanDetailPanel EN super._insertInfo
+		super._insertInfo({ insert });
+		this._insertSeeMoreInformation();
 	}
 
 	_getDataExternal() {

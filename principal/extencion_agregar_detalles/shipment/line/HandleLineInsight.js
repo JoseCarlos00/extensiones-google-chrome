@@ -3,6 +3,12 @@ class HandleLineInsight extends HandlePanelDetailDataExternal {
 		super();
 		this.backgroundMessage = "actualizar_datos_de_shipment_detail";
 
+		this.messageMap = {
+			[this.backgroundMessage]: (datos) => this._updateDetailsPanelInfo(datos),
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
+			datos_no_encontrados: (datos) => this._handleDataNotFound(datos),
+		};
+
 		this.selectorsId = {
 			...selectorsId,
 			...this.seeMoreInformationSelector,
@@ -34,6 +40,7 @@ class HandleLineInsight extends HandlePanelDetailDataExternal {
 			...this.internalPanelElements,
 			...this.externalPanelElements,
 			seeMoreInformation: null,
+			capacityCJ: null,
 		};
 
 		this.internalData = {
@@ -69,6 +76,7 @@ class HandleLineInsight extends HandlePanelDetailDataExternal {
 			waveNumber: document.querySelector(this.selectorsId.waveNumber),
 			dateCreate: document.querySelector(this.selectorsId.dateCreate),
 		};
+
 		return {
 			...this.group1ExternalPanelElements,
 			seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),

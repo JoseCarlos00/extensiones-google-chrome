@@ -4,13 +4,12 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 
 		this.backgroundMessageGroup1 = "actualizar_datos_de_receipt_container_detail";
 		this.backgroundMessageGroup2 = "actualizar_datos_de_receipt_detail";
-		this.backgroundMessageGroup3 = "actualizar_datos_de_item_unit_of_measure";
 		this.headerDataExternalPrincipal = "Receipt Container Detail";
 
 		this.messageMap = {
 			[this.backgroundMessageGroup1]: (datos) => this._updateContainerDetail(datos),
 			[this.backgroundMessageGroup2]: (datos) => this._updateReceiptDetail(datos),
-			[this.backgroundMessageGroup3]: (datos) => this.updateCapacityCJ(datos),
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
 			datos_no_encontrados: (datos) => this._handleDataNotFound(datos),
 		};
 
@@ -34,6 +33,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 			...this.group1ExternalPanelElements,
 			...this.group2ExternalPanelElements,
 			seeMoreInformation: null,
+			capacityCJ: null,
 		};
 
 		this.internalPanelElements = {

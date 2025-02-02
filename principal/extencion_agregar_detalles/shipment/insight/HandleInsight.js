@@ -5,7 +5,6 @@ class HandleInsight extends HandlePanelDetailDataExternal {
 
 		this.messageMap = {
 			[this.backgroundMessage]: (datos) => this._updateDetailsPanelInfo(datos),
-			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
 			datos_no_encontrados: (datos) => this._handleDataNotFound(datos),
 		};
 

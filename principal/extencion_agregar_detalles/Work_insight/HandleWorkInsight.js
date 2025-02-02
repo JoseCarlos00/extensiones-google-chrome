@@ -1,17 +1,16 @@
 class HandlePanelDetailWorkInsight extends HandlePanelDetailDataExternal {
-	constructor() {
+	constructor({ selectorsId }) {
 		super();
 		this.backgroundMessage = "actualizar_datos_de_workinstruction_detail";
 
+		this.messageMap = {
+			[this.backgroundMessage]: (datos) => this._updateDetailsPanelInfo(datos),
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
+			datos_no_encontrados: (datos) => this._handleDataNotFound(datos),
+		};
+
 		this.selectorsId = {
-			referenceId: "#DetailPaneHeaderReferenceId",
-			assignedUser: "#DetailPaneHeaderAssignedUser",
-			internalNum: "#DetailPaneHeaderInternalInstructionNum",
-			completedByUser: "#DetailPaneHeaderCompleteByUser",
-			waveNumber: "#DetailPaneHeaderWaveNumber",
-			customer: "#DetailPaneHeaderCustomer",
-			fromZone: "#DetailPaneHeaderFromZone",
-			toZone: "#DetailPaneHeaderToZone",
+			...selectorsId,
 			...this.seeMoreInformationSelector,
 		};
 
@@ -37,6 +36,7 @@ class HandlePanelDetailWorkInsight extends HandlePanelDetailDataExternal {
 			...this.internalPanelElements,
 			...this.externalPanelElements,
 			seeMoreInformation: null,
+			capacityCJ: null,
 		};
 
 		this.internalData = {
@@ -69,6 +69,7 @@ class HandlePanelDetailWorkInsight extends HandlePanelDetailDataExternal {
 		return {
 			...this.group1ExternalPanelElements,
 			seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
+			capacityCJ: document.querySelector(this.selectorsId.capacityCJ),
 		};
 	}
 
@@ -99,6 +100,8 @@ class HandlePanelDetailWorkInsight extends HandlePanelDetailDataExternal {
 
 	_insertInfo({ insert = [], tiendaNum }) {
 		super._insertInfo({ insert });
+		this._insertSeeMoreInformation();
+		this.initializeCapacityCJText();
 
 		// Insertar tienda si hay un ID de envío
 		this._insertarTienda(tiendaNum);
@@ -140,5 +143,11 @@ class HandlePanelDetailWorkInsight extends HandlePanelDetailDataExternal {
 		];
 
 		this._setDataExternal(elementsToUpdate);
+	}
+
+	_initializeDataExternal() {
+		this._listeningToBackgroundMessages();
+		this._setEventSeeMore();
+		this.setClickEventCapacityCJ();
 	}
 }

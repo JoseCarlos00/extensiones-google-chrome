@@ -26,7 +26,7 @@ class ElementsHtml {
 		div.className = "summarypaneheadermediumlabel hideemptydiv row";
 
 		const a = document.createElement("a");
-		a.id = id;
+		a.id = id.replace("#", "");
 		a.className = "detailpaneheaderlabel ScreenControlHyperlink, anchorPanelDetail";
 		a.setAttribute("role", "buttton");
 		a.href = "javascript:void(0);";

@@ -1,9 +1,17 @@
-class HandleShippingContainer extends HandlePanelDetail {
+class HandleShippingContainer extends HandlePanelDetailDataExternal {
 	constructor({ selectorsId }) {
 		super();
-		this.selectorsId = selectorsId;
+		this.messageMap = {
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
+			datos_no_encontrados: (datos) => this.handleDataNoFoundCapacity(),
+		};
 
-		this.panelElements = {
+		this.selectorsId = {
+			...selectorsId,
+			...this.seeMoreInformationSelector,
+		};
+
+		this.internalPanelElements = {
 			workUnit: null,
 			parentContainerId: null,
 			statusNumeric: null,
@@ -11,6 +19,15 @@ class HandleShippingContainer extends HandlePanelDetail {
 			internalShipmentNum: null,
 			internalContainerNum: null,
 			customer: null,
+		};
+
+		this.externalPanelElements = {
+			capacityCJ: null,
+		};
+
+		this.panelElements = {
+			...this.internalPanelElements,
+			...this.externalPanelElements,
 		};
 
 		this.internalData = {
@@ -24,32 +41,21 @@ class HandleShippingContainer extends HandlePanelDetail {
 		};
 	}
 
-	_initializePanelElements() {
-		return new Promise((resolve, reject) => {
-			const elements = {
-				parentContainerId: document.querySelector(this.selectorsId.parentContainerId),
-				statusNumeric: document.querySelector(this.selectorsId.statusNumeric),
-				shipmentId: document.querySelector(this.selectorsId.shipmentId),
-				internalShipmentNum: document.querySelector(this.selectorsId.internalShipmentNum),
-				internalContainerNum: document.querySelector(this.selectorsId.internalContainerNum),
-				customer: document.querySelector(this.selectorsId.customer),
-			};
+	_initializeInternalPanelElements() {
+		return {
+			parentContainerId: document.querySelector(this.selectorsId.parentContainerId),
+			statusNumeric: document.querySelector(this.selectorsId.statusNumeric),
+			shipmentId: document.querySelector(this.selectorsId.shipmentId),
+			internalShipmentNum: document.querySelector(this.selectorsId.internalShipmentNum),
+			internalContainerNum: document.querySelector(this.selectorsId.internalContainerNum),
+			customer: document.querySelector(this.selectorsId.customer),
+		};
+	}
 
-			const missingOptions = Object.entries(elements)
-				.filter(([key, value]) => !value)
-				.map(([key]) => key);
-
-			if (missingOptions.length > 0) {
-				reject(
-					`No se encontraron los elementos necesarios para inicializar el HandlePanelDetail: [${missingOptions.join(
-						", "
-					)}]`
-				);
-			}
-
-			this.panelElements = elements;
-			setTimeout(resolve, 50);
-		});
+	_initializeExternalPanelElements() {
+		return {
+			capacityCJ: document.querySelector(this.selectorsId.capacityCJ),
+		};
 	}
 
 	_extraerDatosDeTr(tr) {
@@ -82,8 +88,14 @@ class HandleShippingContainer extends HandlePanelDetail {
 
 	_insertInfo({ insert = [], tiendaNum }) {
 		super._insertInfo({ insert });
+		this.initializeCapacityCJText();
 
 		// Insertar tienda si hay un ID de envío
 		this._insertarTienda(tiendaNum);
+	}
+
+	_initializeDataExternal() {
+		this._listeningToBackgroundMessages();
+		this.setClickEventCapacityCJ();
 	}
 }

@@ -1,13 +1,31 @@
-class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
+class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataExternal {
 	constructor({ selectorsId }) {
 		super();
-		this.selectorsId = selectorsId;
 
-		this.panelElements = {
+		this.messageMap = {
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
+			datos_no_encontrados: (datos) => this.handleDataNoFoundCapacity(),
+		};
+
+		this.selectorsId = {
+			...selectorsId,
+			...this.seeMoreInformationSelector,
+		};
+
+		this.externalPanelElements = {
+			capacityCJ: null,
+		};
+
+		this.internalPanelElements = {
 			workUnit: null,
 			containerId: null,
 			userName: null,
 			customer: null,
+		};
+
+		this.panelElements = {
+			...this.internalPanelElements,
+			...this.externalPanelElements,
 		};
 
 		this.internalData = {
@@ -18,31 +36,19 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
 		};
 	}
 
-	_initializePanelElements() {
-		return new Promise((resolve, reject) => {
-			const elements = {
-				workUnit: document.querySelector(this.selectorsId.workUnit),
-				containerId: document.querySelector(this.selectorsId.containerId),
-				userName: document.querySelector(this.selectorsId.userName),
-				customer: document.querySelector(this.selectorsId.customer),
-			};
+	_initializeInternalPanelElements() {
+		return {
+			workUnit: document.querySelector(this.selectorsId.workUnit),
+			containerId: document.querySelector(this.selectorsId.containerId),
+			userName: document.querySelector(this.selectorsId.userName),
+			customer: document.querySelector(this.selectorsId.customer),
+		};
+	}
 
-			const missingOptions = Object.entries(elements)
-				.filter(([key, value]) => !value)
-				.map(([key]) => key);
-
-			if (missingOptions.length > 0) {
-				reject(
-					`No se encontraron los elementos necesarios para inicializar el HandlePanelDetail: [${missingOptions.join(
-						", "
-					)}]`
-				);
-			}
-
-			// Asignar los elementos validados a `optionModal`
-			this.panelElements = elements;
-			setTimeout(resolve, 50);
-		});
+	_initializeExternalPanelElements() {
+		return {
+			capacityCJ: document.querySelector(this.selectorsId.capacityCJ),
+		};
 	}
 
 	_extraerDatosDeTr(tr) {
@@ -68,8 +74,14 @@ class HandlePanelDetailTransactionHistory extends HandlePanelDetail {
 
 	_insertInfo({ insert = [], referenceId }) {
 		super._insertInfo({ insert });
+		this.initializeCapacityCJText();
 
 		// Insertar tienda si hay un ID de envío
 		this._insertarTienda(referenceId);
+	}
+
+	_initializeDataExternal() {
+		this._listeningToBackgroundMessages();
+		this.setClickEventCapacityCJ();
 	}
 }

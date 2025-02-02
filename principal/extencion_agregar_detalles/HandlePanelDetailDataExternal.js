@@ -208,8 +208,6 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 			this._removeClassWait(this.group1ExternalPanelElements);
 			return;
 		}
-
-		this.handleDataNoFoundCapacity();
 	}
 
 	updateCapacityCJ(datos) {
