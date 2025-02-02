@@ -197,6 +197,13 @@ window.addEventListener("load", async () => {
 	try {
 		const shippingLoad = new ShippingLoad();
 		await shippingLoad.init();
+
+		try {
+			const refreshDockDoor = new RefreshDockDoor();
+			await refreshDockDoor.render();
+		} catch (error) {
+			console.error("Error in inicializar la clase refreshDockDoor:", error);
+		}
 	} catch (error) {
 		console.error("Error in inicializar la clase ShippingLoad:", error);
 	}

@@ -66,7 +66,7 @@ class ShippingLoadInsight {
 
 			const li = `
         <li class="navdetailpane visible-sm visible-md visible-lg">
-          <a id='${this.idButtonOpenModal}' href="#" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Mostrar Dock Doors" data-balloon-pos="right">
+          <a id='${this.idButtonOpenModal}' href="javascript:void(0);" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Mostrar Dock Doors" data-balloon-pos="right">
             <i class="far fa-door-open navimage"></i>
           </a>
         </li>
