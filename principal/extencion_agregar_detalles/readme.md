@@ -157,6 +157,22 @@
 
 ---
 
+- **[Shipping load insight]**
+  > [https://wms.fantasiasmiguel.com.mx/scale/insights/3041](https://wms.fantasiasmiguel.com.mx/scale/insights/3041)
+
+| Fila                   | Agredas / original |
+| :--------------------- | ------------------ |
+| Load Number            | Original           |
+| Carrier                | Original           |
+| Scheduled Ship Date    | Original           |
+| Leading Status         | Original           |
+| Leading Status Number  |                    |
+| Trailing Status        | Original           |
+| Trailing Status Number |                    |
+| Dock Door              |                    |
+
+---
+
 - **[Wave Insight]**
   > [https://wms.fantasiasmiguel.com.mx/scale/insights/2773](https://wms.fantasiasmiguel.com.mx/scale/insights/2773)
 

@@ -1,20 +1,38 @@
 window.addEventListener("load", async () => {
 	try {
-		const selectorId = {
-			htmlUserDefineFile3: "#DetailPaneHeaderUserDefineFile3",
+		const selectorsId = {
+			trailingNum: "#DetailPaneHeaderTrailingStsNumber",
+			leadingNum: "#DetailPaneHeaderLeadingStsNumber",
+			dockDoor: "#DetailPaneHeaderDockDoor",
 		};
 
 		// ELEMENTOS INTERNOS
-		const htmlUserDefineFile3 = ElementsHtml.createElement({
-			id: selectorId.htmlUserDefineFile3,
+		const htmlTrailingStsNumber = ElementsHtml.createElement({
+			id: selectorsId.trailingNum,
+			title: "Trailing Status Number",
+		});
+		const htmlLeadingStsNumber = ElementsHtml.createElement({
+			id: selectorsId.leadingNum,
+			title: "Leading Status Number",
 		});
 
-		const elementsHtmlToInsert = [{ element: htmlUserDefineFile3 }];
+		// ELEMENTOS EXTERNOS
+		const htmlDockDoor = ElementsHtml.createElement({
+			id: selectorsId.dockDoor,
+			title: "Dock Door",
+		});
 
-		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderRow1Column1046");
-		const handlePanelDetail = new HandlePanelDetailNAME({ selectorId });
+		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderRow1Column1048");
 
-		const manangerPanelDetail = new ManangerPanelDetail({
+		const elementsHtmlToInsert = [
+			{ element: htmlTrailingStsNumber },
+			{ element: htmlLeadingStsNumber },
+			{ element: htmlDockDoor },
+		];
+
+		const handlePanelDetail = new HandleShippingLoad({ selectorsId });
+
+		const manangerPanelDetail = new ManangerPanelDetailShippingLoad({
 			panelDetail,
 			elementsHtmlToInsert,
 			handlePanelDetail,

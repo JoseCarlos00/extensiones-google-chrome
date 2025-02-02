@@ -27,7 +27,8 @@
 				"https://wms.fantasiasmiguel.com.mx/scale/insights/2777*",
 				"https://wms.fantasiasmiguel.com.mx/scale/insights/2779*",
 				"https://wms.fantasiasmiguel.com.mx/scale/insights/2780*",
-				"https://wms.fantasiasmiguel.com.mx/scale/insights/2783*"
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2783*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"
 			],
 			"js": [
 				"HandlePanelDetail.js",
@@ -107,6 +108,10 @@
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingcontainer/*"],
 			"js": ["shipping/container/containerDetail.js"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],
+			"js": ["shipping/load/ManangerPanelDetail.js", "shipping/load/HandleShippingLoad.js", "shipping/load/main.js"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2773*"],
