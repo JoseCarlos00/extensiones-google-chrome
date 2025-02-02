@@ -13,13 +13,24 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],
-			"js": ["CONST.js", "utils/ToastAlert.js", "utils/LocalStorageHelper.js", "ShippingLoadInsight.js"],
+			"js": [
+				"CONST.js",
+				"utils/ToastAlert.js",
+				"utils/LocalStorageHelper.js",
+				"shipping_load_insight/ShippingLoadInsight.js"
+			],
 			"css": ["style.css", "balloon.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload*"],
-			"js": ["CONST.js", "utils/ToastAlert.js", "utils/LocalStorageHelper.js", "Shippingload.js"],
-			"css": ["shippingLoad.css", "balloon.css"]
+			"js": [
+				"CONST.js",
+				"utils/ToastAlert.js",
+				"utils/LocalStorageHelper.js",
+				"shipping_load/Shippingload.js",
+				"shipping_load/refreshDockDoor.js"
+			],
+			"css": ["shipping_load/shippingLoad.css", "balloon.css"]
 		}
 	],
 	"action": {
