@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "Detalles Scale",
-	"version": "1.0",
+	"version": "1.2",
 	"author": "Jose Carlos Aguirre Romero",
 	"description": "Agrega detalles dinámicos al panel de detalles en SCALE, mejorando la visualización de la información seleccionada.",
 	"permissions": [],
