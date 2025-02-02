@@ -1,36 +1,42 @@
-window.addEventListener('load', async () => {
-  try {
-    const htmlCustomer = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderCustomer',
-      title: 'Custumer',
-    });
-    const htmlShipTo = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderShipTo',
-      title: 'Ship To',
-    });
-    const htmlInternalShipmentNumber = ElementsHtml.createElement({
-      id: 'DetailPaneHeaderInternalShipmentNumber',
-      title: 'Internal Shipment Number',
-      bold: true,
-    });
+window.addEventListener("load", async () => {
+	try {
+		const selectorsId = {
+			customer: "#DetailPaneHeaderCustomer",
+			shipTo: "#DetailPaneHeaderShipTo",
+			internalShipmentNum: "#DetailPaneHeaderInternalShipmentNumber",
+		};
 
-    const panelDetail = document.querySelector('#ScreenGroupColumnDetailPanelHeaderRow1Column1053');
+		const htmlCustomer = ElementsHtml.createElement({
+			id: selectorsId.customer,
+			title: "Custumer",
+		});
+		const htmlShipTo = ElementsHtml.createElement({
+			id: selectorsId.shipTo,
+			title: "Ship To",
+		});
+		const htmlInternalShipmentNumber = ElementsHtml.createElement({
+			id: selectorsId.internalShipmentNum,
+			title: "Internal Shipment Number",
+			bold: true,
+		});
 
-    const elementsHtmlToInsert = [
-      { element: htmlCustomer },
-      { element: htmlShipTo },
-      { element: htmlInternalShipmentNumber },
-    ];
-    const handlePanelDetail = new HandlePlannedShipment();
+		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderRow1Column1053");
 
-    const manangerPanelDetail = new ManangerPanelDetail({
-      panelDetail,
-      elementsHtmlToInsert,
-      handlePanelDetail,
-    });
+		const elementsHtmlToInsert = [
+			{ element: htmlCustomer },
+			{ element: htmlShipTo },
+			{ element: htmlInternalShipmentNumber },
+		];
+		const handlePanelDetail = new HandlePlannedShipment({ selectorsId });
 
-    await manangerPanelDetail.initialize();
-  } catch (error) {
-    console.error('Error al crear ManangerPanelDetail:', error);
-  }
+		const manangerPanelDetail = new ManangerPanelDetail({
+			panelDetail,
+			elementsHtmlToInsert,
+			handlePanelDetail,
+		});
+
+		await manangerPanelDetail.initialize();
+	} catch (error) {
+		console.error("Error al crear ManangerPanelDetail:", error);
+	}
 });

@@ -1,5 +1,16 @@
 window.addEventListener("load", async () => {
 	try {
+		const selectorsId = {
+			referenceId: "#DetailPaneHeaderReferenceId",
+			assignedUser: "#DetailPaneHeaderAssignedUser",
+			internalNum: "#DetailPaneHeaderInternalInstructionNum",
+			completedByUser: "#DetailPaneHeaderCompleteByUser",
+			waveNumber: "#DetailPaneHeaderWaveNumber",
+			customer: "#DetailPaneHeaderCustomer",
+			fromZone: "#DetailPaneHeaderFromZone",
+			toZone: "#DetailPaneHeaderToZone",
+		};
+
 		// ELEMENTOS INTERNOS
 		const htmlReferenceId = ElementsHtml.createElement({
 			id: "DetailPaneHeaderReferenceId",

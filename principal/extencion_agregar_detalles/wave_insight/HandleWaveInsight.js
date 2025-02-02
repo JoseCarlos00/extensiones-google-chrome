@@ -1,5 +1,5 @@
 class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
-	constructor() {
+	constructor({ selectorsId }) {
 		super();
 		this.backgroundMessage = "actualizar_datos_de_wave_detail";
 
@@ -9,15 +9,16 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 		};
 
 		this.selectorsId = {
-			waveNumber: "#DetailPaneHeaderWaveNumber",
-			waveFlow: "#DetailPaneHeaderFlow",
-			endDataTime: "#DetailPaneHeaderEndedDateTime",
-			userStamp: "#DetailPaneHeaderUserStamp",
+			...selectorsId,
 			...this.seeMoreInformationSelector,
 		};
 
-		this.externalPanelElements = {
+		this.group1ExternalPanelElements = {
 			userStamp: null,
+		};
+
+		this.externalPanelElements = {
+			...this.group1ExternalPanelElements,
 		};
 
 		this.internalPanelElements = {
@@ -47,8 +48,12 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 	}
 
 	_initializeExternalPanelElements() {
-		return {
+		this.group1ExternalPanelElements = {
 			userStamp: document.querySelector(this.selectorsId.userStamp),
+		};
+		return {
+			...this.group1ExternalPanelElements,
+			seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
 		};
 	}
 
@@ -82,7 +87,7 @@ class HandlePanelDetailWaveInsight extends HandlePanelDetailDataExternal {
 			}
 
 			if (internalElement) {
-				this._waitFordata(this.externalPanelElements);
+				this._waitFordata(this.group1ExternalPanelElements);
 				this.setIsCancelGetDataExternal(false);
 
 				const url = `https://wms.fantasiasmiguel.com.mx/scale/details/wavedetail/${waveNumber}?active=active`;

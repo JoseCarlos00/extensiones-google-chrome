@@ -1,47 +1,60 @@
 window.addEventListener("load", async () => {
 	try {
+		const selectorsId = {
+			internalLocationInv: "#DetailPaneHeaderinternalLocationInv",
+			logisticsUnit: "#DetailPaneHeaderlogisticsUnit",
+			parentLogisticsUnit: "#DetailPaneHeaderParentLogisticsUnit",
+			receiptDateTime: "#DetailPaneHeaderReceiptDateTime",
+			userStamp: "#DetailPaneHeaderUserStamp",
+			dateTimeStamp: "#DetailPaneHeaderDateTimeStamp",
+			allocation: "#DetailPaneHeaderAllocation",
+			locating: "#DetailPaneHeaderLocating",
+			workZone: "#DetailPaneHeaderWorkZone",
+			attribute1: "#DetailPaneHeaderAttribute1",
+		};
+
 		// ELEMENTOS INTERNOS
 		const htmlinternalLocationInv = ElementsHtml.createElement({
-			id: "DetailPaneHeaderinternalLocationInv",
+			id: selectorsId.internalLocationInv,
 			title: "Internal Location Inv",
 			bold: true,
 		});
 		const htmllogisticsUnit = ElementsHtml.createElement({
-			id: "DetailPaneHeaderlogisticsUnit",
+			id: selectorsId.logisticsUnit,
 			title: "Logistics Unit",
 		});
 		const htmlParentLogisticsUnit = ElementsHtml.createElement({
-			id: "DetailPaneHeaderParentLogisticsUnit",
+			id: selectorsId.parentLogisticsUnit,
 			title: "Parent Logistics Unit",
 		});
 
 		// ELEMENTOS EXTERNOS
 		const htmlReceiptDateTime = ElementsHtml.createElement({
-			id: "DetailPaneHeaderReceiptDateTime",
+			id: selectorsId.receiptDateTime,
 			title: "Receipt Date Time",
 		});
 		const htmlUserStamp = ElementsHtml.createElement({
-			id: "DetailPaneHeaderUserStamp",
+			id: selectorsId.userStamp,
 			title: "User Stamp",
 		});
 		const htmlDateTimeStamp = ElementsHtml.createElement({
-			id: "DetailPaneHeaderDateTimeStamp",
+			id: selectorsId.dateTimeStamp,
 			title: "Date Time Stamp",
 		});
 		const htmlAllocation = ElementsHtml.createElement({
-			id: "DetailPaneHeaderAllocation",
+			id: selectorsId.allocation,
 			title: "Allocation",
 		});
 		const htmlLocating = ElementsHtml.createElement({
-			id: "DetailPaneHeaderLocating",
+			id: selectorsId.locating,
 			title: "Locating",
 		});
 		const htmlWorkZone = ElementsHtml.createElement({
-			id: "DetailPaneHeaderWorkZone",
+			id: selectorsId.workZone,
 			title: "Work Zone",
 		});
 		const htmlAttribute1 = ElementsHtml.createElement({
-			id: "DetailPaneHeaderAttribute1",
+			id: selectorsId.attribute1,
 			title: "Attribute 1",
 		});
 
@@ -69,7 +82,7 @@ window.addEventListener("load", async () => {
 			{ element: htmShowCapacityCJ },
 		];
 
-		const handlePanelDetail = new HandlePanelDetailInventory();
+		const handlePanelDetail = new HandlePanelDetailInventory({ selectorsId });
 
 		const manangerPanelDetail = new ManangerPanelDetail({
 			panelDetail,

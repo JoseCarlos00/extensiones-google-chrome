@@ -1,5 +1,5 @@
 class HandleReceipLineInsight extends HandlePanelDetailDataExternal {
-	constructor() {
+	constructor({ selectorsId }) {
 		super();
 
 		this.messageMap = {
@@ -8,9 +8,8 @@ class HandleReceipLineInsight extends HandlePanelDetailDataExternal {
 		};
 
 		this.selectorsId = {
-			receiptId: "#DetailPaneHeaderReceiptId",
-			internalReceiptNumber: "#DetailPaneHeaderInternalReceiptNumber",
-			capacityCJ: "#DetailPaneHeaderShowCapacityCJ",
+			...selectorsId,
+			...this.seeMoreInformationSelector,
 		};
 
 		this.internalPanelElements = {

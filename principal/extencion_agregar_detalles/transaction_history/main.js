@@ -1,19 +1,26 @@
 window.addEventListener("load", async () => {
 	try {
+		const selectorsId = {
+			workUnit: "#DetailPaneHeaderWorkUnit",
+			containerId: "#DetailPaneHeaderContainerId",
+			userName: "#DetailPaneHeaderUserStamp",
+			customer: "#DetailPaneHeaderCustomer",
+		};
+
 		const htmlWorkUnit = ElementsHtml.createElement({
-			id: "DetailPaneHeaderWorkUnit",
+			id: selectorsId.workUnit,
 			title: "Work Unit",
 		});
 		const htmlContainerId = ElementsHtml.createElement({
-			id: "DetailPaneHeaderContainerId",
+			id: selectorsId.containerId,
 			title: "Container ID",
 		});
 		const htmlUserName = ElementsHtml.createElement({
-			id: "DetailPaneHeaderUserStamp",
+			id: selectorsId.userName,
 			title: "User Stamp",
 		});
 		const htmlCustomer = ElementsHtml.createElement({
-			id: "DetailPaneHeaderCustomer",
+			id: selectorsId.customer,
 			title: "Customer",
 		});
 
@@ -31,7 +38,7 @@ window.addEventListener("load", async () => {
 			{ element: htmlCustomer },
 			{ element: htmShowCapacityCJ },
 		];
-		const handlePanelDetail = new HandlePanelDetailTransactionHistory();
+		const handlePanelDetail = new HandlePanelDetailTransactionHistory({ selectorsId });
 
 		const manangerPanelDetail = new ManangerPanelDetail({
 			panelDetail,

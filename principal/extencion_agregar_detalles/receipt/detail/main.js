@@ -1,13 +1,18 @@
 window.addEventListener("load", async () => {
 	try {
+		const selectorsId = {
+			receiptId: "#DetailPaneHeaderReceiptId",
+			internalReceiptNumber: "#DetailPaneHeaderInternalReceiptNumber",
+		};
+
 		const htmlReceiptId = ElementsHtml.createElement({
-			id: "DetailPaneHeaderReceiptId",
+			id: selectorsId.receiptId,
 			title: "Receipt ID",
 			bold: true,
 			color: true,
 		});
 		const htmlInternalReceiptNumber = ElementsHtml.createElement({
-			id: "DetailPaneHeaderInternalReceiptNumber",
+			id: selectorsId.internalReceiptNumber,
 			title: "Internal Receipt Number",
 			bold: true,
 		});
@@ -24,7 +29,7 @@ window.addEventListener("load", async () => {
 			{ element: htmlInternalReceiptNumber },
 			{ element: htmShowCapacityCJ },
 		];
-		const handlePanelDetail = new HandleReceipLineInsight();
+		const handlePanelDetail = new HandleReceipLineInsight({ selectorsId });
 
 		const manangerPanelDetail = new ManangerPanelDetail({
 			panelDetail,

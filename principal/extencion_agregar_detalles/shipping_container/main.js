@@ -1,34 +1,44 @@
 window.addEventListener("load", async () => {
 	try {
+		const selectorsId = {
+			workUnit: "#DetailPaneHeaderWorkUnit",
+			parentContainerId: "#DetailPaneHeaderParentContainerId",
+			statusNumeric: "#DetailPaneHeaderStatusNumeric",
+			shipmentId: "#DetailPaneHeaderShipmentID",
+			internalShipmentNum: "#DetailPaneHeaderIntenalShipmetNum",
+			internalContainerNum: "#DetailPaneHeaderIntenalContainerNum",
+			customer: "#DetailPaneHeaderCustomer",
+		};
+
 		// ELEMENTOS INTERNOS
 		const htmlParentContainerId = ElementsHtml.createElement({
-			id: "DetailPaneHeaderParentContainerId",
+			id: selectorsId.parentContainerId,
 			title: "Parent Container Id",
 			bold: true,
 			color: true,
 		});
 		const htmlStatusNumeric = ElementsHtml.createElement({
-			id: "DetailPaneHeaderStatusNumeric",
+			id: selectorsId.statusNumeric,
 			title: "Status Numeric",
 			bold: true,
 		});
 		const htmlShipmentId = ElementsHtml.createElement({
-			id: "DetailPaneHeaderShipmentID",
+			id: selectorsId.shipmentId,
 			title: "Shipment ID",
 			bold: true,
 			color: true,
 		});
 		const htmlInternalShipmentNum = ElementsHtml.createElement({
-			id: "DetailPaneHeaderIntenalShipmetNum",
+			id: selectorsId.internalShipmentNum,
 			title: "Internal Shipment Number",
 			bold: true,
 		});
 		const htmlInternalContainerNum = ElementsHtml.createElement({
-			id: "DetailPaneHeaderIntenalContainerNum",
+			id: selectorsId.internalContainerNum,
 			title: "Internal Container Number",
 		});
 		const htmlCustomer = ElementsHtml.createElement({
-			id: "DetailPaneHeaderCustomer",
+			id: selectorsId.customer,
 			title: "Customer",
 		});
 
@@ -48,7 +58,7 @@ window.addEventListener("load", async () => {
 		];
 
 		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderRow1Column1068");
-		const handlePanelDetail = new HandleShippingContainer();
+		const handlePanelDetail = new HandleShippingContainer({ selectorsId });
 
 		const manangerPanelDetail = new ManangerPanelDetailShippingContainer({
 			panelDetail,

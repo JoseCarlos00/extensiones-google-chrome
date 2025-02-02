@@ -1,28 +1,18 @@
 class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
-	constructor() {
+	constructor({ selectorsId }) {
 		super();
 
 		this.backgroundMessageGroup1 = "actualizar_datos_de_inventory_detail";
-		this.backgroundMessageGroup2 = "actualizar_datos_de_item_unit_of_measure";
 		this.headerDataExternalPrincipal = "Inventory Detail";
 
 		this.messageMap = {
 			[this.backgroundMessageGroup1]: (datos) => this._updateDetailsPanelInfo(datos),
-			[this.backgroundMessageGroup2]: (datos) => this.updateCapacityCJ(datos),
+			[this.backgroundMessageUOM]: (datos) => this.updateCapacityCJ(datos),
 			datos_no_encontrados: (datos) => this._handleDataNotFound(datos),
 		};
 
 		this.selectorsId = {
-			internalLocationInv: "#DetailPaneHeaderinternalLocationInv",
-			logisticsUnit: "#DetailPaneHeaderlogisticsUnit",
-			parentLogisticsUnit: "#DetailPaneHeaderParentLogisticsUnit",
-			receiptDateTime: "#DetailPaneHeaderReceiptDateTime",
-			userStamp: "#DetailPaneHeaderUserStamp",
-			dateTimeStamp: "#DetailPaneHeaderDateTimeStamp",
-			allocation: "#DetailPaneHeaderAllocation",
-			locating: "#DetailPaneHeaderLocating",
-			workZone: "#DetailPaneHeaderWorkZone",
-			attribute1: "#DetailPaneHeaderAttribute1",
+			...selectorsId,
 			...this.seeMoreInformationSelector,
 		};
 
@@ -72,13 +62,16 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 	}
 
 	_initializeExternalPanelElements() {
-		return {
+		this.group1ExternalPanelElements = {
 			userStamp: document.querySelector(this.selectorsId.userStamp),
 			dateTimeStamp: document.querySelector(this.selectorsId.dateTimeStamp),
 			allocation: document.querySelector(this.selectorsId.allocation),
 			locating: document.querySelector(this.selectorsId.locating),
 			workZone: document.querySelector(this.selectorsId.workZone),
 			attribute1: document.querySelector(this.selectorsId.attribute1),
+		};
+		return {
+			...this.group1ExternalPanelElements,
 			seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
 			capacityCJ: document.querySelector(this.selectorsId.capacityCJ),
 		};
@@ -121,6 +114,9 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 		}
 
 		if (internalNumberText) {
+			console.log("group1ExternalPanelElements", this.group1ExternalPanelElements);
+			console.log("externalPanelElements", this.externalPanelElements);
+
 			this._waitFordata(this.group1ExternalPanelElements);
 			this.setIsCancelGetDataExternal(false);
 

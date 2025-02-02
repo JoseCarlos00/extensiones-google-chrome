@@ -1,38 +1,48 @@
 window.addEventListener("load", async () => {
 	try {
+		const selectorsId = {
+			receiptId: "#DetailPaneHeaderReceiptId",
+			parent: "#DetailPaneHeaderParent",
+			receiptDate: "#DetailPaneHeaderReceiptDate",
+			checkIn: "#DetailPaneHeaderCheckIn",
+			userStamp: "#DetailPaneHeaderUserStamp",
+			internalReceiptNum: "#DetailPaneHeaderInternalReceiptNum",
+			trailerId: "#DetailPaneHeaderTrailerId",
+		};
+
 		// ELEMENTOS INTERNOS
 		const htmlReceiptId = ElementsHtml.createElement({
-			id: "DetailPaneHeaderReceiptId",
+			id: selectorsId.receiptId,
 			title: "Receipt Id",
 			bold: true,
 			color: true,
 		});
 
 		const htmlInternalReceiptNum = ElementsHtml.createElement({
-			id: "DetailPaneHeaderInternalReceiptNum",
+			id: selectorsId.internalReceiptNum,
 			title: "Internal Receipt Num",
 			bold: true,
 		});
 
 		// ELEMENTOS EXTERNOS
 		const htmlParent = ElementsHtml.createElement({
-			id: "DetailPaneHeaderParent",
+			id: selectorsId.parent,
 			title: "Parent",
 		});
 		const htmlReceiptDate = ElementsHtml.createElement({
-			id: "DetailPaneHeaderReceiptDate",
+			id: selectorsId.receiptDate,
 			title: "Receipt Date",
 		});
 		const htmlCheckIn = ElementsHtml.createElement({
-			id: "DetailPaneHeaderCheckIn",
+			id: selectorsId.checkIn,
 			title: "Check In",
 		});
 		const htmlUserStamp = ElementsHtml.createElement({
-			id: "DetailPaneHeaderUserStamp",
+			id: selectorsId.userStamp,
 			title: "User Stamp",
 		});
 		const htmlTrailerId = ElementsHtml.createElementAnchor({
-			id: "DetailPaneHeaderTrailerId",
+			id: selectorsId.trailerId,
 			title: "Trailer Id",
 		});
 		const htmlVerMas = ElementsHtml.seeMoreInformation();
@@ -55,7 +65,7 @@ window.addEventListener("load", async () => {
 			{ element: htmShowCapacityCJ },
 		];
 
-		const handlePanelDetail = new HandleReceiptContainer();
+		const handlePanelDetail = new HandleReceiptContainer({ selectorsId });
 
 		const manangerPanelDetail = new ManangerPanelDetail({
 			panelDetail,

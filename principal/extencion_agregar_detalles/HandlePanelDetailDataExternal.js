@@ -88,6 +88,7 @@ class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	}
 
 	_waitFordata(externalPanelElements) {
+		console.log("waitFordata", externalPanelElements);
 		const text = "1346-863-28886...";
 
 		if (!(externalPanelElements instanceof Object) || !externalPanelElements) {

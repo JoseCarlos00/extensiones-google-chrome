@@ -1,5 +1,5 @@
 class HandleReceiptContainer extends HandlePanelDetailDataExternal {
-	constructor() {
+	constructor({ selectorsId }) {
 		super();
 
 		this.backgroundMessageGroup1 = "actualizar_datos_de_receipt_container_detail";
@@ -15,13 +15,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 		};
 
 		this.selectorsId = {
-			receiptId: "#DetailPaneHeaderReceiptId",
-			parent: "#DetailPaneHeaderParent",
-			receiptDate: "#DetailPaneHeaderReceiptDate",
-			checkIn: "#DetailPaneHeaderCheckIn",
-			userStamp: "#DetailPaneHeaderUserStamp",
-			internalReceiptNum: "#DetailPaneHeaderInternalReceiptNum",
-			trailerId: "#DetailPaneHeaderTrailerId",
+			...selectorsId,
 			...this.seeMoreInformationSelector,
 		};
 
@@ -39,6 +33,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 		this.externalPanelElements = {
 			...this.group1ExternalPanelElements,
 			...this.group2ExternalPanelElements,
+			seeMoreInformation: null,
 		};
 
 		this.internalPanelElements = {
@@ -54,7 +49,6 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 		this.panelElements = {
 			...this.internalPanelElements,
 			...this.externalPanelElements,
-			seeMoreInformation: null,
 		};
 
 		this.internalData = {
@@ -72,12 +66,19 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 	}
 
 	_initializeExternalPanelElements() {
-		return {
+		this.group1ExternalPanelElements = {
 			parent: document.querySelector(this.selectorsId.parent),
 			receiptDate: document.querySelector(this.selectorsId.receiptDate),
 			checkIn: document.querySelector(this.selectorsId.checkIn),
 			userStamp: document.querySelector(this.selectorsId.userStamp),
+		};
+		this.group2ExternalPanelElements = {
 			trailerId: document.querySelector(this.selectorsId.trailerId),
+		};
+		return {
+			...this.group1ExternalPanelElements,
+			...this.group2ExternalPanelElements,
+			seeMoreInformation: document.querySelector(this.selectorsId.seeMoreInformation),
 			capacityCJ: document.querySelector(this.selectorsId.capacityCJ),
 		};
 	}
@@ -112,6 +113,7 @@ class HandleReceiptContainer extends HandlePanelDetailDataExternal {
 	_insertInfo({ insert = [], internalReceiptNumber, internalRecContNumber }) {
 		// LLAMA A _cleanDetailPanel EN super._insertInfo
 		super._insertInfo({ insert });
+		this._insertSeeMoreInformation();
 		this.initializeCapacityCJText();
 
 		const { trailerId } = this.panelElements;
