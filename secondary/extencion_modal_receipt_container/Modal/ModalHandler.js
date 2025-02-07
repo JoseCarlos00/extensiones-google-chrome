@@ -4,6 +4,7 @@ class ModalHandler {
 		this._tbodyTable = null;
 		this._tableContent = null;
 		this._prefix = "#myModalShowTable";
+		this.btnCopyTable = null;
 
 		this.trailerId = this.getTrailerId();
 	}
@@ -121,6 +122,7 @@ class ModalHandler {
 	async #initialVariables() {
 		this._tbodyTable = document.querySelector("#ListPaneDataGrid tbody");
 		this._tableContent = document.querySelector(`${this._prefix} #tableContent`);
+		this.btnCopyTable = this._modal.querySelector("#copiarTabla");
 
 		if (!this._tbodyTable) {
 			throw new Error("No se encontro el elemento #ListPaneDataGrid tbody");
@@ -168,14 +170,12 @@ class ModalHandler {
 
 	async #setEventClick() {
 		try {
-			if (!this.btnCopySenteceSql) {
-				console.warn("No se encontró el elemento #copy-sentence-sql");
+			if (!this.btnCopyTable) {
+				console.warn("No se encontró el elemento #btnCopyTable");
 				return;
 			}
 
-			this.btnCopySenteceSql.addEventListener("click", () => {
-				this.btnCopySenteceSql.classList.toggle("active");
-			});
+			this.btnCopyTable.addEventListener("click", () => this.handleCopyTable());
 		} catch (error) {
 			console.warn("Error: Ha ocurrido un error al crear el Evento click en #setEventClick(): ", error);
 		}
@@ -196,6 +196,35 @@ class ModalHandler {
 		}
 	}
 
+	handleCopyTable() {
+		console.log("Copiar tabla");
+		console.log(this._tableContent);
+		const tbodyContent = this._tableContent?.querySelector("tbody");
+
+		if (!tbodyContent) return;
+
+		const rows = Array.from(tbodyContent.rows);
+		const firstTdContent = tbodyContent.querySelector("tr td")?.textContent.trim();
+
+		if (firstTdContent === "No hay datos para mostrar") {
+			console.warn("Filas vacias");
+			return;
+		}
+
+		const textToCopy = rows
+			.map((tr) => {
+				const licencePlate = tr.querySelector("td[aria-describedby=ListPaneDataGrid_LICENSE_PLATE_ID] input")?.value;
+				const receiptId = tr.querySelector("td[aria-describedby=ListPaneDataGrid_RECEIPT_ID] input")?.value;
+
+				return `${receiptId} ${licencePlate}`;
+			})
+			.filter(Boolean)
+			.join("\n");
+
+		console.log({ textToCopy });
+		copyToClipboard(textToCopy);
+	}
+
 	async setModalElement(modal) {
 		try {
 			if (!modal) {
@@ -205,7 +234,7 @@ class ModalHandler {
 			this._modal = modal;
 			await this.#initialVariables();
 			await this.#setEventClickModalTable();
-			// await this.#setEventClick();
+			await this.#setEventClick();
 			this.#setEventKeydownsForTableContent();
 		} catch (error) {
 			console.error(`Error en setModalElement: ${error}`);
