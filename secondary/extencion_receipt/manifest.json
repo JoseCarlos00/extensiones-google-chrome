@@ -20,16 +20,18 @@
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
 			"js": [
+				"constants.js",
 				"utils/ToastAlert.js",
 				"utils/LocalStorageHelper.js",
-				"modal/container_receipt/ButtonOpenModal.js",
-				"modal/container_receipt/EventManager.js",
-				"modal/container_receipt/ModaCreateHTML.js",
-				"modal/container_receipt/ModalHandler.js",
-				"modal/container_receipt/modalContent.js",
-				"modal/container_receipt/ModalManager.js",
-				"SaveDataContainer.js",
-				"mainModal.js"
+				"modal/container-receipt/ButtonOpenModal.js",
+				"modal/container-receipt/EventManager.js",
+				"modal/container-receipt/ModaCreateHTML.js",
+				"modal/container-receipt/ModalHandler.js",
+				"modal/container-receipt/modalContent.js",
+				"modal/container-receipt/ModalManager.js",
+				"modal/container-receipt/mainModal.js",
+				"save-data/SaveDataContainer.js",
+				"index.js.js"
 			],
 			"css": ["CSS/style.css", "CSS/balloon.css"]
 		},

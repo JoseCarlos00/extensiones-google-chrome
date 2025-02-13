@@ -1,4 +1,4 @@
-class EventManager {
+class EventClickManager {
 	constructor({ updateRowCounter, tableContent, list }) {
 		this._tableContent = tableContent;
 		this._updateRowCounter = updateRowCounter;
@@ -41,16 +41,6 @@ class EventManager {
 			this._updateRowCounter();
 		}
 	}
-}
-
-function getValueLocalStorage() {
-	const storedState = localStorage.getItem("storedStateHide");
-
-	return JSON.parse(storedState) ?? configurationInitial;
-}
-
-function setValueLocalStorage(configurationObject) {
-	localStorage.setItem("storedStateHide", JSON.stringify(configurationObject));
 }
 
 class EventManagerKeydown {

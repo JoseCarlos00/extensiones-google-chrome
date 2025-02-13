@@ -5,12 +5,12 @@ window.addEventListener(
 			console.log("[Receipt Container Insight Modal]");
 
 			const selectoresModal = {
-				modalId: "myModalShowTable",
+				modalId: modalReceiptContainerId,
 				sectionContainerClass: "modal-container",
 			};
 
 			const buttonConfiguration = {
-				buttonId: "openModalBtn",
+				buttonId: buttonReceiptContainerId,
 				iconoModal: "fa-list",
 				textLabel: "Mostrar Contenedores",
 				textLabelPosition: "right",

@@ -3,7 +3,7 @@ class ModalHandler {
 		this._modal = null;
 		this._tbodyTable = null;
 		this._tableContent = null;
-		this._prefix = "#myModalShowTable";
+		this._prefix = `#${modalReceiptContainerId}`;
 		this.btnCopyTable = null;
 
 		this.trailerId = this.getTrailerId();
@@ -152,7 +152,7 @@ class ModalHandler {
 		try {
 			await this.#valitateElementsTable();
 
-			const eventManager = new EventManager({
+			const eventManager = new EventClickManager({
 				updateRowCounter: this._updateRowCounter,
 				tableContent: this._tableContent,
 			});
@@ -168,7 +168,7 @@ class ModalHandler {
 		}
 	}
 
-	async #setEventClick() {
+	async #setEventCopyTable() {
 		try {
 			if (!this.btnCopyTable) {
 				console.warn("No se encontró el elemento #btnCopyTable");
@@ -234,7 +234,7 @@ class ModalHandler {
 			this._modal = modal;
 			await this.#initialVariables();
 			await this.#setEventClickModalTable();
-			await this.#setEventClick();
+			await this.#setEventCopyTable();
 			this.#setEventKeydownsForTableContent();
 		} catch (error) {
 			console.error(`Error en setModalElement: ${error}`);
