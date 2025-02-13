@@ -6,6 +6,10 @@ class GetDataDevolucionesForm {
 
 		this.nameDataStoragePause = nameDataStorage + "_puuse";
 		this.pauseSubmmit = this.getValuePauseSubmit();
+
+		this.EVENTS = {
+			NEW_REGISTER: "new-register",
+		};
 	}
 
 	async render() {
@@ -46,6 +50,9 @@ class GetDataDevolucionesForm {
 	async setEventsListener() {
 		try {
 			const form = document.querySelector("#registroForm");
+			const textareaForm = document.querySelector("#dataToInsert");
+
+			textareaForm?.addEventListener("keydown", ({ key }) => key === "Enter" && (textareaForm.value += "\n"));
 
 			if (!form) {
 				throw new Error("Formulario no encontrado. #registroForm");
@@ -195,6 +202,9 @@ class GetDataDevolucionesForm {
 		LocalStorageHelper.save(this.nameDataStorage, data);
 		this.updateCounter(data.length);
 		this.alertDataSaved();
+
+		const navigationEvent = new Event(this.EVENTS.NEW_REGISTER);
+		window.dispatchEvent(navigationEvent);
 	}
 
 	alertDataSaved() {

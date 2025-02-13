@@ -36,6 +36,10 @@ class Devoluciones {
 
 			this.recoverSettingsStorage();
 			this.dataContainerStorage = LocalStorageHelper.get(this.nameStorageContainer);
+
+			this.EVENTS = {
+				NEW_REGISTER: "new-register",
+			};
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar el objeto:", error.message);
 		}
@@ -222,6 +226,8 @@ class Devoluciones {
 	setEventListeners() {
 		this.setEventInitReceipt();
 		this.autocompleteForm();
+
+		window.addEventListener(this.EVENTS.NEW_REGISTER, () => this.handleGetData());
 	}
 
 	updateCounter(value) {
