@@ -24,12 +24,12 @@
 				"utils/LocalStorageHelper.js",
 				"modal/container_receipt/ButtonOpenModal.js",
 				"modal/container_receipt/EventManager.js",
-				"modal/container_receipt/ModalHandler.js",
 				"modal/container_receipt/ModaCreateHTML.js",
-				"modal/container_receipt/ModalManager.js",
+				"modal/container_receipt/ModalHandler.js",
 				"modal/container_receipt/modalContent.js",
-				"mainModal.js",
-				"SaveDataContainer.js"
+				"modal/container_receipt/ModalManager.js",
+				"SaveDataContainer.js",
+				"mainModal.js"
 			],
 			"css": ["CSS/style.css", "CSS/balloon.css"]
 		},

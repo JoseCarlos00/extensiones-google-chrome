@@ -11,19 +11,19 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
     
     <table id="tableContent" contenteditable="false">
       <thead>
-        <th class="show-header" contenteditable="false" id="ListPaneDataGrid_LICENSE_PLATE_ID" aria-describedby="ListPaneDataGrid_LICENSE_PLATE_ID"">
+        <th class="show-header" draggable="true" contenteditable="false" id="ListPaneDataGrid_LICENSE_PLATE_ID" aria-describedby="ListPaneDataGrid_LICENSE_PLATE_ID">
           <div class="value">
             License Plate
           </div>
         </th>
 
-        <th class="show-header" contenteditable="false" id="ListPaneDataGrid_RECEIPT_ID" aria-describedby="ListPaneDataGrid_RECEIPT_ID">
+        <th class="show-header" draggable="true" contenteditable="false" id="ListPaneDataGrid_RECEIPT_ID" aria-describedby="ListPaneDataGrid_RECEIPT_ID">
           <div class="value">
             Receipt id
           </div>
         </th>
 
-        <th class="show-header" contenteditable="false" id="ListPaneDataGrid_TRAILER_ID" aria-describedby="ListPaneDataGrid_TRAILER_ID">
+        <th class="show-header" draggable="true" contenteditable="false" id="ListPaneDataGrid_TRAILER_ID" aria-describedby="ListPaneDataGrid_TRAILER_ID">
           <div class="value">
             Trailer id
           </div>
