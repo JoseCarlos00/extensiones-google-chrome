@@ -22,12 +22,12 @@
 			"js": [
 				"utils/ToastAlert.js",
 				"utils/LocalStorageHelper.js",
-				"Modal/ButtonOpenModal.js",
-				"Modal/EventManager.js",
-				"Modal/ModalHandler.js",
-				"Modal/ModaCreateHTML.js",
-				"Modal/ModalManager.js",
-				"Modal/modalContent.js",
+				"modal/container_receipt/ButtonOpenModal.js",
+				"modal/container_receipt/EventManager.js",
+				"modal/container_receipt/ModalHandler.js",
+				"modal/container_receipt/ModaCreateHTML.js",
+				"modal/container_receipt/ModalManager.js",
+				"modal/container_receipt/modalContent.js",
 				"mainModal.js",
 				"SaveDataContainer.js"
 			],
