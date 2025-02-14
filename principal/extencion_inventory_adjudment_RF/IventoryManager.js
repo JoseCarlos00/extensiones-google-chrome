@@ -58,6 +58,35 @@ class IventoryManager {
 		return sessionStorage.getItem(this.nameDataStoragePause) === "true";
 	}
 
+	async handleSumitEvent(e) {
+		try {
+			e.preventDefault();
+
+			const { dataToInsert } = form;
+			console.log("dataToInsert:", dataToInsert?.value);
+
+			if (!dataToInsert) {
+				throw new Error("No se encontró el campo de texto [name='dataToInsert']");
+			}
+
+			// Dividir el texto en líneas
+			const lineas =
+				dataToInsert?.value
+					?.trim()
+					?.split("\n")
+					?.map((i) => i?.trim())
+					?.filter(Boolean) ?? [];
+
+			if (lineas.length === 0) {
+				throw new Error("No hay líneas para insertar");
+			}
+
+			this.registrarDatos({ lineas });
+		} catch (error) {
+			console.error("Error al manejar el evento handleSumitEvent", error.message);
+		}
+	}
+
 	async setEventsListener() {
 		try {
 			const form = document.querySelector("#registroForm");
@@ -68,37 +97,10 @@ class IventoryManager {
 
 			const { pause, cancel } = form;
 
-			const handleSumitEvent = async (e) => {
-				try {
-					e.preventDefault();
+			const textareaForm = form.querySelector("textarea");
+			textareaForm?.addEventListener("keydown", ({ key }) => key === "Enter" && (textareaForm.value += "\n"));
 
-					const { dataToInsert } = form;
-					console.log("dataToInsert:", dataToInsert?.value);
-
-					if (!dataToInsert) {
-						throw new Error("No se encontró el campo de texto [name='dataToInsert']");
-					}
-
-					// Dividir el texto en líneas
-					const lineas =
-						dataToInsert?.value
-							?.trim()
-							?.split("\n")
-							?.map((i) => i?.trim())
-							?.filter(Boolean) ?? [];
-
-					if (lineas.length === 0) {
-						throw new Error("No hay líneas para insertar");
-					}
-
-					this.registrarDatos({ lineas });
-				} catch (error) {
-					console.error("Error al manejar el evento handleSumitEvent", error.message);
-				}
-			};
-
-			form.addEventListener("submit", handleSumitEvent);
-
+			form.addEventListener("submit", (e) => this.handleSumitEvent(e));
 			cancel?.addEventListener("click", (e) => this.handleCancelInsertData(e));
 
 			if (pause) {
