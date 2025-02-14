@@ -1,7 +1,7 @@
 /**
  * Clase que permite mover columnas en una tabla HTML mediante drag-and-drop.
  */
-class MoveColumns {
+class MoveColumnManager {
 	/**
 	 * Constructor de la clase MoveColumns.
 	 * @param {Object} params - Parámetros para la configuración de la clase.
