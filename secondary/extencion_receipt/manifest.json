@@ -22,16 +22,17 @@
 			"js": [
 				"constants.js",
 				"utils/ToastAlert.js",
+				"utils/copyToClipboard.js",
 				"utils/LocalStorageHelper.js",
-				"modal/container-receipt/ButtonOpenModal.js",
+				"modal/ButtonOpenModal.js",
+				"modal/ModaCreateHTML.js",
 				"modal/container-receipt/EventManager.js",
-				"modal/container-receipt/ModaCreateHTML.js",
-				"modal/container-receipt/ModalHandler.js",
-				"modal/container-receipt/modalContent.js",
 				"modal/container-receipt/ModalManager.js",
+				"modal/container-receipt/modalContent.js",
+				"modal/container-receipt/ModalHandler.js",
 				"modal/container-receipt/mainModal.js",
 				"save-data/SaveDataContainer.js",
-				"index.js.js"
+				"index.js"
 			],
 			"css": ["CSS/style.css", "CSS/balloon.css"]
 		},

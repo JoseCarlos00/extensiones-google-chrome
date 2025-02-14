@@ -1,9 +1,9 @@
 class ModalHandler {
-	constructor() {
+	constructor({ modalId }) {
 		this._modal = null;
 		this._tbodyTable = null;
 		this._tableContent = null;
-		this._prefix = `#${modalReceiptContainerId}`;
+		this._prefix = `#${modalId}`;
 		this.btnCopyTable = null;
 
 		this.trailerId = this.getTrailerId();

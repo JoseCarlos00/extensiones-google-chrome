@@ -1,4 +1,12 @@
+/**
+ * Clase que permite mover columnas en una tabla HTML mediante drag-and-drop.
+ */
 class MoveColumns {
+	/**
+	 * Constructor de la clase MoveColumns.
+	 * @param {Object} params - Parámetros para la configuración de la clase.
+	 * @param {HTMLElement} params.table - Elemento de tabla HTML donde se habilitará el movimiento de columnas.
+	 */
 	constructor({ table = null }) {
 		this.table = table;
 		this.thead = this.table?.querySelector("thead");
@@ -6,17 +14,23 @@ class MoveColumns {
 		this.initEvents();
 	}
 
+	/**
+	 * Inicializa los eventos necesarios para el movimiento de columnas.
+	 */
 	initEvents() {
 		try {
 			if (!this.thead) throw new Error("No se encontro el elemento <thead>");
 
-			this.setEventDragAndDrog();
+			this.setEventsDragAndDrog();
 		} catch (error) {
 			console.error("[MoveColumns] Error:", error?.message, error);
 		}
 	}
 
-	setEventDragAndDrog() {
+	/**
+	 * Configura los eventos de drag-and-drop para las celdas de encabezado de la tabla.
+	 */
+	setEventsDragAndDrog() {
 		this.table.querySelectorAll("th").forEach((th, index) => {
 			th.draggable = true;
 			th.dataset.dragColumnIndex = index;
@@ -27,38 +41,71 @@ class MoveColumns {
 		});
 	}
 
+	/**
+	 * Maneja el evento de inicio de arrastre.
+	 * @param {Object} param - Objeto que contiene el evento.
+	 * @param {Event} param.event - Evento que se está manejando.
+	 */
 	handleDragStart({ event }) {
-		event.dataTransfer.setData("text/plain", event.target.dataset.dragColumnIndex);
+		const columnIndex = event.target.dataset.dragColumnIndex;
+
+		if (columnIndex === undefined) {
+			console.error("El índice de columna no está definido.");
+			return;
+		}
+
+		event.dataTransfer.setData("text/plain", columnIndex);
 	}
 
+	/**
+	 * Maneja el evento de arrastre sobre otra celda.
+	 * @param {Object} param - Objeto que contiene el evento.
+	 * @param {Event} param.event - Evento que se está manejando.
+	 */
 	handleDragOver({ event }) {
 		event.preventDefault(); // Permite soltar
 	}
 
+	/**
+	 * Maneja el evento de soltar una celda.
+	 * @param {Object} param - Objeto que contiene el evento.
+	 * @param {Event} param.event - Evento que se está manejando.
+	 */
 	handleDrog({ event }) {
 		event.preventDefault();
+		const fromIndexColumn = event.dataTransfer.getData("text/plain"); // Obtiene el índice de la columna arrastrada.
+		const toIndexColumn = this.getToIndexColumn(event);
 
-		const fromIndexColumn = event.dataTransfer.getData("text/plain");
-
-		const getToIndexColumn = () => {
-			const { toElement } = event;
-
-			if (!toElement) return undefined;
-
-			if (toElement.nodeName === "TH") return dataset?.dragColumnIndex;
-
-			if (toElement.nodeName === "DIV") {
-				return toElement?.closest("th")?.dataset?.dragColumnIndex;
-			}
-		};
-
-		const toIndexColumn = getToIndexColumn();
+		if (toIndexColumn === undefined) {
+			console.warn("No se pudo determinar el índice de la columna de destino.");
+			return;
+		}
 
 		if (fromIndexColumn === toIndexColumn) return;
 
+		// Intercambia las columnas.
 		this.swapColumns(fromIndexColumn, toIndexColumn);
 	}
 
+	getToIndexColumn(event) {
+		const { toElement } = event;
+		if (!toElement) return undefined;
+
+		if (toElement.nodeName === "TH") {
+			return toElement.dataset.dragColumnIndex;
+		}
+		if (toElement.nodeName === "DIV") {
+			return toElement.closest("th")?.dataset?.dragColumnIndex;
+		}
+
+		return undefined;
+	}
+
+	/**
+	 * Intercambia las columnas en la tabla.
+	 * @param {string} fromIndexColumn - Índice de la columna de origen.
+	 * @param {string} toIndexColumn - Índice de la columna de destino.
+	 */
 	swapColumns(fromIndexColumn, toIndexColumn) {
 		const fromIndexColumnParse = Number(fromIndexColumn);
 		const toIndexColumnParse = Number(toIndexColumn);
@@ -67,10 +114,12 @@ class MoveColumns {
 		if (
 			!Number.isInteger(fromIndexColumnParse) ||
 			!Number.isInteger(toIndexColumnParse) ||
-			fromIndexColumn < 0 ||
-			toIndexColumn < 0
+			fromIndexColumnParse < 0 ||
+			toIndexColumnParse < 0 ||
+			fromIndexColumnParse >= this.table.rows[0].cells.length || // Asegura que el índice esté dentro del rango
+			toIndexColumnParse >= this.table.rows[0].cells.length
 		) {
-			console.warn("Índices inválidos:", { col1 }, { col2 });
+			console.warn("Índices inválidos:", { fromIndexColumnParse }, { toIndexColumnParse });
 			return;
 		}
 
@@ -79,17 +128,20 @@ class MoveColumns {
 		rows.forEach((row, index) => {
 			const cells = row.children;
 
-			if (cells[fromIndexColumnParse] && cells[toIndexColumnParse]) {
-				// parentNode.insertBefore(newNode, existingNode);
+			if (cells[fromIndexColumnParse] && cells[toIndexColumnParse]) return;
+			// parentNode.insertBefore(newNode, existingNode);
 
-				if (fromIndexColumnParse > toIndexColumnParse) {
-					row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse]);
-				} else {
-					row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse].nextSibling);
-				}
+			if (fromIndexColumnParse > toIndexColumnParse) {
+				row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse]);
+				return;
 			}
-		});
 
+			row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse].nextSibling);
+			this.updateColumnIndices();
+		});
+	}
+
+	updateColumnIndices() {
 		this.table.querySelectorAll("th").forEach((th, index) => {
 			th.dataset.dragColumnIndex = index;
 		});

@@ -1,46 +1,52 @@
-window.addEventListener(
-	"load",
-	async () => {
-		try {
-			console.log("[Receipt Container Insight Modal]");
+/**
+ * Crea una instancia de la Clase que gestiona la creación y manipulación de un modal.
+ */
+async function mainModal() {
+	try {
+		// Definición de selectores e id's para el modal.
+		const selectoresModal = {
+			modalId: modalReceiptContainerId,
+			sectionContainerClass: "modal-container",
+		};
 
-			const selectoresModal = {
-				modalId: modalReceiptContainerId,
-				sectionContainerClass: "modal-container",
-			};
+		// Configuración del botón que abrirá el modal.
+		const buttonConfiguration = {
+			buttonId: buttonReceiptContainerId,
+			iconoModal: "fa-list",
+			textLabel: "Mostrar Contenedores",
+			textLabelPosition: "right",
+		};
 
-			const buttonConfiguration = {
-				buttonId: buttonReceiptContainerId,
-				iconoModal: "fa-list",
-				textLabel: "Mostrar Contenedores",
-				textLabelPosition: "right",
-			};
+		/**
+		 * obtiene el botón que abrirá el modal utilizando la configuración definida.
+		 * @get {HTMLElement} - El elemento `<li>` que representa el botón.
+		 */
+		const buttonOpenModal = await ButtonOpenModal.getButtonOpenModal(buttonConfiguration);
 
-			const buttonOpenModal = await ButtonOpenModal.getButtonOpenModal(buttonConfiguration);
-			const buttonOpenModalId = buttonConfiguration.buttonId;
+		/**
+		 * Crea una instancia del manejador del modal con los selectores definidos.
+		 */
+		const modalHandler = new ModalHandler({ ...selectoresModal });
 
-			const modalHandler = new ModalHandler({ ...selectoresModal });
-			const contentModalHtml = await getHtmlContent({ ...selectoresModal });
+		/**
+		 * Obtiene el contenido HTML que se mostrará en el modal.
+		 * @get {Promise<HTMLElement>} - Un elemento HTML que representa el modal o null si ocurre un error.
+		 */
+		const contentModalHtml = await getHtmlContent({ ...selectoresModal });
 
-			const modalManager = new ModalManager({
-				modalHandler,
-				contentModalHtml,
-				buttonOpenModal,
-				buttonOpenModalId,
-				...selectoresModal,
-			});
+		/**
+		 * Crea una instancia del administrador del modal con la configuración y el contenido obtenido.
+		 */
+		const modalManager = new ModalManager({
+			modalHandler,
+			contentModalHtml,
+			buttonOpenModal,
+			buttonOpenModalId: buttonConfiguration.buttonId,
+			...selectoresModal,
+		});
 
-			await modalManager.initialize();
-		} catch (error) {
-			console.error("Error: al inicializar el modal ", error);
-		} finally {
-			try {
-				const saveDataContainer = new SaveDataContainer();
-				saveDataContainer.init();
-			} catch (error) {
-				console.error("Error: al inicializar SaveDataContainer", error.message);
-			}
-		}
-	},
-	{ once: true }
-);
+		await modalManager.initialize();
+	} catch (error) {
+		console.error("Error: al inicializar el ModalManager ", error);
+	}
+}
