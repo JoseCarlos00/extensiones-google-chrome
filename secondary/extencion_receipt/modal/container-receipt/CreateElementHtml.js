@@ -22,6 +22,44 @@ class CreateElementHtml {
 		}
 	}
 
+	getTbodyElement({ rows, newTbody }) {
+		rows.forEach((row) => {
+			const fila = row.childNodes;
+			const tr = document.createElement("tr");
+
+			fila.forEach((td) => {
+				const ariadescribedby = td.getAttribute("aria-describedby");
+
+				if (ariadescribedby === "ListPaneDataGrid_LICENSE_PLATE_ID") {
+					const tdLicencePlate = document.createElement("td");
+					tdLicencePlate.innerHTML = `<input value="${td.textContent}" readonly class="input-text" tabindex="0">`;
+					tdLicencePlate.setAttribute("aria-describedby", ariadescribedby);
+
+					tr.appendChild(tdLicencePlate);
+				}
+
+				if (ariadescribedby === "ListPaneDataGrid_RECEIPT_ID") {
+					const tdReceiptId = document.createElement("td");
+					tdReceiptId.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
+					tdReceiptId.setAttribute("aria-describedby", ariadescribedby);
+
+					tr.appendChild(tdReceiptId);
+
+					const tdTrailerId = document.createElement("td");
+					tdTrailerId.innerHTML = `<input value="${this.trailerId}" readonly class="input-text" tabindex="0">`;
+					tdTrailerId.setAttribute("aria-describedby", "ListPaneDataGrid_TRAILER_ID");
+
+					const divDelete = document.createElement("div");
+					divDelete.className = "delete-row";
+					tdTrailerId.appendChild(divDelete);
+					tr.appendChild(tdTrailerId);
+				}
+			});
+
+			newTbody.appendChild(tr);
+		});
+	}
+
 	async createTbody({ tbodyTable }) {
 		try {
 			if (!tbodyTable) {
@@ -38,41 +76,7 @@ class CreateElementHtml {
 				return newTbody;
 			}
 
-			rows.forEach((row) => {
-				const fila = row.childNodes;
-				const tr = document.createElement("tr");
-
-				fila.forEach((td) => {
-					const ariadescribedby = td.getAttribute("aria-describedby");
-
-					if (ariadescribedby === "ListPaneDataGrid_LICENSE_PLATE_ID") {
-						const tdLicencePlate = document.createElement("td");
-						tdLicencePlate.innerHTML = `<input value="${td.textContent}" readonly class="input-text" tabindex="0">`;
-						tdLicencePlate.setAttribute("aria-describedby", ariadescribedby);
-
-						tr.appendChild(tdLicencePlate);
-					}
-
-					if (ariadescribedby === "ListPaneDataGrid_RECEIPT_ID") {
-						const tdReceiptId = document.createElement("td");
-						tdReceiptId.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
-						tdReceiptId.setAttribute("aria-describedby", ariadescribedby);
-
-						tr.appendChild(tdReceiptId);
-
-						const tdTrailerId = document.createElement("td");
-						tdTrailerId.innerHTML = `<input value="${this.trailerId}" readonly class="input-text" tabindex="0">`;
-						tdTrailerId.setAttribute("aria-describedby", "ListPaneDataGrid_TRAILER_ID");
-
-						const divDelete = document.createElement("div");
-						divDelete.className = "delete-row";
-						tdTrailerId.appendChild(divDelete);
-						tr.appendChild(tdTrailerId);
-					}
-				});
-
-				newTbody.appendChild(tr);
-			});
+			this.getTbodyElement();
 
 			return newTbody;
 		} catch (error) {
