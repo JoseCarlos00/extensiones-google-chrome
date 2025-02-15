@@ -107,38 +107,42 @@ class MoveColumnManager {
 	 * @param {string} toIndexColumn - Índice de la columna de destino.
 	 */
 	swapColumns(fromIndexColumn, toIndexColumn) {
-		const fromIndexColumnParse = Number(fromIndexColumn);
-		const toIndexColumnParse = Number(toIndexColumn);
+		try {
+			const fromIndexColumnParse = Number(fromIndexColumn);
+			const toIndexColumnParse = Number(toIndexColumn);
 
-		// Verificar si son números enteros válidos y mayores o iguales a 0
-		if (
-			!Number.isInteger(fromIndexColumnParse) ||
-			!Number.isInteger(toIndexColumnParse) ||
-			fromIndexColumnParse < 0 ||
-			toIndexColumnParse < 0 ||
-			fromIndexColumnParse >= this.table.rows[0].cells.length || // Asegura que el índice esté dentro del rango
-			toIndexColumnParse >= this.table.rows[0].cells.length
-		) {
-			console.warn("Índices inválidos:", { fromIndexColumnParse }, { toIndexColumnParse });
-			return;
-		}
-
-		const rows = this.table.querySelectorAll("tr");
-
-		rows.forEach((row, index) => {
-			const cells = row.children;
-
-			if (cells[fromIndexColumnParse] && cells[toIndexColumnParse]) return;
-			// parentNode.insertBefore(newNode, existingNode);
-
-			if (fromIndexColumnParse > toIndexColumnParse) {
-				row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse]);
+			// Verificar si son números enteros válidos y mayores o iguales a 0
+			if (
+				!Number.isInteger(fromIndexColumnParse) ||
+				!Number.isInteger(toIndexColumnParse) ||
+				fromIndexColumnParse < 0 ||
+				toIndexColumnParse < 0 ||
+				fromIndexColumnParse >= this.table.rows[0].cells.length || // Asegura que el índice esté dentro del rango
+				toIndexColumnParse >= this.table.rows[0].cells.length
+			) {
+				console.warn("Índices inválidos:", { fromIndexColumnParse }, { toIndexColumnParse });
 				return;
 			}
 
-			row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse].nextSibling);
-			this.updateColumnIndices();
-		});
+			const rows = this.table.querySelectorAll("tr");
+
+			rows.forEach((row) => {
+				const cells = row.children;
+
+				if (!cells[fromIndexColumnParse] || !cells[toIndexColumnParse]) return;
+				// parentNode.insertBefore(newNode, existingNode);
+
+				if (fromIndexColumnParse > toIndexColumnParse) {
+					row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse]);
+				} else {
+					row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse]?.nextSibling);
+				}
+
+				this.updateColumnIndices();
+			});
+		} catch (error) {
+			console.error("[swapColumns]: Error al intercambiar columnas:", error);
+		}
 	}
 
 	updateColumnIndices() {

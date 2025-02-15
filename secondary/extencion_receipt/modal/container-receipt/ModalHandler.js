@@ -1,12 +1,16 @@
 class ModalHandler {
 	constructor({ modalId }) {
-		this._modal = null;
-		this._tbodyTable = null;
-		this._tableContent = null;
-		this._prefix = `#${modalId}`;
-		this.btnCopyTable = null;
+		try {
+			this._modal = null;
+			this._tbodyTable = null;
+			this._tableContent = null;
+			this._prefix = `#${modalId}`;
+			this.btnCopyTable = null;
 
-		this.createElementHtml = new CreateElementHtml();
+			this.createElementHtml = new CreateElementHtml();
+		} catch (error) {
+			console.error("Error: [constructor] Ha ocurrido un error al inicializar: ModalHandler", error?.message);
+		}
 	}
 
 	async initialVariables() {
@@ -57,17 +61,24 @@ class ModalHandler {
 	}
 
 	updateRowCounter() {
-		const contador = document.querySelector(`${this._prefix} #rowCounter`);
+		try {
+			const counterE = this._modal.querySelector("#rowCounter");
 
-		if (!contador || this._tableContent) {
-			console.error("El elemento contador no se encuentra en el DOM.");
-			return;
+			if (!counterE) {
+				throw new Error("No se encontro el elemento #rowCounter");
+			}
+
+			if (!this._tableContent) {
+				throw new Error("No se encontro el elemento #tableContent");
+			}
+
+			const rows = Array.from(this._tableContent.querySelectorAll("tbody tr"));
+
+			// Actualizar el texto del contador con el número de filas
+			counterE.textContent = `Filas: ${rows.length}`;
+		} catch (error) {
+			console.error("Error: [updateRowCounter] Ha Ocurrido un error al actualizar el contador de filas:", error);
 		}
-
-		const rows = Array.from(this._tableContent.querySelectorAll("tbody tr"));
-
-		// Actualizar el texto del contador con el número de filas
-		contador.textContent = `Filas: ${rows.length}`;
 	}
 
 	async setModalElement(modal) {
@@ -82,8 +93,9 @@ class ModalHandler {
 
 			const initializeEvents = new InitializeEvents({
 				tbodyTable: this._tbodyTable,
-				btnCopyTable: this._btnCopyTable,
+				btnCopyTable: this.btnCopyTable,
 				tableContent: this._tableContent,
+				modal: this._modal,
 				updateRowCounter: this.updateRowCounter,
 			});
 

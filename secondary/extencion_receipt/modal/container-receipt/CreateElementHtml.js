@@ -1,6 +1,6 @@
 class CreateElementHtml {
 	constructor() {
-		this.trailerId = getTrailerId();
+		this.trailerId = this.getTrailerId();
 	}
 
 	getTrailerId() {
