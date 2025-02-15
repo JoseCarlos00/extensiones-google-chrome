@@ -83,21 +83,6 @@ class SaveDataManager {
 		this.markSaveData();
 	}
 
-	markSaveData(isRemoveMark) {
-		console.log("markSaveData:", { buttonSaveData: this.buttonSaveData });
-
-		if (!this.buttonSaveData) {
-			console.error("No existe el botón de guardar datos.");
-			return;
-		}
-
-		if (isRemoveMark) {
-			this.buttonSaveData.classList.remove("save-data-active");
-		} else {
-			this.buttonSaveData.classList.add("save-data-active");
-		}
-	}
-
 	handleDeleteData() {
 		try {
 			const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer);
@@ -112,12 +97,25 @@ class SaveDataManager {
 
 			if (confirmDelete) {
 				LocalStorageHelper.remove(this.nameStorageContainer);
-				ToastAlert.showAlertMinBotton("Datos eliminados con éxito", "success");
 				this.markSaveData(true);
+				ToastAlert.showAlertMinBotton("Datos eliminados con éxito", "success");
 			}
 		} catch (error) {
 			console.error("Error al eleminar los datos guardados:", error.message, error);
 			ToastAlert.showAlertFullTop("Ha ocurrido un error al guardar los datos");
+		}
+	}
+
+	markSaveData(isRemoveMark) {
+		if (!this.buttonSaveData) {
+			console.error("No existe el botón de guardar datos.");
+			return;
+		}
+
+		if (isRemoveMark) {
+			this.buttonSaveData.classList.remove("save-data-active");
+		} else {
+			this.buttonSaveData.classList.add("save-data-active");
 		}
 	}
 }

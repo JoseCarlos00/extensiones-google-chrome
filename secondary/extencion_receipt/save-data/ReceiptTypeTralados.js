@@ -31,9 +31,10 @@ class ReceiptTypeTralados {
 
 			// Dividir la lista de contenedores en grupos de 5
 			const groupedContainers = [];
+
 			for (let i = 0; i < containersList.length; i += 5) {
-				groupedContainers.push(containersList.slice(i, i + 5));
-				groupedContainers.push(["DONE"]);
+				groupedContainers.push([...containersList.slice(i, i + 5), "DONE"]);
+				// groupedContainers.push(["DONE"]);
 			}
 
 			// Crear el arreglo final con grupos
@@ -42,7 +43,7 @@ class ReceiptTypeTralados {
 			});
 
 			console.log("Datos guardados:", data);
-			LocalStorageHelper.save(this.nameStorageContainer, data);
+			LocalStorageHelper.save(this.nameStorageContainer, { receiptType: this.receiptType, dataContainer: data });
 			ToastAlert.showAlertMinBotton("Datos guardados con éxito", "success");
 
 			window.dispatchEvent(this.eventStorgageChange);
