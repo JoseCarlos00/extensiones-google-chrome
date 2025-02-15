@@ -1,9 +1,9 @@
 {
 	"manifest_version": 3,
-	"name": "Modal Receipt Container",
+	"name": "Receipt Container",
 	"version": "1.0",
-	"description": "Crea un modal con el Container y Shipment Id",
-	"permissions": ["scripting", "activeTab", "storage"],
+	"description": "Crea utilidades para la pantalla de receipt, como un modal con el containerId y el receiptId",
+	"permissions": [],
 	"icons": {
 		"16": "images/inventory16.png",
 		"32": "images/inventory32.png",
@@ -21,11 +21,11 @@
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
 			"js": [
 				"constants.js",
-				"clases/MoveColumnManager.js",
+				"class/MoveColumnManager.js",
+				"class/ButtonCreateInElemetLI.js",
 				"utils/ToastAlert.js",
 				"utils/copyToClipboard.js",
 				"utils/LocalStorageHelper.js",
-				"modal/ButtonOpenModal.js",
 				"modal/ModaCreateHTML.js",
 				"modal/container-receipt/CreateElementHtml.js",
 				"modal/container-receipt/InitializeEvents.js",

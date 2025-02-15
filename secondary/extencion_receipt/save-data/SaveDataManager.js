@@ -1,0 +1,3 @@
+class SaveDataManager {
+	constructor() {}
+}

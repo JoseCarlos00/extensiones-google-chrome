@@ -1,18 +1,18 @@
 /**
- * Clase que representa un botón para abrir un modal.
+ * Clase que representa un botón
  */
-class ButtonOpenModal {
+class ButtonCreateInElemetLI {
 	/**
-	 * Constructor de la clase ButtonOpenModal.
+	 * Constructor de la clase ButtonCreateInElemetLI.
 	 * @param {Object} params - Parámetros para configurar el botón.
 	 * @param {string} params.buttonId - ID del botón.
-	 * @param {string} params.iconoModal - Clase del icono que se mostrará en el botón.
+	 * @param {string} params.iconButton - Clase del icono que se mostrará en el botón.
 	 * @param {string} params.textLabel - Texto que se mostrará en el botón.
 	 * @param {string} params.textLabelPosition - Posición del texto en relación al icono.
 	 */
-	constructor({ buttonId, iconoModal, textLabel, textLabelPosition }) {
+	constructor({ buttonId, iconButton, textLabel, textLabelPosition }) {
 		this.buttonId = buttonId ?? "";
-		this.iconoModal = iconoModal ? iconoModal : "fa-bug";
+		this.iconButton = iconButton ? iconButton : "fa-bug";
 		this.textLabel = textLabel ?? "ERROR";
 		this.textLabelPosition = textLabelPosition ?? "right";
 	}
@@ -50,7 +50,7 @@ class ButtonOpenModal {
 	 */
 	_getIconoElement() {
 		const icono = document.createElement("i");
-		icono.className = `far ${this.iconoModal} navimage`;
+		icono.className = `far ${this.iconButton} navimage`;
 		icono.id = this.buttonId + "Icono";
 		return icono;
 	}
@@ -71,13 +71,13 @@ class ButtonOpenModal {
 	}
 
 	/**
-	 * Método estático para crear un botón abierto de modal.
+	 * Método estático para crear un botón.
 	 * @param {Object} configuration - Configuración para el botón.
 	 * @returns {HTMLElement} - El elemento `<li>` que representa el botón.
 	 */
-	static async getButtonOpenModal(confiuration) {
+	static getButtonElement(confiuration) {
 		try {
-			const button = new ButtonOpenModal(confiuration);
+			const button = new ButtonCreateInElemetLI(confiuration);
 			return button._createButton();
 		} catch (error) {
 			console.error("Error: Ha ocurrido un error al crear un Elemento `<li>` button", error);

@@ -12,7 +12,7 @@ async function mainModal() {
 		// Configuración del botón que abrirá el modal.
 		const buttonConfiguration = {
 			buttonId: buttonReceiptContainerId,
-			iconoModal: "fa-list",
+			iconButton: "fa-list",
 			textLabel: "Mostrar Contenedores",
 			textLabelPosition: "right",
 		};
@@ -21,7 +21,7 @@ async function mainModal() {
 		 * obtiene el botón que abrirá el modal utilizando la configuración definida.
 		 * @get {HTMLElement} - El elemento `<li>` que representa el botón.
 		 */
-		const buttonOpenModal = await ButtonOpenModal.getButtonOpenModal(buttonConfiguration);
+		const buttonOpenModal = ButtonCreateInElemetLI.getButtonElement(buttonConfiguration);
 
 		/**
 		 * Crea una instancia del manejador del modal con los selectores definidos.
