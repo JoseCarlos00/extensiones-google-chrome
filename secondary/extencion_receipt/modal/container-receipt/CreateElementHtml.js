@@ -76,7 +76,7 @@ class CreateElementHtml {
 				return newTbody;
 			}
 
-			this.getTbodyElement();
+			this.getTbodyElement({ rows, newTbody });
 
 			return newTbody;
 		} catch (error) {

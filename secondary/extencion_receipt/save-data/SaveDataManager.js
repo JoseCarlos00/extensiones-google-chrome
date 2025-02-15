@@ -5,7 +5,7 @@ class SaveDataManager {
 		this.buttonSaveData = buttonSaveData;
 		this.buttonDeleteData = buttonDeleteData;
 
-		this.eventClickManager = new EventClickManagerStorage();
+		this.eventClickManager = null;
 	}
 
 	async initialize() {
@@ -22,6 +22,8 @@ class SaveDataManager {
 				throw new Error("No se encontraron los botones de guardar y eliminar datos");
 			}
 
+			this.eventClickManager = new EventClickManagerStorage({ tbodyTable: this._tbodyTable });
+
 			if (!this.eventClickManager) {
 				throw new Error("No se encontró el manejador de eventos de click");
 			}
@@ -29,7 +31,10 @@ class SaveDataManager {
 			await this.insertButtons();
 			this.setEventListener();
 		} catch (error) {
-			console.error(`Error: [initialize] Ha ocurrido un error al inicializar la clase: ${error.message}.`, error);
+			console.error(
+				`Error: [initialize] Ha ocurrido un error al inicializar la clase SaveDataManager: ${error.message}.`,
+				error
+			);
 		}
 	}
 

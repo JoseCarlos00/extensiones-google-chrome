@@ -1,31 +1,53 @@
 class EventClickManagerStorage {
-	constructor() {}
-
-	handleEvent(event) {
-		console.log("Se ha producido un evento:", event);
+	constructor({ tbodyTable }) {
+		this.tbodyTable = tbodyTable;
+		this.licencePlateId = "ListPaneDataGrid_LICENSE_PLATE_ID";
+		this.status = "ListPaneDataGrid_STATUS_NAME";
+		this.receiptId = "ListPaneDataGrid_RECEIPT_ID";
 	}
 
-	async getContainersList() {
+	handleEvent() {
+		console.log("Se ha producido un evento:");
+		const rows = Array.from(this.tbodyTable?.rows) || [];
+
+		if (rows.length === 0) return;
+
+		const firstRow = rows[0];
+
+		const receiptId = firstRow.querySelector(`td[aria-describedby="${this.receiptId}"]`)?.textContent?.trim();
+		console.log({ receiptId, bool: !!receiptId });
+
+		if (!receiptId) return;
+
+		if (receiptId.includes("-TR-111-")) {
+			console.warn("DEVOLUCIONES");
+			return;
+		}
+
+		if (receiptId.includes("TR_E-B")) {
+			console.warn("TRASLADOS");
+		}
+	}
+
+	getContainersList(rows = []) {
 		try {
-			if (!this._tbodyTable) {
-				throw new Error("No se encontró el elemento tbody");
-			}
-
-			const rows = Array.from(this._tbodyTable.rows);
-
 			if (rows.length === 0) {
 				return [];
 			}
 
-			// Procesar cada fila para obtener el valor deseado
+			// Función de normalización
+			const normalizeString = (str) => str?.textContent?.normalize("NFKC")?.replace(/\s+/g, " ")?.trim();
+
 			const containersList = rows
-				.flatMap((row) => {
-					// Iterar por los hijos de cada fila
-					return Array.from(row.children)
-						.filter((td) => td.getAttribute("aria-describedby") === "ListPaneDataGrid_LICENSE_PLATE_ID")
-						.map((td) => td.textContent?.trim() || null);
+				.map((row) => {
+					const licencePlateIdValue = normalizeString(row.querySelector(`td[aria-describedby=${this.licencePlateId}]`));
+					const statusValue = normalizeString(row.querySelector(`td[aria-describedby=${this.status}]`));
+
+					if (statusValue === "Check In Pending") {
+						return licencePlateIdValue;
+					}
 				})
-				.filter(Boolean); // Filtrar valores nulos o vacíos
+				.filter(Boolean);
 
 			return containersList;
 		} catch (error) {
