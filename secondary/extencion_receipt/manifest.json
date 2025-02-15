@@ -34,7 +34,10 @@
 				"modal/container-receipt/ModalHandler.js",
 				"modal/container-receipt/ModalManager.js",
 				"modal/container-receipt/mainModal.js",
-				"save-data/SaveDataContainer.js",
+				"save-data/buttons/buttons.js",
+				"save-data/EventClickManagerStorage.js",
+				"save-data/SaveDataManager.js",
+				"save-data/mainSaveData.js",
 				"index.js"
 			],
 			"css": ["CSS/style.css", "CSS/balloon.css"]

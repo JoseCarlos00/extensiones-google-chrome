@@ -139,7 +139,7 @@ class SaveDataContainer {
 			e.preventDefault();
 
 			// Obtener los datos
-			let trailerId = await this.getTrailerId();
+			let trailerId = this.getTrailerId();
 			const containersList = await this.getContainersList();
 
 			// Verificar que hay contenedores

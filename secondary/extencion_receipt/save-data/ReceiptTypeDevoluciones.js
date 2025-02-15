@@ -1,3 +1,1 @@
-class ReceiptTypeDevoluciones {
-	constructor() {}
-}
+class ReceiptTypeDevoluciones {}

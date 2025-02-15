@@ -47,6 +47,6 @@ async function mainModal() {
 
 		await modalManager.initialize();
 	} catch (error) {
-		console.error("Error: al inicializar el ModalManager ", error);
+		console.error("Error in mainModal(): ", error);
 	}
 }
