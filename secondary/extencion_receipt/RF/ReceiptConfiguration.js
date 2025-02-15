@@ -29,13 +29,13 @@ class Configuration {
 	}
 
 	getSaveStorageData() {
-		const saveData = LocalStorageHelper.get(this.nameStorageContainer);
+		const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer);
 
-		if (!saveData) {
+		if (!dataContainer) {
 			return {};
 		}
 
-		return saveData;
+		return dataContainer;
 	}
 
 	getTrailerId() {

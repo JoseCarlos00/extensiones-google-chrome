@@ -6,6 +6,7 @@ class SaveDataManager {
 		this.buttonDeleteData = buttonDeleteData;
 
 		this.eventClickManager = null;
+		this.eventNameStorgageChange = eventNameStorgageChange;
 	}
 
 	async initialize() {
@@ -22,7 +23,10 @@ class SaveDataManager {
 				throw new Error("No se encontraron los botones de guardar y eliminar datos");
 			}
 
-			this.eventClickManager = new EventClickManagerStorage({ tbodyTable: this._tbodyTable });
+			this.eventClickManager = new EventClickManagerStorage({
+				tbodyTable: this._tbodyTable,
+				nameStorageContainer: this.nameStorageContainer,
+			});
 
 			if (!this.eventClickManager) {
 				throw new Error("No se encontró el manejador de eventos de click");
@@ -65,17 +69,13 @@ class SaveDataManager {
 		this.buttonSaveData.addEventListener("click", (e) => this.eventClickManager.handleEvent(e));
 		this.buttonDeleteData.addEventListener("click", (e) => this.handleDeleteData(e));
 
-		window.addEventListener("storage", ({ key }) => {
-			if (key === this.nameStorageContainer) {
-				this.handleMarckSaveData();
-			}
-		});
+		window.addEventListener(this.eventNameStorgageChange, () => this.handleMarckSaveData());
 	}
 
 	handleMarckSaveData() {
-		const saveData = LocalStorageHelper.get(this.nameStorageContainer);
+		const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer);
 
-		if (!saveData || saveData?.length === 0) {
+		if (!dataContainer || saveData?.length === 0) {
 			this.markSaveData(true);
 			return;
 		}
@@ -84,6 +84,8 @@ class SaveDataManager {
 	}
 
 	markSaveData(isRemoveMark) {
+		console.log("markSaveData:", { buttonSaveData: this.buttonSaveData });
+
 		if (!this.buttonSaveData) {
 			console.error("No existe el botón de guardar datos.");
 			return;
@@ -98,9 +100,9 @@ class SaveDataManager {
 
 	handleDeleteData() {
 		try {
-			const saveData = LocalStorageHelper.get(this.nameStorageContainer);
+			const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer);
 
-			if (!saveData) {
+			if (!dataContainer) {
 				console.warn("No hay datos para eliminar");
 				this.markSaveData(true);
 				return;

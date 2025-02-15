@@ -35,6 +35,8 @@
 				"modal/container-receipt/ModalManager.js",
 				"modal/container-receipt/mainModal.js",
 				"save-data/buttons/buttons.js",
+				"save-data/ReceiptTypeTralados.js",
+				"save-data/ReceiptTypeDevoluciones.js",
 				"save-data/EventClickManagerStorage.js",
 				"save-data/SaveDataManager.js",
 				"save-data/mainSaveData.js",

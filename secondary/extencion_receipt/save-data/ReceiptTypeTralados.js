@@ -1,15 +1,21 @@
 class ReceiptTypeTralados {
-	async handleSaveData(e) {
+	constructor({ nameStorageContainer }) {
+		this.nameStorageContainer = nameStorageContainer;
+		this.eventStorgageChange = new Event(eventNameStorgageChange);
+		this.receiptType = "TRASLADOS";
+	}
+
+	handleSaveData({ containersList = [] }) {
 		try {
-			e.preventDefault();
+			console.log({ ReceiptTypeTralados: containersList });
 
 			// Obtener los datos
 			let trailerId = this.getTrailerId();
-			const containersList = await this.getContainersList();
 
 			// Verificar que hay contenedores
-			if (!containersList || containersList.length === 0) {
+			if (containersList.length === 0) {
 				console.error("No hay contenedores para guardar.");
+				ToastAlert.showAlertFullTop("No hay contenedores para guardar.", "info");
 				return;
 			}
 
@@ -38,7 +44,8 @@ class ReceiptTypeTralados {
 			console.log("Datos guardados:", data);
 			LocalStorageHelper.save(this.nameStorageContainer, data);
 			ToastAlert.showAlertMinBotton("Datos guardados con éxito", "success");
-			this.markSaveData();
+
+			window.dispatchEvent(this.eventStorgageChange);
 		} catch (error) {
 			console.error("Error al guardar los datos:", error.message, error);
 			ToastAlert.showAlertFullTop("Ha ocurrido un error al guardar los datos");

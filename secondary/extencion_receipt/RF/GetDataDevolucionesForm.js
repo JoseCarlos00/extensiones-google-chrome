@@ -10,6 +10,7 @@ class GetDataDevolucionesForm {
 		this.EVENTS = {
 			NEW_REGISTER: "new-register",
 		};
+		this.receiptType = "TRASLADOS";
 	}
 
 	async render() {
@@ -199,7 +200,7 @@ class GetDataDevolucionesForm {
 		console.log("groupedContainers:", groupedContainers);
 
 		console.log("Datos guardados:", data);
-		LocalStorageHelper.save(this.nameDataStorage, data);
+		LocalStorageHelper.save({ receiptType: this.receiptType, dataContainer: this.nameDataStorage }, data);
 		this.updateCounter(data.length);
 		this.alertDataSaved();
 

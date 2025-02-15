@@ -35,7 +35,8 @@ class Devoluciones {
 			this.isValideLicencePlate = this.tittleSurtido === "License plate";
 
 			this.recoverSettingsStorage();
-			this.dataContainerStorage = LocalStorageHelper.get(this.nameStorageContainer);
+			const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer);
+			this.dataContainerStorage = dataContainer;
 
 			this.EVENTS = {
 				NEW_REGISTER: "new-register",
@@ -103,7 +104,10 @@ class Devoluciones {
 			// Elimina el objeto si su `containers` está vacío
 			this.dataContainerStorage?.shift();
 			console.log("[1] El primer objeto fue eliminado porque `containers` está vacío.");
-			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+			LocalStorageHelper.save(this.nameStorageContainer, {
+				...this.storageContainer,
+				dataContainer: this.dataContainerStorage,
+			});
 			console.warn("No hay datos gurdados");
 			return;
 		}
@@ -111,12 +115,18 @@ class Devoluciones {
 		// Obtén y procesa el primer elemento de `containers`
 		const firstLicencePlate = firstObject.containers.shift();
 		console.log(`Procesando placa: ${firstLicencePlate}`);
-		LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+		LocalStorageHelper.save(this.nameStorageContainer, {
+			...this.storageContainer,
+			dataContainer: this.dataContainerStorage,
+		});
 
 		// Si después de eliminar, el array `containers` está vacío, elimina el objeto completo
 		if (firstObject.containers?.length === 0) {
 			this.dataContainerStorage.shift();
-			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+			LocalStorageHelper.save(this.nameStorageContainer, {
+				...this.storageContainer,
+				dataContainer: this.dataContainerStorage,
+			});
 			console.log("[2] El primer objeto fue eliminado porque `containers` quedó vacío.");
 		}
 
@@ -202,7 +212,7 @@ class Devoluciones {
 	}
 
 	handleGetData() {
-		this.dataContainerStorage = LocalStorageHelper.get(this.nameStorageContainer);
+		this.dataContainerStorage = LocalStorageHelper.get(this.nameStorageContainer)?.dataContainer;
 		this.changeInitReceiptStorage();
 		this.autocompleteForm();
 	}
