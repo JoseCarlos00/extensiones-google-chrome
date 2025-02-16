@@ -13,7 +13,10 @@
 	"web_accessible_resources": [
 		{
 			"resources": ["images/icons-alert.png"],
-			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
+			"matches": [
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2779*",
+				"https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"
+			]
 		}
 	],
 	"content_scripts": [
@@ -47,13 +50,11 @@
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
 			"js": [
-				"RF/ReceiptManager.js",
-				"RF/GetDataDevolucionesForm.js",
-				"RF/Devoluciones.js",
-				"RF/Traslados.js",
-				"RF/ReceiptConfiguration.js",
+				"constants.js",
 				"utils/LocalStorageHelper.js",
-				"utils/ToaAlertRF.js"
+				"utils/ToaAlertRF.js",
+				"configuration-receipt/RenderConfiguration.js",
+				"configuration-receipt/ReceiptConfiguration.js"
 			],
 			"css": ["CSS/Receipt.css", "CSS/toasAlert.css"]
 		}

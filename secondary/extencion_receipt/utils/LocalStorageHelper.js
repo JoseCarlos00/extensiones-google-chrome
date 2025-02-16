@@ -8,7 +8,7 @@ class LocalStorageHelper {
 		try {
 			const serializedValue = JSON.stringify(value);
 			localStorage.setItem(key, serializedValue);
-			console.log(`Guardado exitoso: ${key}`);
+			console.log(`Guardado exitoso:`, { key });
 		} catch (error) {
 			console.error("Error al guardar en localStorage:", error);
 		}
@@ -36,7 +36,7 @@ class LocalStorageHelper {
 	static remove(key) {
 		try {
 			localStorage.removeItem(key);
-			console.log(`Eliminado exitoso: ${key}`);
+			console.log(`Eliminado exitoso: `, { key });
 		} catch (error) {
 			console.error("Error al eliminar de localStorage:", error);
 		}

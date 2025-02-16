@@ -1,7 +1,7 @@
 class ReceiptTypeDevoluciones {
 	constructor({ nameStorageContainer }) {
 		this.nameStorageContainer = nameStorageContainer;
-		this.eventStorgageChange = new Event(eventNameStorgageChange);
+		this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
 		this.receiptType = "DEVOLUCIONES";
 	}
 
@@ -32,7 +32,9 @@ class ReceiptTypeDevoluciones {
 			LocalStorageHelper.save(this.nameStorageContainer, { receiptType: this.receiptType, dataContainer: data });
 			ToastAlert.showAlertMinBotton("Datos guardados con éxito", "success");
 
-			window.dispatchEvent(this.eventStorgageChange);
+			// Crear una nueva instancia del evento cada vez que se dispare
+			const eventStorgageChange = new Event(this.eventNameStorgageChange);
+			window.dispatchEvent(eventStorgageChange);
 		} catch (error) {
 			console.error("Error al guardar los datos:", error.message, error);
 			ToastAlert.showAlertFullTop("Ha ocurrido un error al guardar los datos");
