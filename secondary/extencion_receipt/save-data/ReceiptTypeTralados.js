@@ -7,8 +7,6 @@ class ReceiptTypeTralados {
 
 	handleSaveData({ containersList = [] }) {
 		try {
-			console.log({ ReceiptTypeTralados: containersList });
-
 			// Obtener los datos
 			let trailerId = this.getTrailerId();
 

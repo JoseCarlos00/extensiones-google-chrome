@@ -40,6 +40,24 @@
 	&.save-data-active i#saveDataIcono {
 		color: red !important;
 	}
+
+	&.disabled {
+		a {
+			pointer-events: none;
+			background-color: initial;
+			color: initial;
+			opacity: 0.72;
+		}
+
+		i#deleteDataIcono {
+			pointer-events: none;
+			opacity: 0.72;
+		}
+	}
+
+	&.delete-data-active i#deleteDataIcono {
+		pointer-events: initial;
+	}
 }
 
 /* The Modal (background) */

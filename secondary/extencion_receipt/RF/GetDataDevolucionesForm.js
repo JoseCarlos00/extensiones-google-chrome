@@ -157,50 +157,33 @@ class GetDataDevolucionesForm {
 	}
 
 	registrarDatos({ lineas }) {
-		const data = [];
-
-		// Crear un objeto para agrupar por receiptID
-		const groupedContainers = {};
+		const groupedMap = new Map();
 
 		// Procesar cada línea
 		lineas.forEach((linea) => {
 			const match = linea.match(/(\d+-TR-\d{3}-\d+)\s+([^\W_]+)/);
 
 			if (match) {
-				const receiptId = match[1] ?? "";
-				const LP = match[2] ?? "";
+				const receiptId = match[1];
+				const LP = match[2];
 
-				// Verificar si receiptID ya está en el objeto
-				if (!groupedContainers[receiptId]) {
-					groupedContainers[receiptId] = [];
+				if (!receiptId || !LP) return; // Si no hay datos, no hacer nada
+
+				if (!groupedMap.has(receiptId)) {
+					groupedMap.set(receiptId, []);
 				}
 
-				// Agregar el LP al array correspondiente
-				groupedContainers[receiptId].push(LP);
+				groupedMap.get(receiptId).push(LP);
 			}
 		});
 
-		// Transformar groupedContainers en un array
-		for (const receiptId in groupedContainers) {
-			if (Object.hasOwnProperty.call(groupedContainers, receiptId)) {
-				data.push({
-					receiptId,
-					containers: groupedContainers[receiptId],
-				});
-			}
-		}
-
-		// Agregar "DONE" al final de cada array LP
-		data.forEach((item) => {
-			item.containers.push("DONE");
-		});
-
-		// Insertar datos
-		console.log("datos:", data);
-		console.log("groupedContainers:", groupedContainers);
+		const data = Array.from(groupedMap, ([receiptId, containers]) => ({
+			receiptId,
+			containers: [...containers, "DONE"],
+		}));
 
 		console.log("Datos guardados:", data);
-		LocalStorageHelper.save({ receiptType: this.receiptType, dataContainer: this.nameDataStorage }, data);
+		LocalStorageHelper.save(this.nameDataStorage, { receiptType: this.receiptType, dataContainer: data });
 		this.updateCounter(data.length);
 		this.alertDataSaved();
 

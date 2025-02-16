@@ -3,7 +3,7 @@ const buttonSaveConfiguration = {
 	iconButton: "fa-save",
 	iconoId: "saveDataIcono",
 	textLabel: "Guardar Contenedores",
-	textLabelPosition: "right",
+	textLabelPosition: "down",
 };
 
 const buttonDeleteConfiguration = {
@@ -11,7 +11,7 @@ const buttonDeleteConfiguration = {
 	iconButton: "fa-trash",
 	iconoId: "deleteDataIcono",
 	textLabel: "Borrar Contenedores",
-	textLabelPosition: "right",
+	textLabelPosition: "down",
 };
 
 const buttonSaveData = ButtonCreateInElemetLI.getButtonElement(buttonSaveConfiguration);

@@ -14,7 +14,7 @@ async function mainModal() {
 			buttonId: buttonReceiptContainerId,
 			iconButton: "fa-list",
 			textLabel: "Mostrar Contenedores",
-			textLabelPosition: "right",
+			textLabelPosition: "down",
 		};
 
 		/**

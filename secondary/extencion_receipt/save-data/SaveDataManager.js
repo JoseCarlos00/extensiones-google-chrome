@@ -69,11 +69,13 @@ class SaveDataManager {
 		this.buttonSaveData.addEventListener("click", (e) => this.eventClickManager.handleEvent(e));
 		this.buttonDeleteData.addEventListener("click", (e) => this.handleDeleteData(e));
 
-		window.addEventListener(this.eventNameStorgageChange, () => this.handleMarckSaveData());
+		window.addEventListener(this.eventNameStorgageChange, () => this.handleSaveDataMark());
+
+		this.handleSaveDataMark();
 	}
 
-	handleMarckSaveData() {
-		const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer);
+	handleSaveDataMark() {
+		const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer) ?? {};
 
 		if (!dataContainer || saveData?.length === 0) {
 			this.markSaveData(true);
@@ -85,7 +87,7 @@ class SaveDataManager {
 
 	handleDeleteData() {
 		try {
-			const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer);
+			const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer) ?? {};
 
 			if (!dataContainer) {
 				console.warn("No hay datos para eliminar");
@@ -112,10 +114,19 @@ class SaveDataManager {
 			return;
 		}
 
+		if (!this.buttonDeleteData) {
+			console.error("No existe el botón de eliminar datos.");
+			return;
+		}
+
 		if (isRemoveMark) {
 			this.buttonSaveData.classList.remove("save-data-active");
+			this.buttonDeleteData.classList.remove("delete-data-active");
+			this.buttonDeleteData.classList.add("disabled");
 		} else {
 			this.buttonSaveData.classList.add("save-data-active");
+			this.buttonDeleteData.classList.add("delete-data-active");
+			this.buttonDeleteData.classList.remove("disabled");
 		}
 	}
 }

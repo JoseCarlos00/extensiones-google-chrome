@@ -6,34 +6,33 @@ class EventClickManagerStorage {
 		this.receiptId = "ListPaneDataGrid_RECEIPT_ID";
 
 		this.receiptTypeTralados = new ReceiptTypeTralados({ nameStorageContainer });
+		this.receiptTypeDevoluciones = new ReceiptTypeDevoluciones({ nameStorageContainer });
 	}
 
 	handleEvent() {
 		const rows = Array.from(this.tbodyTable?.rows) || [];
-
 		if (rows.length === 0) return;
 
 		const firstRow = rows[0];
-
 		const receiptId = firstRow.querySelector(`td[aria-describedby="${this.receiptId}"]`)?.textContent?.trim();
 
 		if (!receiptId) return;
 
-		const containersList = this.getContainersList(rows);
-		console.log({ handleEvent: containersList });
-
 		if (receiptId.includes("-TR-111-")) {
 			console.warn("DEVOLUCIONES");
+			const containersList = this.getContainersList({ rows, receiptType: "DEVOLUCIONES" });
+			this.receiptTypeDevoluciones.handleSaveData({ containersList });
 			return;
 		}
 
 		if (receiptId.includes("TR_E-B")) {
 			console.warn("TRASLADOS");
+			const containersList = this.getContainersList({ rows, receiptType: "TRASLADOS" });
 			this.receiptTypeTralados.handleSaveData({ containersList });
 		}
 	}
 
-	getContainersList(rows = []) {
+	getContainersList({ rows = [], receiptType }) {
 		try {
 			if (rows.length === 0) {
 				return [];
@@ -46,9 +45,16 @@ class EventClickManagerStorage {
 				.map((row) => {
 					const licencePlateIdValue = normalizeString(row.querySelector(`td[aria-describedby=${this.licencePlateId}]`));
 					const statusValue = normalizeString(row.querySelector(`td[aria-describedby=${this.status}]`));
+					const receiptIdValue = normalizeString(row.querySelector(`td[aria-describedby=${this.receiptId}]`));
 
 					if (statusValue === "Check In Pending") {
-						return licencePlateIdValue;
+						if (receiptType === "TRASLADOS") {
+							return licencePlateIdValue;
+						}
+
+						if (receiptType === "DEVOLUCIONES") {
+							return [receiptIdValue, licencePlateIdValue];
+						}
 					}
 				})
 				.filter(Boolean);
