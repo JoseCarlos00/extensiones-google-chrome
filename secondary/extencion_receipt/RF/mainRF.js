@@ -1,32 +1,31 @@
 // Crear una instancia de la clase y ejecutar la inicialización
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
 	try {
 		const inputHiddenReceiptPreference = Form1?.HIDDENRECPREF ?? "";
 
 		const configurationControl = recoverSettingsStorage();
-		const configurationManager = new Configuration({ ...configurationControl });
+		const configurationManager = new Configuration({
+			...configurationControl,
+			receiptType: inputHiddenReceiptPreference?.value,
+		});
 
-		console.log({ configurationManager });
-		configurationManager.initialize();
+		await configurationManager.initialize();
 
-		if (inputHiddenReceiptPreference?.value === "TRASLADOS") {
-			// const receiptManager = new Traslados({ configurationManager });
-			// console.log(receiptManager);
-			// receiptManager.init();
-			return;
-		}
+		console.log({ inputHiddenReceiptPreference });
 
-		if (inputHiddenReceiptPreference?.value === "DEVOLUCIONES") {
-			// const getDataForm = new GetDataDevolucionesForm({ nameDataStorage: "receiptContainerDataDevoluciones" });
-			// getDataForm.render();
-			// const receiptManager = new Devoluciones({ configurationManager });
-			// console.log(receiptManager);
-			// setTimeout(() => {
-			// 	receiptManager.init();
-			// }, 50);
-		}
+		// if (inputHiddenReceiptPreference?.value === "TRASLADOS") {
+		// 	const receiptManager = new Traslados({ configurationControl });
+		// 	return;
+		// }
+
+		// if (inputHiddenReceiptPreference?.value === "DEVOLUCIONES") {
+		// 	const getDataForm = new GetDataDevolucionesForm();
+		// 	await getDataForm.render();
+
+		// 	const receiptManager = new Devoluciones({ configurationControl });
+		// }
 	} catch (error) {
-		console.error("Error: no se pudo crear ReceitManagerRF", error.message);
+		console.error("Ha ocurrido un error en [mainRF]:", error.message);
 	}
 });
 

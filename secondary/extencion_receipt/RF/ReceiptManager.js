@@ -1,19 +1,13 @@
-console.log("Receit Manager RF Class");
-
 class ReceitManagerRF {
-	constructor({ configurationManager }) {
+	constructor({ autoComplete, confirmDelay, confirmOk }) {
 		try {
-			this.configurationManager = configurationManager;
+			this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
 
-			// Inputs
-			this.inputTrailerId = Form1?.TRAILERID;
-			this.inputLicencePlate = Form1?.CONTID;
-
-			// buttons action
-			this.btnOK = document.querySelector("input[type=submit][value=OK]");
-			this.btnDone = document.querySelector("input[type=button][value=Done]");
-
-			this.nameStorageContainer = "dataContainers";
+			// Configuracion inicial
+			this.autoComplete = autoComplete;
+			this.confirmOk = confirmOk;
+			this.confirmDelay = confirmDelay;
+			this.initReceipt = this.getInitReceiptStorage();
 
 			this.nameStorage = {
 				autoComplete: "autoCompleteReceipt",
@@ -22,24 +16,11 @@ class ReceitManagerRF {
 				initReceipt: "initReceipt",
 			};
 
-			// Configuracion inicial
-			this.autoComplete = true;
-			this.confirmOk = false;
-			this.confirmDelay = 500;
-			this.initReceipt = this.getInitReceiptStorage();
-
-			// Title Surtido
-			this.tittleSurtido = document.getElementsByTagName("h3")[0]?.textContent?.trim() ?? "";
-			this.messageInvaliteTrailerId = document.getElementsByTagName("h3")[1]?.textContent?.trim() ?? "";
-			this.messageInvaliteLicencePlate = document.getElementsByTagName("h3")[1]?.textContent?.trim() ?? "";
-
-			this.isValideTrailerIdTitle = this.tittleSurtido === "Trailer id";
-			this.isValideLicencePlate = this.tittleSurtido === "License plate";
-
-			this.recoverSettingsStorage();
-			this.dataContainerStorage = this.configurationManager?.getSaveStorageData();
+			// Storage
+			this.dataStorage = LocalStorageHelper.get(this.nameStorageContainer);
+			this.dataContainerStorage = dataStorage?.dataContainer;
 		} catch (error) {
-			console.error("Ha ocurrido un error al inicializar el objeto:", error.message);
+			console.error("Ha ocurrido un error al inicializar el ReceitManagerRF:", error.message);
 		}
 	}
 
@@ -52,7 +33,6 @@ class ReceitManagerRF {
 	recoverSettingsStorage() {
 		const savedAutocomplete = localStorage.getItem(this.nameStorage.autoComplete);
 		const savedConfirmOk = localStorage.getItem(this.nameStorage.confirmOk);
-		const savedConfirmDelay = localStorage.getItem(this.nameStorage.confirmDelay);
 
 		// Recuperar y verificar si confirmOk es válido (no ha pasado más de 1 hora)
 		if (savedConfirmOk !== null) {
@@ -70,17 +50,10 @@ class ReceitManagerRF {
 		}
 
 		this.autoComplete = savedAutocomplete === null ? this.autoComplete : JSON.parse(savedAutocomplete);
-		this.confirmDelay = savedConfirmDelay === null ? this.confirmDelay : parseInt(savedConfirmDelay, 10);
 	}
 
-	setValueTrailerIdInput() {
-		const tralerId = this.configurationManager.getTrailerId();
-		console.log("[setValueTrailerIdInput]: tralerId:", tralerId);
-
-		if (this.inputTrailerId && tralerId) {
-			this.inputTrailerId.value = tralerId;
-			this.submitForm();
-		}
+	autocompleteForm() {
+		throw new Error("Method not implemented in the class child");
 	}
 
 	setValueLicencePlate() {
@@ -91,14 +64,19 @@ class ReceitManagerRF {
 		}
 
 		// Obtén el primer objeto del array
-		const firstObject = this.dataContainerStorage[0];
+		const firstObject = this.dataContainerStorage?.[0];
 
 		// Verifica si el objeto tiene un array `containers` válido
 		if (!firstObject?.containers || firstObject?.containers?.length === 0) {
 			// Elimina el objeto si su `containers` está vacío
 			this.dataContainerStorage?.shift();
-			console.log("El primer objeto fue eliminado porque `containers` está vacío.");
-			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+			console.log("[1] El primer objeto fue eliminado porque `containers` está vacío.");
+
+			LocalStorageHelper.save(this.nameStorageContainer, {
+				...this.storageContainer,
+				dataContainer: this.dataContainerStorage,
+			});
+
 			console.warn("No hay datos gurdados");
 			return;
 		}
@@ -106,13 +84,20 @@ class ReceitManagerRF {
 		// Obtén y procesa el primer elemento de `containers`
 		const firstLicencePlate = firstObject.containers.shift();
 		console.log(`Procesando placa: ${firstLicencePlate}`);
-		LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
+
+		LocalStorageHelper.save(this.nameStorageContainer, {
+			...this.storageContainer,
+			dataContainer: this.dataContainerStorage,
+		});
 
 		// Si después de eliminar, el array `containers` está vacío, elimina el objeto completo
 		if (firstObject.containers?.length === 0) {
 			this.dataContainerStorage.shift();
-			LocalStorageHelper.save(this.nameStorageContainer, this.dataContainerStorage);
-			console.log("El primer objeto fue eliminado porque `containers` quedó vacío.");
+			LocalStorageHelper.save(this.nameStorageContainer, {
+				...this.storageContainer,
+				dataContainer: this.dataContainerStorage,
+			});
+			console.log("[2] El primer objeto fue eliminado porque `containers` quedó vacío.");
 		}
 
 		if (firstLicencePlate === "DONE") {
@@ -126,31 +111,6 @@ class ReceitManagerRF {
 		this.submitForm();
 	}
 
-	autocompleteForm() {
-		try {
-			if (!this.autoComplete) return;
-
-			const storageLength = Array.from(this.dataContainerStorage).length ?? 0;
-
-			if (!this.dataContainerStorage || storageLength === 0) {
-				console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
-				return;
-			}
-
-			if (this.isValideTrailerIdTitle) {
-				this.setValueTrailerIdInput();
-				return;
-			}
-
-			if (this.isValideLicencePlate) {
-				this.setValueLicencePlate();
-				return;
-			}
-		} catch (error) {
-			console.error("Error: [AutoComplete]:", error);
-		}
-	}
-
 	onclickButtonDonde() {
 		if (!this.confirmOk || !this.btnDone) {
 			console.error("No se encontró el botón DONE");
@@ -162,58 +122,21 @@ class ReceitManagerRF {
 		}, this.confirmDelay);
 	}
 
-	submitForm() {
-		if (!this.confirmOk || !this.btnOK) return;
-
-		if (
-			this.inputTrailerId?.value === "" &&
-			this.inputTrailerId &&
-			this.messageInvaliteTrailerId !== "Invalid Trailer ID."
-		) {
-			console.warn("Input Trailer ID vacío");
-			return;
-		}
-
-		if (
-			this.inputLicencePlate?.value === "" &&
-			this.inputLicencePlate &&
-			this.messageInvaliteLicencePlate !== "Configuracion"
-		) {
-			console.warn("Input Licence Plate vacío");
-			return;
-		}
-
-		setTimeout(() => {
-			console.warn("Confirmar button OK");
-			this.btnOK.click();
-		}, this.confirmDelay);
-	}
-
 	handleGetData() {
-		this.dataContainerStorage = this.configurationManager?.getSaveStorageData();
-		this.changeInitReceiptStorage();
+		this.dataContainerStorage = LocalStorageHelper.get(this.nameStorageContainer);
+		this.dataContainerStorage = dataStorage?.dataContainer;
 		this.autocompleteForm();
-	}
-
-	setEventInitReceipt() {
-		const btnInitReceipt = document.getElementById("init-receipt");
-
-		if (!btnInitReceipt) {
-			console.error('No se encontró el elemento con id "init-receipt".');
-			return;
-		}
-
-		btnInitReceipt.addEventListener("click", () => this.handleGetData());
-	}
-
-	changeInitReceiptStorage() {
-		this.initReceipt = true;
-		sessionStorage.setItem(this.nameStorage.initReceipt, JSON.stringify(true));
 	}
 
 	setEventListeners() {
 		this.setEventInitReceipt();
 		this.autocompleteForm();
+
+		window.addEventListener(this.eventStorgageChange, () => this.handleGetData());
+
+		window.addEventListener("init-receipt-event", () => {
+			this.initReceipt = this.getInitReceiptStorage();
+		});
 	}
 
 	init() {

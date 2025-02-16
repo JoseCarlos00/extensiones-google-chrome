@@ -1,37 +1,43 @@
 class Configuration {
 	constructor({ autoComplete, confirmDelay, confirmOk, receiptType }) {
-		this.nameStorageContainer = nameStorageContainer;
+		try {
+			this.nameStorageContainer = nameStorageContainer;
+			this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
 
-		this.autoComplete = autoComplete;
-		this.confirmOk = confirmOk;
-		this.confirmDelay = confirmDelay;
+			this.autoComplete = autoComplete;
+			this.confirmOk = confirmOk;
+			this.confirmDelay = confirmDelay;
 
-		this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
+			this.nameStorage = {
+				autoComplete: "autoCompleteReceipt",
+				confirmOk: "confirmOkReceipt",
+				confirmDelay: "confirmDelayReceipt",
+				initReceipt: "initReceipt",
+			};
 
-		this.nameStorage = {
-			autoComplete: "autoCompleteReceipt",
-			confirmOk: "confirmOkReceipt",
-			confirmDelay: "confirmDelayReceipt",
-			initReceipt: "initReceipt",
-		};
+			this.trailerIdLabel = null;
+			this.btnInitReceipt = null;
+			this.btnCancelReceipt = null;
 
-		this.dataStorage = LocalStorageHelper.get(this.nameStorageContainer);
-		this.dataContainerStorage = dataStorage?.dataContainer;
-		this.trailerId = dataStorage?.trailerId || "No encontrado";
+			this.receiptTypeLocal = receiptType;
 
-		this.isReceiptTypeTralados = receiptType === "TRASLADOS";
-		this.isReceiptTypedevoluciones = receiptType === "DEVOLUCIONES";
+			this.dataStorage = LocalStorageHelper.get(this.nameStorageContainer) || {};
+			this.dataContainerStorage = this.dataStorage?.dataContainer || [];
+			this.trailerId = this.dataStorage?.trailerId || "No encontrado";
+			this.receiptType = this.dataStorage?.receiptType;
 
-		this.renderConfiguration = new RenderConfiguration({
-			autoComplete: this.autoComplete,
-			confirmOk: this.confirmOk,
-			receiptType,
-			trailerId: this.trailerId,
-		});
+			this.renderConfiguration = new RenderConfiguration({
+				autoComplete: this.autoComplete,
+				confirmOk: this.confirmOk,
+				receiptType: this.receiptTypeLocal,
+				trailerId: this.trailerId,
+			});
 
-		this.trailerIdLabel = null;
-		this.btnInitReceipt = null;
-		this.btnCancelReceipt = null;
+			this.isReceiptTypeTralados = this.receiptType === "TRASLADOS";
+			this.isReceiptTypedevoluciones = this.receiptType === "DEVOLUCIONES";
+		} catch (error) {
+			console.error("Error al crear [Configuration constructor]:", error);
+		}
 	}
 
 	async initialize() {
@@ -65,29 +71,41 @@ class Configuration {
 	}
 
 	setEventListener() {
-		const form = document.getElementById("form-config");
-		if (!form) return;
+		try {
+			const form = document.getElementById("form-config");
+			if (!form) return;
 
-		const { confirmToggle, autoCompleteToggle } = form;
+			const { confirmToggle, autoCompleteToggle } = form;
 
-		autoCompleteToggle?.addEventListener("change", () => {
-			this.autoComplete = autoCompleteToggle.checked;
-			localStorage.setItem(this.nameStorage.autoComplete, JSON.stringify(this.autoComplete));
-		});
+			if (!confirmToggle) {
+				throw new Error("No se encontro el elemento #confirm-toggle");
+			}
 
-		confirmToggle?.addEventListener("change", () => {
-			confirmDelayInput.disabled = !confirmToggle.checked;
-			this.confirmOk = confirmToggle.checked;
+			if (!autoCompleteToggle) {
+				throw new Error("No se encontro el elemento #auto-complete-toggle");
+			}
 
-			// Guardar confirmOk y la hora de activación
-			localStorage.setItem(
-				this.nameStorage.confirmOk,
-				JSON.stringify({
-					value: this.confirmOk,
-					timestamp: Date.now(), // Guarda la marca de tiempo actual
-				})
-			);
-		});
+			autoCompleteToggle?.addEventListener("change", () => {
+				this.autoComplete = autoCompleteToggle.checked;
+				localStorage.setItem(this.nameStorage.autoComplete, JSON.stringify(this.autoComplete));
+			});
+
+			confirmToggle?.addEventListener("change", () => {
+				this.confirmOk = confirmToggle.checked;
+
+				// Guardar confirmOk y la hora de activación
+				localStorage.setItem(
+					this.nameStorage.confirmOk,
+					JSON.stringify({
+						value: this.confirmOk,
+						timestamp: Date.now(), // Guarda la marca de tiempo actual
+					})
+				);
+			});
+		} catch (error) {
+			console.error("[Configuration] Ha ocurrido un error al configurar los eventos:", error);
+			throw new Error("Ha ocurrido un error al configurar los eventos");
+		}
 	}
 
 	setEventStorage() {
@@ -98,7 +116,8 @@ class Configuration {
 				sessionStorage.removeItem(this.nameStorage.initReceipt);
 				LocalStorageHelper.remove(this.nameStorageContainer);
 
-				this.isReceiptTypeTralados && this.verifyTrailerId();
+				this.setvalueInStorage();
+				this.handleStorageEvent();
 			});
 
 			btnInitReceipt.addEventListener("click", () => {
@@ -107,7 +126,18 @@ class Configuration {
 				document.dispatchEvent(initReceiptEvent);
 			});
 
-			window.addEventListener(this.eventStorgageChange, () => this.handleStorageEvent());
+			// Windows
+			window.addEventListener(this.eventStorgageChange, () => {
+				console.log("Event [eventStorgageChange] In ReceiptConfiguration");
+			});
+
+			window.addEventListener("storage", ({ key }) => {
+				if (key === this.nameStorageContainer) {
+					console.log("Event [event storage] In ReceiptConfiguration");
+					this.setvalueInStorage();
+					this.handleStorageEvent();
+				}
+			});
 		} catch (error) {
 			console.error("Ha ocurrido un error al guardar eventos de Storage:", error?.message);
 		}
@@ -118,17 +148,28 @@ class Configuration {
 
 		this.trailerIdLabel.innerHTML = `Trailer Id: ${this.trailerId}`;
 		console.log("trailerId:", this.trailerId);
-
-		if (this.trailerId && this.trailerId !== "No encontrado") {
-			btnInitReceipt.removeAttribute("disabled");
-		} else {
-			btnInitReceipt.setAttribute("disabled", "");
-		}
 	};
+
+	setvalueInStorage() {
+		this.dataStorage = LocalStorageHelper.get(this.nameStorageContainer) || {};
+		this.dataContainerStorage = this.dataStorage?.dataContainer || [];
+		this.trailerId = this.dataStorage?.trailerId || "No encontrado";
+	}
 
 	// -> Cada que se actualize el valor en local estorage. Agregar o Eliminar
 	handleStorageEvent() {
-		if (this.btnInitReceipt && this.dataContainerStorage) {
+		console.log("handleStorageEvent");
+
+		this.verifyTrailerId();
+
+		console.log("handleStorageEvent:", {
+			btnInitReceipt: this.btnInitReceipt,
+			dataStorage: this.dataStorage,
+			dataContainerStorage: this.dataContainerStorage,
+			bool: this.btnInitReceipt && this.dataContainerStorage,
+		});
+
+		if (this.btnInitReceipt && this.dataContainerStorage.length > 0) {
 			this.btnInitReceipt.removeAttribute("disabled");
 		} else {
 			this.btnInitReceipt.setAttribute("disabled", "");

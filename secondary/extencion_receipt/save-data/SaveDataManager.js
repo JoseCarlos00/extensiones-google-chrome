@@ -6,7 +6,7 @@ class SaveDataManager {
 		this.buttonDeleteData = buttonDeleteData;
 
 		this.eventClickManager = null;
-		this.eventNameStorgageChange = eventNameStorgageChange;
+		this.eventStorgageChange = eventNameStorgageChange;
 	}
 
 	async initialize() {
@@ -69,7 +69,18 @@ class SaveDataManager {
 		this.buttonSaveData.addEventListener("click", (e) => this.eventClickManager.handleEvent(e));
 		this.buttonDeleteData.addEventListener("click", (e) => this.handleDeleteData(e));
 
-		window.addEventListener(this.eventNameStorgageChange, () => this.handleSaveDataMark());
+		window.addEventListener(this.eventStorgageChange, () => {
+			console.log("Evvent [eventStorgageChange] In SaveDataManager");
+
+			this.handleSaveDataMark();
+		});
+
+		window.addEventListener("storage", ({ key }) => {
+			if (key === this.nameStorageContainer) {
+				console.log("Event [event storage] In SaveDataManager");
+				this.handleSaveDataMark();
+			}
+		});
 
 		this.handleSaveDataMark();
 	}

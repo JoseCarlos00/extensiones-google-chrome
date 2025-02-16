@@ -1,16 +1,15 @@
 class GetDataDevolucionesForm {
-	constructor({ nameDataStorage = "dataContentRf" }) {
-		this.formularioHTML = formularioHTMLReceiptDevoluciones;
-
-		this.nameDataStorage = nameDataStorage;
-
-		this.nameDataStoragePause = nameDataStorage + "_puuse";
-		this.pauseSubmmit = this.getValuePauseSubmit();
-
-		this.EVENTS = {
-			NEW_REGISTER: "new-register",
-		};
-		this.receiptType = "TRASLADOS";
+	constructor() {
+		try {
+			this.formularioHTML = formularioHTMLReceiptDevoluciones;
+			this.pauseSubmmit = this.getValuePauseSubmit() ?? false;
+			this.nameDataStorage = nameStorageContainer;
+			this.nameDataStoragePause = nameDataStorage + "_puuse";
+			this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
+			this.receiptType = "DEVOLUCIONES";
+		} catch (error) {
+			console.error("Error al inicializar la clase GetDataDevolucionesForm", error);
+		}
 	}
 
 	async render() {
@@ -44,10 +43,6 @@ class GetDataDevolucionesForm {
 		document.body.insertAdjacentHTML("beforeend", contadores);
 	}
 
-	getValuePauseSubmit() {
-		return sessionStorage.getItem(this.nameDataStoragePause) === "true";
-	}
-
 	async setEventsListener() {
 		try {
 			const form = document.querySelector("#registroForm");
@@ -59,39 +54,9 @@ class GetDataDevolucionesForm {
 				throw new Error("Formulario no encontrado. #registroForm");
 			}
 
+			form.addEventListener("submit", () => this.handleSumitEvent);
+
 			const { pause, cancel } = form;
-
-			const handleSumitEvent = async (e) => {
-				try {
-					e.preventDefault();
-
-					const { dataToInsert } = form;
-					console.log("dataToInsert:", dataToInsert?.value);
-
-					if (!dataToInsert) {
-						throw new Error("No se encontró el campo de texto [name='dataToInsert']");
-					}
-
-					// Dividir el texto en líneas
-					const lineas =
-						dataToInsert?.value
-							?.trim()
-							?.split("\n")
-							?.map((i) => i?.trim())
-							?.filter(Boolean) ?? [];
-
-					if (lineas.length === 0) {
-						throw new Error("No hay líneas para insertar");
-					}
-
-					this.registrarDatos({ lineas });
-					dataToInsert.value = "";
-				} catch (error) {
-					console.error("Error al manejar el evento handleSumitEvent", error.message);
-				}
-			};
-
-			form.addEventListener("submit", handleSumitEvent);
 
 			cancel?.addEventListener("click", (e) => this.handleCancelInsertData(e));
 
@@ -104,56 +69,8 @@ class GetDataDevolucionesForm {
 		}
 	}
 
-	handlePauseInsertData(pause) {
-		if (!pause) {
-			console.error('No se encontró el elemento [name="pause"]');
-			return;
-		}
-
-		const newPasueValue = !this.pauseSubmmit;
-
-		sessionStorage.setItem(this.nameDataStoragePause, String(newPasueValue));
-		this.pauseSubmmit = newPasueValue;
-
-		this.setPauseValuenInDOM(pause);
-	}
-
-	handleCancelInsertData() {
-		const timeDelayReload = 250;
-
-		// Mostrar una alerta que permita al usuario cancelar la ejecución de la función
-		const confirmacion = confirm(`¿Quieres cancelar?\nSe borraran los datos ingresados`);
-
-		try {
-			if (confirmacion) {
-				// Si el usuario confirma, cancelar la ejecución de la función
-				LocalStorageHelper.remove(this.nameDataStorage);
-
-				setTimeout(() => {
-					window.location.reload();
-				}, timeDelayReload);
-			}
-		} catch (error) {
-			console.error("Error: al cancelar: ", error.message);
-		}
-	}
-
-	setPauseValuenInDOM(pause) {
-		const pauseSubmmit = this.pauseSubmmit ? "on" : "off";
-		pause.setAttribute("pause-active", pauseSubmmit);
-		pause.innerHTML = `Pausa: ${pauseSubmmit}`;
-	}
-
-	saveDataToSessionStorage(data) {
-		sessionStorage.setItem(this.nameDataStorage, JSON.stringify(data));
-	}
-
-	getContentFromSessionStorage() {
-		return JSON.parse(sessionStorage.getItem(this.nameDataStorage)) ?? [];
-	}
-
-	deleteDataFromSessionStorage() {
-		sessionStorage.removeItem(this.nameDataStorage);
+	getValuePauseSubmit() {
+		return sessionStorage.getItem(this.nameDataStoragePause) === "true";
 	}
 
 	registrarDatos({ lineas }) {
@@ -187,8 +104,80 @@ class GetDataDevolucionesForm {
 		this.updateCounter(data.length);
 		this.alertDataSaved();
 
-		const navigationEvent = new Event(this.EVENTS.NEW_REGISTER);
-		window.dispatchEvent(navigationEvent);
+		const eventStorgageChange = new Event(this.eventStorgageChange);
+		window.dispatchEvent(eventStorgageChange);
+	}
+
+	async handleSumitEvent(e) {
+		try {
+			e.preventDefault();
+
+			const { dataToInsert } = form;
+
+			if (!dataToInsert) {
+				throw new Error("No se encontró el campo de texto [name='dataToInsert']");
+			}
+
+			// Dividir el texto en líneas
+			const lineas =
+				dataToInsert?.value
+					?.trim()
+					?.split("\n")
+					?.map((i) => i?.trim())
+					?.filter(Boolean) ?? [];
+
+			if (lineas.length === 0) {
+				throw new Error("No hay líneas para insertar");
+			}
+
+			dataToInsert.value = "";
+			this.registrarDatos({ lineas });
+		} catch (error) {
+			console.error("Error al manejar el evento handleSumitEvent", error.message);
+		}
+	}
+
+	handlePauseInsertData(pause) {
+		if (!pause) {
+			console.error('No se encontró el elemento [name="pause"]');
+			return;
+		}
+
+		const newPasueValue = !this.pauseSubmmit;
+
+		sessionStorage.setItem(this.nameDataStoragePause, String(newPasueValue));
+		this.pauseSubmmit = newPasueValue;
+
+		this.setPauseValuenInDOM(pause);
+	}
+
+	handleCancelInsertData() {
+		const timeDelayReload = 250;
+
+		const data = LocalStorageHelper.get(this.nameDataStorage);
+		if (!data) return; // No hay datos para cancelar
+
+		// Mostrar una alerta que permita al usuario cancelar la ejecución de la función
+		const confirmacion = confirm(`¿Quieres cancelar?\nSe borraran los datos ingresados`);
+
+		try {
+			if (confirmacion) {
+				// Si el usuario confirma, cancelar la ejecución de la función
+				LocalStorageHelper.remove(this.nameDataStorage);
+
+				setTimeout(() => {
+					window.location.reload();
+				}, timeDelayReload);
+			}
+		} catch (error) {
+			console.error("Error: al cancelar: ", error.message);
+		}
+	}
+
+	setPauseValuenInDOM(pause) {
+		const pauseSubmmit = this.pauseSubmmit ? "on" : "off";
+		pause.setAttribute("pause-active", pauseSubmmit);
+		pause.innerHTML = `Pausa: ${pauseSubmmit}`;
 	}
 
 	alertDataSaved() {
@@ -211,7 +200,6 @@ const formularioHTMLReceiptDevoluciones = /*html*/ `
   <textarea  id="dataToInsert" name="dataToInsert" class="textarea" rows="4" cols="50" required placeholder="Receipt ID\t\tContainer\n357-TR-111-12119\tFMA0002376952"></textarea>
   
   <div>
-    <button id="initRecDev" type="button"  tabindex="-1">Iniciar</button>
     <button id="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
     <button id="insertData" type="submit">Registrar</button>
     <button id="cancel" type="button">Cancelar</button>

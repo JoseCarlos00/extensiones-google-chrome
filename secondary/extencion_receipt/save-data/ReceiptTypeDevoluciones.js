@@ -33,7 +33,7 @@ class ReceiptTypeDevoluciones {
 			ToastAlert.showAlertMinBotton("Datos guardados con éxito", "success");
 
 			// Crear una nueva instancia del evento cada vez que se dispare
-			const eventStorgageChange = new Event(this.eventNameStorgageChange);
+			const eventStorgageChange = new Event(this.eventStorgageChange);
 			window.dispatchEvent(eventStorgageChange);
 		} catch (error) {
 			console.error("Error al guardar los datos:", error.message, error);

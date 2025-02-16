@@ -10,15 +10,6 @@
 		"48": "images/inventory48.png",
 		"128": "images/inventory128.png"
 	},
-	"web_accessible_resources": [
-		{
-			"resources": ["images/icons-alert.png"],
-			"matches": [
-				"https://wms.fantasiasmiguel.com.mx/scale/insights/2779*",
-				"https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"
-			]
-		}
-	],
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
@@ -53,8 +44,13 @@
 				"constants.js",
 				"utils/LocalStorageHelper.js",
 				"utils/ToaAlertRF.js",
-				"configuration-receipt/RenderConfiguration.js",
-				"configuration-receipt/ReceiptConfiguration.js"
+				"RF/configuration-receipt/RenderConfiguration.js",
+				"RF/configuration-receipt/ReceiptConfiguration.js",
+				"RF/GetDataDevolucionesForm.js",
+				"RF/ReceiptManager.js",
+				"RF/Traslados.js",
+				"RF/Devoluciones.js",
+				"RF/mainRF.js"
 			],
 			"css": ["CSS/Receipt.css", "CSS/toasAlert.css"]
 		}

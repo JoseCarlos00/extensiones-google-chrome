@@ -1,11 +1,15 @@
 class RenderConfiguration {
 	constructor({ autoComplete, confirmOk, receiptType, trailerId }) {
-		this.autoComplete = autoComplete;
-		this.confirmOk = confirmOk;
-		this.receiptType = receiptType;
-		this.trailerId = trailerId;
+		try {
+			this.autoComplete = autoComplete;
+			this.confirmOk = confirmOk;
+			this.receiptType = receiptType;
+			this.trailerId = trailerId;
 
-		this.isTrailerId = !trailerId || trailerId !== "No encontrado";
+			this.isTrailerId = !this.trailerId || this.trailerId !== "No encontrado";
+		} catch (error) {
+			throw new Error(`Error al crear la configuración de renderizado: ${error.message}`);
+		}
 	}
 
 	async render() {
@@ -51,7 +55,7 @@ class RenderConfiguration {
 		let label = "";
 
 		if (this.receiptType === "TRASLADOS") {
-			label = `<label id="trailer-id-label">Trailer Id: ${trailerId}</label>`;
+			label = `<label id="trailer-id-label">Trailer Id: ${this.trailerId}</label>`;
 		}
 
 		return /*html*/ `
@@ -59,7 +63,7 @@ class RenderConfiguration {
         ${label}
       <div class="input-group">
         <button id="init-receipt" type="button" name="init-receipt" ${disabled(this.isTrailerId)}>
-          Iniciar Recibo
+          Iniciar
         </button>
 
         <button id="cancel-receipt" type="button" name="cancel-receipt">

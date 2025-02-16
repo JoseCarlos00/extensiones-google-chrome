@@ -4,7 +4,7 @@
 	top: 20px;
 	left: 20px;
 
-	width: 200px;
+	width: 250px;
 	height: auto;
 	color: #e3e3e3;
 	background-color: #212121;
@@ -121,6 +121,11 @@
 		.input-group {
 			display: flex;
 			justify-content: space-evenly;
+
+			button {
+				font-size: 15pt;
+				border-radius: 4px;
+			}
 		}
 	}
 }
