@@ -101,6 +101,9 @@ class SaveDataManager {
 				LocalStorageHelper.remove(this.nameStorageContainer);
 				this.markSaveData(true);
 				ToastAlert.showAlertMinBotton("Datos eliminados con éxito", "success");
+
+				const eventStorgageChange = new Event(this.eventStorgageChange);
+				window.dispatchEvent(eventStorgageChange);
 			}
 		} catch (error) {
 			console.error("Error al eleminar los datos guardados:", error.message, error);

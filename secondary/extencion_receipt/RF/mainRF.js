@@ -10,22 +10,20 @@ window.addEventListener("load", () => {
 		configurationManager.initialize();
 
 		if (inputHiddenReceiptPreference?.value === "TRASLADOS") {
-			const receiptManager = new Traslados({ configurationManager });
-			console.log(receiptManager);
-			receiptManager.init();
+			// const receiptManager = new Traslados({ configurationManager });
+			// console.log(receiptManager);
+			// receiptManager.init();
 			return;
 		}
 
 		if (inputHiddenReceiptPreference?.value === "DEVOLUCIONES") {
-			const getDataForm = new GetDataDevolucionesForm({ nameDataStorage: "receiptContainerDataDevoluciones" });
-			getDataForm.render();
-
-			const receiptManager = new Devoluciones({ configurationManager });
-			console.log(receiptManager);
-			setTimeout(() => {
-				receiptManager.init();
-			}, 50);
-			return;
+			// const getDataForm = new GetDataDevolucionesForm({ nameDataStorage: "receiptContainerDataDevoluciones" });
+			// getDataForm.render();
+			// const receiptManager = new Devoluciones({ configurationManager });
+			// console.log(receiptManager);
+			// setTimeout(() => {
+			// 	receiptManager.init();
+			// }, 50);
 		}
 	} catch (error) {
 		console.error("Error: no se pudo crear ReceitManagerRF", error.message);
