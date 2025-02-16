@@ -2,12 +2,7 @@ class ReceitManagerRF {
 	constructor({ autoComplete, confirmDelay, confirmOk }) {
 		try {
 			this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
-
-			// Configuracion inicial
-			this.autoComplete = autoComplete;
-			this.confirmOk = confirmOk;
-			this.confirmDelay = confirmDelay;
-			this.initReceipt = this.getInitReceiptStorage();
+			this.nameDataStorage = nameStorageContainer;
 
 			this.nameStorage = {
 				autoComplete: "autoCompleteReceipt",
@@ -16,17 +11,25 @@ class ReceitManagerRF {
 				initReceipt: "initReceipt",
 			};
 
+			// Configuracion inicial
+			this.autoComplete = autoComplete;
+			this.confirmOk = confirmOk;
+			this.confirmDelay = confirmDelay;
+			this.initReceipt = this.getInitReceiptStorage();
+			console.log("initReceipt", this.initReceipt);
+
 			// Storage
-			this.dataStorage = LocalStorageHelper.get(this.nameStorageContainer);
-			this.dataContainerStorage = dataStorage?.dataContainer;
+			this.dataStorage = LocalStorageHelper.get(this.nameDataStorage);
+			this.dataContainerStorage = this.dataStorage?.dataContainer;
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar el ReceitManagerRF:", error.message);
 		}
 	}
 
 	getInitReceiptStorage() {
-		const initReceiptStorage = JSON.parse(sessionStorage.getItem(this.nameStorage.initReceipt));
-		return initReceiptStorage || false;
+		const storage = sessionStorage.getItem("initReceipt");
+		const initReceiptStorage = storage ? JSON.parse(storage) : false;
+		return initReceiptStorage;
 	}
 
 	// Recuperar configuraciones almacenadas en localStorage

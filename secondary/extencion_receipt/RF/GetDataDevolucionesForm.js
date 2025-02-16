@@ -2,9 +2,9 @@ class GetDataDevolucionesForm {
 	constructor() {
 		try {
 			this.formularioHTML = formularioHTMLReceiptDevoluciones;
-			this.pauseSubmmit = this.getValuePauseSubmit() ?? false;
 			this.nameDataStorage = nameStorageContainer;
-			this.nameDataStoragePause = nameDataStorage + "_puuse";
+			this.pauseSubmmit = this.getValuePauseSubmit() ?? false;
+			this.nameDataStoragePause = this.nameDataStorage + "_puuse";
 			this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
 			this.receiptType = "DEVOLUCIONES";
 		} catch (error) {

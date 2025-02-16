@@ -33,8 +33,8 @@ class Configuration {
 				trailerId: this.trailerId,
 			});
 
-			this.isReceiptTypeTralados = this.receiptType === "TRASLADOS";
-			this.isReceiptTypedevoluciones = this.receiptType === "DEVOLUCIONES";
+			this.isReceiptTypeTralados = this.receiptTypeLocal === "TRASLADOS";
+			this.isReceiptTypedevoluciones = this.receiptTypeLocal === "DEVOLUCIONES";
 		} catch (error) {
 			console.error("Error al crear [Configuration constructor]:", error);
 		}
@@ -57,8 +57,12 @@ class Configuration {
 		this.btnInitReceipt = document.getElementById("init-receipt");
 		this.btnCancelReceipt = document.getElementById("cancel-receipt");
 
-		if (!this.trailerIdLabel && this.isReceiptTypeTralados) {
-			throw new Error("No se encontro el elemento #trailer-id-label");
+		console.log({ isReceiptTypeTralados: this.isReceiptTypeTralados });
+
+		if (this.isReceiptTypeTralados) {
+			if (!this.trailerIdLabel) {
+				throw new Error("No se encontro el elemento #trailer-id-label");
+			}
 		}
 
 		if (!this.btnInitReceipt) {
@@ -159,15 +163,7 @@ class Configuration {
 	// -> Cada que se actualize el valor en local estorage. Agregar o Eliminar
 	handleStorageEvent() {
 		console.log("handleStorageEvent");
-
 		this.verifyTrailerId();
-
-		console.log("handleStorageEvent:", {
-			btnInitReceipt: this.btnInitReceipt,
-			dataStorage: this.dataStorage,
-			dataContainerStorage: this.dataContainerStorage,
-			bool: this.btnInitReceipt && this.dataContainerStorage,
-		});
 
 		if (this.btnInitReceipt && this.dataContainerStorage.length > 0) {
 			this.btnInitReceipt.removeAttribute("disabled");

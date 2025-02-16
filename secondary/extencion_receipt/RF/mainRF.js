@@ -2,6 +2,20 @@
 window.addEventListener("load", async () => {
 	try {
 		const inputHiddenReceiptPreference = Form1?.HIDDENRECPREF ?? "";
+		const titileMainValue = document
+			.querySelector("#proRfWrapper > form > table > tbody > tr.touchscreen-show > td > b")
+			?.textContent?.trim();
+
+		console.log({ inputHiddenReceiptPreference: inputHiddenReceiptPreference?.value });
+		console.log({
+			titileMainValue,
+			bool: !!titileMainValue,
+		});
+
+		if (titileMainValue === "Select a receiving preference") {
+			// Si el título principal es igual a "Select a receiving preference", entamos en el menu principal
+			return;
+		}
 
 		const configurationControl = recoverSettingsStorage();
 		const configurationManager = new Configuration({
@@ -10,20 +24,19 @@ window.addEventListener("load", async () => {
 		});
 
 		await configurationManager.initialize();
+		console.log("Configuration render");
 
-		console.log({ inputHiddenReceiptPreference });
+		if (inputHiddenReceiptPreference?.value === "TRASLADOS") {
+			const receiptManager = new Traslados({ configurationControl });
+			return;
+		}
 
-		// if (inputHiddenReceiptPreference?.value === "TRASLADOS") {
-		// 	const receiptManager = new Traslados({ configurationControl });
-		// 	return;
-		// }
+		if (inputHiddenReceiptPreference?.value === "DEVOLUCIONES") {
+			const getDataForm = new GetDataDevolucionesForm();
+			await getDataForm.render();
 
-		// if (inputHiddenReceiptPreference?.value === "DEVOLUCIONES") {
-		// 	const getDataForm = new GetDataDevolucionesForm();
-		// 	await getDataForm.render();
-
-		// 	const receiptManager = new Devoluciones({ configurationControl });
-		// }
+			const receiptManager = new Devoluciones({ configurationControl });
+		}
 	} catch (error) {
 		console.error("Ha ocurrido un error en [mainRF]:", error.message);
 	}
