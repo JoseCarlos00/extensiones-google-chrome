@@ -1,7 +1,10 @@
 class Traslados extends ReceitManagerRF {
-	constructor({ configurationManager }) {
+	constructor(configurationManager) {
 		try {
+			const { receiptType } = configurationManager;
 			super(configurationManager);
+
+			console.log("Iniciando: ", receiptType);
 
 			// Inputs
 			this.inputTrailerId = Form1?.TRAILERID;

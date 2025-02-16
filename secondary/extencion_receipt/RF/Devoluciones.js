@@ -1,7 +1,10 @@
 class Devoluciones extends ReceitManagerRF {
-	constructor({ configurationManager }) {
+	constructor(configurationManager) {
 		try {
-			super({ configurationManager });
+			const { receiptType } = configurationManager;
+			super(configurationManager);
+
+			console.log("Iniciando: ", receiptType);
 
 			// Inputs
 			this.inputReceiptId = Form1?.RECID;

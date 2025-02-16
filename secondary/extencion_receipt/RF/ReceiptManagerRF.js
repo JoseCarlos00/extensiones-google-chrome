@@ -16,7 +16,6 @@ class ReceitManagerRF {
 			this.confirmOk = confirmOk;
 			this.confirmDelay = confirmDelay;
 			this.initReceipt = this.getInitReceiptStorage();
-			console.log("initReceipt", this.initReceipt);
 
 			// Storage
 			this.dataStorage = LocalStorageHelper.get(this.nameDataStorage);
