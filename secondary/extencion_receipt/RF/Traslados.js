@@ -1,10 +1,9 @@
 class Traslados extends ReceitManagerRF {
 	constructor(configurationManager) {
 		try {
-			const { receiptType } = configurationManager;
 			super(configurationManager);
 
-			console.log("Iniciando: ", receiptType);
+			console.log("Iniciando: ", this.currentReceiptType);
 
 			// Inputs
 			this.inputTrailerId = Form1?.TRAILERID;
@@ -28,21 +27,36 @@ class Traslados extends ReceitManagerRF {
 
 	autocompleteForm() {
 		try {
+			console.log("autocompleteForm", !this.currentReceiptType !== this.receiptType, {
+				autoComplete: this.autoComplete,
+				confirmOk: this.confirmOk,
+			});
+
+			if (this.currentReceiptType !== this.receiptType) {
+				console.error("Error: El tipo de recibo no coincide con el tipo de recibo configurado", {
+					currentReceiptType: this.currentReceiptType,
+					receiptType: this.receiptType,
+				});
+				return;
+			}
+
 			if (!this.autoComplete) return;
 
-			const storageLength = Array.from(this.dataContainerStorage).length ?? 0;
+			const storageLength = this.dataContainerStorage.length ?? 0;
+
+			this.updateCounter(storageLength);
 
 			if (!this.dataContainerStorage || storageLength === 0) {
 				console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
 				return;
 			}
 
-			if (this.isValideTrailerIdTitle) {
+			if (this.isValideTrailerIdTitle && this.inputTrailerId) {
 				this.setValueTrailerIdInput();
 				return;
 			}
 
-			if (this.isValideLicencePlate) {
+			if (this.isValideLicencePlate && this.inputLicencePlate) {
 				this.setValueLicencePlate();
 				return;
 			}
@@ -79,11 +93,12 @@ class Traslados extends ReceitManagerRF {
 	}
 
 	setValueTrailerIdInput() {
-		const tralerId = this.configurationManager.getTrailerId();
-		console.log("[setValueTrailerIdInput]: tralerId:", tralerId);
+		const tralerId = this.dataStorage?.trailerId;
+		console.log("[setValueTrailerIdInput]:", { tralerId, messageInvaliteTrailerId: this.messageInvaliteTrailerId });
 
-		if (this.inputTrailerId && tralerId) {
-			this.inputTrailerId.value = tralerId;
+		this.inputTrailerId.value = tralerId;
+
+		if (this.inputTrailerId && tralerId && this.messageInvaliteTrailerId !== "Invalid Trailer ID.") {
 			this.submitForm();
 		}
 	}

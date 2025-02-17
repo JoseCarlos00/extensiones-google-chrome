@@ -19,22 +19,22 @@ class Configuration {
 			this.btnInitReceipt = null;
 			this.btnCancelReceipt = null;
 
-			this.receiptTypeLocal = receiptType;
+			this.currentReceiptType = receiptType;
 
 			this.dataStorage = LocalStorageHelper.get(this.nameStorageContainer) || {};
 			this.dataContainerStorage = this.dataStorage?.dataContainer || [];
 			this.trailerId = this.dataStorage?.trailerId || "No encontrado";
 			this.receiptType = this.dataStorage?.receiptType;
 
+			this.isReceiptTypeTralados = this.currentReceiptType === "TRASLADOS";
+			this.isReceiptTypedevoluciones = this.currentReceiptType === "DEVOLUCIONES";
+
 			this.renderConfiguration = new RenderConfiguration({
 				autoComplete: this.autoComplete,
 				confirmOk: this.confirmOk,
-				receiptType: this.receiptTypeLocal,
+				receiptType: this.currentReceiptType,
 				trailerId: this.trailerId,
 			});
-
-			this.isReceiptTypeTralados = this.receiptTypeLocal === "TRASLADOS";
-			this.isReceiptTypedevoluciones = this.receiptTypeLocal === "DEVOLUCIONES";
 		} catch (error) {
 			console.error("Error al crear [Configuration constructor]:", error);
 		}
@@ -56,8 +56,6 @@ class Configuration {
 		this.trailerIdLabel = document.getElementById("trailer-id-label");
 		this.btnInitReceipt = document.getElementById("init-receipt");
 		this.btnCancelReceipt = document.getElementById("cancel-receipt");
-
-		console.log({ isReceiptTypeTralados: this.isReceiptTypeTralados });
 
 		if (this.isReceiptTypeTralados) {
 			if (!this.trailerIdLabel) {
@@ -89,12 +87,12 @@ class Configuration {
 				throw new Error("No se encontro el elemento #auto-complete-toggle");
 			}
 
-			autoCompleteToggle?.addEventListener("change", () => {
+			const handleAutoComplete = () => {
 				this.autoComplete = autoCompleteToggle.checked;
 				localStorage.setItem(this.nameStorage.autoComplete, JSON.stringify(this.autoComplete));
-			});
+			};
 
-			confirmToggle?.addEventListener("change", () => {
+			const handleConfirm = () => {
 				this.confirmOk = confirmToggle.checked;
 
 				// Guardar confirmOk y la hora de activación
@@ -105,6 +103,14 @@ class Configuration {
 						timestamp: Date.now(), // Guarda la marca de tiempo actual
 					})
 				);
+			};
+
+			autoCompleteToggle?.addEventListener("change", handleAutoComplete);
+			confirmToggle?.addEventListener("change", handleConfirm);
+
+			window.addEventListener("event-form-control", () => {
+				handleAutoComplete();
+				handleConfirm();
 			});
 		} catch (error) {
 			console.error("[Configuration] Ha ocurrido un error al configurar los eventos:", error);
@@ -126,13 +132,14 @@ class Configuration {
 
 			btnInitReceipt.addEventListener("click", () => {
 				sessionStorage.setItem(this.nameStorage.initReceipt, JSON.stringify(true));
+
 				const initReceiptEvent = new Event("init-receipt-event");
-				document.dispatchEvent(initReceiptEvent);
+				window.dispatchEvent(initReceiptEvent);
 			});
 
 			// Windows
 			window.addEventListener(this.eventStorgageChange, () => {
-				console.log("Event [eventStorgageChange] In ReceiptConfiguration");
+				this.handleStorageEvent();
 			});
 
 			window.addEventListener("storage", ({ key }) => {
@@ -165,7 +172,7 @@ class Configuration {
 		console.log("handleStorageEvent");
 		this.verifyTrailerId();
 
-		if (this.btnInitReceipt && this.dataContainerStorage.length > 0) {
+		if (this.btnInitReceipt && this.dataContainerStorage?.length > 0) {
 			this.btnInitReceipt.removeAttribute("disabled");
 		} else {
 			this.btnInitReceipt.setAttribute("disabled", "");

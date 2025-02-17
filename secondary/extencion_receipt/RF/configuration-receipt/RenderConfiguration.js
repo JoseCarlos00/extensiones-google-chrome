@@ -16,6 +16,8 @@ class RenderConfiguration {
 		const checked = (property) => (property ? "checked" : "");
 
 		return new Promise((resolve) => {
+			this.renderCounters();
+
 			const html = /*html*/ `
       <div>
         <nav class="menu-config">
@@ -50,8 +52,19 @@ class RenderConfiguration {
 		});
 	}
 
+	renderCounters() {
+		const contadores = `
+      <div class="contadores-container">
+        <p>
+        Restantes:<spam id="countRestante">0</spam>
+        </p>
+      </div>
+      `;
+
+		document.body.insertAdjacentHTML("beforeend", contadores);
+	}
+
 	getFormControl() {
-		const disabled = (property) => (property ? "" : "disabled");
 		let label = "";
 
 		if (this.receiptType === "TRASLADOS") {
@@ -62,7 +75,7 @@ class RenderConfiguration {
     <form id="form-get-data">
         ${label}
       <div class="input-group">
-        <button id="init-receipt" type="button" name="init-receipt" ${disabled(this.isTrailerId)}>
+        <button id="init-receipt" type="button" name="init-receipt" disabled>
           Iniciar
         </button>
 

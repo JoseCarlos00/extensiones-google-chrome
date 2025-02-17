@@ -1,10 +1,9 @@
 class Devoluciones extends ReceitManagerRF {
 	constructor(configurationManager) {
 		try {
-			const { receiptType } = configurationManager;
 			super(configurationManager);
 
-			console.log("Iniciando: ", receiptType);
+			console.log("Iniciando: ", this.currentReceiptType);
 
 			// Inputs
 			this.inputReceiptId = Form1?.RECID;
@@ -28,28 +27,36 @@ class Devoluciones extends ReceitManagerRF {
 
 	autocompleteForm() {
 		try {
-			if (!this.autoComplete) return;
+			console.log("autocompleteForm", !this.currentReceiptType !== this.receiptType, {
+				autoComplete: this.autoComplete,
+				confirmOk: this.confirmOk,
+			});
 
-			const storageLength = this.dataContainerStorage?.length;
-
-			if (storageLength === 0) {
-				console.warn("No hay datos en dataContainerStorage.");
+			if (this.currentReceiptType !== this.receiptType) {
+				console.error("Error: El tipo de recibo no coincide con el tipo de recibo configurado", {
+					currentReceiptType: this.currentReceiptType,
+					receiptType: this.receiptType,
+				});
 				return;
 			}
 
+			if (!this.autoComplete) return;
+
+			const storageLength = this.dataContainerStorage?.length ?? 0;
+
 			this.updateCounter(storageLength);
 
-			if (!this.dataContainerStorage || storageLength === 0) {
+			if (storageLength === 0) {
 				console.warn("No se encontraron datos en el almacenamiento [dataContainerStorage]");
 				return;
 			}
 
-			if (this.isValideReceiptIdTitle) {
+			if (this.isValideReceiptIdTitle && this.inputReceiptId) {
 				this.setValueReceiptIdInput();
 				return;
 			}
 
-			if (this.isValideLicencePlate) {
+			if (this.isValideLicencePlate && this.inputLicencePlate) {
 				this.setValueLicencePlate();
 				return;
 			}
@@ -66,7 +73,7 @@ class Devoluciones extends ReceitManagerRF {
 			this.inputReceiptId &&
 			this.messageInvaliteReceiptId !== "Invalid receipt."
 		) {
-			console.warn("Input Trailer ID vacío");
+			console.warn("Input Receipt ID vacío");
 			return;
 		}
 
@@ -86,25 +93,12 @@ class Devoluciones extends ReceitManagerRF {
 	}
 
 	setValueReceiptIdInput() {
-		console.log("setValueReceiptIdInput", this.dataContainerStorage);
-
 		const receiptId = this.dataContainerStorage?.[0]?.receiptId;
 		console.log("[setValueReceiptIdInput]: receiptId:", receiptId);
 
+		this.inputReceiptId.value = receiptId;
 		if (this.inputReceiptId && receiptId) {
-			this.inputReceiptId.value = receiptId;
 			this.submitForm();
-		}
-	}
-
-	// * Revisar ↓
-
-	updateCounter(value) {
-		const countRestante = document.querySelector("#countRestante");
-		if (countRestante) {
-			countRestante.innerHTML = `${value ?? "0"}`;
-		} else {
-			console.warn("No se encontro el elemento #countRestante");
 		}
 	}
 

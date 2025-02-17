@@ -1,5 +1,5 @@
 class ReceitManagerRF {
-	constructor({ autoComplete, confirmDelay, confirmOk }) {
+	constructor({ autoComplete, confirmDelay, confirmOk, receiptType }) {
 		try {
 			this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
 			this.nameDataStorage = nameStorageContainer;
@@ -16,10 +16,12 @@ class ReceitManagerRF {
 			this.confirmOk = confirmOk;
 			this.confirmDelay = confirmDelay;
 			this.initReceipt = this.getInitReceiptStorage();
+			this.currentReceiptType = receiptType;
 
 			// Storage
 			this.dataStorage = LocalStorageHelper.get(this.nameDataStorage);
-			this.dataContainerStorage = this.dataStorage?.dataContainer;
+			this.dataContainerStorage = this.dataStorage?.dataContainer || [];
+			this.receiptType = this.dataStorage?.receiptType;
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar el ReceitManagerRF:", error.message);
 		}
@@ -125,20 +127,59 @@ class ReceitManagerRF {
 	}
 
 	handleGetData() {
-		this.dataContainerStorage = LocalStorageHelper.get(this.nameStorageContainer);
-		this.dataContainerStorage = dataStorage?.dataContainer;
+		this.dataStorage = LocalStorageHelper.get(this.nameDataStorage);
+		this.dataContainerStorage = this.dataStorage?.dataContainer;
+		this.receiptType = this.dataStorage?.receiptType;
+
+		this.availableButtonInitReceipt();
 		this.autocompleteForm();
 	}
 
 	setEventListeners() {
-		this.setEventInitReceipt();
-		this.autocompleteForm();
+		console.log("setEventListeners");
 
+		const form = document.getElementById("form-config");
+		const { confirmToggle, autoCompleteToggle } = form;
+
+		this.autocompleteForm();
+		this.availableButtonInitReceipt();
 		window.addEventListener(this.eventStorgageChange, () => this.handleGetData());
 
 		window.addEventListener("init-receipt-event", () => {
-			this.initReceipt = this.getInitReceiptStorage();
+			console.log("event init-receipt-event: ReceiptManagerRF");
+
+			// Evento Cuando se da click en el button #btnInitReceipt
+			this.initReceipt = this.getInitReceiptStorage() ?? true;
+			this.confirmOk = true;
+			this.autoComplete = true;
+
+			confirmToggle.checked = true;
+			autoCompleteToggle.checked = true;
+
+			const newEventFormControl = new Event("event-form-control");
+			window.dispatchEvent(newEventFormControl);
+
+			this.handleGetData();
 		});
+	}
+
+	availableButtonInitReceipt() {
+		const btnInitReceipt = document.getElementById("init-receipt");
+
+		if (btnInitReceipt && this.dataContainerStorage?.length > 0) {
+			btnInitReceipt.removeAttribute("disabled");
+		} else {
+			btnInitReceipt.setAttribute("disabled", "");
+		}
+	}
+
+	updateCounter(value) {
+		const countRestante = document.querySelector("#countRestante");
+		if (countRestante) {
+			countRestante.innerHTML = `${value ?? "0"}`;
+		} else {
+			console.warn("No se encontro el elemento #countRestante");
+		}
 	}
 
 	init() {

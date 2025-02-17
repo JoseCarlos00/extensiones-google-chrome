@@ -24,7 +24,9 @@ window.addEventListener("load", async () => {
 		console.log("Configuration render");
 
 		if (inputHiddenReceiptPreference?.value === "TRASLADOS") {
-			new Traslados({ configurationControl, receiptType });
+			const managerReceipr = new Traslados({ ...configurationControl, receiptType });
+			managerReceipr.init();
+			console.log(managerReceipr);
 			return;
 		}
 
@@ -32,7 +34,9 @@ window.addEventListener("load", async () => {
 			const getDataForm = new GetDataDevolucionesForm();
 			await getDataForm.render();
 
-			new Devoluciones({ configurationControl, receiptType });
+			const managerReceipr = new Devoluciones({ ...configurationControl, receiptType });
+			managerReceipr.init();
+			console.log(managerReceipr);
 		}
 	} catch (error) {
 		console.error("Ha ocurrido un error en [mainRF]:", error.message);

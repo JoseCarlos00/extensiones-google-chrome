@@ -14,9 +14,7 @@ class GetDataDevolucionesForm {
 
 	async render() {
 		try {
-			await this.renderCounters();
 			await this.renderForm();
-
 			await this.setEventsListener();
 		} catch (error) {
 			console.error("Error al renderizar el formulario:", error.message);
@@ -29,18 +27,6 @@ class GetDataDevolucionesForm {
 		}
 
 		document.body.insertAdjacentHTML("afterbegin", this.formularioHTML);
-	}
-
-	async renderCounters() {
-		const contadores = `
-      <div class="contadores-container">
-        <p>
-        Restantes:<spam id="countRestante">0</spam>
-        </p>
-      </div>
-      `;
-
-		document.body.insertAdjacentHTML("beforeend", contadores);
 	}
 
 	async setEventsListener() {
