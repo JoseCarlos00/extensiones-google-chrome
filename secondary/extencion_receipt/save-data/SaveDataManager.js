@@ -88,7 +88,7 @@ class SaveDataManager {
 	handleSaveDataMark() {
 		const { dataContainer } = LocalStorageHelper.get(this.nameStorageContainer) ?? {};
 
-		if (!dataContainer || saveData?.length === 0) {
+		if (dataContainer?.length === 0 || !dataContainer) {
 			this.markSaveData(true);
 			return;
 		}

@@ -66,6 +66,8 @@ class Devoluciones extends ReceitManagerRF {
 	}
 
 	submitForm() {
+		console.log("[submitForm]");
+
 		if (!this.confirmOk || !this.btnOK) return;
 
 		if (

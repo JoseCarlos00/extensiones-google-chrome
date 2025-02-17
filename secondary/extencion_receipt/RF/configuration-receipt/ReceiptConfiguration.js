@@ -156,12 +156,12 @@ class Configuration {
 		}
 	}
 
-	verifyTrailerId = () => {
+	verifyTrailerId() {
 		if (!this.trailerIdLabel) return;
 
 		this.trailerIdLabel.innerHTML = `Trailer Id: ${this.trailerId}`;
 		console.log("trailerId:", this.trailerId);
-	};
+	}
 
 	setvalueInStorage() {
 		this.dataStorage = LocalStorageHelper.get(this.nameStorageContainer) || {};
@@ -177,18 +177,30 @@ class Configuration {
 
 		if (this.btnInitReceipt && this.dataContainerStorage?.length > 0) {
 			this.btnInitReceipt.removeAttribute("disabled");
+			this.btnInitReceipt.classList.add("bounce");
 		} else {
 			this.btnInitReceipt.setAttribute("disabled", "");
+			this.btnInitReceipt.classList.remove("bounce");
 		}
 	}
 
 	updateCounter(value) {
 		console.log("updateCounter ReceiptConfiguration");
 		const conunterE = document.querySelector("#countRestante");
-		const containerLength = value ? containerLength : this.dataContainerStorage?.length ?? "0";
+		const containerLength = value ? value : this.dataContainerStorage?.length ?? "0";
+		const containersLength = this.dataContainerStorage?.[0]?.containers
+			? this.dataContainerStorage[0].containers?.length - 1
+			: "0";
+		console.log({
+			dataContainerStorage: this.dataContainerStorage,
+			containersLength,
+			containerLength,
+			value,
+			dataContainerStorageContainers: this.dataContainerStorage?.[0]?.containers,
+		});
 
 		if (conunterE) {
-			conunterE.innerHTML = `${containerLength} |  ${dataContainerStorage[0]?.containers?.length ?? ""}`;
+			conunterE.innerHTML = `${containerLength} |  ${containersLength}`;
 		} else {
 			console.warn("No se encontro el elemento #countRestante");
 		}

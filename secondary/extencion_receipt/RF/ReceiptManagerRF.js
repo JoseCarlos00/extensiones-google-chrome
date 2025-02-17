@@ -83,7 +83,7 @@ class ReceitManagerRF {
 			this.dataContainerStorage?.shift();
 			console.log("[1] El primer objeto fue eliminado porque `containers` está vacío.");
 
-			LocalStorageHelper.save(this.nameStorageContainer, {
+			LocalStorageHelper.save(this.nameDataStorage, {
 				...this.dataStorage,
 				dataContainer: this.dataContainerStorage,
 			});
@@ -96,7 +96,7 @@ class ReceitManagerRF {
 		const firstLicencePlate = firstObject.containers.shift();
 		console.log(`Procesando placa: ${firstLicencePlate}`);
 
-		LocalStorageHelper.save(this.nameStorageContainer, {
+		LocalStorageHelper.save(this.nameDataStorage, {
 			...this.dataStorage,
 			dataContainer: this.dataContainerStorage,
 		});
@@ -109,7 +109,7 @@ class ReceitManagerRF {
 		//
 		if (firstObject.containers?.length === 0) {
 			this.dataContainerStorage.shift();
-			LocalStorageHelper.save(this.nameStorageContainer, {
+			LocalStorageHelper.save(this.nameDataStorage, {
 				...this.dataStorage,
 				dataContainer: this.dataContainerStorage,
 			});
@@ -128,8 +128,13 @@ class ReceitManagerRF {
 	}
 
 	onclickButtonDonde() {
-		if (!this.confirmOk || !this.btnDone) {
+		if (!this.btnDone) {
 			console.error("No se encontró el botón DONE");
+			return;
+		}
+
+		if (!this.confirmOk) {
+			console.warn("DONE: confirmOK está Inhablilitado");
 			return;
 		}
 
@@ -182,18 +187,30 @@ class ReceitManagerRF {
 
 		if (btnInitReceipt && this.dataContainerStorage?.length > 0) {
 			btnInitReceipt.removeAttribute("disabled");
+			btnInitReceipt.classList.add("bounce");
 		} else {
 			btnInitReceipt.setAttribute("disabled", "");
+			btnInitReceipt.classList.remove("bounce");
 		}
 	}
 
 	updateCounter(value) {
 		console.log("updateCounter ReceiptManager");
 		const conunterE = document.querySelector("#countRestante");
-		const containerLength = value ? containerLength : this.dataContainerStorage?.length ?? "0";
+		const containerLength = value ? value : this.dataContainerStorage?.length ?? "0";
+		const containersLength = this.dataContainerStorage?.[0]?.containers
+			? this.dataContainerStorage[0].containers?.length - 1
+			: "0";
+		console.log({
+			dataContainerStorage: this.dataContainerStorage,
+			containersLength,
+			containerLength,
+			value,
+			dataContainerStorageContainers: this.dataContainerStorage?.[0]?.containers,
+		});
 
 		if (conunterE) {
-			conunterE.innerHTML = `${containerLength} |  ${dataContainerStorage[0]?.containers?.length ?? ""}`;
+			conunterE.innerHTML = `${containerLength} |  ${containersLength}`;
 		} else {
 			console.warn("No se encontro el elemento #countRestante");
 		}
