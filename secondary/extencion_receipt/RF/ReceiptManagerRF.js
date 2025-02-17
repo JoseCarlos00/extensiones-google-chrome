@@ -143,13 +143,9 @@ class ReceitManagerRF {
 
 		this.autocompleteForm();
 		this.availableButtonInitReceipt();
-		window.addEventListener(this.eventStorgageChange, () => this.handleGetData());
 
-		window.addEventListener("init-receipt-event", () => {
-			console.log("event init-receipt-event: ReceiptManagerRF");
-
-			// Evento Cuando se da click en el button #btnInitReceipt
-			this.initReceipt = this.getInitReceiptStorage() ?? true;
+		const handleNewRegister = () => {
+			this.initReceipt = true;
 			this.confirmOk = true;
 			this.autoComplete = true;
 
@@ -160,7 +156,13 @@ class ReceitManagerRF {
 			window.dispatchEvent(newEventFormControl);
 
 			this.handleGetData();
-		});
+		};
+
+		// Evento que se dispara cuando se guardar los datos del formulario <textarea>
+		window.addEventListener(this.eventStorgageChange, handleNewRegister);
+
+		// Evento Cuando se da click en el button #btnInitReceipt
+		window.addEventListener("init-receipt-event", handleNewRegister);
 	}
 
 	availableButtonInitReceipt() {
@@ -174,9 +176,12 @@ class ReceitManagerRF {
 	}
 
 	updateCounter(value) {
-		const countRestante = document.querySelector("#countRestante");
-		if (countRestante) {
-			countRestante.innerHTML = `${value ?? "0"}`;
+		console.log("updateCounter ReceiptManager");
+		const conunterE = document.querySelector("#countRestante");
+		const containerLent = this.dataContainerStorage?.length ?? 0;
+
+		if (conunterE) {
+			conunterE.innerHTML = `${value ? value : containerLent}`;
 		} else {
 			console.warn("No se encontro el elemento #countRestante");
 		}

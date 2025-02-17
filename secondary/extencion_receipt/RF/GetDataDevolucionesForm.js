@@ -2,10 +2,10 @@ class GetDataDevolucionesForm {
 	constructor() {
 		try {
 			this.formularioHTML = formularioHTMLReceiptDevoluciones;
+
 			this.nameDataStorage = nameStorageContainer;
-			this.pauseSubmmit = this.getValuePauseSubmit() ?? false;
-			this.nameDataStoragePause = this.nameDataStorage + "_puuse";
 			this.eventStorgageChange = eventNameStorgageChange ?? "storageChange";
+
 			this.receiptType = "DEVOLUCIONES";
 		} catch (error) {
 			console.error("Error al inicializar la clase GetDataDevolucionesForm", error);
@@ -41,15 +41,6 @@ class GetDataDevolucionesForm {
 			}
 
 			form.addEventListener("submit", () => this.handleSumitEvent);
-
-			const { pause, cancel } = form;
-
-			cancel?.addEventListener("click", (e) => this.handleCancelInsertData(e));
-
-			if (pause) {
-				pause.addEventListener("click", () => this.handlePauseInsertData(pause));
-				this.setPauseValuenInDOM(pause);
-			}
 		} catch (error) {
 			console.error("Error al agregar eventos:", error.message);
 		}
@@ -123,49 +114,6 @@ class GetDataDevolucionesForm {
 		}
 	}
 
-	handlePauseInsertData(pause) {
-		if (!pause) {
-			console.error('No se encontró el elemento [name="pause"]');
-			return;
-		}
-
-		const newPasueValue = !this.pauseSubmmit;
-
-		sessionStorage.setItem(this.nameDataStoragePause, String(newPasueValue));
-		this.pauseSubmmit = newPasueValue;
-
-		this.setPauseValuenInDOM(pause);
-	}
-
-	handleCancelInsertData() {
-		const timeDelayReload = 250;
-
-		const data = LocalStorageHelper.get(this.nameDataStorage);
-		if (!data) return; // No hay datos para cancelar
-
-		// Mostrar una alerta que permita al usuario cancelar la ejecución de la función
-		const confirmacion = confirm(`¿Quieres cancelar?\nSe borraran los datos ingresados`);
-
-		try {
-			if (confirmacion) {
-				// Si el usuario confirma, cancelar la ejecución de la función
-				LocalStorageHelper.remove(this.nameDataStorage);
-
-				setTimeout(() => {
-					window.location.reload();
-				}, timeDelayReload);
-			}
-		} catch (error) {
-			console.error("Error: al cancelar: ", error.message);
-		}
-	}
-
-	setPauseValuenInDOM(pause) {
-		const pauseSubmmit = this.pauseSubmmit ? "on" : "off";
-		pause.setAttribute("pause-active", pauseSubmmit);
-		pause.innerHTML = `Pausa: ${pauseSubmmit}`;
-	}
-
 	alertDataSaved() {
 		ToastAlertRF.showAlertMinBotton("Datos guardados", "success");
 	}
@@ -186,8 +134,6 @@ const formularioHTMLReceiptDevoluciones = /*html*/ `
   <textarea  id="dataToInsert" name="dataToInsert" class="textarea" rows="4" cols="50" required placeholder="Receipt ID\t\tContainer\n357-TR-111-12119\tFMA0002376952"></textarea>
   
   <div>
-    <button id="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
     <button id="insertData" type="submit">Registrar</button>
-    <button id="cancel" type="button">Cancelar</button>
   </div>
 </form>`;

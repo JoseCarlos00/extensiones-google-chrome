@@ -137,7 +137,9 @@ class Configuration {
 				window.dispatchEvent(initReceiptEvent);
 			});
 
-			// Windows
+			/* Windows  Events*/
+
+			// Evento para activar o desactivar button de Iniciar recibo cuendo recibe un nuevo registro
 			window.addEventListener(this.eventStorgageChange, () => {
 				this.handleStorageEvent();
 			});
@@ -171,11 +173,24 @@ class Configuration {
 	handleStorageEvent() {
 		console.log("handleStorageEvent");
 		this.verifyTrailerId();
+		this.updateCounter();
 
 		if (this.btnInitReceipt && this.dataContainerStorage?.length > 0) {
 			this.btnInitReceipt.removeAttribute("disabled");
 		} else {
 			this.btnInitReceipt.setAttribute("disabled", "");
+		}
+	}
+
+	updateCounter(value) {
+		console.log("updateCounter ReceiptConfiguration");
+		const conunterE = document.querySelector("#countRestante");
+		const containerLent = this.dataContainerStorage?.length ?? 0;
+
+		if (conunterE) {
+			conunterE.innerHTML = `${value ? value : containerLent}`;
+		} else {
+			console.warn("No se encontro el elemento #countRestante");
 		}
 	}
 }
