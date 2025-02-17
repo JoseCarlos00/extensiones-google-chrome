@@ -68,7 +68,7 @@ class CreateElementHtml {
 			const newTbody = document.createElement("tbody");
 
 			if (rows.length === 0) {
-				newTbody.innerHTML = '<tr><td colspan="3">No hay datos para mostrar <div class="delete-row"></div></td></tr>';
+				newTbody.innerHTML = `<tr><td colspan="${this.columns.length}">No hay datos para mostrar <div class="delete-row"></div></td></tr>`;
 				return newTbody;
 			}
 

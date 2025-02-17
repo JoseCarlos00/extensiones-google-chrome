@@ -23,6 +23,9 @@ class ReceitManagerRF {
 			this.dataContainerStorage = this.dataStorage?.dataContainer || [];
 			this.receiptType = this.dataStorage?.receiptType;
 
+			this.inputReceiptId = null;
+			this.inputTrailerId = null;
+
 			this.timeoutId = null;
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar el ReceitManagerRF:", error.message);
@@ -180,12 +183,18 @@ class ReceitManagerRF {
 
 		// Evento Cuando se da click en el button #btnInitReceipt
 		window.addEventListener("init-receipt-event", handleNewRegister);
+
+		window.addEventListener("cancel-receipt-event", () => {
+			this.initReceipt = false;
+			this.inputReceiptId && (this.inputReceiptId.value = "");
+			this.inputTrailerId && (this.inputTrailerId.value = "");
+		});
 	}
 
 	availableButtonInitReceipt() {
 		const btnInitReceipt = document.getElementById("init-receipt");
 
-		if (btnInitReceipt && this.dataContainerStorage?.length > 0) {
+		if (btnInitReceipt && this.dataContainerStorage?.length > 0 && this.currentReceiptType === this.receiptType) {
 			btnInitReceipt.removeAttribute("disabled");
 			btnInitReceipt.classList.add("bounce");
 		} else {
@@ -196,6 +205,7 @@ class ReceitManagerRF {
 
 	updateCounter(value) {
 		console.log("updateCounter ReceiptManager");
+
 		const conunterE = document.querySelector("#countRestante");
 		const containerLength = value ? value : this.dataContainerStorage?.length ?? "0";
 		const containersLength = this.dataContainerStorage?.[0]?.containers

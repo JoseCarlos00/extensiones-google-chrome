@@ -100,7 +100,7 @@ class Devoluciones extends ReceitManagerRF {
 		console.log("[setValueReceiptIdInput]: receiptId:", receiptId);
 
 		this.inputReceiptId.value = receiptId;
-		if (this.inputReceiptId && receiptId) {
+		if (this.inputReceiptId && receiptId && this.messageInvaliteReceiptId !== "Invalid receipt.") {
 			this.submitForm();
 		}
 	}

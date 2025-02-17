@@ -128,6 +128,9 @@ class Configuration {
 
 				this.setvalueInStorage();
 				this.handleStorageEvent();
+
+				const cancelEvent = new Event("cancel-receipt-event");
+				window.dispatchEvent(cancelEvent);
 			});
 
 			btnInitReceipt.addEventListener("click", () => {
@@ -175,7 +178,7 @@ class Configuration {
 		this.verifyTrailerId();
 		this.updateCounter();
 
-		if (this.btnInitReceipt && this.dataContainerStorage?.length > 0) {
+		if (this.btnInitReceipt && this.dataContainerStorage?.length > 0 && this.currentReceiptType === this.receiptType) {
 			this.btnInitReceipt.removeAttribute("disabled");
 			this.btnInitReceipt.classList.add("bounce");
 		} else {
@@ -186,6 +189,9 @@ class Configuration {
 
 	updateCounter(value) {
 		console.log("updateCounter ReceiptConfiguration");
+
+		if (this.currentReceiptType !== this.receiptType) return;
+
 		const conunterE = document.querySelector("#countRestante");
 		const containerLength = value ? value : this.dataContainerStorage?.length ?? "0";
 		const containersLength = this.dataContainerStorage?.[0]?.containers
