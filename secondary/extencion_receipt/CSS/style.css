@@ -164,25 +164,6 @@
 		text-overflow: ellipsis;
 	}
 
-	table tr th[aria-describedby="ListPaneDataGrid_ITEM"],
-	table tr th[aria-describedby="ListPaneDataGrid_LOCATION"] {
-		cursor: pointer;
-
-		.value {
-			display: inline;
-		}
-
-		.ui-icon {
-			color: rgb(51, 51, 51);
-		}
-
-		.ui-iggrid-indicatorcontainer {
-			display: block;
-			float: right;
-			display: none;
-		}
-	}
-
 	th,
 	td {
 		text-align: left;
@@ -208,6 +189,11 @@
 	thead th {
 		background-color: #bebebe;
 
+		&,
+		.value {
+			cursor: move;
+		}
+
 		button {
 			float: right;
 			border-radius: 50%;
@@ -227,7 +213,7 @@
 		color: inherit;
 	}
 
-	table tbody tr:hover > td:nth-last-child(1) .delete-row::before {
+	table tbody tr:hover > td .delete-row::before {
 		content: "\e676";
 
 		font-family: jquery-ui !important;

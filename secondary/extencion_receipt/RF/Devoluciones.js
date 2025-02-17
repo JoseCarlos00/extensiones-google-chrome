@@ -104,8 +104,4 @@ class Devoluciones extends ReceitManagerRF {
 			this.submitForm();
 		}
 	}
-
-	/**
-	 * TODO: Agregar un setTimeout para acer submitForm
-	 */
 }

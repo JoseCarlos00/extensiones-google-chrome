@@ -10,8 +10,27 @@
  * @returns {Promise<HTMLElement>} - Un elemento HTML que representa el modal o null si ocurre un error.
  * @throws {Error} - Si no se pudo crear el modalHTML debido a un error en insertContenModal.
  */
-async function getHtmlContent({ sectionContainerClass, modalId }) {
+async function getHtmlContent({ sectionContainerClass, modalId, columns = [] }) {
 	const containerMain = document.createElement("div");
+
+	console.log({ columns });
+
+	// Generar las columnas dinámicamente
+	const theadContent = columns
+		.map(
+			(column) => `
+        <th 
+          class="show-header" draggable="true" 
+          contenteditable="false"
+          id="ListPaneDataGrid_${column.id}"
+          aria-describedby="ListPaneDataGrid_${column.id}"
+        >
+          <div class="value">
+              ${column.label}
+          </div>
+        </th>`
+		)
+		.join("");
 
 	containerMain.innerHTML = /*html*/ `
     <div class="container-group">
@@ -24,23 +43,7 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
     
     <table id="tableContent" contenteditable="false">
       <thead>
-        <th class="show-header" draggable="true" contenteditable="false" id="ListPaneDataGrid_LICENSE_PLATE_ID" aria-describedby="ListPaneDataGrid_LICENSE_PLATE_ID">
-          <div class="value">
-            License Plate
-          </div>
-        </th>
-
-        <th class="show-header" draggable="true" contenteditable="false" id="ListPaneDataGrid_RECEIPT_ID" aria-describedby="ListPaneDataGrid_RECEIPT_ID">
-          <div class="value">
-            Receipt id
-          </div>
-        </th>
-
-        <th class="show-header" draggable="true" contenteditable="false" id="ListPaneDataGrid_TRAILER_ID" aria-describedby="ListPaneDataGrid_TRAILER_ID">
-          <div class="value">
-            Trailer id
-          </div>
-        </th>
+        ${theadContent}
       </thead>
     </table>
   `;

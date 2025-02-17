@@ -3,6 +3,8 @@
  */
 async function mainModal() {
 	try {
+		const { columns } = configurationModalInitial;
+
 		// Definición de selectores e id's para el modal.
 		const selectoresModal = {
 			modalId: modalReceiptContainerId,
@@ -32,7 +34,7 @@ async function mainModal() {
 		 * Obtiene el contenido HTML que se mostrará en el modal.
 		 * @get {Promise<HTMLElement>} - Un elemento HTML que representa el modal o null si ocurre un error.
 		 */
-		const contentModalHtml = await getHtmlContent({ ...selectoresModal });
+		const contentModalHtml = await getHtmlContent({ ...selectoresModal, columns });
 
 		/**
 		 * Crea una instancia del administrador del modal con la configuración y el contenido obtenido.

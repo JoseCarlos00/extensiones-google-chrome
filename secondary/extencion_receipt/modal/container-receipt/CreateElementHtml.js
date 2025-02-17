@@ -1,6 +1,7 @@
 class CreateElementHtml {
 	constructor() {
 		this.trailerId = this.getTrailerId();
+		this.columns = configurationModalInitial?.columns ?? [];
 	}
 
 	getTrailerId() {
@@ -24,39 +25,34 @@ class CreateElementHtml {
 
 	getTbodyElement({ rows, newTbody }) {
 		rows.forEach((row) => {
-			const fila = row.childNodes;
-			const tr = document.createElement("tr");
+			const tdList = row.childNodes;
+			const trNew = document.createElement("tr");
 
-			fila.forEach((td) => {
-				const ariadescribedby = td.getAttribute("aria-describedby");
+			this.columns.forEach(({ id }) => {
+				const tdNew = document.createElement("td");
+				tdNew.setAttribute("aria-describedby", `ListPaneDataGrid_${id}`);
 
-				if (ariadescribedby === "ListPaneDataGrid_LICENSE_PLATE_ID") {
-					const tdLicencePlate = document.createElement("td");
-					tdLicencePlate.innerHTML = `<input value="${td.textContent}" readonly class="input-text" tabindex="0">`;
-					tdLicencePlate.setAttribute("aria-describedby", ariadescribedby);
+				if (id === "TRAILER_ID") {
+					tdNew.innerHTML = `<input value="${this.trailerId}" readonly class="input-text" tabindex="0">`;
+				} else {
+					const tdOriginal = Array.from(tdList).find(
+						(td) => td.getAttribute("aria-describedby") === `ListPaneDataGrid_${id}`
+					);
 
-					tr.appendChild(tdLicencePlate);
+					if (tdOriginal) {
+						tdNew.innerHTML = `<input value="${tdOriginal.textContent}" readonly class="input-text" tabindex="0">`;
+					}
 				}
 
-				if (ariadescribedby === "ListPaneDataGrid_RECEIPT_ID") {
-					const tdReceiptId = document.createElement("td");
-					tdReceiptId.innerHTML = `<input value="${td.textContent}" readonly tabindex="0" class="input-text">`;
-					tdReceiptId.setAttribute("aria-describedby", ariadescribedby);
-
-					tr.appendChild(tdReceiptId);
-
-					const tdTrailerId = document.createElement("td");
-					tdTrailerId.innerHTML = `<input value="${this.trailerId}" readonly class="input-text" tabindex="0">`;
-					tdTrailerId.setAttribute("aria-describedby", "ListPaneDataGrid_TRAILER_ID");
-
-					const divDelete = document.createElement("div");
-					divDelete.className = "delete-row";
-					tdTrailerId.appendChild(divDelete);
-					tr.appendChild(tdTrailerId);
-				}
+				trNew.appendChild(tdNew);
 			});
 
-			newTbody.appendChild(tr);
+			// Agregar botón eliminar en la primera columna
+			const divDelete = document.createElement("div");
+			divDelete.className = "delete-row";
+			trNew.querySelector("td")?.insertAdjacentElement("beforeend", divDelete);
+
+			newTbody.appendChild(trNew);
 		});
 	}
 
@@ -76,6 +72,7 @@ class CreateElementHtml {
 				return newTbody;
 			}
 
+			// Crea filas en el nuevo tbody
 			this.getTbodyElement({ rows, newTbody });
 
 			return newTbody;

@@ -11,6 +11,7 @@ class MoveColumnManager {
 		this.table = table;
 		this.thead = this.table?.querySelector("thead");
 
+		this.nameStorageConfigurationModal = nameStorageConfigurationModal;
 		this.initEvents();
 	}
 
@@ -137,9 +138,10 @@ class MoveColumnManager {
 				} else {
 					row.insertBefore(cells[fromIndexColumnParse], cells[toIndexColumnParse]?.nextSibling);
 				}
-
-				this.updateColumnIndices();
 			});
+
+			this.updateColumnIndices();
+			this.saveColumnOrder();
 		} catch (error) {
 			console.error("[swapColumns]: Error al intercambiar columnas:", error);
 		}
@@ -149,5 +151,21 @@ class MoveColumnManager {
 		this.table.querySelectorAll("th").forEach((th, index) => {
 			th.dataset.dragColumnIndex = index;
 		});
+	}
+
+	saveColumnOrder() {
+		const columnOrder = Array.from(this.table.querySelectorAll("th")).map((th) => {
+			const id = th.id?.replace("ListPaneDataGrid_", "");
+			const label = th.textContent.trim();
+
+			return { id, label };
+		});
+
+		// Obtener configuración previa de localStorage
+		const storedConfig = localStorage.getItem(this.nameStorageConfigurationModal);
+		let config = storedConfig ? JSON.parse(storedConfig) : configurationModalInitial ?? {};
+
+		// Guardar nuevamente en localStorage
+		localStorage.setItem(this.nameStorageConfigurationModal, JSON.stringify({ ...config, columns: columnOrder }));
 	}
 }

@@ -20,6 +20,7 @@
 				"utils/ToastAlert.js",
 				"utils/copyToClipboard.js",
 				"utils/LocalStorageHelper.js",
+				"modal/configuration/configuration.js",
 				"modal/ModaCreateHTML.js",
 				"modal/container-receipt/CreateElementHtml.js",
 				"modal/container-receipt/InitializeEvents.js",
