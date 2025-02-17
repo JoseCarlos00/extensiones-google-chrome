@@ -89,6 +89,7 @@ class Traslados extends ReceitManagerRF {
 		setTimeout(() => {
 			console.warn("Confirmar button OK");
 			this.btnOK.click();
+			this.setTimeoutsubmitForm();
 		}, this.confirmDelay);
 	}
 

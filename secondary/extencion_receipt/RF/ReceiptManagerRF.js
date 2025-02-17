@@ -22,6 +22,8 @@ class ReceitManagerRF {
 			this.dataStorage = LocalStorageHelper.get(this.nameDataStorage);
 			this.dataContainerStorage = this.dataStorage?.dataContainer || [];
 			this.receiptType = this.dataStorage?.receiptType;
+
+			this.timeoutId = null;
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar el ReceitManagerRF:", error.message);
 		}
@@ -60,6 +62,10 @@ class ReceitManagerRF {
 		throw new Error("Method not implemented in the class child");
 	}
 
+	submitForm() {
+		throw new Error("Method not implemented in the class child");
+	}
+
 	setValueLicencePlate() {
 		// Verifica si el array `dataContainerStorage` tiene elementos
 		if (this.dataContainerStorage?.length === 0 && this.inputLicencePlate) {
@@ -71,13 +77,14 @@ class ReceitManagerRF {
 		const firstObject = this.dataContainerStorage?.[0];
 
 		// Verifica si el objeto tiene un array `containers` válido
+		// Actualiza e elimina el primer Objeto de dataContainerStorage
 		if (!firstObject?.containers || firstObject?.containers?.length === 0) {
 			// Elimina el objeto si su `containers` está vacío
 			this.dataContainerStorage?.shift();
 			console.log("[1] El primer objeto fue eliminado porque `containers` está vacío.");
 
 			LocalStorageHelper.save(this.nameStorageContainer, {
-				...this.storageContainer,
+				...this.dataStorage,
 				dataContainer: this.dataContainerStorage,
 			});
 
@@ -90,15 +97,20 @@ class ReceitManagerRF {
 		console.log(`Procesando placa: ${firstLicencePlate}`);
 
 		LocalStorageHelper.save(this.nameStorageContainer, {
-			...this.storageContainer,
+			...this.dataStorage,
 			dataContainer: this.dataContainerStorage,
 		});
 
-		// Si después de eliminar, el array `containers` está vacío, elimina el objeto completo
+		/**
+		 * Si después de eliminar el primer elemento de `containers`,
+		 * el array `containers` está vacío, elimina el objeto completo
+		 *  Actualiza e elimina el primer Objeto de dataContainerStorage
+		 */
+		//
 		if (firstObject.containers?.length === 0) {
 			this.dataContainerStorage.shift();
 			LocalStorageHelper.save(this.nameStorageContainer, {
-				...this.storageContainer,
+				...this.dataStorage,
 				dataContainer: this.dataContainerStorage,
 			});
 			console.log("[2] El primer objeto fue eliminado porque `containers` quedó vacío.");
@@ -178,13 +190,32 @@ class ReceitManagerRF {
 	updateCounter(value) {
 		console.log("updateCounter ReceiptManager");
 		const conunterE = document.querySelector("#countRestante");
-		const containerLent = this.dataContainerStorage?.length ?? 0;
+		const containerLength = value ? containerLength : this.dataContainerStorage?.length ?? "0";
 
 		if (conunterE) {
-			conunterE.innerHTML = `${value ? value : containerLent}`;
+			conunterE.innerHTML = `${containerLength} |  ${dataContainerStorage[0]?.containers?.length ?? ""}`;
 		} else {
 			console.warn("No se encontro el elemento #countRestante");
 		}
+	}
+
+	clearExistingTimeout() {
+		if (this.timeoutId) {
+			clearTimeout(this.timeoutId);
+			this.timeoutId = null;
+		}
+	}
+
+	setTimeoutSubmitForm() {
+		this.clearExistingTimeout();
+
+		this.timeoutId = setTimeout(() => this.submitForm(), 1000);
+
+		// Limpiar el timeout original después de 10 minutos
+		setTimeout(() => {
+			this.clearExistingTimeout();
+			console.log("Timeout de 10 minutos alcanzado, timeout original limpiado.");
+		}, 10 * 60 * 1000);
 	}
 
 	init() {

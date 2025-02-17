@@ -185,10 +185,10 @@ class Configuration {
 	updateCounter(value) {
 		console.log("updateCounter ReceiptConfiguration");
 		const conunterE = document.querySelector("#countRestante");
-		const containerLent = this.dataContainerStorage?.length ?? 0;
+		const containerLength = value ? containerLength : this.dataContainerStorage?.length ?? "0";
 
 		if (conunterE) {
-			conunterE.innerHTML = `${value ? value : containerLent}`;
+			conunterE.innerHTML = `${containerLength} |  ${dataContainerStorage[0]?.containers?.length ?? ""}`;
 		} else {
 			console.warn("No se encontro el elemento #countRestante");
 		}
