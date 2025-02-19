@@ -40,7 +40,7 @@ class GetDataDevolucionesForm {
 				throw new Error("Formulario no encontrado. #registroForm");
 			}
 
-			form.addEventListener("submit", () => this.handleSumitEvent);
+			form.addEventListener("submit", (e) => this.handleSumitEvent(e));
 		} catch (error) {
 			console.error("Error al agregar eventos:", error.message);
 		}
@@ -73,6 +73,7 @@ class GetDataDevolucionesForm {
 
 		const data = Array.from(groupedMap, ([receiptId, containers]) => ({
 			receiptId,
+			receiptType: this.receiptType,
 			containers: [...containers, "DONE"],
 		}));
 
@@ -89,7 +90,7 @@ class GetDataDevolucionesForm {
 		try {
 			e.preventDefault();
 
-			const { dataToInsert } = form;
+			const { dataToInsert } = document.querySelector("#registroForm") ?? {};
 
 			if (!dataToInsert) {
 				throw new Error("No se encontró el campo de texto [name='dataToInsert']");

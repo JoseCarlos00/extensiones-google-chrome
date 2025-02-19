@@ -86,31 +86,3 @@ class InventoryTransferLP extends IventoryManager {
 		}
 	}
 }
-
-const formularioHTMLTranferLP = /*html*/ `
-<form id="registroForm" class="registroForm adjustment">
-<label for="dataToInsert">Item, To Ubicacion, LP:</label>
-<textarea id="dataToInsert" name="dataToInsert" rows="4" cols="50" required placeholder="LP Origen\tUbi. destino\tLP destino(Opcional)\nFMA-ORIGEN\t1-25-02-AA-01\tFMA-DESTINO"></textarea>
-  
-  <div>
-    <button id="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
-    <button id="insertData" type="submit">Registrar</button>
-    <button id="cancel" type="button">Cancelar</button>
-  </div>
-</form>`;
-
-window.addEventListener("load", async () => {
-	const nameDataStorage = "datosToTranferLP"; // Nombre del objeto en el almacenamiento local
-
-	try {
-		const iventoryManager = new InventoryTransferLP({
-			formularioHTML: formularioHTMLTranferLP,
-			nameDataStorage,
-			adjType: "Transferencia Manual LP",
-		});
-
-		iventoryManager.render();
-	} catch (error) {
-		console.error("Error al cargar el componente InventoryTranferLP:", error.message);
-	}
-});
