@@ -1,1 +1,1 @@
-Extensioned de Google Chrome para mulyiples funcionalidades
+Extensioned de Google Chrome para multiples funcionalidades
