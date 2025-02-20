@@ -117,6 +117,10 @@ body {
 	}
 }
 
+[data-bs-theme="dark"] .inputGroup :is(.textarea:focus, .textarea:focus-visible, .textarea:valid) ~ label {
+	background-color: rgb(13, 17, 23);
+}
+
 /* ============= */
 /* Transferencia Manual */
 #registroForm.tranfer {

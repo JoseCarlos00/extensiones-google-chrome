@@ -27,11 +27,11 @@
 	min-height: 20px;
 }
 
-#WaveFlowGrid
+/* #WaveFlowGrid
 	> tbody
 	tr:not(tr[data-id="2168485273"], tr[data-id="655614933"], tr[data-id="1155736963"], tr[data-id="1265266259"]) {
 	display: none;
-}
+} */
 
 #WaveFlowGrid > tbody tr td {
 	padding: 1rem;

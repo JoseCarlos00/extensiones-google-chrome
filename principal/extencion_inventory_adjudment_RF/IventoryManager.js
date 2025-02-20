@@ -116,7 +116,7 @@ class IventoryManager {
 					?.split("\n")
 					?.map((i) => i?.trim()?.toUpperCase())
 					?.filter(Boolean) ?? [];
-      
+
 			if (lineas.length === 0) {
 				throw new Error("No hay líneas para insertar");
 			}
@@ -316,7 +316,7 @@ class IventoryManager {
 		}
 
 		setTimeout(() => {
-			// btnSubmit.click();
+			btnSubmit.click();
 			console.log("click en OK");
 
 			this.setTimeoutSubmitForm();
