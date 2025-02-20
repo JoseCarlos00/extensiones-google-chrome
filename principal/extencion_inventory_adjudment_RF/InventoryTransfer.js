@@ -1,114 +1,52 @@
 // Transferencia Manual
 class InventoryTransfer extends IventoryManager {
-	constructor({ formularioHTML, nameDataStorage, adjType }) {
-		super({ formularioHTML, nameDataStorage, adjType });
+	constructor(config) {
+		super(config);
 		console.log("Class InventoryTransfer");
 	}
 
-	registrarDatos({ lineas }) {
-		const data = {};
+	parseLine(linea) {
+		const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)(?:\s+(\S+))?/);
+		if (!match) return null;
 
-		// Contador para asignar claves numéricas únicas
-		let contador = 0;
+		const item = match[1] ?? null;
+		const qty = Number(match[2]) ?? null;
+		const fromLoc = match[3] ?? null;
+		const toLoc = match[4] ?? null;
+		const LP = match[5] ?? null;
 
-		// Procesar cada línea
-		lineas.forEach((linea) => {
-			const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)(?:\s+(\S+))?/);
-
-			if (match) {
-				const item = match[1] ?? null;
-				const qty = Number(match[2]) ?? null;
-				const fromLoc = match[3] ?? null;
-				const toLoc = match[4] ?? null;
-				const LP = match[5] ?? null;
-
-				if (!item || !qty) return;
-
-				// Agregar datos al objeto usando el contador como clave
-				data[contador++] = { item, qty, fromLoc, toLoc, LP };
-			}
-		});
-
-		// Limpiar el campo de texto
-
-		// Insertar datos
-		console.log("datos:", data);
-		this.insertarDatos({ data });
+		if (!item || !qty || !fromLoc || !toLoc) return null;
+		return { item, qty, fromLoc, toLoc, LP };
 	}
 
-	// Insertar datos en el Formulario
-	insertarDatos({ data }) {
-		try {
-			// Obtener las claves (números de artículo) del objeto datos
-			const rows = Object.keys(data);
-			this.updateCounter(rows.length);
-			// Verificar si hay datos para procesar
-			if (rows.length === 0) {
-				console.log("No hay datos para insertar.");
-				return;
-			}
+	// Asignar valores al formulario
+	assigneateValueInForm({ firstDataToInsert }) {
+		const { item, company, quantity, QTYUM, RFLOGISTICSUNIT, fromLoc, toLoc } = form1;
 
-			// console.log('datos:', datos);
+		item.value = firstDataToInsert?.item;
+		quantity.value = firstDataToInsert?.qty;
+		fromLoc.value = firstDataToInsert?.fromLoc;
+		toLoc.value = firstDataToInsert?.toLoc;
+		company.value = "FM";
+		QTYUM.value = "PZ (1,00)";
+		RFLOGISTICSUNIT.value = firstDataToInsert?.LP;
+	}
 
-			// Obtener la primera fila del objeto datos
-			const firstRow = data[rows[0]];
+	verifyFormInsertData() {
+		const { item, company, quantity, QTYUM, fromLoc, toLoc } = form1;
+		console.log("verifyFormInsertData");
 
-			if (!form1) {
-				throw new Error("Formulario no encontrado [#form1]");
-			}
-
-			// Asignar valores al formulario
-			const { item, company, quantity, QTYUM, RFLOGISTICSUNIT, fromLoc, toLoc } = form1;
-
-			item.value = firstRow?.item;
-			company.value = "FM";
-			quantity.value = firstRow?.qty;
-			QTYUM.value = "PZ (1,00)";
-			fromLoc.value = firstRow?.fromLoc;
-			toLoc.value = firstRow?.toLoc;
-
-			if (firstRow?.LP) RFLOGISTICSUNIT.value = firstRow?.LP;
-
-			delete data[rows[0]];
-
-			const verifyForm = () => {
-				if (item.value && company.value && quantity.value && fromLoc.value && toLoc.value) {
-					this.submitFormData();
-				}
-			};
-
-			this.saveDataToSessionStorage(data);
-			this.submitFormData(() => setTimeout(() => setInterval(() => verifyForm(), 1000), 2000));
-		} catch (error) {
-			console.error("Error al insertar datos:", error.message);
+		if (
+			item.value &&
+			company.value === "FM" &&
+			quantity.value &&
+			QTYUM.value === "PZ (1,00)" &&
+			fromLoc.value &&
+			toLoc.value
+		) {
+			return true;
 		}
+
+		return false;
 	}
 }
-
-const formularioHTMLTranfer = /*html*/ `
-<form id="registroForm" class="registroForm adjustment">
-<label for="dataToInsert">Item, Qty, From Ubicacion, To Ubicacion, LP:</label>
-<textarea id="dataToInsert" name="dataToInsert" rows="4" cols="50" required placeholder="Item\t\t\tPiezas\tUbi. origen\tUbi. destino\tLP origen(Opcional)\n8264-10104-10618\t1pz\t1-25-02-AA-01\t1-25-02-AA-01\tFMA0002376952"></textarea>
-  
-  <div>
-    <button id="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
-    <button id="insertData" type="submit">Registrar</button>
-    <button id="cancel" type="button">Cancelar</button>
-  </div>
-</form>`;
-
-window.addEventListener("load", async () => {
-	const nameDataStorage = "datosToTranfer"; // Nombre del objeto en el almacenamiento local
-
-	try {
-		const iventoryManager = new InventoryTransfer({
-			formularioHTML: formularioHTMLTranfer,
-			nameDataStorage,
-			adjType: "Transferencia Manual",
-		});
-
-		iventoryManager.render();
-	} catch (error) {
-		console.error("Error al cargar el componente InventoryTranfer:", error.message);
-	}
-});

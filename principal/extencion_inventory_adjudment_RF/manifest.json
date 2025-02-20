@@ -10,7 +10,6 @@
 		"48": "images/inventory48.png",
 		"128": "images/inventory128.png"
 	},
-	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ToContainerRF.aspx?*"],
@@ -19,7 +18,14 @@
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/InventoryManagementRF.aspx*"],
-			"js": ["IventoryManager.js", "InventoryAdjustment.js", "InventoryTransfer.js", "InventoryTranferLP.js"],
+			"js": [
+				"formHtml.js",
+				"IventoryManager.js",
+				"InventoryAdjustment.js",
+				"InventoryTransfer.js",
+				"InventoryTranferLP.js",
+				"index.js"
+			],
 			"css": ["style.css"]
 		}
 	],
