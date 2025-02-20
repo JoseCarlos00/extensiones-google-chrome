@@ -1,11 +1,50 @@
+* {
+	box-sizing: border-box;
+}
+
+:root {
+	--width-form: 500px;
+	--height-form: 180px;
+}
+
+center {
+	width: 100%;
+	display: grid;
+	min-width: 500px;
+	grid-template-columns: 500px 1fr 1fr;
+
+	#inventoryManagementRfWrapper {
+		grid-column: 2;
+	}
+}
+
+body {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	align-items: center;
+}
+
+.change center {
+	width: calc(100% - var(--width-form));
+	grid-template-columns: 1fr 1fr;
+
+	#inventoryManagementRfWrapper {
+		display: flex;
+		flex-direction: column;
+		min-width: 500px;
+		grid-column: initial;
+	}
+}
+
 /* Goobal */
 .registroForm {
-	position: absolute;
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
 
-	animation: entradaElemento 0.5s ease-in-out;
+	width: 500px;
+	height: var(--height-form);
 
 	& div {
 		margin: 0 auto;
@@ -21,11 +60,11 @@
 		background-color: #0dd406;
 
 		&:hover {
-			background: #0dd406d6;
+			background-color: #0dd406d6;
 		}
 
 		&:active {
-			background: #0dd406bf;
+			background-color: #0dd406bf;
 		}
 	}
 
@@ -33,12 +72,55 @@
 		border-color: red;
 		font-weight: bold;
 	}
+
+	.inputGroup {
+		position: relative;
+		width: 100%;
+
+		.textarea {
+			padding: 4px 8px;
+			display: block;
+			width: 100%;
+			outline: none;
+			border: 2px solid rgb(200, 200, 200);
+			border-radius: 8px;
+			font-size: 15px;
+			text-transform: uppercase;
+		}
+
+		label {
+			padding: 8px 8px;
+			font-size: 16px;
+			position: absolute;
+			left: 0;
+			top: 0;
+			pointer-events: none;
+			transition: all 0.25s ease;
+			color: rgb(100, 100, 100);
+
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		& :is(.textarea:focus, .textarea:focus-visible, .textarea:valid) ~ label {
+			transform: translateY(-50%) scale(0.9);
+			margin: 0;
+			padding: 0;
+			background-color: #fff;
+		}
+
+		& :is(.textarea:focus, .textarea:focus-visible, .textarea:valid) {
+			border-color: rgb(150, 150, 200);
+			padding-top: 14px;
+		}
+	}
 }
 
 /* ============= */
 /* Transferencia Manual */
 #registroForm.tranfer {
-	width: 650px;
+	width: var(--width-form);
 }
 
 /** Otros estilos */
@@ -50,7 +132,7 @@
 
 /*Ajuste Positivo  */
 #registroForm.adjustment {
-	width: 700px;
+	width: var(--width-form);
 }
 
 /** Otros estilos */
@@ -64,21 +146,15 @@
 	width: 200px;
 	font-size: 1.12rem;
 
-	animation: entradaElemento 0.5s ease-in-out;
-
 	spam {
 		font-weight: bold;
 		padding-left: 4px;
 	}
 }
 
-@keyframes entradaElemento {
-	from {
-		opacity: 0;
-		transform: translateY(-20px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
+@media (width <= 1000px) {
+	body.change {
+		flex-direction: column-reverse;
+		gap: 30px;
 	}
 }

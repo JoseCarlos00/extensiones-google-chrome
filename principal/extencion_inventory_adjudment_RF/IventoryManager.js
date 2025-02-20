@@ -55,6 +55,7 @@ class IventoryManager {
 			}
 
 			document.body.insertAdjacentHTML("afterbegin", this.formularioHTML);
+			document.body.classList.add("change");
 
 			setTimeout(resolve, 50);
 		});
@@ -113,7 +114,7 @@ class IventoryManager {
 				dataToInsert?.value
 					?.trim()
 					?.split("\n")
-					?.map((i) => i?.trim())
+					?.map((i) => i?.trim()?.toUpperCase())
 					?.filter(Boolean) ?? [];
 
 			if (lineas.length === 0) {
