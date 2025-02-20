@@ -153,6 +153,15 @@ body {
 }
 
 @media (width <= 1000px) {
+	body {
+		flex-direction: initial;
+		gap: initial;
+
+		:not(.change) #inventoryManagementRfWrapper {
+			grid-column: initial;
+		}
+	}
+
 	body.change {
 		flex-direction: column-reverse;
 		gap: 30px;
