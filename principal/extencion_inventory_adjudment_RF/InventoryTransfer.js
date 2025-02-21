@@ -36,14 +36,7 @@ class InventoryTransfer extends IventoryManager {
 		const { item, company, quantity, QTYUM, fromLoc, toLoc } = form1;
 		console.log("verifyFormInsertData");
 
-		if (
-			item.value &&
-			company.value === "FM" &&
-			quantity.value &&
-			QTYUM.value === "PZ (1,00)" &&
-			fromLoc.value &&
-			toLoc.value
-		) {
+		if (item.value && company.value === "FM" && quantity.value && fromLoc.value && toLoc.value) {
 			return true;
 		}
 

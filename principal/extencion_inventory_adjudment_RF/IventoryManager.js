@@ -304,7 +304,7 @@ class IventoryManager {
 		const dataInsertOk = this.verifyFormInsertData();
 
 		if (!dataInsertOk) {
-			console.warn(" No se pudo insertar los datos");
+			console.warn(" No se pudo insertar los datos [dataInsertOk]");
 			return;
 		}
 
