@@ -19,7 +19,7 @@ const formularioHTMLAdjustment = /*html*/ `
 const formularioHTMLTranfer = /*html*/ `
 <form id="registroForm" class="registroForm adjustment">
 <div class="inputGroup">
-    <textarea id="dataToInsert" name="dataToInsert" class="textarea input" rows="4" cols="50" required style="width: 600px"
+    <textarea id="dataToInsert" name="dataToInsert" class="textarea input" rows="4" cols="50" required style="width: 700px"
       placeholder="" value=""></textarea>
     <label
     for="dataToInsert"><span>Item</span><span>Qty</span><span>From Loc</span><span>To loc</span><span>LP(opcional)</span></label>

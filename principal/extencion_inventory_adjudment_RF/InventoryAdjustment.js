@@ -13,9 +13,10 @@ class InventoryAdjustment extends IventoryManager {
 		const qty = Number(match[2]) ?? "";
 		const ubicacion = match[3] ?? "";
 		const LP = match[4] ?? "";
+		const company = match[5] ?? "FM";
 
 		if (!item || !qty || !ubicacion) return null;
-		return { item, qty, ubicacion, LP };
+		return { item, qty, ubicacion, LP, company };
 	}
 
 	// Asignar valores al formulario
@@ -26,14 +27,14 @@ class InventoryAdjustment extends IventoryManager {
 		quantity.value = firstDataToInsert?.qty;
 		location.value = firstDataToInsert?.ubicacion;
 		RFLOGISTICSUNIT.value = firstDataToInsert?.LP;
-		company.value = "FM";
+		company.value = firstDataToInsert?.company ?? "FM";
 	}
 
 	verifyFormInsertData() {
-		const { item, company, quantity, location, RFLOGISTICSUNIT } = form1;
+		const { item, company, quantity, location } = form1;
 		console.log("verifyFormInsertData");
 
-		if (item.value && company.value === "FM" && quantity.value && location.value) {
+		if (item.value && (company.value === "FM" || company.value === "BF") && quantity.value && location.value) {
 			return true;
 		}
 

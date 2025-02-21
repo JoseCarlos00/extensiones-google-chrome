@@ -9,34 +9,40 @@ class InventoryTransfer extends IventoryManager {
 		const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)(?:\s+(\S+))?/);
 		if (!match) return null;
 
-		const item = match[1] ?? null;
-		const qty = Number(match[2]) ?? null;
-		const fromLoc = match[3] ?? null;
-		const toLoc = match[4] ?? null;
-		const LP = match[5] ?? null;
+		const item = match[1] ?? "";
+		const qty = Number(match[2]) ?? "";
+		const fromLoc = match[3] ?? "";
+		const toLoc = match[4] ?? "";
+		const LP = match[5] ?? "";
+		const company = match[6] ?? "FM";
 
 		if (!item || !qty || !fromLoc || !toLoc) return null;
-		return { item, qty, fromLoc, toLoc, LP };
+		return { item, qty, fromLoc, toLoc, LP, company };
 	}
 
 	// Asignar valores al formulario
 	assigneateValueInForm({ firstDataToInsert }) {
-		const { item, company, quantity, QTYUM, RFLOGISTICSUNIT, fromLoc, toLoc } = form1;
+		const { item, company, quantity, RFLOGISTICSUNIT, fromLoc, toLoc } = form1;
 
 		item.value = firstDataToInsert?.item;
 		quantity.value = firstDataToInsert?.qty;
 		fromLoc.value = firstDataToInsert?.fromLoc;
 		toLoc.value = firstDataToInsert?.toLoc;
-		company.value = "FM";
-		QTYUM.value = "PZ (1,00)";
+		company.value = firstDataToInsert?.company ?? "FM";
 		RFLOGISTICSUNIT.value = firstDataToInsert?.LP;
 	}
 
 	verifyFormInsertData() {
-		const { item, company, quantity, QTYUM, fromLoc, toLoc } = form1;
+		const { item, company, quantity, fromLoc, toLoc } = form1;
 		console.log("verifyFormInsertData");
 
-		if (item.value && company.value === "FM" && quantity.value && fromLoc.value && toLoc.value) {
+		if (
+			item.value &&
+			(company.value === "FM" || company.value === "BF") &&
+			quantity.value &&
+			fromLoc.value &&
+			toLoc.value
+		) {
 			return true;
 		}
 

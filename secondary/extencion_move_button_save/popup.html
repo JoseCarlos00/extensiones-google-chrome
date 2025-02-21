@@ -28,11 +28,36 @@
             font-size: 18px;
             margin-bottom: 12px;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        .not-validate {
+
+            .title,
+            .container {
+                display: none;
+            }
+        }
+
+        .mensaje-error {
+            width: max-content;
+        }
+
+        body:not(.not-validate) .mensaje-error {
+            display: none;
+        }
     </style>
 </head>
 
-<body>
-    <h2>Mostrar Waves</h2>
+<body class="not-validate">
+
+    <div class="mensaje-error">
+        No es una pagina valida.
+    </div>
+
+    <h2 class="title">Mostrar Waves</h2>
     <div class="container">
         <table>
             <caption class="title-table">Create custom wave</caption>
@@ -48,59 +73,67 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-id="2168485273">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="2168485273" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Express</td>
                     <td>Flujo&nbsp;Mariano&nbsp;Express</td>
                 </tr>
-                <tr data-id="655614933">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="655614933" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Nacionalizaciones</td>
                     <td>Flujo&nbsp;de&nbsp;Ola&nbsp;Nacionalizaciones</td>
                 </tr>
-                <tr data-id="2012109031">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="2012109031" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;AMD</td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;AMD</td>
                 </tr>
-                <tr data-id="1832152421">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="1832152421" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Normal</td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Normal</td>
                 </tr>
-                <tr data-id="756146214">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="756146214" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Pedido1-3</td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Pedido1-3</td>
                 </tr>
-                <tr data-id="3593612721">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="3593612721" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Picos&nbsp;NEW</td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Picos&nbsp;Nuevo</td>
                 </tr>
-                <tr data-id="3199656165">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="3199656165" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Piezas</td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Piezas</td>
                 </tr>
-                <tr data-id="1192122430">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="1192122430" type="checkbox" class="checkbox"></td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Zona&nbsp;Bulk</td>
                     <td>Flujo&nbsp;Tultitlan&nbsp;Zona&nbsp;Bulk</td>
                 </tr>
-                <tr data-id="1155736963">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="1155736963" type="checkbox" class="checkbox"></td>
                     <td>Mariano&nbsp;STD&nbsp;Auto&nbsp;ACTIVA</td>
                     <td> Mariano&nbsp;STD&nbsp;Auto&nbsp;ACTIVA</td>
                 </tr>
-                <tr data-id="1265266259">
-                    <td><input type="checkbox" class="checkbox"></td>
+                <tr>
+                    <td><input checked value="1265266259" type="checkbox" class="checkbox"></td>
                     <td>Mariano&nbsp;STD&nbsp;No&nbsp;Rpln</td>
                     <td>Mariano&nbsp;STD&nbsp;Sin&nbsp;Reabasto</td>
+                </tr>
+
+                <tr data-id="486474973">
+                    <td><input checked value="486474973" type="checkbox" class="checkbox"></td>
+                    <td>Tultitlan&nbsp;Crossdock</td>
+                    <td>Flujo&nbsp;de&nbsp;Ola&nbsp;Tultitlan&nbsp;Cross&nbsp;Dock</td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <script type="module" src="./popup.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,74 @@
+.my-botton-save {
+	position: absolute !important;
+	height: 35px !important;
+	border: 1px solid #bcbcbc;
+
+	& a#NewWaveActionSave {
+		padding-top: 0.35rem !important;
+		height: 33px !important;
+	}
+
+	& a#NewWaveActionSave:hover {
+		background-color: #a233c1;
+		height: 33px !important;
+		color: #fff;
+	}
+}
+
+.nav > li.disabled {
+	background-color: #494e53;
+}
+.nav > li.disabled > a#NewWaveActionSave {
+	background-color: transparent;
+}
+
+/* Reducir spaciado */
+#GridPlaceHolder {
+	min-height: 20px;
+}
+
+#WaveFlowGrid > tbody tr td {
+	padding: 1rem;
+}
+
+#ScreenGroupSubAccordion12897 {
+	display: none !important;
+}
+
+.hidden {
+	display: none;
+}
+
+.flujo-express {
+	display: var(--flujo-express);
+}
+.flujo-nacionalizaciones {
+	display: var(--flujo-nacionalizaciones);
+}
+.flujo-tultitlan-amd {
+	display: var(--flujo-tultitlan-amd);
+}
+.flujo-tultitlan-normal {
+	display: var(--flujo-tultitlan-normal);
+}
+.flujo-tultitlan-pedido1-3 {
+	display: var(--flujo-tultitlan-pedido1-3);
+}
+.flujo-tultitlan-picos-new {
+	display: var(--flujo-tultitlan-picos-new);
+}
+.flujo-tultitlan-piezas {
+	display: var(--flujo-tultitlan-piezas);
+}
+.flujo-tultitlan-zona-bulk {
+	display: var(--flujo-tultitlan-zona-bulk);
+}
+.mariano-std-auto-activa {
+	display: var(--mariano-std-auto-activa);
+}
+.mariano-std-no-rpln {
+	display: var(--mariano-std-no-rpln);
+}
+.tultitlan-crossdock {
+	display: var(--tultitlan-crossdock);
+}
