@@ -39,6 +39,17 @@
 	display: none;
 }
 
+.save-personality {
+	display: inline-block;
+	margin-left: 16px;
+
+	&:hover {
+		background-color: #a233c1;
+		height: 33px !important;
+		color: #fff;
+	}
+}
+
 table#WaveFlowGrid tbody {
 	--default-display: table-row;
 

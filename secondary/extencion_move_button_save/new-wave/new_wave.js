@@ -30,27 +30,25 @@ async function inicio() {
 	}
 
 	const btnCancel = document.querySelector("#AddWaveActionCancel");
-	btnCancel && btnCancel.addEventListener("click", () => localStorage.removeItem("newWaveActive"));
+	btnCancel?.addEventListener("click", () => localStorage.removeItem("newWaveActive"));
 
 	await delay(150);
 
-	liElementSave.classList.add("my-botton-save");
-	liElementSave.classList.remove("pull-right");
+	// liElementSave.classList.add("my-botton-save");
+	// liElementSave.classList.remove("pull-right");
 
-	await delay(150);
-	setPositionButtonSave(liElementSave);
+	// setPositionButtonSave(liElementSave);
 
 	// Agregar el listener para el evento resize
-	window.addEventListener("resize", () => setPositionButtonSave(liElementSave));
+	// window.addEventListener("resize", () => setPositionButtonSave(liElementSave));
 
-	const btnWaveMaster = document.querySelector("#ui-id-12");
-	btnWaveMaster?.addEventListener("click", () => {
-		document.body.classList.remove("new-wave");
-		setPositionButtonSave(liElementSave);
-	});
+	// const btnWaveMaster = document.querySelector("#ui-id-12");
+	// btnWaveMaster?.addEventListener("click", () => {
+	// 	document.body.classList.remove("new-wave");
+	// 	setPositionButtonSave(liElementSave);
+	// });
 
 	const tbody = document.querySelector("#WaveFlowGrid > tbody");
-	const btnSave = document.querySelector("#NewWaveActionSave");
 
 	if (tbody) {
 		tbody.addEventListener("dblclick", (e) => {
@@ -63,12 +61,25 @@ function setPositionButtonSave(btnSave) {
 	const toggleRealize = document.querySelector("#ScreenControlToggleSwitch37984 > div");
 	const { bottom, top, left, right, x, y } = toggleRealize.getBoundingClientRect();
 
-	console.log("setPositionButtonSave");
-
 	// Asigna la posición al botón btnSave para que esté al lado de toggleRealize
 	btnSave.style.position = "absolute"; // Asegúrate de que el elemento es posicionado de manera absoluta
 	btnSave.style.top = `${top - 40}px`; // Coloca el botón en la misma altura que toggleRealize
 	btnSave.style.left = `${right + 10}px`; // Colócalo a la derecha de toggleRealize con un margen de 10px
+}
+
+function simulateClickSave() {
+	// Obtener el elemento para enviar un evento de clic
+	const btnSave = document.querySelector("#NewWaveActionSave");
+
+	// Crear un MouseEvent de clic artificial
+	let evt = new MouseEvent("click", {
+		bubbles: true,
+		cancelable: true,
+		view: window,
+	});
+
+	// Enviar el evento al elemento de la casilla de verificación
+	btnSave.dispatchEvent(evt);
 }
 
 function setEventClickMenuWaveMaster() {
