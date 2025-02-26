@@ -4,31 +4,29 @@ window.addEventListener("load", async () => {
 	const storedData = await chrome.storage.local.get("hiddenColumns");
 	const hiddenColumns = storedData.hiddenColumns || {};
 
-	const toggleRowVisibility = (isHidden, id) => {
+	const toggleRowVisibility = (isHidden, values) => {
 		if (!tableE) {
 			console.error("No se encontró #WaveFlowGrid en la página.");
 			return;
 		}
 
-		const currentTr = tableE.querySelector(`tr[data-id="${id}"]`);
-
-		if (!currentTr) {
-			console.warn(`No se encontró el elemento con data-id="${id}"`);
+		if (isHidden) {
+			tableE.style.setProperty(values.property, values.propertyValue);
 			return;
 		}
 
-		currentTr.classList.toggle("hidden", !isHidden);
+		tableE.style.removeProperty(values.property);
 	};
 
-	Object.keys(hiddenColumns).forEach((id) => {
-		toggleRowVisibility(false, id); // Ocultar los elementos guardados
+	Object.entries(hiddenColumns).forEach(([key, value]) => {
+		toggleRowVisibility(true, value);
 	});
 
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		const { type, data } = message;
 
-		const isVisible = type === "SHOW";
-		toggleRowVisibility(isVisible, data.id);
-		sendResponse({ status: `Elemento ${isVisible ? "mostrado" : "ocultado"}` });
+		const isHidden = type === "HIDDEN";
+		toggleRowVisibility(isHidden, data.values);
+		sendResponse({ status: `Elemento ${isHidden ? "ocultado" : "mostrado"}` });
 	});
 });

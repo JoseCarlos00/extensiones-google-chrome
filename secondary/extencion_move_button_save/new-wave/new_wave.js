@@ -8,15 +8,26 @@ function delay(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function recoveryAutoREalizeVaule() {
+	const storedData = (await chrome.storage.local.get("autoRealize")) || {};
+	const autoRealize = storedData.autoRealize || false;
+
+	return autoRealize;
+}
+
 async function inicio() {
+	document.body.classList.add("new-wave");
+
 	const liElementSave = document.querySelector(selector.btnSave);
+	const isAutoRealize = await recoveryAutoREalizeVaule();
 
 	await delay(150);
-	await clickMenuWaveMaster();
 
 	// Auto realise
 	const autoRealise = document.querySelector(selector.autoRelise);
-	autoRealise && autoRealise.click();
+	if (autoRealise && isAutoRealize) {
+		autoRealise.click();
+	}
 
 	const btnCancel = document.querySelector("#AddWaveActionCancel");
 	btnCancel && btnCancel.addEventListener("click", () => localStorage.removeItem("newWaveActive"));
@@ -32,6 +43,12 @@ async function inicio() {
 	// Agregar el listener para el evento resize
 	window.addEventListener("resize", () => setPositionButtonSave(liElementSave));
 
+	const btnWaveMaster = document.querySelector("#ui-id-12");
+	btnWaveMaster?.addEventListener("click", () => {
+		document.body.classList.remove("new-wave");
+		setPositionButtonSave(liElementSave);
+	});
+
 	const tbody = document.querySelector("#WaveFlowGrid > tbody");
 	const btnSave = document.querySelector("#NewWaveActionSave");
 
@@ -43,21 +60,27 @@ async function inicio() {
 }
 
 function setPositionButtonSave(btnSave) {
-	const btnYes = document.querySelector(selector.btnYes);
-	const area = document.querySelector("#ui-id-13")?.getBoundingClientRect();
-	const area2 = btnYes?.getBoundingClientRect();
+	const toggleRealize = document.querySelector("#ScreenControlToggleSwitch37984 > div");
+	const { bottom, top, left, right, x, y } = toggleRealize.getBoundingClientRect();
 
-	btnSave.style.top = area.bottom - 4 + "px";
-	btnSave.style.left = area2.right + "px";
+	console.log("setPositionButtonSave");
+
+	// Asigna la posición al botón btnSave para que esté al lado de toggleRealize
+	btnSave.style.position = "absolute"; // Asegúrate de que el elemento es posicionado de manera absoluta
+	btnSave.style.top = `${top - 40}px`; // Coloca el botón en la misma altura que toggleRealize
+	btnSave.style.left = `${right + 10}px`; // Colócalo a la derecha de toggleRealize con un margen de 10px
 }
 
-function clickMenuWaveMaster() {
-	return new Promise((resolve, reject) => {
-		const btn = document.querySelector("#ui-id-12");
+function setEventClickMenuWaveMaster() {
+	const btn = document.querySelector("#ui-id-12");
 
-		if (!btn) reject("No existe el button Wave Master");
-		btn.click();
-		resolve();
+	if (!btn) {
+		console.warn("No existe el button Wave Master");
+		return;
+	}
+
+	btn.addEventListener("click", () => {
+		document.body.classList.remove("new-wave");
 	});
 }
 

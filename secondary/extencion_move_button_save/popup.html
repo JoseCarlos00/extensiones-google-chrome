@@ -4,28 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hola</title>
+    <title>Wave Create</title>
+
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
         body {
             background-color: rgb(36, 35, 35);
             color: rgb(201, 203, 205);
-            font-size: 16px;
+            font-size: 13px;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 8px;
         }
 
-        table {
-            border: 1px solid;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid;
-            padding: 6px 8px;
-        }
 
         .title-table {
-            font-size: 18px;
             margin-bottom: 12px;
         }
 
@@ -49,6 +47,50 @@
             display: none;
         }
     </style>
+
+    <style>
+        main {
+            margin-top: 20px;
+            width: 420px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .header .title {
+            font-weight: bold;
+            cursor: initial;
+        }
+
+        h2.title {
+            text-align: center;
+        }
+
+
+        .row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 25px 1fr 1fr;
+            border-radius: 4px;
+            border: 1px solid;
+            padding: 4px;
+            cursor: pointer;
+        }
+
+        .col {
+            width: 100%;
+            padding: 4px 8px;
+            text-wrap-mode: nowrap;
+            display: inline;
+        }
+
+        .checked {
+            background-color: rgb(83, 161, 225);
+            color: #2a2d29;
+        }
+    </style>
+
 </head>
 
 <body class="not-validate">
@@ -58,80 +100,88 @@
     </div>
 
     <h2 class="title">Mostrar Waves</h2>
-    <div class="container">
-        <table>
-            <caption class="title-table">Create custom wave</caption>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>
-                        <span>Wave flow</span>
-                    </th>
-                    <th>
-                        <span>Description</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input checked value="2168485273" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Express</td>
-                    <td>Flujo&nbsp;Mariano&nbsp;Express</td>
-                </tr>
-                <tr>
-                    <td><input checked value="655614933" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Nacionalizaciones</td>
-                    <td>Flujo&nbsp;de&nbsp;Ola&nbsp;Nacionalizaciones</td>
-                </tr>
-                <tr>
-                    <td><input checked value="2012109031" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;AMD</td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;AMD</td>
-                </tr>
-                <tr>
-                    <td><input checked value="1832152421" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Normal</td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Normal</td>
-                </tr>
-                <tr>
-                    <td><input checked value="756146214" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Pedido1-3</td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Pedido1-3</td>
-                </tr>
-                <tr>
-                    <td><input checked value="3593612721" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Picos&nbsp;NEW</td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Picos&nbsp;Nuevo</td>
-                </tr>
-                <tr>
-                    <td><input checked value="3199656165" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Piezas</td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Piezas</td>
-                </tr>
-                <tr>
-                    <td><input checked value="1192122430" type="checkbox" class="checkbox"></td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Zona&nbsp;Bulk</td>
-                    <td>Flujo&nbsp;Tultitlan&nbsp;Zona&nbsp;Bulk</td>
-                </tr>
-                <tr>
-                    <td><input checked value="1155736963" type="checkbox" class="checkbox"></td>
-                    <td>Mariano&nbsp;STD&nbsp;Auto&nbsp;ACTIVA</td>
-                    <td> Mariano&nbsp;STD&nbsp;Auto&nbsp;ACTIVA</td>
-                </tr>
-                <tr>
-                    <td><input checked value="1265266259" type="checkbox" class="checkbox"></td>
-                    <td>Mariano&nbsp;STD&nbsp;No&nbsp;Rpln</td>
-                    <td>Mariano&nbsp;STD&nbsp;Sin&nbsp;Reabasto</td>
-                </tr>
 
-                <tr data-id="486474973">
-                    <td><input checked value="486474973" type="checkbox" class="checkbox"></td>
-                    <td>Tultitlan&nbsp;Crossdock</td>
-                    <td>Flujo&nbsp;de&nbsp;Ola&nbsp;Tultitlan&nbsp;Cross&nbsp;Dock</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="container">
+        <label for="auto-realize">
+            <input type="checkbox" id="auto-realize" name="auto-realize" checked>
+            Auto Realize
+        </label>
     </div>
+
+    <main class="container">
+        <header class="header row">
+            <div class=""></div>
+            <div class="title col">Wave Flow</div>
+            <div class="title col">Description</div>
+        </header>
+
+        <label for="row1" class="row checked">
+            <div><input id="row1" checked value="2168485273" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Express</div>
+            <div>Flujo&nbsp;Mariano&nbsp;Express</div>
+        </label>
+
+        <label for="row2" class="row checked">
+            <div><input id="row2" checked value="655614933" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Nacionalizaciones</div>
+            <div>Flujo&nbsp;de&nbsp;Ola&nbsp;Nacionalizaciones</div>
+        </label>
+
+        <label for="row3" class="row checked">
+            <div><input id="row3" checked value="2012109031" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;AMD</div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;AMD</div>
+        </label>
+
+        <label for="row4" class="row checked">
+            <div><input id="row4" checked value="1832152421" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Normal</div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Normal</div>
+        </label>
+
+        <label for="row5" class="row checked">
+            <div><input id="row5" checked value="756146214" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Pedido1-3</div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Pedido1-3</div>
+        </label>
+
+        <label for="row6" class="row checked">
+            <div><input id="row6" checked value="3593612721" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Picos&nbsp;NEW</div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Picos&nbsp;Nuevo</div>
+        </label>
+
+        <label for="row7" class="row checked">
+            <div><input id="row7" checked value="3199656165" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Piezas</div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Piezas</div>
+        </label>
+
+        <label for="row8" class="row checked">
+            <div><input id="row8" checked value="1192122430" type="checkbox" class="checkbox"></div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Zona&nbsp;Bulk</div>
+            <div>Flujo&nbsp;Tultitlan&nbsp;Zona&nbsp;Bulk</div>
+        </label>
+
+        <label for="row9" class="row checked">
+            <div><input id="row9" checked value="1155736963" type="checkbox" class="checkbox"></div>
+            <div>Mariano&nbsp;Sdiv&nbsp;Auto&nbsp;ACTIVA</div>
+            <div> Mariano&nbsp;Sdiv&nbsp;Auto&nbsp;ACTIVA</div>
+        </label>
+
+        <label for="row10" class="row checked">
+            <div><input id="row10" checked value="1265266259" type="checkbox" class="checkbox"></div>
+            <div>Mariano&nbsp;Sdiv&nbsp;No&nbsp;Rpln</div>
+            <div>Mariano&nbsp;Sdiv&nbsp;Sin&nbsp;Reabasto</div>
+        </label>
+
+        <label for="row11" class="row checked">
+            <div><input id="row11" checked value="486474973" type="checkbox" class="checkbox"></div>
+            <div>Tultitlan&nbsp;Crossdock</div>
+            <div>Flujo&nbsp;de&nbsp;Ola&nbsp;Tultitlan&nbsp;Cross&nbsp;Dock</div>
+        </label>
+
+    </main>
 
     <script type="module" src="./popup.js"></script>
 </body>
