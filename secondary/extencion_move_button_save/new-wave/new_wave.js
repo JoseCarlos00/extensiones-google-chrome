@@ -57,6 +57,7 @@ async function inicio() {
 	btnWaveMaster?.addEventListener("click", () => document.body.classList.remove("new-wave"));
 
 	const tbody = document.querySelector("#WaveFlowGrid > tbody");
+	const btnSave = document.querySelector("#NewWaveActionSave");
 
 	if (tbody) {
 		tbody.addEventListener("dblclick", (e) => {
@@ -85,8 +86,6 @@ function simulateClickSave() {
 		cancelable: true,
 		view: window,
 	});
-
-	console.log("simulateClickSave, btnSave:", btnSave);
 
 	// Enviar el evento al elemento de la casilla de verificación
 	btnSave.dispatchEvent(evt);
