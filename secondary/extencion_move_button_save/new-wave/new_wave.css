@@ -43,10 +43,16 @@
 	display: inline-block;
 	margin-left: 16px;
 
-	&:hover {
-		background-color: #a233c1;
-		height: 33px !important;
+	input {
+		width: 100px;
+		height: 34px;
+		background-color: #337ab7;
+		border-color: #bcbcbc;
 		color: #fff;
+	}
+
+	input:hover {
+		background-color: #a233c1;
 	}
 }
 

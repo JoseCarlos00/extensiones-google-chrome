@@ -15,10 +15,26 @@ async function recoveryAutoREalizeVaule() {
 	return autoRealize;
 }
 
+async function insertNewButtonSave() {
+	const elementForReference = document.querySelector("#ScreenControlToggleSwitch37984 > div");
+	const newButton = `
+		<div tabindex="0" class="save-personality">
+    	<input class="btn new-button-save" value="Save" type="button" />
+		</div>`;
+
+	if (!elementForReference) {
+		console.error("[insertNewButtonSave]: Elemento no encontrado");
+		return;
+	}
+
+	elementForReference.insertAdjacentHTML("beforeend", newButton);
+}
+
 async function inicio() {
 	document.body.classList.add("new-wave");
 
-	const liElementSave = document.querySelector(selector.btnSave);
+	await insertNewButtonSave();
+	// const liElementSave = document.querySelector(selector.btnSave);
 	const isAutoRealize = await recoveryAutoREalizeVaule();
 
 	await delay(150);
@@ -32,21 +48,13 @@ async function inicio() {
 	const btnCancel = document.querySelector("#AddWaveActionCancel");
 	btnCancel?.addEventListener("click", () => localStorage.removeItem("newWaveActive"));
 
+	const newButtonSave = document.querySelector(".save-personality .new-button-save");
+	newButtonSave?.addEventListener("click", simulateClickSave);
+
 	await delay(150);
 
-	// liElementSave.classList.add("my-botton-save");
-	// liElementSave.classList.remove("pull-right");
-
-	// setPositionButtonSave(liElementSave);
-
-	// Agregar el listener para el evento resize
-	// window.addEventListener("resize", () => setPositionButtonSave(liElementSave));
-
-	// const btnWaveMaster = document.querySelector("#ui-id-12");
-	// btnWaveMaster?.addEventListener("click", () => {
-	// 	document.body.classList.remove("new-wave");
-	// 	setPositionButtonSave(liElementSave);
-	// });
+	const btnWaveMaster = document.querySelector("#ui-id-12");
+	btnWaveMaster?.addEventListener("click", () => document.body.classList.remove("new-wave"));
 
 	const tbody = document.querySelector("#WaveFlowGrid > tbody");
 
@@ -77,6 +85,8 @@ function simulateClickSave() {
 		cancelable: true,
 		view: window,
 	});
+
+	console.log("simulateClickSave, btnSave:", btnSave);
 
 	// Enviar el evento al elemento de la casilla de verificación
 	btnSave.dispatchEvent(evt);
