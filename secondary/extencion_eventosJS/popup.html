@@ -63,6 +63,28 @@
         .item-title {
             width: 80px;
             font-weight: bold;
+
+            .img {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border-radius: 4px;
+                margin-left: 4px;
+
+                background-image: url("./images/icons-scale.png");
+                background-size: 27px;
+                background-position-y: 0;
+                background-repeat: no-repeat;
+            }
+
+            .filter {
+                background-position-y: -18px;
+                width: 30px;
+            }
+
+            .play {
+                background-position-y: -38px;
+            }
         }
     </style>
 </head>
@@ -73,6 +95,7 @@
     <div class="container">
         <div class="item-title">
             Menu Pricipal
+            <span class="img"></span>
         </div>
 
         <div class="item marker">
@@ -88,7 +111,9 @@
     </div>
 
     <div class="container">
-        <span class="item-title">Filtros</span>
+        <div class="item-title">Filtros
+            <span class="img filter"></span>
+        </div>
 
         <div class="item marker">
             <div>
@@ -103,7 +128,9 @@
     </div>
 
     <div class="container">
-        <span class="item-title">Actualizar / Play</span>
+        <div class="item-title">Actualizar / Play
+            <span class="img play"></span>
+        </div>
 
         <div class="item marker">
             <div>
