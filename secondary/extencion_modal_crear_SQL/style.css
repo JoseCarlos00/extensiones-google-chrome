@@ -1,156 +1,155 @@
 .collapsepane.nav.navbar-nav li {
-  --balloon-color: #fff;
-  --balloon-bg-color: #487cc9;
-  --ballon-padding: 0.8em;
+	--balloon-color: #fff;
+	--balloon-bg-color: #487cc9;
+	--ballon-padding: 0.8em;
 
-  [aria-label][data-balloon-pos][data-balloon-pos='right']:before {
-    border-right-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos="right"]:before {
+		border-right-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos][data-balloon-pos^='down']:before {
-    border-bottom-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos^="down"]:before {
+		border-bottom-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos][data-balloon-pos='left']:before {
-    border-left-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos="left"]:before {
+		border-left-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos][data-balloon-pos='up']:before {
-    border-top-color: var(--balloon-color);
-  }
+	[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
+		border-top-color: var(--balloon-color);
+	}
 
-  [aria-label][data-balloon-pos]:after {
-    background-color: var(--balloon-bg-color);
-    padding-top: var(--ballon-padding);
-    padding-bottom: var(--ballon-padding);
-  }
+	[aria-label][data-balloon-pos]:after {
+		background-color: var(--balloon-bg-color);
+		padding-top: var(--ballon-padding);
+		padding-bottom: var(--ballon-padding);
+	}
 
-  a:hover {
-    cursor: pointer;
+	a:hover {
+		cursor: pointer;
 
-    i {
-      transform: scale(1.1);
-    }
-  }
+		i {
+			transform: scale(1.1);
+		}
+	}
 }
 
 /* The Modal (background) */
 .modal-container {
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1040;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.7);
-  }
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 1040;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgb(0, 0, 0);
+		background-color: rgba(0, 0, 0, 0.7);
+	}
 
-  /* Modal Content/Box */
-  .modal-content {
-    background-color: #fefefe;
-    margin: 100px auto;
-    padding: 20px;
-    border: 1px solid #888;
-    border-radius: 0.75em;
-    width: 80%;
-    width: fit-content;
-  }
+	/* Modal Content/Box */
+	.modal-content {
+		background-color: #fefefe;
+		margin: 100px auto;
+		padding: 20px;
+		border: 1px solid #888;
+		border-radius: 0.75em;
+		width: 80%;
+	}
 }
 
 .modal-container button.close {
-  --white: #fff;
-  --width-button-close: 30px;
-  --with-close-times-color: var(--white);
-  --bg-color: rgb(24, 49, 83);
+	--white: #fff;
+	--width-button-close: 30px;
+	--with-close-times-color: var(--white);
+	--bg-color: rgb(24, 49, 83);
 
-  --fa-primary-color: var(--with-close-times-color);
-  --fa-secondary-color: rgb(24, 49, 83);
-  --fa-secondary-opacity: 1;
+	--fa-primary-color: var(--with-close-times-color);
+	--fa-secondary-color: rgb(24, 49, 83);
+	--fa-secondary-opacity: 1;
 
-  font-size: 30px;
-  width: var(--width-button-close);
-  height: var(--width-button-close);
+	font-size: 30px;
+	width: var(--width-button-close);
+	height: var(--width-button-close);
 
-  box-sizing: content-box;
-  position: absolute;
-  top: -0.5em;
-  right: -0.5em;
-  line-height: 1;
-  color: inherit;
-  color: var(--with-close-close-color);
-  font-size: calc(1em * 1.5);
-  font-size: var(--with-close-close-font-size);
+	box-sizing: content-box;
+	position: absolute;
+	top: -0.5em;
+	right: -0.5em;
+	line-height: 1;
+	color: inherit;
+	color: var(--with-close-close-color);
+	font-size: calc(1em * 1.5);
+	font-size: var(--with-close-close-font-size);
 
-  opacity: 1;
+	opacity: 1;
 
-  sgv {
-    width: var(--width-button-close);
-    height: var(--width-button-close);
-  }
+	sgv {
+		width: var(--width-button-close);
+		height: var(--width-button-close);
+	}
 
-  .fa-primary {
-    fill: var(--fa-primary-color, currentColor);
-    opacity: var(--fa-primary-opacity, 1);
-  }
+	.fa-primary {
+		fill: var(--fa-primary-color, currentColor);
+		opacity: var(--fa-primary-opacity, 1);
+	}
 
-  .fa-secondary {
-    fill: var(--fa-secondary-color, currentColor);
-    opacity: var(--fa-secondary-opacity, 0.4);
-  }
+	.fa-secondary {
+		fill: var(--fa-secondary-color, currentColor);
+		opacity: var(--fa-secondary-opacity, 0.4);
+	}
 
-  &:hover,
-  &:hover .fa-secondary,
-  &:focus {
-    text-decoration: none;
-    cursor: pointer;
-    color: rgb(224, 49, 49);
-    opacity: 1;
-    fill: rgb(224, 49, 49);
-  }
+	&:hover,
+	&:hover .fa-secondary,
+	&:focus {
+		text-decoration: none;
+		cursor: pointer;
+		color: rgb(224, 49, 49);
+		opacity: 1;
+		fill: rgb(224, 49, 49);
+	}
 
-  &:is(:focus, .focus, .focused) {
-    --focus-outline-width: calc(1em * 3 / 16);
-    --focus-outline-color: #74c0fc;
-    --focus-outline: solid var(--focus-outline-width) var(--focus-outline-color);
-    outline: var(--focus-outline);
-    outline-offset: calc(1em * 1 / 16);
-    outline-offset: var(--focus-outline-offset);
-  }
+	&:is(:focus, .focus, .focused) {
+		--focus-outline-width: calc(1em * 3 / 16);
+		--focus-outline-color: #74c0fc;
+		--focus-outline: solid var(--focus-outline-width) var(--focus-outline-color);
+		outline: var(--focus-outline);
+		outline-offset: calc(1em * 1 / 16);
+		outline-offset: var(--focus-outline-offset);
+	}
 }
 
 pre.postition-relative {
-  position: relative;
-  font-size: 16px;
+	position: relative;
+	font-size: 16px;
 }
 
 pre.postition-relative:hover > .btn-copy-code {
-  opacity: 1 !important;
-  background-color: rgba(255, 255, 255, 0.005);
+	opacity: 1 !important;
+	background-color: rgba(255, 255, 255, 0.005);
 }
 
 .btn-copy-code:active,
 .copy:active {
-  transform: scale(0.99);
+	transform: scale(0.99);
 }
 
 .btn-copy-code:focus-visible .copy,
 .btn-copy-code:focus .copy,
 .copy:focus,
 .copy:focus-visible {
-  outline: 2px solid red !important;
+	outline: 2px solid red !important;
 }
 
 pre code .input {
-  display: inline-block;
-  box-shadow: 0px 0px 3px 0px #000;
-  width: 50px;
+	display: inline-block;
+	box-shadow: 0px 0px 3px 0px #000;
+	width: 50px;
 }
 
 .btn-copy-code:hover .copy,
 .copy:hover {
-  background-color: #000 !important;
+	background-color: #000 !important;
 }

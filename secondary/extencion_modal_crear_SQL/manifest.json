@@ -3,14 +3,13 @@
 	"name": "Modal Crear Sentencea SQL",
 	"version": "1.0",
 	"description": "Crea un modal con un sentecia SQL",
-	"permissions": ["scripting", "activeTab", "storage"],
+	"permissions": [],
 	"icons": {
 		"16": "images/sql-16.png",
 		"32": "images/sql-32.png",
 		"48": "images/sql-48.png",
 		"128": "images/sql-128.png"
 	},
-	"host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
@@ -19,12 +18,14 @@
 				"ModalManager.js",
 				"ToastAlert.js",
 				"ModaCreateHTML.js",
+				"tabs/TabsComponent.js",
 				"shipping_container_insight/ModalManagerShippingContainer.js",
+				"shipping_container_insight/content/updateContainer.js",
 				"shipping_container_insight/ModalHandler.js",
 				"shipping_container_insight/modalContent.js",
 				"shipping_container_insight/main.js"
 			],
-			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css", "tabs/tabs.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],

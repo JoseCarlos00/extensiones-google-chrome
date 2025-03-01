@@ -1,14 +1,4 @@
 .MuiTabs-container-principal {
-	--MuiDocs-header-heigh: 300px;
-	margin: 100px auto;
-	position: relative;
-	width: fit-content;
-	background-color: #fefefe;
-	padding: 0;
-	border: 1px solid #888;
-	border-radius: 0.75em;
-	width: 80%;
-
 	& .MuiTabs-section-secondary {
 		border-bottom: 1px solid;
 		border-color: rgba(0, 0, 0, 0.12);
@@ -95,13 +85,5 @@
 
 	.MuiTabs-content {
 		padding: 12px;
-	}
-
-	& .modal-content {
-		background-color: #fefefe;
-		margin: 0;
-		padding: 0;
-		border: none;
-		width: auto;
 	}
 }

@@ -1,4 +1,4 @@
-export class TabsComponent {
+class TabsComponent {
 	constructor({ tabs = [] }) {
 		this.tabs = tabs;
 	}
@@ -120,7 +120,15 @@ export class TabsComponent {
 
 			const container = document.createElement("div");
 			container.className = "MuiTabs-content";
-			container.appendChild(content);
+
+			// Verificar si content es un elemento HTML
+			if (content instanceof Element) {
+				container.appendChild(content);
+			} else if (typeof content === "string") {
+				container.innerHTML += content;
+			} else {
+				throw new Error("El tipo de contenido no es soportado");
+			}
 
 			tabPanel.appendChild(container);
 			sectionContent.appendChild(tabPanel);
@@ -152,7 +160,7 @@ export class TabsComponent {
 				throw new Error("TabsComponent: 'tabs' debe ser un array con al menos un elemento.");
 			}
 
-			const tabsComponent = new TabsComponent({ tabs, contents });
+			const tabsComponent = new TabsComponent({ tabs });
 			const container = tabsComponent.getTabs();
 
 			if (!container) {
