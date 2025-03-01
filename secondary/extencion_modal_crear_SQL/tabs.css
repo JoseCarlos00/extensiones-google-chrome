@@ -1,4 +1,4 @@
-.tabs-container {
+.MuiTabs-container-principal {
 	--MuiDocs-header-heigh: 300px;
 	margin: 100px auto;
 	position: relative;
@@ -7,125 +7,101 @@
 	padding: 0;
 	border: 1px solid #888;
 	border-radius: 0.75em;
-	/* width: fit-content; */
 	width: 80%;
-}
 
-.css-1gsv261 {
-	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-	border-top-color: rgba(0, 0, 0, 0.12);
-	border-right-color: rgba(0, 0, 0, 0.12);
-	border-left-color: rgba(0, 0, 0, 0.12);
-}
+	& .MuiTabs-section-secondary {
+		border-bottom: 1px solid;
+		border-color: rgba(0, 0, 0, 0.12);
 
-.css-1tfef {
-	overflow: hidden;
-	min-height: 48px;
-	display: flex;
-}
+		.MuiTabs-contaier {
+			overflow: hidden;
+			min-height: 48px;
+			display: flex;
 
-.css-w94xpu {
-	position: relative;
-	display: inline-block;
-	flex: 1 1 auto;
-	white-space: nowrap;
-	overflow-x: hidden;
-	width: 100%;
-}
+			.MuiTabs-scroller {
+				position: relative;
+				display: inline-block;
+				flex: 1 1 auto;
+				white-space: nowrap;
+				overflow-x: hidden;
+				width: 100%;
 
-.css-162tvoi {
-	display: flex;
-}
+				.MuiTabs-flexContainer {
+					display: flex;
 
-.css-6p016c.Mui-selected {
-	color: rgb(25, 118, 210);
-}
+					.Mui-Button {
+						display: inline-flex;
+						-webkit-box-align: center;
+						align-items: center;
+						-webkit-box-pack: center;
+						justify-content: center;
+						box-sizing: border-box;
+						-webkit-tap-highlight-color: transparent;
+						background-color: transparent;
+						outline: 0px;
+						border: 0px;
+						margin: 0px;
+						border-radius: 0px;
+						cursor: pointer;
+						user-select: none;
+						vertical-align: middle;
+						appearance: none;
+						text-decoration: none;
+						font-family: Roboto, Helvetica, Arial, sans-serif;
+						font-weight: 500;
+						font-size: 0.875rem;
+						line-height: 1.25;
+						letter-spacing: 0.02857em;
+						text-transform: uppercase;
+						max-width: 360px;
+						min-width: 90px;
+						position: relative;
+						min-height: 48px;
+						flex-shrink: 0;
+						padding: 12px 16px;
+						overflow: hidden;
+						white-space: normal;
+						text-align: center;
+						flex-direction: column;
+						color: rgba(0, 0, 0, 0.6);
+					}
 
-.css-w94xpu {
-	position: relative;
-	display: inline-block;
-	flex: 1 1 auto;
-	white-space: nowrap;
-	overflow-x: hidden;
-	width: 100%;
-}
+					.Mui-Button.Mui-selected {
+						color: rgb(25, 118, 210);
+					}
 
-.css-m92kzj {
-	width: 100%;
-	margin-left: auto;
-	box-sizing: border-box;
-	margin-right: auto;
-	padding-left: 16px;
-	padding-right: 16px;
-	padding-top: calc(var(--MuiDocs-header-height) + 32px);
-	font-family: Arial;
-	max-width: 105ch;
-	position: relative;
-	min-width: 0;
-	font-family: Arial;
-	max-width: 105ch;
-}
+					/* Touch animate */
+					.Mui-Button .animation {
+						overflow: hidden;
+						pointer-events: none;
+						position: absolute;
+						z-index: 0;
+						inset: 0px;
+						border-radius: inherit;
+					}
+				}
 
-.css-6p016c {
-	display: inline-flex;
-	-webkit-box-align: center;
-	align-items: center;
-	-webkit-box-pack: center;
-	justify-content: center;
-	box-sizing: border-box;
-	-webkit-tap-highlight-color: transparent;
-	background-color: transparent;
-	outline: 0px;
-	border: 0px;
-	margin: 0px;
-	border-radius: 0px;
-	cursor: pointer;
-	user-select: none;
-	vertical-align: middle;
-	appearance: none;
-	text-decoration: none;
-	font-family: Roboto, Helvetica, Arial, sans-serif;
-	font-weight: 500;
-	font-size: 0.875rem;
-	line-height: 1.25;
-	letter-spacing: 0.02857em;
-	text-transform: uppercase;
-	max-width: 360px;
-	min-width: 90px;
-	position: relative;
-	min-height: 48px;
-	flex-shrink: 0;
-	padding: 12px 16px;
-	overflow: hidden;
-	white-space: normal;
-	text-align: center;
-	flex-direction: column;
-	color: rgba(0, 0, 0, 0.6);
-}
+				.MuiTabs-indicator {
+					position: absolute;
+					height: 2px;
+					bottom: 0px;
+					width: 100%;
+					background-color: rgb(25, 118, 210);
+					transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+				}
+			}
+		}
+	}
 
-/* Touch animate */
-.css-4mb1j7 {
-	overflow: hidden;
-	pointer-events: none;
-	position: absolute;
-	z-index: 0;
-	inset: 0px;
-	border-radius: inherit;
-}
+	.MuiTabs-content {
+		padding: 12px;
+	}
 
-.css-jkmkwa {
-	position: absolute;
-	height: 2px;
-	bottom: 0px;
-	width: 100%;
-	background-color: rgb(25, 118, 210);
-	transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.tabs-container div[id^="simple-tabpanel-"] .modal-content {
-	background-color: #fefefe;
-	margin: 0;
-	padding: 0;
-	border: none;
-	width: auto;
+	& .modal-content {
+		background-color: #fefefe;
+		margin: 0;
+		padding: 0;
+		border: none;
+		width: auto;
+	}
 }
