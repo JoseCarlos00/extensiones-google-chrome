@@ -7,12 +7,6 @@ class ModalManagerShippingContainer extends ModalManager {
 		try {
 			super.setEventListeners();
 
-			// Event to copy
-			const btnCopy = document.querySelector(".btn-copy-code");
-			if (btnCopy) {
-				btnCopy.addEventListener("click", () => this.modalHandler.handleCopyToClipBoar());
-			}
-
 			this.initEventsTabs();
 		} catch (error) {
 			console.error("Error:[setEventListeners] Ha ocurrido un error al crear los eventListener", error);
@@ -25,9 +19,6 @@ class ModalManagerShippingContainer extends ModalManager {
 		const indicator = document.querySelector(".MuiTabs-container-principal .MuiTabs-indicator");
 
 		const tabSelected = document.querySelector(".MuiTabs-container-principal .MuiTabs-list button.Mui-selected");
-
-		console.log("initEventsTabs");
-		console.log({ tabs, panels, indicator, tabSelected });
 
 		tabs.forEach((tab, index) => {
 			tab.addEventListener("click", function () {

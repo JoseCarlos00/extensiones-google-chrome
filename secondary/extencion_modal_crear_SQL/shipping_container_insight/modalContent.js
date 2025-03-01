@@ -1,5 +1,5 @@
 async function getHtmlContent({ sectionContainerClass, modalId }) {
-	const modal = new ModalCreateHTML({ sectionContainerClass, modalId });
+	const modal = new ModalCreateHTML({ sectionContainerClass, modalId, widthContent: "1200px" });
 	const modalHTML = await modal.createModaElement();
 
 	const tabs = [
