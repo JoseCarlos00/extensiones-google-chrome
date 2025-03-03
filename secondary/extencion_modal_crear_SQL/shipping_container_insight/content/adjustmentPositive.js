@@ -12,11 +12,11 @@ style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443)
     Copiar
   </div>
 </div>
-/button>`;
+</button>`;
 
-const contenModalSts = `
-<pre class="postition-relative adjustmen-positive">
-${btnCopySts}
-<textarea id="adjustment-positive-form" style="width: 470px; height: 150px;"></textarea>
+const contenModalAjtPositive = `
+<pre class="postition-relative adjustment-positive">
+${btnCopyAjsPositive}
+<textarea id="adjustment-positive-form" style="width: 470px; height: 150px; border-color: #c4c3c9; border-radius: 8px;"></textarea>
 </pre>
 `;

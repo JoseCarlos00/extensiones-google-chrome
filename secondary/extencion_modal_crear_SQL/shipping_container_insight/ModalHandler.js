@@ -9,8 +9,9 @@
 class ModalHandler {
 	constructor() {
 		this.modal = null;
-		this.updateContainerId = new UpdateContainerId({ verifyValidTable: this.verifyValidTable });
-		this.updateStatus = new UpdateStatus({ verifyValidTable: this.verifyValidTable });
+		this.updateContainerId = new UpdateContainerId();
+		this.updateStatus = new UpdateStatus();
+		this.adjustmentPositive = new AdjustmentPositive();
 	}
 
 	setModalElement(modal) {
@@ -31,6 +32,8 @@ class ModalHandler {
 			console.log("error:", error.message);
 			await this.updateContainerId.cleanValues();
 			await this.updateStatus.cleanValues();
+		} finally {
+			await this.adjustmentPositive.setValueForAdjustment();
 		}
 	}
 
@@ -74,11 +77,11 @@ class ModalHandler {
 	async initialVariables() {
 		this.updateContainerId.initialVariables();
 		this.updateStatus.initialVariables();
+		this.adjustmentPositive.initialVariables();
 	}
 
 	async openModal() {
 		this.modal.style.display = "block";
-		// await this.updateContainerId.setValueLogisticUnit();
 		this.updateContainerId.inputInsertLogistisUnit.focus();
 	}
 }
