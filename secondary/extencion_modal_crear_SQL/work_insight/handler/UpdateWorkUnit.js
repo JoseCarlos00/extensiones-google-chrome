@@ -10,14 +10,16 @@ class UpdateWorkUnit {
 			workType: "td[aria-describedby='ListPaneDataGrid_INSTRUCTION_TYPE']",
 			tbody: "#ListPaneDataGrid > tbody",
 			btnCopy: ".update-work-unit .btn-copy-code-work-unit",
-			adjustmentPositiveForm: ".update-work-unit #adjustment-positive-form",
-			internalNumbers: ".update-work-unit #numbers-internals-containers",
+			internalsNumbers: ".update-work-unit #numbers-internals-containers",
 			codeText: ".update-work-unit #code-text",
 		};
 
 		this._selectedRows = [];
-		this.internalData = "";
-		this.adjustmentPositiveForm = null;
+		this.internalData = {
+			internalsNumbers: [],
+		};
+
+		this.internalsNumbers = null;
 	}
 
 	setSelectedRows(values) {
@@ -26,10 +28,10 @@ class UpdateWorkUnit {
 
 	async initialVariables() {
 		try {
-			this.adjustmentPositiveForm = document.querySelector(this.selectors.adjustmentPositiveForm);
+			this.internalsNumbers = document.querySelector(this.selectors.internalsNumbers);
 
-			if (!this.adjustmentPositiveForm) {
-				throw new Error("<textarea> Adjustment Positive Form not found");
+			if (!this.internalsNumbers) {
+				throw new Error("Internal numbers container not found");
 			}
 
 			this.setEventCopyToClipBoard();
@@ -64,41 +66,37 @@ class UpdateWorkUnit {
 	}
 
 	async cleanInternalData() {
-		this.internalData = "";
+		this.internalData.internalsNumbers.length = 0;
 	}
 
 	resetElementVaules() {
-		this.adjustmentPositiveForm.value = "";
+		this.internalsNumbers.textContent = "";
 	}
 
 	async setInternalData(rows) {
+		const { internalContainerNum, containerId } = this.selectors;
+
 		await this.cleanInternalData();
 
 		if (rows.length === 0) {
 			throw new Error("No se encontraron filas en el <tbody>");
 		}
 
-		this.internalData = rows
-			.map((row) => {
-				const itemValue = row.querySelector(this.selectors.item)?.textContent?.trim() ?? "";
-				const confirmQtyValue = row.querySelector(this.selectors.confirmQty)?.textContent?.trim() ?? "";
-				const fromLocValue = row.querySelector(this.selectors.fromLoc)?.textContent?.trim() ?? "";
-				const toLocValue = row.querySelector(this.selectors.toLoc)?.textContent?.trim() ?? "";
-				const workTypeVaule = row.querySelector(this.selectors.workType)?.textContent?.trim() ?? "";
+		rows.forEach((row) => {
+			const internalContainerNumElement = row.querySelector(internalContainerNum);
+			const containerIdElement = row.querySelector(containerId);
 
-				if (workTypeVaule !== "Detail") {
-					return null;
+			if (internalContainerNumElement && containerIdElement) {
+				const containerIdText = containerIdElement.textContent.trim();
+				const internalNumText = internalContainerNumElement.textContent.trim();
+
+				if (containerIdText && internalNumText) {
+					this.internalData.internalsNumbers.push(internalNumText);
+				} else if (!containerIdText && internalNumText) {
+					this.internalData.internalsNumbers.push(internalNumText);
 				}
-
-				const location = toLocValue === "EMP-01" ? "ASCENSOR" : fromLocValue;
-
-				return `${itemValue}\t${confirmQtyValue}\t${location}`;
-			})
-			.filter(Boolean)
-			.join("\n")
-			.trim();
-
-		console.log(this.internalData);
+			}
+		});
 	}
 
 	async processInternalTableData() {
@@ -121,43 +119,16 @@ class UpdateWorkUnit {
 	}
 
 	setElementValues() {
-		this.adjustmentPositiveForm.value = this.internalData;
+		this.internalsNumbers.textContent = this.internalData.internalsNumbers.join("\n");
 	}
 
-	async setValueForAdjustment() {
+	async setValueForUpdateWorkUnit() {
 		try {
 			await this.cleanValues();
 			await this.processInternalTableData();
 			this.setElementValues();
 		} catch (error) {
-			console.error("Error en setValueForAdjustment: ", error.message);
-		}
-	}
-
-	insertInfoFromTbodyInModal() {
-		if (!this._selectedRows.length === 0) {
-			console.warn("No se enontraron filas");
-			return;
-		}
-
-		const { item, confirmQty, fromLoc, workType } = this.internalDataSelector;
-
-		const workUnitsDetailForAdjustment = this._selectedRows
-			.map((row) => {
-				const $item = row.querySelector(item)?.textContent?.trim();
-				const $confirmQty = row.querySelector(confirmQty)?.textContent?.trim();
-				const $fromLoc = row.querySelector(fromLoc)?.textContent?.trim();
-				const $workType = row.querySelector(workType)?.textContent?.trim();
-
-				if ($item && $confirmQty && $fromLoc && $workType === "Detail") {
-					return `${$item} ${$confirmQty} ${$fromLoc}`;
-				}
-			})
-			.filter(Boolean)
-			.join("\n");
-
-		if (this.codeElementHTML) {
-			this.codeElementHTML.innerHTML = workUnitsDetailForAdjustment;
+			console.error("Error en setValueForUpdateWorkUnit: ", error.message);
 		}
 	}
 }

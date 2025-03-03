@@ -39,6 +39,7 @@ class ModalHandler {
 
 	async initialVariables() {
 		this.adjustmentPositive.initialVariables();
+		this.updateWorkUnit.initialVariables();
 	}
 
 	async setModalElement(modal) {
@@ -59,9 +60,13 @@ class ModalHandler {
 		try {
 			this.adjustmentPositive.setSelectedRows(this._selectedRows);
 			await this.adjustmentPositive.setValueForAdjustment();
+
+			this.updateWorkUnit.setSelectedRows(this._selectedRows);
+			await this.updateWorkUnit.setValueForUpdateWorkUnit();
 		} catch (error) {
 			console.log("error:", error.message);
 			await this.adjustmentPositive.cleanValues();
+			await this.updateWorkUnit.cleanValues();
 		}
 	}
 
