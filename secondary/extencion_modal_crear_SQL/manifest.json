@@ -19,13 +19,13 @@
 				"ToastAlert.js",
 				"ModaCreateHTML.js",
 				"tabs/TabsComponent.js",
-				"shipping_container_insight/ModalManagerShippingContainer.js",
 				"shipping_container_insight/content/updateContainer.js",
 				"shipping_container_insight/content/updateStatus.js",
 				"shipping_container_insight/content/adjustmentPositive.js",
 				"shipping_container_insight/handlers/UpdateContainer.js",
 				"shipping_container_insight/handlers/UpdateStatus.js",
 				"shipping_container_insight/handlers/AdjustmentPositive.js",
+				"shipping_container_insight/ModalManagerShippingContainer.js",
 				"shipping_container_insight/ModalHandler.js",
 				"shipping_container_insight/modalContent.js",
 				"shipping_container_insight/main.js"
@@ -87,12 +87,17 @@
 				"ModalManager.js",
 				"ToastAlert.js",
 				"ModaCreateHTML.js",
+				"tabs/TabsComponent.js",
+				"work_insight/content/adjustmentPositive.js",
+				"work_insight/content/updateWorkUnit.js",
+				"work_insight/handler/adjustmentPositive.js",
+				"work_insight/handler/UpdateWorkUnit.js",
 				"work_insight/ModalManagerWorkInsight.js",
 				"work_insight/ModalHandler.js",
 				"work_insight/modalContent.js",
 				"work_insight/main.js"
 			],
-			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css", "tabs/tabs.css"]
 		}
 	],
 	"action": {

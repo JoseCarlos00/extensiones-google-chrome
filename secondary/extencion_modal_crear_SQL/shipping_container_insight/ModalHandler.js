@@ -32,6 +32,7 @@ class ModalHandler {
 			console.log("error:", error.message);
 			await this.updateContainerId.cleanValues();
 			await this.updateStatus.cleanValues();
+			await this.adjustmentPositive.cleanValues();
 		} finally {
 			await this.adjustmentPositive.setValueForAdjustment();
 		}

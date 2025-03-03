@@ -1,17 +1,25 @@
 class AdjustmentPositive {
 	constructor() {
+		this.tbody = document.querySelector("#ListPaneDataGrid > tbody");
+
 		this.selectors = {
 			item: "td[aria-describedby='ListPaneDataGrid_ITEM']",
-			qty: "td[aria-describedby='ListPaneDataGrid_QUANTITY']",
-			location: "td[aria-describedby='ListPaneDataGrid_LOCATION']",
-			containerId: "td[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
+			fromLoc: "td[aria-describedby='ListPaneDataGrid_FROM_LOC']",
+			toLoc: "td[aria-describedby='ListPaneDataGrid_TO_LOC']",
+			confirmQty: "td[aria-describedby='ListPaneDataGrid_CONFIRM_QTY']",
+			workType: "td[aria-describedby='ListPaneDataGrid_INSTRUCTION_TYPE']",
 			tbody: "#ListPaneDataGrid > tbody",
 			btnCopy: ".adjustment-positive .btn-copy-code-adj-pos",
 			adjustmentPositiveForm: ".adjustment-positive #adjustment-positive-form",
 		};
 
+		this._selectedRows = [];
 		this.internalData = "";
 		this.adjustmentPositiveForm = null;
+	}
+
+	setSelectedRows(values) {
+		this._selectedRows = values;
 	}
 
 	async initialVariables() {
@@ -71,30 +79,38 @@ class AdjustmentPositive {
 		this.internalData = rows
 			.map((row) => {
 				const itemValue = row.querySelector(this.selectors.item)?.textContent?.trim() ?? "";
-				const qtyValue = row.querySelector(this.selectors.qty)?.textContent?.trim() ?? "";
-				const locationValue = row.querySelector(this.selectors.location)?.textContent?.trim() ?? "";
+				const confirmQtyValue = row.querySelector(this.selectors.confirmQty)?.textContent?.trim() ?? "";
+				const fromLocValue = row.querySelector(this.selectors.fromLoc)?.textContent?.trim() ?? "";
+				const toLocValue = row.querySelector(this.selectors.toLoc)?.textContent?.trim() ?? "";
+				const workTypeVaule = row.querySelector(this.selectors.workType)?.textContent?.trim() ?? "";
 
-				const containerIdE = row.querySelector(this.selectors.containerId)?.textContent?.trim();
-
-				if (containerIdE) {
+				if (workTypeVaule !== "Detail") {
 					return null;
 				}
 
-				const location = locationValue.startsWith("-") ? "ASCENSOR" : locationValue;
+				const location =
+					toLocValue === "EMP-01" || /^\d-\d{2}-\d{2}-[A-Z]{2}-\d{2}$/.test(fromLocValue) ? "ASCENSOR" : fromLocValue;
 
-				return `${itemValue}  ${qtyValue}  ${location}`;
+				return `${itemValue}\t${confirmQtyValue}\t${location}`;
 			})
 			.filter(Boolean)
-			.join("\n");
+			.join("\n")
+			.trim();
+
+		console.log(this.internalData);
 	}
 
 	async processInternalTableData() {
-		const tbody = document.querySelector(this.selectors.tbody);
-		if (!tbody) {
+		if (!this.tbody) {
 			throw new Error("No se encontró <tbody>");
 		}
 
-		const rows = Array.from(tbody.querySelectorAll("tr"));
+		if (this._selectedRows.length > 0) {
+			await this.setInternalData(this._selectedRows);
+			return;
+		}
+
+		const rows = Array.from(this.tbody.querySelectorAll("tr"));
 		await this.setInternalData(rows);
 	}
 

@@ -1,5 +1,5 @@
-const btnCopyAjsPositive = /*htm*/ `
-<button class="btn-copy-code-adj-pos" tabindex="2"
+const btnCopyWorkUnit = /*html*/ `
+<button class="btn-copy-code-work-unit" tabindex="2"
 style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none;">
 <div
   style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
@@ -14,9 +14,11 @@ style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443)
 </div>
 </button>`;
 
-const contenModalAjtPositive = `
-<pre class="postition-relative adjustment-positive">
-${btnCopyAjsPositive}
-<textarea id="adjustment-positive-form" style="width: 470px; height: 150px; border-color: #c4c3c9; border-radius: 8px; padding: 8px;"></textarea>
+const contenModalWorkUnit = /*html*/ `
+<pre class="postition-relative update-work-unit">
+${btnCopyWorkUnit}<code id="code-text" class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
+<span class="hljs-keyword">SET</span> work_unit <span class="hljs-operator">=</span> <span  class="hljs-string" contenteditable="true" style="border-bottom: 1px solid; min-width: 40px; display: inline-block;">''</span> 
+<span class="hljs-keyword">WHERE</span> from_whs <span class="hljs-operator">=</span> <span  class="hljs-string">'Mariano'</span>
+<span class="hljs-keyword">AND</span> internal_instruction_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="numbers-internals-containers"></span>);</code>
 </pre>
 `;
