@@ -17,7 +17,7 @@ style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443)
 const contenModal = `
 <label class="insert-logistict-unit">Contenedor: <input tabindex="1" id="insertLogistictUnit" autocomplete="off" type="text" placeholder="Ingrese un Contededor"></label>
 
-<pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
+<pre class="postition-relative change-container-id">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
 <span class="hljs-keyword">SET</span> 
   container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-operator">=</span> <span class="hljs-string" id="internal-container-id-num"></span> <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="container-id" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>,
   parent_container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal-parent-container-id-num"></span>) <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="parent-container-id" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>

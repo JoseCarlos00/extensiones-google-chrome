@@ -15,8 +15,8 @@ style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443)
 </button>`;
 
 const contenModalSts = `
-<pre class="postition-relative">${btnCopySts}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
-<span class="hljs-keyword">SET</span> status <span class="hljs-operator">=</span> <span id="sts-container" class="hljs-string" contenteditable="true"></span> 
+<pre class="postition-relative change-sts">${btnCopySts}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
+<span class="hljs-keyword">SET</span> status <span class="hljs-operator">=</span> <span id="sts-container" class="hljs-string" contenteditable="true" style="border-bottom: 1px solid; min-width: 40px; display: inline-block;"></span> 
 <span class="hljs-keyword">WHERE</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="numbers-internals-containers"></span>);</code>
 </pre>
 `;

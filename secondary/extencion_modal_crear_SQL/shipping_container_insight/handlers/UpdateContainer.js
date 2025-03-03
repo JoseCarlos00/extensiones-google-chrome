@@ -1,15 +1,15 @@
 class UpdateContainerId {
-	constructor({ verifyValidTable }) {
+	constructor() {
 		this.selectors = {
 			internalContainerNum: "td[aria-describedby='ListPaneDataGrid_INTERNAL_CONTAINER_NUM']",
 			containerId: "td[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
 			tbody: "#ListPaneDataGrid > tbody",
-			internalContainerNumElement: "internal-container-id-num",
-			internalParentContainerNumElement: "internal-parent-container-id-num",
-			internalContainerNumbersElement: "numbers-internals-containers",
-			containerIdElement: "container-id",
-			parentContainerIdElement: "parent-container-id",
-			inputInsertLogistisUnit: "insertLogistictUnit",
+			internalContainerNumElement: ".change-container-id #internal-container-id-num",
+			internalParentContainerNumElement: ".change-container-id #internal-parent-container-id-num",
+			internalContainerNumbersElement: ".change-container-id #numbers-internals-containers",
+			containerIdElement: ".change-container-id #container-id",
+			parentContainerIdElement: ".change-container-id #parent-container-id",
+			inputInsertLogistisUnit: "#insertLogistictUnit",
 		};
 
 		this.internalData = {
@@ -18,27 +18,24 @@ class UpdateContainerId {
 			LP: "",
 			internalsNumbers: [],
 		};
+
 		this.internalContainerNumElement = null;
 		this.internalParentContainerNumElement = null;
 		this.internalContainerNumbersElement = null;
 		this.containerIdElement = null;
 		this.parentContainerIdElement = null;
 		this.inputInsertLogistisUnit = null;
-
-		this.verifyValidTable = verifyValidTable;
 	}
 
 	async initialVariables() {
 		try {
 			// Select elements
-			this.internalContainerNumElement = document.getElementById(this.selectors.internalContainerNumElement);
-			this.internalParentContainerNumElement = document.getElementById(
-				this.selectors.internalParentContainerNumElement
-			);
-			this.internalContainerNumbersElement = document.getElementById(this.selectors.internalContainerNumbersElement);
-			this.containerIdElement = document.getElementById(this.selectors.containerIdElement);
-			this.parentContainerIdElement = document.getElementById(this.selectors.parentContainerIdElement);
-			this.inputInsertLogistisUnit = document.getElementById(this.selectors.inputInsertLogistisUnit);
+			this.internalContainerNumElement = document.querySelector(this.selectors.internalContainerNumElement);
+			this.internalParentContainerNumElement = document.querySelector(this.selectors.internalParentContainerNumElement);
+			this.internalContainerNumbersElement = document.querySelector(this.selectors.internalContainerNumbersElement);
+			this.containerIdElement = document.querySelector(this.selectors.containerIdElement);
+			this.parentContainerIdElement = document.querySelector(this.selectors.parentContainerIdElement);
+			this.inputInsertLogistisUnit = document.querySelector(this.selectors.inputInsertLogistisUnit);
 
 			if (!this.internalContainerNumElement) {
 				throw new Error("Internal container number element not found");
@@ -166,9 +163,8 @@ class UpdateContainerId {
 
 	async handleChangeContainerId() {
 		try {
-			await this.cleanInternalData();
 			this.resetElementVaules();
-			await this.verifyValidTable();
+			await this.cleanInternalData();
 			await this.processInternalTableData();
 			await this.setElementValues();
 		} catch (error) {
@@ -177,22 +173,27 @@ class UpdateContainerId {
 	}
 
 	handleCopyToClipBoar() {
-		const codeText = document.querySelector("code.language-sql")?.textContent;
+		try {
+			const codeText = document.querySelector(".change-container-id code.language-sql")?.textContent;
 
-		const parentContainerText = this.parentContainerIdElement.textContent.trim();
-		const containerIdText = this.containerIdElement.textContent.trim();
+			const parentContainerText = this.parentContainerIdElement.textContent.trim();
+			const containerIdText = this.containerIdElement.textContent.trim();
 
-		if (
-			/''/.test(parentContainerText) ||
-			parentContainerText === `'CONTENEDOR'` ||
-			/''/.test(containerIdText) ||
-			containerIdText === `'CONTENEDOR'`
-		) {
-			ToastAlert.showAlertFullTop("Ingrese un Contenedor Valido");
-		} else {
-			if (codeText) {
-				copyToClipboard(codeText);
+			if (
+				/''/.test(parentContainerText) ||
+				parentContainerText === `'CONTENEDOR'` ||
+				/''/.test(containerIdText) ||
+				containerIdText === `'CONTENEDOR'`
+			) {
+				ToastAlert.showAlertFullTop("Ingrese un Contenedor Valido");
+			} else {
+				if (codeText) {
+					copyToClipboard(codeText);
+				}
 			}
+		} catch (error) {
+			console.error("Error en handleCopyToClipBoar: ", error.message);
+			ToastAlert.showAlertMinBotton("Ha ocurrido al copiar al portapapeles");
 		}
 	}
 }

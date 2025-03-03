@@ -9,13 +9,8 @@
 class ModalHandler {
 	constructor() {
 		this.modal = null;
-		this.selectors = {
-			internalContainerNum: "td[aria-describedby='ListPaneDataGrid_INTERNAL_CONTAINER_NUM']",
-			containerId: "td[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
-			tbody: "#ListPaneDataGrid > tbody",
-		};
-
 		this.updateContainerId = new UpdateContainerId({ verifyValidTable: this.verifyValidTable });
+		this.updateStatus = new UpdateStatus({ verifyValidTable: this.verifyValidTable });
 	}
 
 	setModalElement(modal) {
@@ -27,9 +22,19 @@ class ModalHandler {
 		this.initialVariables();
 	}
 
+	async handleAction() {
+		try {
+			await this.verifyValidTable();
+			await this.updateContainerId.handleChangeContainerId();
+			await this.updateStatus.handleChangeStatus();
+		} catch (error) {
+			console.log("error:", error.message);
+		}
+	}
+
 	async handleOpenModal() {
 		try {
-			await this.updateContainerId.handleChangeContainerId();
+			await this.handleAction();
 			await this.openModal();
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error.message}`);
@@ -66,11 +71,12 @@ class ModalHandler {
 	 */
 	async initialVariables() {
 		this.updateContainerId.initialVariables();
+		this.updateStatus.initialVariables();
 	}
 
 	async openModal() {
 		this.modal.style.display = "block";
-		await this.updateContainerId.setValueLogisticUnit();
+		// await this.updateContainerId.setValueLogisticUnit();
 		this.updateContainerId.inputInsertLogistisUnit.focus();
 	}
 }
