@@ -22,8 +22,10 @@
 				"shipping_container_insight/ModalManagerShippingContainer.js",
 				"shipping_container_insight/content/updateContainer.js",
 				"shipping_container_insight/content/updateStatus.js",
+				"shipping_container_insight/content/adjustmentPositive.js",
 				"shipping_container_insight/handlers/UpdateContainer.js",
 				"shipping_container_insight/handlers/UpdateStatus.js",
+				"shipping_container_insight/handlers/AdjustmentPositive.js",
 				"shipping_container_insight/ModalHandler.js",
 				"shipping_container_insight/modalContent.js",
 				"shipping_container_insight/main.js"

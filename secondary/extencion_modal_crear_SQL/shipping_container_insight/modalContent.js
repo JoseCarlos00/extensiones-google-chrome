@@ -5,6 +5,7 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
 	const tabs = [
 		{ tab: "Cambio de Contenedor", content: contenModal },
 		{ tab: "Cambio de Status", content: contenModalSts },
+		{ tab: "Ajuste Positivo", content: contenModalAjtPositive },
 	];
 
 	const tabsContainer = TabsComponent.getTabs({ tabs });

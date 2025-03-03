@@ -113,10 +113,14 @@ class UpdateStatus {
 			.join(", ");
 	}
 
+	async cleanValues() {
+		this.resetElementVaules();
+		await this.cleanInternalData();
+	}
+
 	async handleChangeStatus() {
 		try {
-			this.resetElementVaules();
-			await this.cleanInternalData();
+			await this.cleanValues();
 			await this.processInternalTableData();
 			await this.setElementValues();
 		} catch (error) {

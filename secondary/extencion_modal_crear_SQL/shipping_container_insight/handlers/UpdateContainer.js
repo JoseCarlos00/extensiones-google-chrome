@@ -161,17 +161,6 @@ class UpdateContainerId {
 		await this.setInternalData(rows);
 	}
 
-	async handleChangeContainerId() {
-		try {
-			this.resetElementVaules();
-			await this.cleanInternalData();
-			await this.processInternalTableData();
-			await this.setElementValues();
-		} catch (error) {
-			console.error("Error en handleChangeContainerId: ", error.message);
-		}
-	}
-
 	handleCopyToClipBoar() {
 		try {
 			const codeText = document.querySelector(".change-container-id code.language-sql")?.textContent;
@@ -194,6 +183,21 @@ class UpdateContainerId {
 		} catch (error) {
 			console.error("Error en handleCopyToClipBoar: ", error.message);
 			ToastAlert.showAlertMinBotton("Ha ocurrido al copiar al portapapeles");
+		}
+	}
+
+	async cleanValues() {
+		this.resetElementVaules();
+		await this.cleanInternalData();
+	}
+
+	async handleChangeContainerId() {
+		try {
+			await this.cleanValues();
+			await this.processInternalTableData();
+			await this.setElementValues();
+		} catch (error) {
+			console.error("Error en handleChangeContainerId: ", error.message);
 		}
 	}
 }
