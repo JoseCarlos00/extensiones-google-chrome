@@ -154,3 +154,7 @@ pre code .input {
 .copy:hover {
 	background-color: #000 !important;
 }
+
+.d-none {
+	display: none !important;
+}

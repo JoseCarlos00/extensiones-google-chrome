@@ -16,8 +16,8 @@ style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443)
 
 const contenModalWorkUnit = /*html*/ `
 <pre class="postition-relative update-work-unit">
-${btnCopyWorkUnit}<code id="code-text" class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
-<span class="hljs-keyword">SET</span> work_unit <span class="hljs-operator">=</span> <span  class="hljs-string" contenteditable="true" style="border-bottom: 1px solid; min-width: 40px; display: inline-block;">''</span> 
+${btnCopyWorkUnit}<span id="message-error" class="d-none" style=" display: inline-block; text-align: center; width: 100%; color: red; "> Debe selecionar al menos dos filas</span><code id="code-text" class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
+<span class="hljs-keyword">SET</span> work_unit <span class="hljs-operator">=</span> <span id="work-unit"  class="hljs-string" contenteditable="true" style="border-bottom: 1px solid; min-width: 40px; display: inline-block;">''</span> 
 <span class="hljs-keyword">WHERE</span> from_whs <span class="hljs-operator">=</span> <span  class="hljs-string">'Mariano'</span>
 <span class="hljs-keyword">AND</span> internal_instruction_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="numbers-internals-containers"></span>);</code>
 </pre>

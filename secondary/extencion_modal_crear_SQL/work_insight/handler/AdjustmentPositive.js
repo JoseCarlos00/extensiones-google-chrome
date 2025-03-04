@@ -96,8 +96,6 @@ class AdjustmentPositive {
 			.filter(Boolean)
 			.join("\n")
 			.trim();
-
-		console.log(this.internalData);
 	}
 
 	async processInternalTableData() {

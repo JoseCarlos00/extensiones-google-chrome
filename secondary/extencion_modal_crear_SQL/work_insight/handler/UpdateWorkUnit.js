@@ -3,15 +3,14 @@ class UpdateWorkUnit {
 		this.tbody = document.querySelector("#ListPaneDataGrid > tbody");
 
 		this.selectors = {
-			item: "td[aria-describedby='ListPaneDataGrid_ITEM']",
-			fromLoc: "td[aria-describedby='ListPaneDataGrid_FROM_LOC']",
-			toLoc: "td[aria-describedby='ListPaneDataGrid_TO_LOC']",
-			confirmQty: "td[aria-describedby='ListPaneDataGrid_CONFIRM_QTY']",
 			workType: "td[aria-describedby='ListPaneDataGrid_INSTRUCTION_TYPE']",
+			intenralInstructionNum: "td[aria-describedby='ListPaneDataGrid_INTERNAL_INSTRUCTION_NUM']",
 			tbody: "#ListPaneDataGrid > tbody",
 			btnCopy: ".update-work-unit .btn-copy-code-work-unit",
 			internalsNumbers: ".update-work-unit #numbers-internals-containers",
 			codeText: ".update-work-unit #code-text",
+			workUnit: ".update-work-unit #work-unit",
+			messageError: ".update-work-unit #message-error",
 		};
 
 		this._selectedRows = [];
@@ -19,7 +18,9 @@ class UpdateWorkUnit {
 			internalsNumbers: [],
 		};
 
-		this.internalsNumbers = null;
+		this.internalContainerNumbersElement = null;
+		this.workUnitElement = null;
+		this.messageErrorElement = null;
 	}
 
 	setSelectedRows(values) {
@@ -28,10 +29,18 @@ class UpdateWorkUnit {
 
 	async initialVariables() {
 		try {
-			this.internalsNumbers = document.querySelector(this.selectors.internalsNumbers);
+			this.internalContainerNumbersElement = document.querySelector(this.selectors.internalsNumbers);
+			this.workUnitElement = document.querySelector(this.selectors.workUnit);
+			this.messageErrorElement = document.querySelector(this.selectors.messageError);
 
-			if (!this.internalsNumbers) {
-				throw new Error("Internal numbers container not found");
+			if (!this.internalContainerNumbersElement) {
+				throw new Error("Internal container numbers element container not found");
+			}
+			if (!this.workUnitElement) {
+				throw new Error("Work unit element not found");
+			}
+			if (!this.messageErrorElement) {
+				throw new Error("Message error element not found");
 			}
 
 			this.setEventCopyToClipBoard();
@@ -70,47 +79,59 @@ class UpdateWorkUnit {
 	}
 
 	resetElementVaules() {
-		this.internalsNumbers.textContent = "";
+		this.internalContainerNumbersElement.textContent = "";
+		this.workUnitElement.textContent = "''";
 	}
 
 	async setInternalData(rows) {
-		const { internalContainerNum, containerId } = this.selectors;
-
 		await this.cleanInternalData();
 
 		if (rows.length === 0) {
-			throw new Error("No se encontraron filas en el <tbody>");
+			throw new Error("[setInternalData]: No se encontraron filas en el <tbody>");
 		}
 
+		const headers = [];
+		const detail = [];
+
 		rows.forEach((row) => {
-			const internalContainerNumElement = row.querySelector(internalContainerNum);
-			const containerIdElement = row.querySelector(containerId);
+			const workTypeValue = row.querySelector(this.selectors.workType)?.textContent?.trim() ?? null;
+			const internalsNumbersValue =
+				row.querySelector(this.selectors.intenralInstructionNum)?.textContent?.trim() ?? null;
 
-			if (internalContainerNumElement && containerIdElement) {
-				const containerIdText = containerIdElement.textContent.trim();
-				const internalNumText = internalContainerNumElement.textContent.trim();
+			if (!internalsNumbersValue) {
+				return null;
+			}
 
-				if (containerIdText && internalNumText) {
-					this.internalData.internalsNumbers.push(internalNumText);
-				} else if (!containerIdText && internalNumText) {
-					this.internalData.internalsNumbers.push(internalNumText);
-				}
+			if (workTypeValue === "Header") {
+				headers.push(`'${internalsNumbersValue}'`);
+				return;
+			}
+
+			if (workTypeValue === "Detail") {
+				detail.push(`'${internalsNumbersValue}'`);
 			}
 		});
+
+		if (headers.length > 1) {
+			this.showMessageError("Se encontraron más de un [Header]");
+			throw new Error("[setInternalData]: Se encontraron más de una cabecera");
+		}
+
+		if (detail.length === 0) {
+			this.showMessageError("No se encontraron [Detail]");
+			throw new Error("[setInternalData]: No se encontraron detalles");
+		}
+
+		this.internalData.internalsNumbers = [...headers, ...detail];
 	}
 
 	async processInternalTableData() {
-		if (!this.tbody) {
-			throw new Error("No se encontró <tbody>");
-		}
-
-		if (this._selectedRows.length > 0) {
-			await this.setInternalData(this._selectedRows);
+		if (this._selectedRows.length <= 1) {
+			this.showMessageError("Debe selecionar al menos dos filas");
 			return;
 		}
 
-		const rows = Array.from(tbody.querySelectorAll("tr"));
-		await this.setInternalData(rows);
+		await this.setInternalData(this._selectedRows);
 	}
 
 	async cleanValues() {
@@ -119,11 +140,24 @@ class UpdateWorkUnit {
 	}
 
 	setElementValues() {
-		this.internalsNumbers.textContent = this.internalData.internalsNumbers.join("\n");
+		if (this.internalData.internalsNumbers.length === 0) {
+			return;
+		}
+
+		this.internalContainerNumbersElement.textContent = this.internalData.internalsNumbers.join(", ");
+	}
+
+	hidenMessageError() {
+		this.messageErrorElement.classList.add("d-none");
+	}
+	showMessageError(msg = "Debe selecionar al menos dos filas") {
+		this.messageErrorElement.classList.remove("d-none");
+		this.messageErrorElement.textContent = msg;
 	}
 
 	async setValueForUpdateWorkUnit() {
 		try {
+			this.hidenMessageError();
 			await this.cleanValues();
 			await this.processInternalTableData();
 			this.setElementValues();
