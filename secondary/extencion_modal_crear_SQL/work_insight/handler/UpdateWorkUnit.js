@@ -21,6 +21,7 @@ class UpdateWorkUnit {
 		this.internalContainerNumbersElement = null;
 		this.workUnitElement = null;
 		this.messageErrorElement = null;
+		this.codeTextElement = null;
 	}
 
 	setSelectedRows(values) {
@@ -32,6 +33,7 @@ class UpdateWorkUnit {
 			this.internalContainerNumbersElement = document.querySelector(this.selectors.internalsNumbers);
 			this.workUnitElement = document.querySelector(this.selectors.workUnit);
 			this.messageErrorElement = document.querySelector(this.selectors.messageError);
+			this.codeTextElement = document.querySelector(this.selectors.codeText);
 
 			if (!this.internalContainerNumbersElement) {
 				throw new Error("Internal container numbers element container not found");
@@ -42,6 +44,9 @@ class UpdateWorkUnit {
 			if (!this.messageErrorElement) {
 				throw new Error("Message error element not found");
 			}
+			if (!this.codeTextElement) {
+				throw new Error("Code text element not found");
+			}
 
 			this.setEventCopyToClipBoard();
 		} catch (error) {
@@ -51,7 +56,7 @@ class UpdateWorkUnit {
 
 	handleCopyToClipBoar() {
 		try {
-			const codeText = this.internalData;
+			const codeText = this.codeTextElement.textContent;
 
 			if (codeText) {
 				copyToClipboard(codeText);
