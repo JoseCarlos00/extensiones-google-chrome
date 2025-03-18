@@ -2,8 +2,8 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 	constructor({ selectorsId }) {
 		super();
 
-		this.backgroundMessageGroup1 = "actualizar_datos_de_inventory_detail";
-		this.headerDataExternalPrincipal = "Inventory Detail";
+		this.backgroundMessageGroup1 = 'actualizar_datos_de_inventory_detail';
+		this.headerDataExternalPrincipal = 'Inventory Detail';
 
 		this.messageMap = {
 			[this.backgroundMessageGroup1]: (datos) => this._updateDetailsPanelInfo(datos),
@@ -82,7 +82,7 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 
 		const internalLocationInv = this._extractAndTrim(tr.querySelector(this.internalData.internalLocationInv));
 		const logisticsUnit = this._extractAndTrim(tr.querySelector(this.internalData.logisticsUnit));
-		const parentLogisticsUnit = this._extractAndTrim(tr.querySelector(this.internalData.parentLogistics));
+		const parentLogisticsUnit = this._extractAndTrim(tr.querySelector(this.internalData.parentLogisticsUnit));
 
 		const insert = [
 			{ element: this.panelElements.internalLocationInv, value: internalLocationInv },
@@ -106,16 +106,16 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 	getDataFromInternalLocationInv() {
 		const { internalLocationInv: internalLocationInvElement, seeMoreInformation } = this.panelElements;
 
-		const internalNumberText = internalLocationInvElement ? internalLocationInvElement.textContent.trim() : "";
+		const internalNumberText = internalLocationInvElement ? internalLocationInvElement.textContent.trim() : '';
 
-		if (internalNumberText === "-1" || internalNumberText === "0") {
+		if (internalNumberText === '-1' || internalNumberText === '0') {
 			ToastAlert.showAlertMinTop(`Internal Location Inv Invalido: [${internalNumberText}]`);
 			return;
 		}
 
 		if (internalNumberText) {
-			console.log("group1ExternalPanelElements", this.group1ExternalPanelElements);
-			console.log("externalPanelElements", this.externalPanelElements);
+			console.log('group1ExternalPanelElements', this.group1ExternalPanelElements);
+			console.log('externalPanelElements', this.externalPanelElements);
 
 			this._waitFordata(this.group1ExternalPanelElements);
 			this.setIsCancelGetDataExternal(false);
@@ -123,9 +123,9 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 			const url = `https://wms.fantasiasmiguel.com.mx/scale/trans/inventory?InternalLocationInv=${internalNumberText}&active=active`;
 			this._sendBackgroundMessage(url);
 		} else {
-			ToastAlert.showAlertFullTop("No se encontró la columna [Internal Location Inv], por favor active la columna.");
-			console.error("No se encontró el Internal Location Inv");
-			if (seeMoreInformation) seeMoreInformation.classList.remove("disabled"); // Reactivar el botón
+			ToastAlert.showAlertFullTop('No se encontró la columna [Internal Location Inv], por favor active la columna.');
+			console.error('No se encontró el Internal Location Inv');
+			if (seeMoreInformation) seeMoreInformation.classList.remove('disabled'); // Reactivar el botón
 		}
 	}
 
@@ -135,7 +135,7 @@ class HandlePanelDetailInventory extends HandlePanelDetailDataExternal {
 
 			this.getDataFromInternalLocationInv();
 		} catch (error) {
-			console.error("Error al obtener datos externos:", error);
+			console.error('Error al obtener datos externos:', error);
 		}
 	}
 
