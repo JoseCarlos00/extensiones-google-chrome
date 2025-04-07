@@ -56,6 +56,10 @@ class HandlePanelDetail {
 			4344: 'ME-Maestros',
 			E: 'Tultitlan',
 		};
+
+		this.obtenerTiendas().then((res) => {
+			this.tiendas = res;
+		});
 	}
 
 	setIsCancelGetDataExternal(value = true) {
@@ -123,19 +127,8 @@ class HandlePanelDetail {
 			// Obtener la clave inicial y reemplazar la R si está al principio
 			const clave = shipmentId.trim().split('-')[0].replace(/^R/, '');
 
-			this.obtenerTiendas()
-				.then((tiendas) => {
-					if (tiendas) {
-						this.tiendas = tiendas;
-					}
-				})
-				.catch((error) => {
-					console.error('Error obteniendo tiendas:', error);
-				})
-				.finally(() => {
-					const tienda = this.tiendas?.hasOwnProperty(clave) ? this.tiendas[clave] : '—';
-					this.panelElements.customer.innerHTML = tienda;
-				});
+			const tienda = this.tiendas?.hasOwnProperty(clave) ? this.tiendas[clave] : '—';
+			this.panelElements.customer.innerHTML = tienda;
 		}
 	}
 }
