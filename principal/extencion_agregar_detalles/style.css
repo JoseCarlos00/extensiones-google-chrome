@@ -45,3 +45,13 @@
 	color: #fff !important;
 	pointer-events: none !important;
 }
+
+.detailpaneheaderlabelPersonality {
+	display: inline !important;
+	white-space: normal !important;
+	user-select: text;
+}
+
+.detailpaneheaderDiv {
+	margin-bottom: 10px;
+}

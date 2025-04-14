@@ -6,7 +6,6 @@ class ElementsHtml {
 
 	static seeMoreInformation() {
 		const div = document.createElement("div");
-		div.id = "ScreenControlHyperlink36456";
 		div.className = "ScreenControlHyperlink summarypaneheadermediumlabel hideemptydiv row";
 
 		const a = document.createElement("a");
@@ -22,7 +21,6 @@ class ElementsHtml {
 
 	static createElementAnchor({ id, title = "" }) {
 		const div = document.createElement("div");
-		div.id = "ScreenControlHyperlink36456";
 		div.className = "summarypaneheadermediumlabel hideemptydiv row";
 
 		const a = document.createElement("a");
@@ -38,11 +36,11 @@ class ElementsHtml {
 
 	static createElement({ id, title = "", bold = false, color = false }) {
 		const div = document.createElement("div");
-		div.className = "ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row";
+		div.className = "ScreenControlLabel summarypaneheadermediumlabel hideemptydiv row detailpaneheaderDiv";
 
 		const label = document.createElement("label");
 		label.id = id.replace("#", "");
-		label.className = "detailpaneheaderlabel";
+		label.className = "detailpaneheaderlabel detailpaneheaderlabelPersonality ";
 		label.title = title;
 
 		if (bold && color) {
