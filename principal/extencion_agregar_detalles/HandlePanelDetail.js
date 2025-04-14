@@ -59,6 +59,7 @@ class HandlePanelDetail {
 
 		this.obtenerTiendas().then((res) => {
 			this.tiendas = res;
+			this.tiendas.E = 'Tultitlan';
 		});
 	}
 
@@ -105,7 +106,7 @@ class HandlePanelDetail {
 		}
 
 		insert.forEach(({ element, value }) => {
-			element && (element.innerHTML = value);
+			element && (element.textContent = value);
 		});
 	}
 
