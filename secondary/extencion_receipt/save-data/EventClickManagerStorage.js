@@ -25,7 +25,7 @@ class EventClickManagerStorage {
 			return;
 		}
 
-		if (receiptId.includes("TR_E-B")) {
+		if (receiptId.includes("TR_E-")) {
 			console.warn("TRASLADOS");
 			const containersList = this.getContainersList({ rows, receiptType: "TRASLADOS" });
 			this.receiptTypeTralados.handleSaveData({ containersList });
