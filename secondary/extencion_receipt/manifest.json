@@ -1,6 +1,6 @@
 {
 	"manifest_version": 3,
-	"name": "Receipt Container",
+	"name": "Receipt",
 	"version": "1.0",
 	"description": "Crea utilidades para la pantalla de receipt, como un modal con el containerId y el receiptId",
 	"permissions": [],
@@ -54,7 +54,11 @@
 				"RF/mainRF.js"
 			],
 			"css": ["CSS/Receipt.css", "CSS/toasAlert.css"]
-		}
+		},
+	{
+		"matches":["https://wms.fantasiasmiguel.com.mx/scale/trans/receiptWorkBench*"],
+		"css":["workbench/workbench.css"]
+	}
 	],
 
 	"action": {
