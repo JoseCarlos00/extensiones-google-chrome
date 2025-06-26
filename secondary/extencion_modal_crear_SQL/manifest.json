@@ -98,6 +98,34 @@
 				"work_insight/main.js"
 			],
 			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css", "tabs/tabs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"receipt_line_insight/ModalManagerReceiptLineInsight.js",
+				"receipt_line_insight/ModalHandler.js",
+				"receipt_line_insight/modalContent.js",
+				"receipt_line_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"receipt_insight/ModalManagerReceiptInsight.js",
+				"receipt_insight/ModalHandler.js",
+				"receipt_insight/modalContent.js",
+				"receipt_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
 		}
 	],
 	"action": {

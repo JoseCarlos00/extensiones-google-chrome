@@ -21,6 +21,18 @@ window.addEventListener("load", async () => {
 			return;
 		}
 
+		if (currentAdjType === availableTypes.AJUSTE_NEGATIVO.name) {
+			const adjustmentPositive = new InventoryAdjustment({
+				formularioHTML: formularioHTMLAdjustment,
+				nameDataStorage: availableTypes.AJUSTE_NEGATIVO.storageName,
+				adjType: availableTypes.AJUSTE_NEGATIVO.name,
+				currentAdjType,
+			});
+
+			await adjustmentPositive.render();
+			return;
+		}
+
 		if (currentAdjType === availableTypes.TRASFERENCIA_MANUAL.name) {
 			const tranferenciaManual = new InventoryTransfer({
 				formularioHTML: formularioHTMLTranfer,
