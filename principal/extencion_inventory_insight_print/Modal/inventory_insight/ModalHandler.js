@@ -13,18 +13,18 @@ class ModalHandler {
     this._tbodyTable = null;
     this._tableContent = null;
     this._listPaneDataGridPopover = null;
-    this.btnCopySenteceSql = null;
+    this.btnCopySentenceSql = null;
     this._prefix = '#myModalShowTable';
   }
 
-  async #valitateElementsTable() {
+  async #validateElementsTable() {
     return new Promise((resolve, reject) => {
       if (!this._tbodyTable) {
-        reject('No se encontro el elemento <tbody>');
+        reject('No se encontró el elemento <tbody>');
       }
 
       if (!this._tableContent) {
-        reject("Error:[createTbody] No se encontro el elemento <table id='tableContent'>");
+        reject("Error:[createTbody] No se encontró el elemento <table id='tableContent'>");
       }
 
       resolve();
@@ -33,7 +33,7 @@ class ModalHandler {
 
   async #createTbody() {
     try {
-      await this.#valitateElementsTable();
+      await this.#validateElementsTable();
 
       const rows = Array.from(this._tbodyTable.rows);
 
@@ -93,7 +93,7 @@ class ModalHandler {
 
   async #insertTbody() {
     try {
-      await this.#valitateElementsTable();
+      await this.#validateElementsTable();
 
       const newTbody = await this.#createTbody();
 
@@ -113,18 +113,18 @@ class ModalHandler {
       `${this._prefix} #ListPaneDataGrid_popover`
     );
 
-    this.btnCopySenteceSql = document.querySelector(`${this._prefix} #copy-items`);
+    this.btnCopySentenceSql = document.querySelector(`${this._prefix} #copy-items`);
 
     if (!this._tbodyTable) {
-      throw new Error('No se encontro el elemento #ListPaneDataGrid tbody');
+      throw new Error('No se encontró el elemento #ListPaneDataGrid tbody');
     }
 
     if (!this._tableContent) {
-      throw new Error('No se encontro el elemento #tableContent');
+      throw new Error('No se encontró el elemento #tableContent');
     }
 
     if (!this._listPaneDataGridPopover) {
-      throw new Error('No se encontro el elemento #ListPaneDataGrid_popover');
+      throw new Error('No se encontró el elemento #ListPaneDataGrid_popover');
     }
   }
 
@@ -144,7 +144,7 @@ class ModalHandler {
   }
 
   #setEventsForCopyButtons() {
-    const copytable = document.querySelector(`${this._prefix} #copy-table`);
+    const copyTable = document.querySelector(`${this._prefix} #copy-table`);
 
     const tooltipContainer = document.querySelector(
       `${this._prefix} .tooltip-container .tooltip-content`
@@ -159,8 +159,8 @@ class ModalHandler {
       throw new Error('No se encontró el EventManager');
     }
 
-    if (copytable) {
-      copytable.addEventListener('click', e => eventManager.handleEvent({ ev: e }));
+    if (copyTable) {
+      copyTable.addEventListener('click', e => eventManager.handleEvent({ ev: e }));
     } else {
       console.warn('No se encontró el elemento #copy-table');
     }
@@ -181,7 +181,7 @@ class ModalHandler {
 
   async #setEventClickModalTable() {
     try {
-      await this.#valitateElementsTable();
+      await this.#validateElementsTable();
 
       const eventManager = new EventManager({
         updateRowCounter: this._updateRowCounter,
@@ -205,13 +205,13 @@ class ModalHandler {
 
   async #setEventClick() {
     try {
-      if (!this.btnCopySenteceSql) {
+      if (!this.btnCopySentenceSql) {
         console.warn('No se encontró el elemento #copy-sentence-sql');
         return;
       }
 
-      this.btnCopySenteceSql.addEventListener('click', () => {
-        this.btnCopySenteceSql.classList.toggle('active');
+      this.btnCopySentenceSql.addEventListener('click', () => {
+        this.btnCopySentenceSql.classList.toggle('active');
       });
     } catch (error) {
       console.warn(
@@ -270,11 +270,11 @@ class ModalHandler {
 
   #isTableEmptyOrSingleRow() {
     return new Promise(resolve => {
-      const firsrRow = this._tableContent.querySelector('td');
-      const txt = firsrRow ? firsrRow.textContent.trim().toLowerCase() : '';
+      const firstRow = this._tableContent.querySelector('td');
+      const txt = firstRow ? firstRow.textContent.trim().toLowerCase() : '';
 
-      if (!firsrRow || txt.includes('no hay datos')) {
-        firsrRow.remove();
+      if (!firstRow || txt.includes('no hay datos')) {
+        firstRow.remove();
         resolve(true);
         return;
       }
@@ -285,7 +285,7 @@ class ModalHandler {
 
   async #insertNewRow() {
     try {
-      await this.#valitateElementsTable();
+      await this.#validateElementsTable();
 
       const tbodyExist = this._tableContent.querySelector('tbody');
       const newRow = await this.#createNewRow();
@@ -298,6 +298,8 @@ class ModalHandler {
         newTbody.appendChild(newRow);
         this._tableContent.appendChild(newTbody);
       }
+
+      this._updateRowCounter();
     } catch (error) {
       console.error(
         'Error: [insertNewRow] Ha Ocurrido un error al insertar una nueva fila:',
@@ -317,7 +319,7 @@ class ModalHandler {
     btnInsertRow.addEventListener('click', e => this.#insertNewRow());
   }
 
-  #setEventKeydownsForTableContent() {
+  #setEventKeydownForTableContent() {
     try {
       if (!this._tableContent) {
         console.warn('No se encontró el elemento #table-content');
@@ -329,7 +331,7 @@ class ModalHandler {
       this._tableContent.addEventListener('keydown', e => eventManager.handleEvent({ ev: e }));
     } catch (error) {
       console.warn(
-        'Error: Ha ocurrido un error al crear el Evento Keydowns en #tableContent: ',
+        'Error: Ha ocurrido un error al crear el Evento Keydown en #tableContent: ',
         error
       );
     }
@@ -345,7 +347,7 @@ class ModalHandler {
       await this.#initialVariables();
       await this.#setEventClickModalTable();
       await this.#setEventClick();
-      this.#setEventKeydownsForTableContent();
+      this.#setEventKeydownForTableContent();
       this.#setEventsForCopyButtons();
       this.#setEventHideElement();
       this.#setEventInsertRow();
@@ -373,7 +375,7 @@ class ModalHandler {
       await this.#insertTbody();
       await this.#openModal();
       await this._updateRowCounter();
-      UiIggridIndicator.deleteAllIdicator();
+      UiIggridIndicator.deleteAllIndicator();
       this._focusFirstInput();
     } catch (error) {
       console.error(`Error en handleOpenModal: ${error}`);

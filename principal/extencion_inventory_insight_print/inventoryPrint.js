@@ -22,7 +22,7 @@ function inicio() {
   if (btnPrint) {
     btnPrint.addEventListener('click', getDataForToPrint);
   } else {
-    alert('Error: no se encontro el boton print');
+    alert('Error: no se encontró el botón print');
   }
 
   function getDataForToPrint() {

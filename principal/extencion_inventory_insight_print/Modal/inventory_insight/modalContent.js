@@ -142,7 +142,7 @@ const buttons = /*html*/ `
         data-id="insert-row" 
         aria-label="Insertar Fila" 
         data-balloon-pos="up">
-          <i class="far fa-plus"></i>
+          <i class="far fa-layer-plus"></i>
       </button>
       
       <div class="tooltip-container">
@@ -199,10 +199,7 @@ const buttons = /*html*/ `
         </div>
       </div>
 
-      <span id="rowCounter" class="row-counter ${validateProperty(
-        'counter-row',
-        'className'
-      )}">Filas: 0</span>
+      <span id="rowCounter" class="row-counter ${validateProperty('counter-row', 'className')}">Filas: 0</span>
     </div>
   `;
 

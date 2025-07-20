@@ -81,7 +81,7 @@ class EventManagerCopy {
   constructor({ list, tableContent }) {
     this._list = list;
     this.tableContent = tableContent;
-    this.elemetSelected = null;
+    this.elementSelected = null;
     this.selector = {
       item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
       location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
@@ -94,9 +94,9 @@ class EventManagerCopy {
 
     if (type === 'click') {
       if (nodeName === 'I') {
-        this.elemetSelected = element.parentElement;
+        this.elementSelected = element.parentElement;
       } else {
-        this.elemetSelected = element;
+        this.elementSelected = element;
       }
 
       this._list.classList.add('hidden');
@@ -105,11 +105,11 @@ class EventManagerCopy {
   }
 
   #handleOnClick() {
-    if (!this.elemetSelected) {
-      throw new Error('Error: [handleOnClick] No se encontro un elemento selecionado');
+    if (!this.elementSelected) {
+      throw new Error('Error: [handleOnClick] No se encontró un elemento seleccionado');
     }
 
-    const { id } = this.elemetSelected.dataset;
+    const { id } = this.elementSelected.dataset;
     this.#handleCopyToClipBoar(id);
   }
 
@@ -118,7 +118,7 @@ class EventManagerCopy {
 
     const getElementValue = (element, selector) => {
       const el = element.querySelector(selector);
-      return el ? el.value.trim() : '';
+      return el ? el.value.trim() : null;
     };
 
     /**
@@ -127,7 +127,11 @@ class EventManagerCopy {
      */
     const itemSql = () =>
       rows
-        .map(row => `'${getElementValue(row, itemSelector)}'`)
+        .map(row => {
+          const value = getElementValue(row, itemSelector);
+
+          return value ? `'${value}'` : null;
+        })
         .filter(Boolean)
         .join(',\n');
 
@@ -216,7 +220,7 @@ class EventManagerCopy {
   async #handleCopyToClipBoar(id) {
     try {
       if (!this.tableContent) {
-        throw new Error('Error:[handleCopyToClipBoar] No se encontro la pripiedad [tableContent]');
+        throw new Error('Error:[handleCopyToClipBoar] No se encontró la propiedad [tableContent]');
       }
 
       const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
