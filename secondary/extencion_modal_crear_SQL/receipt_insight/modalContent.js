@@ -15,8 +15,7 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
   </div>
   </button>`;
 
-  const contenModal = /*html*/ `<pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes">
-<span class="hljs-keyword">UPDATE</span> UOM
+  const contenModal = /*html*/ `<pre class="postition-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes" style="padding-top: 2px;"><span class="hljs-keyword">UPDATE</span> UOM
 <span class="hljs-keyword">SET</span> UOM.conversion_qty = RD.open_qty
 <span class="hljs-keyword">FROM</span> Item_unit_of_measure UOM
 <span class="hljs-keyword">INNER JOIN</span> RECEIPT_DETAIL RD 
