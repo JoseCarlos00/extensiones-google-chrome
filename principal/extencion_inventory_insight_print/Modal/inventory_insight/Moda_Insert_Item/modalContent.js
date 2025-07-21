@@ -1,11 +1,11 @@
 async function getHtmlContentItem({ sectionContainerClass, modalId }) {
   const modalContent = `
     <form id="formInsertItem" class="insertar-item">
-      <label for="inserItem"> 
+      <label for="insertItem"> 
         Insertar Item 
       </label>
 
-      <textarea id="inserItem"  name="inserItem" required placeholder="9413-6209-34996,"></textarea>
+      <textarea id="insertItem"  name="insertItem" required placeholder="9413-6209-34996,"></textarea>
 
       <div class="invalid-feedback">
         Proporciona un item valido.

@@ -8,128 +8,147 @@
  */
 
 class ModalHandlerInsertItem {
-  constructor() {
-    this.modal = null;
-    this.formItem = null;
-    this.inserItem = null;
-    this.datos = [];
-  }
+	constructor() {
+		this.modal = null;
+		this.formItem = null;
+		this.insertItem = null;
+		this.datos = [];
 
-  datosReset() {
-    this.datos.length = 0;
-  }
+    this._prefix = '#myModalShowTable';
+    this.listPaneDataGridPopover = null;
+    this.btnCopySentenceSql = null;
+	}
 
-  async initialVatiables() {
-    this.formItem = document.getElementById('formInsertItem');
-    this.inserItem = this.formItem.inserItem;
-  }
+	datosReset() {
+		this.datos.length = 0;
+	}
 
-  #insertarItems() {
-    const table = document.querySelector('#myModalShowTable #tableContent');
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
+	async initialVariables() {
+		this.formItem = document.getElementById('formInsertItem');
+		this.insertItem = this.formItem.insertItem;
 
-    if (rows.length === 0) {
-      console.warn('No se ecnontraron filas en la tabla');
-    }
+    this.listPaneDataGridPopover = document.querySelector(`${this._prefix} #ListPaneDataGrid_popover`);
 
-    rows.forEach(row => {
-      const td = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"]');
-      const inputItem = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"] input');
-      const item = inputItem ? inputItem.value.trim() : '';
+		this.btnCopySentenceSql = document.querySelector(`${this._prefix} #copy-items`);
+	}
 
-      if (item && this.datos.includes(item)) {
-        td.classList.add('item-exist');
-      }
-    });
+	#insertarItems() {
+		const table = document.querySelector('#myModalShowTable #tableContent');
+		const rows = Array.from(table.querySelectorAll('tbody tr'));
 
-    this.datosReset();
-  }
+		if (rows.length === 0) {
+			console.warn('No se encontraron filas en la tabla');
+		}
 
-  #registrarDatos(e) {
-    e.preventDefault();
+		rows.forEach((row) => {
+			const td = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"]');
+			const inputItem = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"] input');
+			const item = inputItem ? inputItem.value.trim() : '';
 
-    const { inserItem, formItem, datos } = this;
+			if (item && this.datos.includes(item)) {
+				td.classList.add('item-exist');
+			}
+		});
 
-    if (!inserItem || !formItem) {
-      console.error('No se encontro el formulario #formInsertItem y sus campos');
-      return;
-    }
+		this.datosReset();
+	}
 
-    this.datosReset();
+	#registrarDatos(e) {
+		e.preventDefault();
 
-    // Dividir el texto en lineas
-    const lineas = inserItem.value.split('\n');
+		const { insertItem, formItem, datos } = this;
 
-    // Procesar cada linea
-    lineas.forEach(linea => {
-      const regex = /^(\d+-\d+-\d+),?\s*$/;
-      const match = linea.match(regex);
+		if (!insertItem || !formItem) {
+			console.error('No se encontró el formulario #formInsertItem y sus campos');
+			return;
+		}
 
-      if (match) {
-        // match[1] contiene el valor sin la coma al final
-        const valorSinComa = match[1];
+		this.datosReset();
 
-        if (!datos.includes(valorSinComa)) {
-          datos.push(valorSinComa);
-        }
-      }
-    });
+		// Dividir el texto en lineas
+		const lineas = insertItem.value.split('\n');
 
-    if (datos.length === 0) {
-      inserItem.classList.add('is-invalid');
-      return;
-    }
+		// Procesar cada linea
+		lineas.forEach((linea) => {
+			const regex = /^(\d+-\d+-\d+),?\s*$/;
+			const match = linea.match(regex);
 
-    // Limpiar el campo de texto
-    inserItem.classList.remove('is-invalid');
-    formItem.reset();
+			if (match) {
+				// match[1] contiene el valor sin la coma al final
+				const valorSinComa = match[1];
 
-    setTimeout(() => this.#closeModal(), 100);
+				if (!datos.includes(valorSinComa)) {
+					datos.push(valorSinComa);
+				}
+			}
+		});
 
-    // Insertar datos
-    this.#insertarItems();
-  }
+		if (datos.length === 0) {
+			insertItem.classList.add('is-invalid');
+			return;
+		}
 
-  #setEventListenerS() {
-    if (this.formItem) {
-      this.formItem.addEventListener('submit', e => this.#registrarDatos(e));
-    } else {
-      console.error('No se encontro el formulario #formInsertItem');
-    }
-  }
+		// Limpiar el campo de texto
+		insertItem.classList.remove('is-invalid');
+		formItem.reset();
 
-  async #openModal() {
-    this.modal.style.display = 'block';
-  }
+		setTimeout(() => this.#closeModal(), 100);
 
-  async #closeModal() {
-    this.modal.style.display = 'none';
-  }
+		// Insertar datos
+		this.#insertarItems();
+	}
 
-  async setModalElement(modal) {
-    try {
-      if (!modal) {
-        throw new Error('No se encontró el modal para abrir');
-      }
+	#setEventListenerS() {
+		if (this.formItem) {
+			this.formItem.addEventListener('submit', (e) => this.#registrarDatos(e));
+		} else {
+			console.error('No se encontró el formulario #formInsertItem');
+		}
+	}
 
-      this.modal = modal;
+	async #openModal() {
+		this.modal.style.display = 'block';
+	}
 
-      await this.initialVatiables();
-      this.#setEventListenerS();
-    } catch (error) {
-      console.error(`Error en setModalElement: ${error}`);
-    }
-  }
+	async #closeModal() {
+		this.modal.style.display = 'none';
+	}
 
-  async handleOpenModal() {
-    try {
-      await this.#openModal();
+	async setModalElement(modal) {
+		try {
+			if (!modal) {
+				throw new Error('No se encontró el modal para abrir');
+			}
 
-      if (this.inserItem) {
-        setTimeout(() => this.inserItem.focus(), 50);
-      }
-    } catch (error) {
-      console.error(`Error en handleOpenModal: ${error}`);
-    }
-  }
+			this.modal = modal;
+
+			await this.initialVariables();
+			this.#setEventListenerS();
+		} catch (error) {
+			console.error(`Error en setModalElement: ${error}`);
+		}
+	}
+
+	async handleOpenModal() {
+		try {
+			const isActive = this.btnCopySentenceSql.classList.contains('active');
+			const isHide = this.listPaneDataGridPopover.classList.contains('hidden');
+
+			if (!isHide) {
+				this.listPaneDataGridPopover.classList.add('hidden');
+			}
+
+			if (isActive) {
+				this.btnCopySentenceSql.classList.remove('active');
+			}
+
+			await this.#openModal();
+
+			if (this.insertItem) {
+				setTimeout(() => this.insertItem.focus(), 50);
+			}
+		} catch (error) {
+			console.error(`Error en handleOpenModal: ${error}`);
+		}
+	}
 }

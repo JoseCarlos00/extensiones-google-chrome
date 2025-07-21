@@ -31,7 +31,7 @@ window.addEventListener(
       await modalManager.initialize();
 
       setTimeout(async () => {
-        await insertModalInserItem();
+        await insertModalInsertItem();
         modalManager.setModalInsert();
       }, 100);
     } catch (error) {
