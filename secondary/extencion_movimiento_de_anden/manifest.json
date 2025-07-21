@@ -34,6 +34,24 @@
 			],
 			"js": ["IventoryManager.js", "MovimientoDeAnden.js"],
 			"css": ["style.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
+			"js": [
+				"constants.js",
+				"class/MoveColumnManager.js",
+				"class/ButtonCreateInElementLI.js",
+				"utils/ToastAlert.js",
+				"utils/copyToClipboard.js",
+				"utils/LocalStorageHelper.js",
+				"shippingContainerInsight.js",
+				"save-data/buttons/buttons.js",
+				"save-data/ReceiptTypeTraslados.js",
+				"save-data/ReceiptTypeDevoluciones.js",
+				"save-data/EventClickManagerStorage.js",
+				"save-data/SaveDataManager.js",
+				"save-data/mainSaveData.js"
+			]
 		}
 	],
 	"action": {
