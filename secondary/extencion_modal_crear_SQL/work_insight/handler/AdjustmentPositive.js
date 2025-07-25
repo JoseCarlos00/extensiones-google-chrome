@@ -65,7 +65,7 @@ class AdjustmentPositive {
 		this.internalData = "";
 	}
 
-	resetElementVaules() {
+	resetElementValues() {
 		this.adjustmentPositiveForm.value = "";
 	}
 
@@ -82,14 +82,14 @@ class AdjustmentPositive {
 				const confirmQtyValue = row.querySelector(this.selectors.confirmQty)?.textContent?.trim() ?? "";
 				const fromLocValue = row.querySelector(this.selectors.fromLoc)?.textContent?.trim() ?? "";
 				const toLocValue = row.querySelector(this.selectors.toLoc)?.textContent?.trim() ?? "";
-				const workTypeVaule = row.querySelector(this.selectors.workType)?.textContent?.trim() ?? "";
+				const workTypeValue = row.querySelector(this.selectors.workType)?.textContent?.trim() ?? "";
 
-				if (workTypeVaule !== "Detail") {
+				if (workTypeValue !== "Detail") {
 					return null;
 				}
 
 				const location =
-					toLocValue === "EMP-01" || /^\d-\d{2}-\d{2}-[A-Z]{2}-\d{2}$/.test(fromLocValue) ? "ASCENSOR" : fromLocValue;
+					toLocValue === "EMP-01" || /^\d-\d{2}-\d{2}-[A-Z]{2}-\d{2}$/.test(fromLocValue) ? "BANDA" : fromLocValue;
 
 				return `${itemValue}\t${confirmQtyValue}\t${location}`;
 			})
@@ -113,7 +113,7 @@ class AdjustmentPositive {
 	}
 
 	async cleanValues() {
-		this.resetElementVaules();
+		this.resetElementValues();
 		await this.cleanInternalData();
 	}
 
