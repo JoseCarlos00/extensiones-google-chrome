@@ -4,13 +4,17 @@ class ModalManagerInventory extends ModalManager {
 
     this.containerPrincipal = null;
     this.mapType = {
-      itemLoc: elemento => {
-        this._toggleClass(elemento, 'item-loc', 'internal-num');
-      },
-      internal: elemento => {
-        this._toggleClass(elemento, 'internal-num', 'item-loc');
-      },
-    };
+			itemLoc: (elemento) => {
+				this._toggleClass(elemento, 'item-loc', 'internal-num');
+			},
+			internal: (elemento) => {
+				this._toggleClass(elemento, 'internal-num', 'item-loc');
+			},
+			addInternal: (elemento) => {
+				console.log('Cambio de clases');
+        
+			},
+		};
   }
 
   _toggleClass(elemento, addClass, removeClass) {

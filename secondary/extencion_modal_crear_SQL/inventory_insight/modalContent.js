@@ -1,5 +1,5 @@
 async function getHtmlContent({ sectionContainerClass, modalId }) {
-  const btnCopy = `
+  const btnCopy = /*html*/ `
     <button class="btn-copy-code" tabindex="2"
     style="position: absolute;right: 0; top: 0; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none; padding-right: 0;">
     <div
@@ -16,7 +16,7 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
     </button>
     `;
 
-  const inputRadios = `
+  const inputRadios = /*html*/ `
    <div class="radio-container">
       <div class="radio-inputs">
         <label class="radio">
@@ -27,11 +27,15 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
           <input name="type-mode" type="radio" data-type="itemLoc" />
           <span class="name">Item - Location</span>
         </label>
+        <label class="radio">
+          <input name="type-mode" type="radio" data-type="addInternal" />
+          <span class="name">Add</span>
+        </label>
       </div>
     </div>
     `;
 
-  const inputChecks = `
+  const inputChecks = /*html*/ `
     <div class="opcs-btn-container position-relative">
     ${btnCopy}
       <input class="opc-btn" id="opc-oh" type="checkbox" checked="true" data-type="OH" />
@@ -48,7 +52,7 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
     </div>
     `;
 
-  const codeContainer = `
+  const codeContainer = /*html*/ `
     <div class="code-container postition-relative language-sql hljs">
       <div>
         <span class="hljs-keyword">UPDATE</span> location_inventory

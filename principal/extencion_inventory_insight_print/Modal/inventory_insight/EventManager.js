@@ -35,12 +35,12 @@ class EventManager {
 
 		if (!isHide) {
 			this._listPaneDataGridPopover.classList.add('hidden');
-			return;
+			// return;
 		}
 
 		if (isActive) {
 			this.btnCopySentenceSql.classList.remove('active');
-			return;
+			// return;
 		}
 	}
 
