@@ -21,8 +21,8 @@ form[action*="SignonMenuRF.aspx"] table {
 }
 
 /* Menu de WORK - TRABAJO */
-form[action*="WorkProfileSelectionRFHandling.aspx?accept=yes"] table,
-form[action*="ReceivingRF.aspx"] table {
+form[action*="WorkProfileSelectionRFHandling.aspx?accept=yes"]:not(.check-in-form) table,
+form[action*="ReceivingRF.aspx"]:not(.check-in-form) table {
 	tr:nth-child(5) td {
 		display: flex;
 		flex-wrap: wrap;

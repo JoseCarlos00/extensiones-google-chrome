@@ -61,6 +61,8 @@ class SwitchHiddeOpction {
 
 window.addEventListener("load", () => {
 	try {
+		inhabiliteStyle();
+
 		const title = document
 			.querySelector('#proRfWrapper > form[action*="ReceivingRF.aspx"] > table > tbody > tr.touchscreen-show > td > b')
 			?.textContent?.trim();
@@ -75,3 +77,13 @@ window.addEventListener("load", () => {
 		console.error("Error renderizar SwitHiddeOption: ", error);
 	}
 });
+
+
+function inhabiliteStyle() {
+	const checkInTittle = document.querySelector('#proRfWrapper > h3')?.textContent?.trim();
+	const containerForm = document.querySelector('#proRfWrapper > form');
+
+	if ((checkInTittle === 'Check in' || checkInTittle === 'Putaway group') && containerForm) {
+		containerForm.classList.add('check-in-form');
+	}
+}
