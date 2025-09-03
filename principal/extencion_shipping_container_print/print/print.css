@@ -252,4 +252,8 @@ table a {
   .filters {
     display: none;
   }
+
+  @page {
+    size: letter landscape;
+  }
 }

@@ -71,6 +71,8 @@ function inicio() {
             createFiltersCheckbox(showColumns, true);
           })
           .catch(err => console.error('Error al crear el evento click mostrar:', err));
+
+        setTimeout(() => window.print(), 500);
       })
       .catch(err => {
         console.error(err);

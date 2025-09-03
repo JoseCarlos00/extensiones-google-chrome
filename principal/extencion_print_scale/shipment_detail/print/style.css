@@ -66,3 +66,9 @@
     transform: translateX(calc(var(--container_width) * 2 / 3));
   }
 }
+
+@media print {
+  @page {
+		size: letter;
+	}
+}

@@ -23,7 +23,6 @@ export class PrintManangerDetail extends PrintMananger {
       { key: 'description', values: ['description'] },
       { key: 'totalQty', values: ['total qty'] },
       { key: 'erpOrder', values: ['erp order'] },
-      { key: 'erpOrder', values: ['erp order'] },
       { key: 'allocationRejectedQty', values: ['allocation rejected quantity'] },
     ];
 
@@ -40,8 +39,8 @@ export class PrintManangerDetail extends PrintMananger {
   }
 
   async createCheckBox() {
-    const { shipmentId, item, description, totalQty, erpOrder, status1 } = this.columnIndex;
-    const showColumns = [shipmentId, item, description, totalQty, erpOrder, status1];
+    const { shipmentId, item, description, totalQty, status1 } = this.columnIndex;
+    const showColumns = [shipmentId, item, description, totalQty, status1];
 
     const checkBoxManangerCol = new CheckBoxManangerColumn();
     checkBoxManangerCol.eventoClickCheckBox();

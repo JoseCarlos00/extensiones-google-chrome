@@ -1,5 +1,5 @@
 function inicio() {
-  console.log('Shipping container insight print');
+  console.log('Shipment line insight print');
 
   const ul =
     document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav') ?? null;
