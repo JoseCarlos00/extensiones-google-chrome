@@ -22,11 +22,15 @@
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/scale/insights/*"],
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
-      "js": ["shipment_detail/containerPrint.js"],
+      "js": ["class/PrintInjector.js","shipment_detail/main.js"],
+      "css": ["style.css", "balloon.css"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
+      "js": ["class/PrintInjector.js","shipping_container/main.js"],
       "css": ["style.css", "balloon.css"]
     }
   ],
