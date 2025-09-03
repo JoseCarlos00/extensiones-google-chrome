@@ -35,7 +35,7 @@ export class PrintManagerDetail extends PrintManager {
   async init() {
     await super.init();
     await this.setEventShowCortos();
-    await this.setEventChangeToggle();
+    this.setEventChangeToggle();
   }
 
   async createCheckBox() {
