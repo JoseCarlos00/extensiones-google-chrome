@@ -30,11 +30,11 @@ function getDataForToPrint() {
     const tbodyToPrint = document.querySelector('#ListPaneDataGrid tbody');
 
     if (!theadToPrint) {
-      console.error('No se encotro el elemento <theadToPrint>');
+      console.error('No se encontró el elemento <theadToPrint>');
     }
 
     if (!tbodyToPrint) {
-      console.error('No se encotro el elemento <tbodyToPrint>');
+      console.error('No se encontró el elemento <tbodyToPrint>');
     }
 
     const config = {

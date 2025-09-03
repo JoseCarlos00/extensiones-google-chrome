@@ -1,9 +1,9 @@
-import { PrintManangerDetail } from './PrintMangerDetail.js';
+import { PrintManagerDetail } from './PrintMangerDetail.js';
 // Espera a que la página haya cargado antes de ejecutar la función inicio
 window.addEventListener(
   'load',
   () => {
-    new PrintManangerDetail();
+    new PrintManagerDetail();
   },
   { once: true }
 );

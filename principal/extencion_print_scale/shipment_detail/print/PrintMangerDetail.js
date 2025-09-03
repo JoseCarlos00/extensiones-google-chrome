@@ -1,7 +1,7 @@
-import { PrintMananger } from '../../utils/PrintMananger.js';
-import { CheckBoxManangerColumn, CheckBoxManangerRow } from '../../utils/CheckBoxMananger.js';
+import { PrintManager } from '../../utils/PrintManager.js';
+import { CheckBoxManagerColumn, CheckBoxManagerRow } from '../../utils/CheckBoxManager.js';
 
-export class PrintManangerDetail extends PrintMananger {
+export class PrintManagerDetail extends PrintManager {
   constructor() {
     super();
     this.columnIndex = {
@@ -35,16 +35,16 @@ export class PrintManangerDetail extends PrintMananger {
   async init() {
     await super.init();
     await this.setEventShowCortos();
-    await this.setEventChangeTogle();
+    await this.setEventChangeToggle();
   }
 
   async createCheckBox() {
     const { shipmentId, item, description, totalQty, status1 } = this.columnIndex;
     const showColumns = [shipmentId, item, description, totalQty, status1];
 
-    const checkBoxManangerCol = new CheckBoxManangerColumn();
-    checkBoxManangerCol.eventoClickCheckBox();
-    await checkBoxManangerCol.createFiltersCheckbox(showColumns, true);
+    const checkBoxManagerCol = new CheckBoxManagerColumn();
+    checkBoxManagerCol.eventoClickCheckBox();
+    await checkBoxManagerCol.createFiltersCheckbox(showColumns, true);
 
     await this.checkBoxRow();
   }
@@ -66,9 +66,9 @@ export class PrintManangerDetail extends PrintMananger {
     const valuesRow = rowsSelected.map(td => td.textContent.trim());
     const uniqueRows = [...new Set(valuesRow)];
 
-    const checkBoxManangerRow = new CheckBoxManangerRow({ positionRow: position });
-    checkBoxManangerRow.eventoClickCheckBox();
-    await checkBoxManangerRow.createFiltersCheckbox({
+    const checkBoxManagerRow = new CheckBoxManagerRow({ positionRow: position });
+    checkBoxManagerRow.eventoClickCheckBox();
+    await checkBoxManagerRow.createFiltersCheckbox({
       rowsDefault: ['100'],
       showColumns: true,
       uniqueRows,
@@ -188,12 +188,12 @@ export class PrintManangerDetail extends PrintMananger {
     mapShort[value]();
   }
 
-  setEventChangeTogle() {
+  setEventChangeToggle() {
     const checkboxContainer = document.querySelector('#checkboxContainerRow');
     // Validar si el contenedor de checkboxes existe
     if (!checkboxContainer) {
       console.error(
-        '[PrintManangerDetail: setEventChangeTogle] No existe el elemento #checkboxContainer'
+        '[PrintManagerDetail: setEventChangeToggle] No existe el elemento #checkboxContainer'
       );
       return;
     }
@@ -203,7 +203,7 @@ export class PrintManangerDetail extends PrintMananger {
 
     if (checkboxes.length === 0) {
       console.error(
-        '[PrintManangerDetail: setEventChangeTogle] No se encontraron elementos #checkboxContainer .column-toggle'
+        '[PrintManagerDetail: setEventChangeToggle] No se encontraron elementos #checkboxContainer .column-toggle'
       );
       return;
     }
