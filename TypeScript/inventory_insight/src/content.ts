@@ -3,8 +3,6 @@ import { ModalHandler } from './ModalHandler.ts';
 import { ModalManagerInventory } from './ModalManagerInventory.ts';
 import { getHtmlContent } from './modalContent.ts';
 
-console.log('Content script cargado para Inventory Insight!');
-
 window.addEventListener(
 	'load',
 	async () => {
@@ -23,7 +21,7 @@ window.addEventListener(
 
 			const buttonOpenModal = ButtonOpenModal.getButtonOpenModal(buttonConfiguration);
 
-			const modalHandler = new ModalHandler({ ...selectoresModal });
+			const modalHandler = new ModalHandler({ modalId: selectoresModal.modalId });
 			const ModalHtml = await getHtmlContent({ ...selectoresModal });
 
 			const modalManager = new ModalManagerInventory({
