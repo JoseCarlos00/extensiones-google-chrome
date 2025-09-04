@@ -1,0 +1,40 @@
+table tr td,
+table tr th {
+	display: none;
+}
+
+table
+	tr
+	:is(
+		td[aria-describedby='ListPaneDataGrid_SHIPMENT_ID'],
+		td[aria-describedby='ListPaneDataGrid_PARENT_CONTAINER_ID'],
+		td[aria-describedby='ListPaneDataGrid_QUANTITY'],
+		td[aria-describedby='ListPaneDataGrid_ITEM'],
+		td[aria-describedby='ListPaneDataGrid_ITEM_DESC']
+	) {
+	display: table-cell;
+}
+
+@media print {
+	@page {
+		size: letter landscape auto;
+		margin: 1cm auto;
+		margin-inline: 0;
+	}
+
+	table {
+
+		td[aria-describedby='ListPaneDataGrid_ITEM_DESC'],
+		th[aria-describedby='ListPaneDataGrid_ITEM_DESC'] {
+			overflow: hidden;
+			max-width: 200px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+    td[aria-describedby='ListPaneDataGrid_SHIPMENT_ID'],
+    td[aria-describedby='ListPaneDataGrid_PARENT_CONTAINER_ID'] {
+      white-space: nowrap;
+    }
+	}
+}

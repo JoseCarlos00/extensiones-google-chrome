@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print</title>
+  <link rel="stylesheet" href="./print.css">
+  <link rel="stylesheet" href="../../utils/style_based.css">
+</head>
+
+<body>
+  <header>
+    <h1 contenteditable="true" class="text-center"><small>Cortos</small></h1>
+  </header>
+
+  <section class="filters">
+    <button id="toggleButton" class="btn-ver-mas" disabled>
+      <span>
+        <svg class="toggleIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+          <path
+            d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
+        </svg>
+        &nbsp;Mostrar Columnas
+      </span>
+    </button>
+    <div id="checkboxContainerColumn"></div>
+
+    <!-- Mostrar/ocultar fila -->
+    <button id="toggleButtonRow" class="toggleButton btn-ver-mas" disabled>
+      <span>
+        <svg class="toggleIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+          <path
+            d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" />
+        </svg>
+        &nbsp;Mostrar/Ocultar Status
+      </span>
+    </button>
+
+    <div id="checkboxContainerRow" class="show"
+      style=" grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); width: 300px; align-self: start; "></div>
+
+    <form id="show-cortos" class="show-cortos-container show">
+      <div class="radio-input">
+        <label>
+          <input type="radio" name="cortos" value="Todo">
+          <span>Todo</span>
+        </label>
+
+        <label>
+          <input type="radio" name="cortos" value="Con Cortos" checked>
+          <span>Con Cortos</span>
+        </label>
+
+        <label>
+          <input type="radio" name="cortos" value="Sin Cortos">
+          <span>Sin Cortos</span>
+        </label>
+
+        <span class="selection"></span>
+      </div>
+    </form>
+  </section>
+
+  <table id="content"></table>
+  <script type="module" src="./print.js"></script>
+</body>
+
+</html>
