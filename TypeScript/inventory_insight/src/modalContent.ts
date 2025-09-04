@@ -25,9 +25,9 @@ const configurationInitial = {
   },
 };
 
-const configurationElementHide = JSON.parse(storedState) ?? configurationInitial;
+const configurationElementHide = JSON.parse(storedState ?? '{}') ?? configurationInitial;
 
-const validateProperty = (value, property) => {
+const validateProperty = (value: string, property: string) => {
   const config = configurationElementHide[value];
 
   if (!config) {
@@ -40,12 +40,12 @@ const validateProperty = (value, property) => {
     iconName: config.hide ? 'hide' : 'show',
   };
 
-  if (!mapCase[property]) {
+  if (!mapCase[property as keyof typeof mapCase]) {
     console.warn(`Propiedad no válida: [${property}]`);
     return '';
   }
 
-  return mapCase[property];
+  return mapCase[property as keyof typeof mapCase];
 };
 
 const hideMenu = /*html*/ `
@@ -245,7 +245,7 @@ async function getBody() {
   const tr = document.createElement('tr');
   const td = document.createElement('td');
   td.colSpan = 3;
-  td.textContent = 'Vacio';
+  td.textContent = 'Vació';
   tr.appendChild(td);
   tbody.appendChild(tr);
 
