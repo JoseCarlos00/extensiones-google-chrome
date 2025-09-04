@@ -39,8 +39,8 @@ export class PrintManagerDetail extends PrintManager {
   }
 
   async createCheckBox() {
-    const { shipmentId, item, description, totalQty, status1 } = this.columnIndex;
-    const showColumns = [shipmentId, item, description, totalQty, status1];
+    const { shipmentId, item, description, totalQty } = this.columnIndex;
+    const showColumns = [shipmentId, item, description, totalQty];
 
     const checkBoxManagerCol = new CheckBoxManagerColumn();
     checkBoxManagerCol.eventoClickCheckBox();
