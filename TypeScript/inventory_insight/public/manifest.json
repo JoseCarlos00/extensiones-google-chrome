@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Inventory Insight Modal",
+  "version": "1.0",
+  "description": "Crea un modal con el inventario",
+  "permissions": [],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/inventory16.png",
+      "32": "images/inventory32.png",
+      "48": "images/inventory48.png",
+      "128": "images/inventory128.png"
+    }
+  },
+  "icons": {
+    "16": "images/inventory16.png",
+    "32": "images/inventory32.png",
+    "48": "images/inventory48.png",
+    "128": "images/inventory128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
+      "js": ["content.js"],
+      "css": []
+    }
+  ]
+}
