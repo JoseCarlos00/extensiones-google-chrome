@@ -1,4 +1,4 @@
-import { EventManagerKeydown } from "./EventManager"
+import { EventManagerKeyDown } from "./EventManagerKeydown.ts"
 
 interface TableHandlerParams {
 	tbodyTable: HTMLTableSectionElement;
@@ -166,7 +166,7 @@ export class TableHandler {
 				return;
 			}
 
-			const eventManager = new EventManagerKeydown();
+			const eventManager = new EventManagerKeyDown();
 
 			this.tableContent.addEventListener('keydown', (e) => eventManager.handleEvent({ ev: e }));
 		} catch (error) {
