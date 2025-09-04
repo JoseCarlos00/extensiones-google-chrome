@@ -83,7 +83,7 @@ export class UiIggridIndicator {
   static deleteAllIndicator() {
     const uiIndicators = Array.from(
       document.querySelectorAll(
-        '#myModalShowTable #tableContent thead  th .ui-iggrid-indicatorcontainer span'
+        '#myModalShowTable #tableContent thead th .ui-iggrid-indicatorcontainer span'
       )
     );
 

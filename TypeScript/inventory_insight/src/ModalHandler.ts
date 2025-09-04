@@ -227,7 +227,7 @@ export class ModalHandler {
 	}
 
 	private setEventInsertRow() {
-		const btnInsertRow = document.querySelector(`${this.prefix} #insertRow`);
+		const btnInsertRow = document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`);
 
 		if (!btnInsertRow) {
 			console.warn('No se encontró el elemento #insert-row');
@@ -266,7 +266,15 @@ export class ModalHandler {
 	}
 
 	updateRowCounter() {
-		const contador = document.querySelector('#myModalShowTable #rowCounter');
+		const contador = document.querySelector(`${this.prefix} #${hideElementsIds.counterRow}`);
+
+		console.log('contador', contador);
+		console.log('hideElementsIds.counterRow', hideElementsIds.counterRow);
+		console.log('this.prefix', this.prefix);
+		console.log('Selector final:', `${this.prefix} #${hideElementsIds.counterRow}`);
+		
+		
+		
 
 		if (!contador) {
 			console.error('El elemento contador no se encuentra en el DOM.');

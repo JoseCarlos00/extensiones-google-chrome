@@ -1,0 +1,108 @@
+/* Container Styles */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  font-family: 'Arial', sans-serif;
+  overflow: visible;
+
+  .copy-item.active + .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%);
+    pointer-events: auto;
+  }
+}
+
+/* Tooltip Styles */
+.tooltip-content {
+  position: absolute;
+  top: -86px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 15px;
+  padding: 22px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  opacity: 1;
+  visibility: visible;
+  visibility: hidden;
+  transition: opacity 0.1 cubic-bezier(0.68, -0.55, 0.265, 1.55),
+    transform 0.1 cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0.1 ease;
+  z-index: 100;
+  pointer-events: auto;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+
+  background: rgba(30, 30, 30, 0.9);
+  color: white;
+
+  display: flex;
+  gap: 6px;
+
+  /* Tooltip Arrow */
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 -3px 3px rgba(0, 0, 0, 0.1));
+    clip-path: polygon(100% 0%, 0% 0%, 50% 100%);
+    background: rgba(30, 30, 30, 0.9);
+    display: block;
+    width: 14px;
+    height: 14px;
+  }
+
+  .button-container {
+    position: relative;
+    .button {
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      font-weight: 500;
+      font-family: inherit;
+      background-color: #1a1a1a;
+      cursor: pointer;
+      color: white;
+      transition: border-color 0.25s;
+
+      display: flex;
+      gap: 8px;
+
+      .fa-location-arrow {
+        transform: rotate(45deg);
+        margin-right: 6px;
+      }
+    }
+
+    .button:hover {
+      border-color: #646cff;
+    }
+
+    .button:focus,
+    .button:focus-visible {
+      outline: 4px auto -webkit-focus-ring-color;
+    }
+
+    .button:hover .far {
+      opacity: 0;
+      display: none;
+    }
+
+    .button::before {
+      content: attr(data-tooltip);
+      visibility: hidden;
+      opacity: 0;
+      display: none;
+    }
+
+    .button:hover::before {
+      visibility: visible;
+      opacity: 1;
+      display: initial;
+    }
+  }
+}

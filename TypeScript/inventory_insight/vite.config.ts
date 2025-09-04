@@ -8,7 +8,7 @@ export default defineConfig({
       input: { // Define los puntos de entrada para la compilación de la extensión.
         popup: resolve(__dirname, 'popup.html'),
         content: resolve(__dirname, 'src/content.ts'),
-        style: resolve(__dirname, 'src/style.css')
+        style: resolve(__dirname, 'src/css/style.css'),
       },
       output: {
         entryFileNames: '[name].js',

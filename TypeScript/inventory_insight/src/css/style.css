@@ -1,3 +1,7 @@
+@import url('./balloon.css');
+@import url('./hide.css');
+@import url('./tooltip.css');
+
 .collapsepane.nav.navbar-nav li {
   --balloon-color: #fff;
   --balloon-bg-color: #487cc9;
@@ -92,6 +96,17 @@
       display: flex;
       column-gap: 8px;
 
+      button {
+        width: fit-content;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: 400ms;
+        opacity: 0.8;
+      }
+
       .insert-item {
         border-radius: 50%;
         border: none;
@@ -117,6 +132,7 @@
         color: #fff;
         border-radius: 4px;
         padding: 1px 4px;
+        height: 24px;
       }
     }
 
