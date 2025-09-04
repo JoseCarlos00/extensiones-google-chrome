@@ -1,22 +1,25 @@
 export class UiIggridIndicator {
+  private indicator: HTMLElement | null;
+  private elementSelected: HTMLElement | null;
+
   constructor() {
     this.indicator = null;
     this.elementSelected = null;
   }
 
-  #validateElement(element) {
+  private validateElement(element : HTMLElement | null) {
     if (!element) {
       throw new Error('El elemento proporcionado es nulo o indefinido.');
     }
   }
 
-  setElementSelected(element) {
-    this.#validateElement(element);
+  setElementSelected(element : HTMLElement | null) {
+    this.validateElement(element);
     this.elementSelected = element;
-    this.#setContainerIndicator();
+    this.setContainerIndicator();
   }
 
-  #setContainerIndicator() {
+  private setContainerIndicator() {
     if (!this.elementSelected) {
       throw new Error('No se ha seleccionado un elemento. Llama a setElementSelected primero.');
     }
@@ -27,7 +30,7 @@ export class UiIggridIndicator {
     }
   }
 
-  #setContentIndicator(sortOrder) {
+  private setContentIndicator(sortOrder : string) {
     if (!this.indicator) {
       throw new Error(
         'El contenedor del indicador no está definido. Llama a setContainerIndicator primero.'
@@ -39,7 +42,7 @@ export class UiIggridIndicator {
       desc: '<span class="ui-iggrid-colindicator-desc ui-icon ui-icon-arrowthick-1-s"></span>',
     };
 
-    const content = sortOrderContent[sortOrder];
+    const content = sortOrderContent[sortOrder as keyof typeof sortOrderContent];
     if (!content) {
       throw new Error(`El valor de sortOrder proporcionado (${sortOrder}) no es válido.`);
     }
@@ -47,7 +50,7 @@ export class UiIggridIndicator {
     this.indicator.innerHTML = content;
   }
 
-  #setAttributeTitle(sortOrder) {
+  private setAttributeTitle(sortOrder : string) {
     if (!this.elementSelected) {
       throw new Error('No se ha seleccionado un elemento. Llama a setElementSelected primero.');
     }
@@ -57,7 +60,7 @@ export class UiIggridIndicator {
       desc: 'ordenado descendente',
     };
 
-    const title = sortOrderTitles[sortOrder];
+    const title = sortOrderTitles[sortOrder as keyof typeof sortOrderTitles];
     if (!title) {
       throw new Error(`El valor de sortOrder proporcionado (${sortOrder}) no es válido.`);
     }
@@ -65,10 +68,10 @@ export class UiIggridIndicator {
     this.elementSelected.setAttribute('title', title);
   }
 
-  showIndicator(sortOrder) {
+  showIndicator(sortOrder : string) {
     try {
-      this.#setAttributeTitle(sortOrder);
-      this.#setContentIndicator(sortOrder);
+      this.setAttributeTitle(sortOrder);
+      this.setContentIndicator(sortOrder);
     } catch (error) {
       console.error(
         'Error: [showIndicator] Ha ocurrido un error al mostrar el indicador de ordenamiento:',

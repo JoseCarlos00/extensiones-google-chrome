@@ -21,19 +21,6 @@ export class ModalHandler {
 		this.tableHandler = null;
 	}
 
-	private async validateElementsTable() {
-		return new Promise((resolve, reject) => {
-			if (!this.tbodyTable) {
-				reject('No se encontró el elemento <tbody>');
-			}
-
-			if (!this.tableContent) {
-				reject("Error:[createTbody] No se encontró el elemento <table id='tableContent'>");
-			}
-
-			resolve();
-		});
-	}
 
 	private async initialVariables() {
 		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
@@ -116,7 +103,6 @@ export class ModalHandler {
 
 	private async setEventClickModalTable() {
 		try {
-			await this.validateElementsTable();
 
 			const eventManager = new EventManager({
 				updateRowCounter: this.updateRowCounter,
@@ -205,16 +191,18 @@ export class ModalHandler {
 				throw new Error('No se encontró el modal para abrir');
 			}
 
-			if (!this.tableHandler) {
-				throw new Error('No se encontró el TableHandler');
-			}
-
 			this.modal = modal;
+
 			await this.initialVariables();
 			await this.setEventClickModalTable();
 			await this.setEventClick();
 
+			if (!this.tableHandler) {
+				throw new Error('No se encontró el TableHandler');
+			}
+
 			this.tableHandler.setEventKeydownForTableContent();
+
 			this.setEventsForCopyButtons();
 			this.setEventHideElement();
 			this.setEventInsertRow();
