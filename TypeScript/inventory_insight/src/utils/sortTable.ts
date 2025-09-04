@@ -4,9 +4,13 @@ export function sortTable({
 	sortOrder = 'asc',
 }: {
 	columnIndex: number;
-	table: HTMLTableElement;
+	table: HTMLTableElement | null;
 	sortOrder?: 'asc' | 'desc';
 }) {
+	if (!table) {
+		throw new Error('La tabla proporcionada es nula');
+	}
+
 	const tbody = table.querySelector('tbody');
 
 	if (!tbody) {

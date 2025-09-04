@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
-// 'path' es un módulo nativo de Node.js para manejar rutas de archivos.
-import { resolve } from 'node:path';
+import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,7 +8,7 @@ export default defineConfig({
       input: { // Define los puntos de entrada para la compilación de la extensión.
         popup: resolve(__dirname, 'popup.html'),
         content: resolve(__dirname, 'src/content.ts'),
-        style: resolve(__dirname, 'src/style.ts')
+        style: resolve(__dirname, 'src/style.css')
       },
       output: {
         entryFileNames: '[name].js',

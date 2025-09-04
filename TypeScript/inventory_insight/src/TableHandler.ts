@@ -4,39 +4,27 @@ interface TableHandlerParams {
 	tbodyTable: HTMLTableSectionElement;
 	tableContent: HTMLTableElement;
 	updateRowCounter: () => void;
+	isTableEmptyOrSingleRow: () => Promise<boolean>;
 }
 
 export class TableHandler {
 	private tbodyTable: HTMLTableSectionElement;
 	private tableContent: HTMLTableElement;
-  private updateRowCounter: () => void;
+	private updateRowCounter: () => void;
+	isTableEmptyOrSingleRow: () => Promise<boolean>;
 
-	constructor({ tbodyTable, tableContent, updateRowCounter }: TableHandlerParams) {
+	constructor({ tbodyTable, tableContent, updateRowCounter, isTableEmptyOrSingleRow }: TableHandlerParams) {
 		this.tbodyTable = tbodyTable;
 		this.tableContent = tableContent;
-    this.updateRowCounter = updateRowCounter;
-	}
-
-	private isTableEmptyOrSingleRow() {
-		return new Promise((resolve) => {
-			const firstRow = this.tableContent.querySelector('td');
-			const txt = firstRow ? firstRow.textContent.trim().toLowerCase() : '';
-
-			if (!firstRow || txt.includes('no hay datos')) {
-				firstRow?.remove();
-				resolve(true);
-				return;
-			}
-
-			resolve(false);
-		});
+		this.updateRowCounter = updateRowCounter;
+		this.isTableEmptyOrSingleRow = isTableEmptyOrSingleRow;
 	}
 
 	private async createTbody() {
 		try {
 			if (!this.tbodyTable) {
-        throw new Error('No se encontró el elemento <tbody>');
-      }
+				throw new Error('No se encontró el elemento <tbody>');
+			}
 
 			const rows = Array.from(this.tbodyTable.rows);
 
@@ -122,7 +110,6 @@ export class TableHandler {
 	// Llamado desde ModalHandler ⬇️
 	async insertNewRow() {
 		try {
-
 			const tbodyExist = this.tableContent.querySelector('tbody');
 			const newRow = await this.createNewRow();
 
@@ -143,7 +130,6 @@ export class TableHandler {
 
 	async insertTbody() {
 		try {
-
 			const newTbody = await this.createTbody();
 
 			const tbodyExist = this.tableContent.querySelector('tbody');
@@ -153,7 +139,7 @@ export class TableHandler {
 				this.tableContent.appendChild(newTbody);
 			}
 
-      this.updateRowCounter();
+			this.updateRowCounter();
 		} catch (error) {
 			console.error('Error: [insertTbody] Ha Ocurrido un error al insertar el new <tbody>:', error);
 		}

@@ -3,19 +3,21 @@ import { ToastAlert } from './utils/ToastAlert.ts';
 import { QueryBuilder } from './QueryBuilder.ts';
 
 interface EventManagerCopyConstructor {
-  list: HTMLElement | null;
+	list: HTMLElement | null;
 	tableContent: HTMLTableElement | null;
-  btnCopySentenceSql: HTMLButtonElement | null;
+	btnCopySentenceSql: HTMLButtonElement | null;
+	isTableEmptyOrSingleRow: () => Promise<boolean>;
 }
 
 export class EventManagerCopy {
-  private readonly _listPaneDataGridPopover: HTMLElement | null;
+	private readonly _listPaneDataGridPopover: HTMLElement | null;
 	private readonly tableContent: HTMLTableElement | null;
 	private elementSelected: HTMLElement | null;
-  private readonly selector: { item: string; location: string };
-  private readonly btnCopySentenceSql: HTMLButtonElement | null;
+	private readonly selector: { item: string; location: string };
+	private readonly btnCopySentenceSql: HTMLButtonElement | null;
+	private isTableEmptyOrSingleRow: () => Promise<boolean>;
 
-	constructor({ list, tableContent, btnCopySentenceSql }: EventManagerCopyConstructor) {
+	constructor({ list, tableContent, btnCopySentenceSql, isTableEmptyOrSingleRow }: EventManagerCopyConstructor) {
 		this._listPaneDataGridPopover = list;
 		this.tableContent = tableContent;
 		this.elementSelected = null;
@@ -24,15 +26,16 @@ export class EventManagerCopy {
 			location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
 		};
 		this.btnCopySentenceSql = btnCopySentenceSql;
+		this.isTableEmptyOrSingleRow = isTableEmptyOrSingleRow;
 	}
 
 	handleEvent({ ev }: { ev: Event }) {
 		const { target: element, type } = ev;
 
-    if (!element || !(element instanceof HTMLElement)) {
-      console.warn('[EventManagerCopy]: [handleEvent]: El target no es un HTMLElement válido');
-      return;
-    }
+		if (!element || !(element instanceof HTMLElement)) {
+			console.warn('[EventManagerCopy]: [handleEvent]: El target no es un HTMLElement válido');
+			return;
+		}
 
 		const { nodeName } = element;
 
@@ -43,9 +46,11 @@ export class EventManagerCopy {
 				this.elementSelected = element;
 			}
 
-      if (!this.elementSelected || !this._listPaneDataGridPopover || !this.btnCopySentenceSql) {
-        throw new Error('Error: [handleEvent] No se encontró un elemento seleccionado, la lista de elementos o el botón');
-      }
+			if (!this.elementSelected || !this._listPaneDataGridPopover || !this.btnCopySentenceSql) {
+				throw new Error(
+					'Error: [handleEvent] No se encontró un elemento seleccionado, la lista de elementos o el botón'
+				);
+			}
 
 			const isActive = this.btnCopySentenceSql.classList.contains('active');
 			const isHide = this._listPaneDataGridPopover.classList.contains('hidden');
@@ -69,9 +74,9 @@ export class EventManagerCopy {
 
 		const { id } = this.elementSelected.dataset;
 		if (!id) {
-      console.warn('No se encontró un ID válido en el elemento seleccionado');
-      return;
-    }
+			console.warn('No se encontró un ID válido en el elemento seleccionado');
+			return;
+		}
 
 		this.handleCopyToClipBoar(id);
 	}
@@ -109,24 +114,6 @@ export class EventManagerCopy {
 		}
 
 		return queryFunction();
-	}
-
-	private isTableEmptyOrSingleRow() {
-		return new Promise((resolve) => {
-      if (!this.tableContent) {
-        throw new Error('No se encontró la propiedad [tableContent]');
-      }
-
-			const firstRow = this.tableContent.querySelector('td');
-			const txt = firstRow ? firstRow.textContent.trim().toLowerCase() : '';
-
-			if (!firstRow || txt.includes('no hay datos')) {
-				resolve(true);
-				return;
-			}
-
-			resolve(false);
-		});
 	}
 
 	private async handleCopyToClipBoar(id: string) {
