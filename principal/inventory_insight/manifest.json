@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Inventory Insight Modal y Print",
+  "name": "Inventory Insight Modal",
   "version": "1.0",
-  "description": "Crea en una nueva pestaña el inventario para imprimir y crea un modal con el inventario",
-  "permissions": ["activeTab", "scripting", "tabs"],
+  "description": "Crea un modal con el inventario",
+  "permissions": [],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -22,12 +22,10 @@
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": ["https://wms.fantasiasmiguel.com.mx/scale/*"],
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
       "js": [
-        "inventoryPrint.js",
         "ToastAlert.js",
         "modal/ButtonOpenModal.js",
         "modal/ModaCreateHTML.js",
@@ -56,9 +54,5 @@
       "resources": ["print/print.html"],
       "matches": ["<all_urls>"]
     }
-  ],
-  "content_security_policy": {
-    "script-src": ["'self'", "'unsafe-inline'"],
-    "object-src": "'self'"
-  }
+  ]
 }
