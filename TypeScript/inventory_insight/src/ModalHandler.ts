@@ -1,29 +1,33 @@
-/**
- * Manejador de Modal
- *
- * Funciones Obligatorias:
- * 1. setModalElement -> initialVariables
- * 2  handleOpenModal
- * 3  handleCopyToClipBoar
- */
+import { EventManager, EventManagerCopy, EventManagerHideElement } from "./EventManager"
+import  { TableHandler } from "./TableHandler"
 
 export class ModalHandler {
-	constructor() {
-		this._modal = null;
-		this._tbodyTable = null;
-		this._tableContent = null;
-		this._listPaneDataGridPopover = null;
+	private modal: HTMLElement | null;
+	private tbodyTable: HTMLTableSectionElement | null;
+	private tableContent: HTMLTableElement | null;
+	private listPaneDataGridPopover: HTMLUListElement | null;
+	private btnCopySentenceSql: HTMLButtonElement | null;
+	private prefix: string;
+
+	private tableHandler: TableHandler | null;
+
+	constructor({ modalId }: { modalId: string }) {
+		this.modal = null;
+		this.tbodyTable = null;
+		this.tableContent = null;
+		this.listPaneDataGridPopover = null;
 		this.btnCopySentenceSql = null;
-		this._prefix = '#myModalShowTable';
+		this.prefix = `#${modalId}`;
+		this.tableHandler = null;
 	}
 
-	async #validateElementsTable() {
+	private async validateElementsTable() {
 		return new Promise((resolve, reject) => {
-			if (!this._tbodyTable) {
+			if (!this.tbodyTable) {
 				reject('No se encontró el elemento <tbody>');
 			}
 
-			if (!this._tableContent) {
+			if (!this.tableContent) {
 				reject("Error:[createTbody] No se encontró el elemento <table id='tableContent'>");
 			}
 
@@ -31,102 +35,34 @@ export class ModalHandler {
 		});
 	}
 
-	async #createTbody() {
-		try {
-			await this.#validateElementsTable();
+	private async initialVariables() {
+		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
+		this.tableContent = document.querySelector(`${this.prefix} #tableContent`);
+		this.listPaneDataGridPopover = document.querySelector(`${this.prefix} #ListPaneDataGrid_popover`);
 
-			const rows = Array.from(this._tbodyTable.rows);
+		this.btnCopySentenceSql = document.querySelector(`${this.prefix} #copy-items`);
 
-			// Create new tbody
-			const newTbody = document.createElement('tbody');
-
-			if (rows.length === 0) {
-				newTbody.innerHTML = '<tr><td colspan="3">No hay datos para mostrar <div class="delete-row"></div></td></tr>';
-				return newTbody;
-			}
-
-			rows.forEach((row) => {
-				const fila = row.childNodes;
-				const tr = document.createElement('tr');
-
-				fila.forEach((td) => {
-					const ariadescribedby = td.getAttribute('aria-describedby');
-
-					if (ariadescribedby === 'ListPaneDataGrid_ITEM') {
-						const tdItem = document.createElement('td');
-						tdItem.innerHTML = `<input value="${td.textContent} "tabindex="0" class="input-text">`;
-						tdItem.setAttribute('aria-describedby', ariadescribedby);
-						tr.prepend(tdItem);
-					}
-
-					if (ariadescribedby === 'ListPaneDataGrid_LOCATION') {
-						const tdLoc = document.createElement('td');
-						tdLoc.innerHTML = `<input value="${td.textContent} "tabindex="0" class="input-text">`;
-						tdLoc.setAttribute('aria-describedby', ariadescribedby);
-						tr.appendChild(tdLoc);
-					}
-
-					if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
-						const tdItemDesc = document.createElement('td');
-
-						tdItemDesc.innerHTML = `<input value="${td.textContent} "class="input-text exclude" tabindex="-1">`;
-						tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
-
-						const divDelete = document.createElement('div');
-						divDelete.className = 'delete-row';
-
-						tdItemDesc.appendChild(divDelete);
-
-						tr.appendChild(tdItemDesc);
-					}
-				});
-
-				newTbody.appendChild(tr);
-			});
-
-			return newTbody;
-		} catch (error) {
-			console.error(`Error: [createTbody] Ha Ocurrido un error al crear el new <tbody>: ${error}`);
-		}
-	}
-
-	async #insertTbody() {
-		try {
-			await this.#validateElementsTable();
-
-			const newTbody = await this.#createTbody();
-
-			const tbodyExist = this._tableContent.querySelector('tbody');
-			tbodyExist && tbodyExist.remove();
-
-			this._tableContent.appendChild(newTbody);
-		} catch (error) {
-			console.error('Error: [insertTbody] Ha Ocurrido un error al insertar el new <tbody>:', error);
-		}
-	}
-
-	async #initialVariables() {
-		this._tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
-		this._tableContent = document.querySelector(`${this._prefix} #tableContent`);
-		this._listPaneDataGridPopover = document.querySelector(`${this._prefix} #ListPaneDataGrid_popover`);
-
-		this.btnCopySentenceSql = document.querySelector(`${this._prefix} #copy-items`);
-
-		if (!this._tbodyTable) {
+		if (!this.tbodyTable) {
 			throw new Error('No se encontró el elemento #ListPaneDataGrid tbody');
 		}
 
-		if (!this._tableContent) {
+		if (!this.tableContent) {
 			throw new Error('No se encontró el elemento #tableContent');
 		}
 
-		if (!this._listPaneDataGridPopover) {
+		if (!this.listPaneDataGridPopover) {
 			throw new Error('No se encontró el elemento #ListPaneDataGrid_popover');
 		}
+
+		this.tableHandler = new TableHandler({
+			updateRowCounter: this.updateRowCounter,
+			tableContent: this.tableContent, 
+			tbodyTable: this.tbodyTable
+		});
 	}
 
-	_focusFirstInput() {
-		const firstInput = this._tableContent.querySelector('input.input-text');
+	private focusFirstInput() {
+		const firstInput = this.tableContent.querySelector('input.input-text');
 
 		if (firstInput) {
 			setTimeout(() => {
@@ -136,33 +72,18 @@ export class ModalHandler {
 		}
 	}
 
-	async #openModal() {
-		this._modal.style.display = 'block';
+	async openModal() {
+		this.modal && (this.modal.style.display = 'block');
 	}
 
-	closedModals() {
-		const isActive = this.btnCopySentenceSql.classList.contains('active');
-		const isHide = this._listPaneDataGridPopover.classList.contains('hidden');
+	private setEventsForCopyButtons() {
+		const copyTable = document.querySelector(`${this.prefix} #copy-table`);
 
-		if (!isHide) {
-			this._listPaneDataGridPopover.classList.add('hidden');
-			return;
-		}
-
-		if (isActive) {
-			this.btnCopySentenceSql.classList.remove('active');
-			return;
-		}
-	}
-
-	#setEventsForCopyButtons() {
-		const copyTable = document.querySelector(`${this._prefix} #copy-table`);
-
-		const tooltipContainer = document.querySelector(`${this._prefix} .tooltip-container .tooltip-content`);
+		const tooltipContainer = document.querySelector(`${this.prefix} .tooltip-container .tooltip-content`);
 
 		const eventManager = new EventManagerCopy({
-			list: this._listPaneDataGridPopover,
-			tableContent: this._tableContent,
+			list: this.listPaneDataGridPopover,
+			tableContent: this.tableContent,
 			btnCopySentenceSql: this.btnCopySentenceSql,
 		});
 
@@ -172,7 +93,7 @@ export class ModalHandler {
 
 		if (copyTable) {
 			copyTable.addEventListener('click', (e) => {
-				this.closedModals();
+				this.closedModal();
 				eventManager.handleEvent({ ev: e });
 			});
 		} else {
@@ -193,19 +114,19 @@ export class ModalHandler {
 		}
 	}
 
-	async #setEventClickModalTable() {
+	private async setEventClickModalTable() {
 		try {
-			await this.#validateElementsTable();
+			await this.validateElementsTable();
 
 			const eventManager = new EventManager({
-				updateRowCounter: this._updateRowCounter,
-				tableContent: this._tableContent,
-				list: this._listPaneDataGridPopover,
+				updateRowCounter: this.updateRowCounter,
+				tableContent: this.tableContent,
+				list: this.listPaneDataGridPopover,
 				btnCopySentenceSql: this.btnCopySentenceSql,
 			});
 
-			this._tableContent.addEventListener('click', (e) => eventManager.handleEvent({ ev: e }));
-			this._modal.querySelector('.modal-content').addEventListener('click', (e) => {
+			this.tableContent.addEventListener('click', (e) => eventManager.handleEvent({ ev: e }));
+			this.modal.querySelector('.modal-content').addEventListener('click', (e) => {
 				if (e.target.classList.contains('modal-content')) {
 					eventManager.handleEvent({ ev: e });
 				}
@@ -215,7 +136,7 @@ export class ModalHandler {
 		}
 	}
 
-	async #setEventClick() {
+	private async setEventClick() {
 		try {
 			if (!this.btnCopySentenceSql) {
 				console.warn('No se encontró el elemento #copy-sentence-sql');
@@ -223,10 +144,10 @@ export class ModalHandler {
 			}
 
 			this.btnCopySentenceSql.addEventListener('click', () => {
-				const isHide = this._listPaneDataGridPopover.classList.contains('hidden');
+				const isHide = this.listPaneDataGridPopover.classList.contains('hidden');
 
 				if (!isHide) {
-					this._listPaneDataGridPopover.classList.add('hidden');
+					this.listPaneDataGridPopover.classList.add('hidden');
 				}
 
 				this.btnCopySentenceSql.classList.toggle('active');
@@ -236,12 +157,12 @@ export class ModalHandler {
 		}
 	}
 
-	#setEventHideElement() {
-		const btnHideElement = document.querySelector(`${this._prefix} #hide-elements`);
+	private setEventHideElement() {
+		const btnHideElement = document.querySelector(`${this.prefix} #hide-elements`);
 
-		const ulList = document.querySelector(`${this._prefix} #list-elements`);
+		const ulList = document.querySelector(`${this.prefix} #list-elements`);
 
-		if (btnHideElement && this._listPaneDataGridPopover) {
+		if (btnHideElement && this.listPaneDataGridPopover) {
 			btnHideElement.addEventListener('click', (e) => {
 				const isActive = this.btnCopySentenceSql.classList.contains('active');
 
@@ -249,14 +170,14 @@ export class ModalHandler {
 					this.btnCopySentenceSql.classList.remove('active');
 				}
 
-				this._listPaneDataGridPopover.classList.toggle('hidden');
+				this.listPaneDataGridPopover.classList.toggle('hidden');
 			});
 		} else {
 			console.warn('No se encontró el elemento #hide-elements');
 		}
 
 		if (ulList) {
-			const eventManager = new EventManagerHideElement({ list: this._listPaneDataGridPopover });
+			const eventManager = new EventManagerHideElement({ list: this.listPaneDataGridPopover });
 			ulList.addEventListener('click', (e) => {
 				eventManager.handleEvent({ ev: e })
 			});
@@ -265,119 +186,44 @@ export class ModalHandler {
 		}
 	}
 
-	async #createNewRow() {
-		const tr = document.createElement('tr');
-
-		const tdItem = document.createElement('td');
-		tdItem.innerHTML = `<input value="" tabindex="0" class="input-text">`;
-		tdItem.setAttribute('aria-describedby', 'ListPaneDataGrid_ITEM');
-		tr.prepend(tdItem);
-
-		const tdLoc = document.createElement('td');
-		tdLoc.innerHTML = `<input value="" tabindex="0" class="input-text">`;
-		tdLoc.setAttribute('aria-describedby', 'ListPaneDataGrid_LOCATION');
-		tr.appendChild(tdLoc);
-
-		const tdItemDesc = document.createElement('td');
-		tdItemDesc.innerHTML = `<input value="" class="input-text exclude" tabindex="-1">`;
-		tdItemDesc.setAttribute('aria-describedby', 'ListPaneDataGrid_ITEM_DESC');
-
-		const divDelete = document.createElement('div');
-		divDelete.className = 'delete-row';
-		tdItemDesc.appendChild(divDelete);
-
-		tr.appendChild(tdItemDesc);
-
-		return tr;
-	}
-
-	#isTableEmptyOrSingleRow() {
-		return new Promise((resolve) => {
-			const firstRow = this._tableContent.querySelector('td');
-			const txt = firstRow ? firstRow.textContent.trim().toLowerCase() : '';
-
-			if (!firstRow || txt.includes('no hay datos')) {
-				firstRow.remove();
-				resolve(true);
-				return;
-			}
-
-			resolve(false);
-		});
-	}
-
-	async #insertNewRow() {
-		try {
-			await this.#validateElementsTable();
-
-			const tbodyExist = this._tableContent.querySelector('tbody');
-			const newRow = await this.#createNewRow();
-
-			if (tbodyExist) {
-				await this.#isTableEmptyOrSingleRow();
-				tbodyExist.appendChild(newRow);
-			} else {
-				const newTbody = document.createElement('tbody');
-				newTbody.appendChild(newRow);
-				this._tableContent.appendChild(newTbody);
-			}
-
-			this._updateRowCounter();
-		} catch (error) {
-			console.error('Error: [insertNewRow] Ha Ocurrido un error al insertar una nueva fila:', error);
-		}
-	}
-
-	#setEventInsertRow() {
-		const btnInsertRow = document.querySelector(`${this._prefix} #insertRow`);
+	private setEventInsertRow() {
+		const btnInsertRow = document.querySelector(`${this.prefix} #insertRow`);
 
 		if (!btnInsertRow) {
 			console.warn('No se encontró el elemento #insert-row');
 			return;
 		}
 
-		btnInsertRow.addEventListener('click', (e) => {
-			this.closedModals();
-
-			this.#insertNewRow();
+		btnInsertRow.addEventListener('click', () => {
+			this.tableHandler && this.tableHandler.insertNewRow();
 		});
 	}
 
-	#setEventKeydownForTableContent() {
-		try {
-			if (!this._tableContent) {
-				console.warn('No se encontró el elemento #table-content');
-				return;
-			}
-
-			const eventManager = new EventManagerKeydown();
-
-			this._tableContent.addEventListener('keydown', (e) => eventManager.handleEvent({ ev: e }));
-		} catch (error) {
-			console.warn('Error: Ha ocurrido un error al crear el Evento Keydown en #tableContent: ', error);
-		}
-	}
-
-	async setModalElement(modal) {
+	async setModalElement(modal: HTMLElement | null) {
 		try {
 			if (!modal) {
 				throw new Error('No se encontró el modal para abrir');
 			}
 
-			this._modal = modal;
-			await this.#initialVariables();
-			await this.#setEventClickModalTable();
-			await this.#setEventClick();
-			this.#setEventKeydownForTableContent();
-			this.#setEventsForCopyButtons();
-			this.#setEventHideElement();
-			this.#setEventInsertRow();
+			if (!this.tableHandler) {
+				throw new Error('No se encontró el TableHandler');
+			}
+
+			this.modal = modal;
+			await this.initialVariables();
+			await this.setEventClickModalTable();
+			await this.setEventClick();
+
+			this.tableHandler.setEventKeydownForTableContent();
+			this.setEventsForCopyButtons();
+			this.setEventHideElement();
+			this.setEventInsertRow();
 		} catch (error) {
 			console.error(`Error en setModalElement: ${error}`);
 		}
 	}
 
-	async _updateRowCounter() {
+	updateRowCounter() {
 		const contador = document.querySelector('#myModalShowTable #rowCounter');
 
 		if (!contador) {
@@ -385,7 +231,12 @@ export class ModalHandler {
 			return;
 		}
 
-		const rows = Array.from(this._tableContent.querySelectorAll('tbody tr'));
+		if (!this.tableContent) {
+			console.error('La tabla no está inicializada.');
+			return;
+		}
+
+		const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
 
 		// Actualizar el texto del contador con el número de filas
 		contador.textContent = `Filas: ${rows.length}`;
@@ -393,56 +244,16 @@ export class ModalHandler {
 
 	async handleOpenModal() {
 		try {
-			await this.#insertTbody();
-			await this.#openModal();
-			await this._updateRowCounter();
-			UiIggridIndicator.deleteAllIndicator();
-			this._focusFirstInput();
+			if (this.tableHandler) {
+				this.tableHandler.insertTbody();
+			}
+		
+			await this.openModal();
+			// UiIggridIndicator.deleteAllIndicator();
+			this.focusFirstInput();
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error}`);
 		}
 	}
 }
 
-function sortTable({ columnIndex, table, sortOrder = 'asc' }) {
-	const tbody = table.querySelector('tbody');
-	const rows = Array.from(tbody.querySelectorAll('tr'));
-
-	if (rows.length === 0) {
-		console.warn('No se encontraron filas para ordenar');
-		return;
-	}
-
-	rows.sort((a, b) => {
-		// Obtener los inputs de las filas a y b
-		const inputA = a.cells[columnIndex].querySelector('input');
-		const inputB = b.cells[columnIndex].querySelector('input');
-
-		// Verificar si alguna fila tiene la clase 'item-exist'
-		const hasClassA = a.cells[columnIndex].classList.contains('item-exist');
-		const hasClassB = b.cells[columnIndex].classList.contains('item-exist');
-
-		let comparison = 0;
-
-		// Ordenar primero por 'item-exist' y luego por valor de input
-		if (hasClassA && !hasClassB) {
-			// return -1; // a viene antes que b
-			comparison = -1; // a viene antes que b
-		} else if (!hasClassA && hasClassB) {
-			// return 1; // b viene antes que a
-			comparison = 1; // b viene antes que a
-		} else {
-			// Ambas tienen o no tienen 'item-exist', ordenar por valor del input
-			const aValue = inputA.value;
-			const bValue = inputB.value;
-			// return aValue.localeCompare(bValue);
-			comparison = aValue.localeCompare(bValue);
-		}
-
-		// Si sortOrder es 'desc', invertir la comparación
-		return sortOrder === 'desc' ? -comparison : comparison;
-	});
-
-	// Limpiar y reordenar las filas en el tbody
-	rows.forEach((row) => tbody.appendChild(row));
-}
