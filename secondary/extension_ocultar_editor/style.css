@@ -1,9 +1,0 @@
-@media print {
-  body > deepl-input-controller {
-    display: none;
-  }
-}
-
-deepl-input-controller {
-  display: none;
-}
