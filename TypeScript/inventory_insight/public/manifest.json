@@ -23,7 +23,7 @@
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
       "js": ["content.js"],
-      "css": []
+      "css": ["style.css"]
     }
   ]
 }

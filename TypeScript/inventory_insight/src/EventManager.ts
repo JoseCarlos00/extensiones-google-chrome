@@ -1,4 +1,7 @@
 import { UiIggridIndicator } from './UiIggridIndicator.ts';
+import { sortTable } from './utils/sortTable.ts';
+import { copyToClipboard } from './utils/copyToClipboard.ts';
+import { ToastAlert } from './utils/ToastAlert.ts';
 
 export class EventManager {
 	constructor({ updateRowCounter, tableContent, list, btnCopySentenceSql }) {
