@@ -1,14 +1,16 @@
-export async function copyToClipboard(textoACopiar) {
+import { ToastAlert } from "./ToastAlert"
+
+export async function copyToClipboard(textoACopiar: string) {
 	try {
 		if (!textoACopiar) {
-			throw new Error('No se encontro contenido para Copiar al portapapeles');
+			throw new Error('No se encontró contenido para Copiar al portapapeles');
 		}
 
 		await navigator.clipboard.writeText(textoACopiar);
 
-		// ToastAlert.showAlertMinBotton('Copiado al portapapeles', 'success');
+		ToastAlert.showAlertMinButton('Copiado al portapapeles', 'success');
 	} catch (err) {
 		console.error('Error al copiar al portapapeles:', err);
-		// ToastAlert.showAlertMinBotton('Ha ocurrido al copiar al portapapeles');
+		ToastAlert.showAlertMinButton('Ha ocurrido al copiar al portapapeles');
 	}
 }

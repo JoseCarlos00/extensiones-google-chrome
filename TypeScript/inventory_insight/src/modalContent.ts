@@ -1,31 +1,8 @@
+import { getValueLocalStorage } from './EventManagerHideElement.ts'
 import { ModalCreateHTML } from './modal/ModaCreateHTML.ts';
+import { hideElementsIds } from './constants.ts';
 
-const storedState = localStorage.getItem('storedStateHide');
-
-const configurationInitial = {
-  'copy-table': {
-    name: 'Copiar Tabla',
-    hide: false,
-  },
-  'insert-item': {
-    name: 'Insertar Item',
-    hide: true,
-  },
-  'insert-row': {
-    name: 'Insertar Fila',
-    hide: true,
-  },
-  'copy-item': {
-    name: 'Copiar Item',
-    hide: true,
-  },
-  'counter-row': {
-    name: 'Contar Filas',
-    hide: false,
-  },
-};
-
-const configurationElementHide = JSON.parse(storedState ?? '{}') ?? configurationInitial;
+const configurationElementHide = getValueLocalStorage();
 
 const validateProperty = (value: string, property: string) => {
   const config = configurationElementHide[value];
@@ -123,7 +100,7 @@ const buttons = /*html*/ `
 
     <div class="container-group">
      <button 
-        id="copy-table"
+        id=${hideElementsIds.copyTable}
         class="copy-table ${validateProperty('copy-table', 'className')}" 
         data-id="item-location"
         aria-label="Item y Location" 
@@ -131,7 +108,8 @@ const buttons = /*html*/ `
         <i class="far fa-copy"></i> Copiar Tabla
       </button>
 
-      <button id='insertItemModal' 
+      <button 
+        id=${hideElementsIds.insertItem}
         class="insert-item ${validateProperty('insert-item', 'className')}"
         data-id="item-sql" 
         aria-label="Insertar Item" 
@@ -139,8 +117,9 @@ const buttons = /*html*/ `
           <i class="far fa-plus"></i>
       </button>
 
-      <button id='insertRow' 
-        class="insert-item ${validateProperty('insert-row', 'className')}"
+      <button 
+        id=${hideElementsIds.insertRow}
+        class="insert-row ${validateProperty('insert-row', 'className')}"
         data-id="insert-row" 
         aria-label="Insertar Fila" 
         data-balloon-pos="up">
@@ -149,7 +128,8 @@ const buttons = /*html*/ `
       
       <div class="tooltip-container">
 
-      <button id='copy-items' 
+      <button 
+        id=${hideElementsIds.copyItems}
         class="copy-item ${validateProperty('copy-item', 'className')}" 
         data-id="item-sql"
         >
@@ -201,7 +181,7 @@ const buttons = /*html*/ `
         </div>
       </div>
 
-      <span id="rowCounter" class="row-counter ${validateProperty('counter-row', 'className')}">Filas: 0</span>
+      <span id=${hideElementsIds.counterRow} class="row-counter ${validateProperty('counter-row', 'className')}">Filas: 0</span>
     </div>
   `;
 
