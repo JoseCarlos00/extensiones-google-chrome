@@ -30,7 +30,7 @@ export class ModalHandler {
 		this.tableContent = document.querySelector(`${this.prefix} #tableContent`);
 		this.listPaneDataGridPopover = document.querySelector(`${this.prefix} #ListPaneDataGrid_popover`);
 
-		this.btnCopySentenceSql = document.querySelector(`${this.prefix} #copy-items`);
+		this.btnCopySentenceSql = document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`);
 
 		if (!this.tbodyTable) {
 			throw new Error('No se encontró el elemento #ListPaneDataGrid tbody');
@@ -52,7 +52,7 @@ export class ModalHandler {
 		});
 	}
 
-	private isTableEmptyOrSingleRow(): Promise<boolean> {
+	public isTableEmptyOrSingleRow = (): Promise<boolean> => {
 		return new Promise((resolve) => {
 			const firstRow = this.tableContent?.querySelector('td');
 			const txt = firstRow ? firstRow?.textContent?.trim()?.toLowerCase() : '';
@@ -65,7 +65,7 @@ export class ModalHandler {
 
 			resolve(false);
 		});
-	}
+	};
 
 	private focusFirstInput() {
 		const firstInput = this.tableContent?.querySelector('input.input-text') as HTMLInputElement | null;
@@ -239,7 +239,7 @@ export class ModalHandler {
 		});
 	}
 
-	async setModalElement(modal: HTMLElement | null) {
+	async setModalElement(modal: HTMLElement | null): Promise<void> {
 		try {
 			if (!modal) {
 				throw new Error('No se encontró el modal para abrir');
@@ -265,16 +265,8 @@ export class ModalHandler {
 		}
 	}
 
-	updateRowCounter() {
+	public updateRowCounter = (): void => {
 		const contador = document.querySelector(`${this.prefix} #${hideElementsIds.counterRow}`);
-
-		console.log('contador', contador);
-		console.log('hideElementsIds.counterRow', hideElementsIds.counterRow);
-		console.log('this.prefix', this.prefix);
-		console.log('Selector final:', `${this.prefix} #${hideElementsIds.counterRow}`);
-		
-		
-		
 
 		if (!contador) {
 			console.error('El elemento contador no se encuentra en el DOM.');
@@ -290,12 +282,12 @@ export class ModalHandler {
 
 		// Actualizar el texto del contador con el número de filas
 		contador.textContent = `Filas: ${rows.length}`;
-	}
+	};
 
 	async handleOpenModal() {
 		try {
 			if (this.tableHandler) {
-				this.tableHandler.insertTbody();
+				await this.tableHandler.insertTbody();
 			}
 
 			await this.openModal();
@@ -306,4 +298,3 @@ export class ModalHandler {
 		}
 	}
 }
-
