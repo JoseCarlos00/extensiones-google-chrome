@@ -44,14 +44,26 @@ export class HandlerHideElements {
 		}
 
 		btnHideElement.addEventListener('click', (e) => {
+			const prevClass = this.ListPanelHiddenMenu?.classList.contains('hidden');
+
 			// 1. Notificamos a todos los demás popups que se cierren.
 			document.dispatchEvent(new CustomEvent('close-popups'));
 			e.stopPropagation();
 			// 2. Abrimos/cerramos nuestro propio popup.
-			this.ListPanelHiddenMenu?.classList.toggle('hidden');
+		
+			console.log('Click en #btnHideElement', 'prevClass:', prevClass);
+
+			// hidden = Closed
+			// not hidden = Open
+			if (prevClass) {
+				this.open();
+			} else {
+				this.close();
+			}
+			
 		});
 
-		const eventManager = new EventManagerHideElement({ ListPanelHiddenMenu: this.ListPanelHiddenMenu, prefix: this.prefix });
+		const eventManager = new EventManagerHideElement({ prefix: this.prefix });
 		
 		ulList.addEventListener('click', (e) => {
 			e.stopPropagation();
@@ -59,8 +71,11 @@ export class HandlerHideElements {
 		});
 	}
 
+	private open() {
+		this.ListPanelHiddenMenu?.classList.remove('hidden');
+	}
+
 	private close() {
-		console.log('[HandlerHideElements] close');
 		this.ListPanelHiddenMenu?.classList.add('hidden');
 	}
 }

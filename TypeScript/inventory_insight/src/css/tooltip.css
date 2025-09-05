@@ -27,8 +27,8 @@
   opacity: 1;
   visibility: visible;
   visibility: hidden;
-  transition: opacity 0.1 cubic-bezier(0.68, -0.55, 0.265, 1.55),
-    transform 0.1 cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0.1 ease;
+  transition: opacity 0.05 cubic-bezier(0.68, -0.55, 0.265, 1.55),
+    transform 0.05 cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0.05 ease;
   z-index: 100;
   pointer-events: auto;
   pointer-events: none;

@@ -32,7 +32,6 @@ export function saveHideElementConfig(configurationObject: ConfigurationHide) {
 // --- Event Manager ---
 
 interface EventManagerHideElementConstructor {
-	ListPanelHiddenMenu: HTMLElement;
 	prefix: string;
 }
 
@@ -42,13 +41,11 @@ interface EventManagerHideElementConstructor {
  */
 export class EventManagerHideElement {
 	private readonly prefix: string;
-	private readonly listPanel: HTMLElement;
 	private readonly config: ConfigurationHide;
 	private readonly elementsMap: Record<string, HTMLElement | null>;
 
-	constructor({ ListPanelHiddenMenu, prefix }: EventManagerHideElementConstructor) {
+	constructor({ prefix }: EventManagerHideElementConstructor) {
 		this.prefix = prefix;
-		this.listPanel = ListPanelHiddenMenu;
 		this.config = getHideElementConfig();
 
 		// Cache the DOM elements that can be hidden/shown
@@ -94,9 +91,6 @@ export class EventManagerHideElement {
 	private handleMenuItemClick(menuItem: HTMLLIElement) {
 		const { hide: elementKey } = menuItem.dataset;
 		const icon = menuItem.querySelector<HTMLElement>('.ui-icon');
-
-		// Ensure the popup closes after a selection is made.
-		this.listPanel.classList.add('hidden');
 
 		if (!elementKey || !icon) {
 			console.warn('Clicked menu item is missing "data-hide" attribute or an icon.', menuItem);

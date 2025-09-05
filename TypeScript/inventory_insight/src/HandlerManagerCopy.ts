@@ -48,11 +48,21 @@ export class HandlerManagerCopy {
 	 */
 	private setupTriggerButtonListener(): void {
 		this.triggerButton?.addEventListener('click', (e) => {
+			const prevClass = this.triggerButton?.classList.contains('active');
+
 			// 1. Notify other popups to close.
 			document.dispatchEvent(new CustomEvent('close-popups'));
 			e.stopPropagation();
 			// 2. Toggle our own popup.
-			this.triggerButton?.classList.toggle('active');
+			
+
+			// not active = Closed
+			// active = Open
+			if (prevClass) {
+				this.close();
+			} else {
+				this.open();
+			}
 		});
 	}
 
@@ -81,6 +91,11 @@ export class HandlerManagerCopy {
 			}
 		});
 	}
+
+	private open() {
+		this.triggerButton?.classList.add('active');
+	}
+
 
 	/**
 	 * Closes the SQL popup by removing the 'active' class.
