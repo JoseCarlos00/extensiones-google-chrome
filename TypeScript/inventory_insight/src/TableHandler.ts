@@ -1,4 +1,6 @@
-import { EventManagerKeyDown } from "./EventManagerKeydown.ts"
+import { EventManagerKeyDown } from './EventManagerKeydown.ts';
+
+type CellType = 'ITEM' | 'LOCATION' | 'ITEM_DESC';
 
 interface TableHandlerParams {
 	tbodyTable: HTMLTableSectionElement;
@@ -10,8 +12,8 @@ interface TableHandlerParams {
 export class TableHandler {
 	private tbodyTable: HTMLTableSectionElement;
 	private tableContent: HTMLTableElement;
-	private updateRowCounter: () => void;
-	isTableEmptyOrSingleRow: () => Promise<boolean>;
+	private readonly updateRowCounter: () => void;
+	public readonly isTableEmptyOrSingleRow: () => Promise<boolean>;
 
 	constructor({ tbodyTable, tableContent, updateRowCounter, isTableEmptyOrSingleRow }: TableHandlerParams) {
 		this.tbodyTable = tbodyTable;
@@ -20,106 +22,101 @@ export class TableHandler {
 		this.isTableEmptyOrSingleRow = isTableEmptyOrSingleRow;
 	}
 
-	private async createTbody() {
-		try {
-			if (!this.tbodyTable) {
-				throw new Error('No se encontró el elemento <tbody>');
-			}
+	/**
+	 * Creates a single table cell (`<td>`) with a pre-configured `<input>`.
+	 * @param type - The type of cell to create, determines its attributes.
+	 * @param value - The initial value for the input field.
+	 * @returns The created `HTMLTableCellElement`.
+	 */
+	private createCell(type: CellType, value = ''): HTMLTableCellElement {
+		const td = document.createElement('td');
+		const input = document.createElement('input');
+		const ariaDescribedby = `ListPaneDataGrid_${type}`;
 
-			const rows = Array.from(this.tbodyTable.rows);
+		td.setAttribute('aria-describedby', ariaDescribedby);
+		input.value = value.trim();
+		input.classList.add('input-text');
 
-			// Create new tbody
-			const newTbody = document.createElement('tbody');
+		if (type === 'ITEM_DESC') {
+			input.classList.add('exclude');
+			input.tabIndex = -1;
+			td.appendChild(input);
 
-			if (rows.length === 0) {
-				newTbody.innerHTML = '<tr><td colspan="3">No hay datos para mostrar <div class="delete-row"></div></td></tr>';
-				return newTbody;
-			}
-
-			rows.forEach((row) => {
-				const fila = row.childNodes as NodeListOf<HTMLTableCellElement>;
-				const tr: HTMLTableRowElement = document.createElement('tr');
-
-				fila.forEach((td: HTMLTableCellElement) => {
-					const ariadescribedby = td.getAttribute('aria-describedby');
-
-					if (ariadescribedby === 'ListPaneDataGrid_ITEM') {
-						const tdItem = document.createElement('td');
-						tdItem.innerHTML = `<input value="${td.textContent} "tabindex="0" class="input-text">`;
-						tdItem.setAttribute('aria-describedby', ariadescribedby);
-						tr.prepend(tdItem);
-					}
-
-					if (ariadescribedby === 'ListPaneDataGrid_LOCATION') {
-						const tdLoc = document.createElement('td');
-						tdLoc.innerHTML = `<input value="${td.textContent} "tabindex="0" class="input-text">`;
-						tdLoc.setAttribute('aria-describedby', ariadescribedby);
-						tr.appendChild(tdLoc);
-					}
-
-					if (ariadescribedby === 'ListPaneDataGrid_ITEM_DESC') {
-						const tdItemDesc = document.createElement('td');
-
-						tdItemDesc.innerHTML = `<input value="${td.textContent} "class="input-text exclude" tabindex="-1">`;
-						tdItemDesc.setAttribute('aria-describedby', ariadescribedby);
-
-						const divDelete = document.createElement('div');
-						divDelete.className = 'delete-row';
-
-						tdItemDesc.appendChild(divDelete);
-
-						tr.appendChild(tdItemDesc);
-					}
-				});
-
-				newTbody.appendChild(tr);
-			});
-
-			return newTbody;
-		} catch (error) {
-			console.error(`Error: [createTbody] Ha Ocurrido un error al crear el new <tbody>: ${error}`);
+			const deleteDiv = document.createElement('div');
+			deleteDiv.className = 'delete-row';
+			td.appendChild(deleteDiv);
+		} else {
+			input.tabIndex = 0;
+			td.appendChild(input);
 		}
+
+		return td;
 	}
 
-	private async createNewRow() {
+	/**
+	 * Creates a new `<tbody>` element by parsing the data from the source table.
+	 * @returns A new `HTMLTableSectionElement` populated with data.
+	 */
+	private createTbodyFromSource(): HTMLTableSectionElement {
+		const newTbody = document.createElement('tbody');
+		const sourceRows = Array.from(this.tbodyTable.rows);
+
+		if (sourceRows.length === 0) {
+			const tr = newTbody.insertRow();
+			const td = tr.insertCell();
+			td.colSpan = 3;
+			td.textContent = 'No hay datos para mostrar';
+			const deleteDiv = document.createElement('div');
+			deleteDiv.className = 'delete-row';
+			td.appendChild(deleteDiv);
+			return newTbody;
+		}
+
+		for (const sourceRow of sourceRows) {
+			const newTr = document.createElement('tr');
+			const cells = Array.from(sourceRow.cells);
+
+			const getCellContent = (aria: string): string => {
+				return cells.find((c) => c.getAttribute('aria-describedby') === aria)?.textContent ?? '';
+			};
+
+			const itemValue = getCellContent('ListPaneDataGrid_ITEM');
+			const locationValue = getCellContent('ListPaneDataGrid_LOCATION');
+			const descValue = getCellContent('ListPaneDataGrid_ITEM_DESC');
+
+			newTr.append(this.createCell('ITEM', itemValue), this.createCell('LOCATION', locationValue), this.createCell('ITEM_DESC', descValue));
+
+			newTbody.appendChild(newTr);
+		}
+
+		return newTbody;
+	}
+
+	/**
+	 * Creates a new, empty table row (`<tr>`) element.
+	 * @returns The created `HTMLTableRowElement`.
+	 */
+	private createRowElement(): HTMLTableRowElement {
 		const tr = document.createElement('tr');
-
-		const tdItem = document.createElement('td');
-		tdItem.innerHTML = `<input value="" tabindex="0" class="input-text">`;
-		tdItem.setAttribute('aria-describedby', 'ListPaneDataGrid_ITEM');
-		tr.prepend(tdItem);
-
-		const tdLoc = document.createElement('td');
-		tdLoc.innerHTML = `<input value="" tabindex="0" class="input-text">`;
-		tdLoc.setAttribute('aria-describedby', 'ListPaneDataGrid_LOCATION');
-		tr.appendChild(tdLoc);
-
-		const tdItemDesc = document.createElement('td');
-		tdItemDesc.innerHTML = `<input value="" class="input-text exclude" tabindex="-1">`;
-		tdItemDesc.setAttribute('aria-describedby', 'ListPaneDataGrid_ITEM_DESC');
-
-		const divDelete = document.createElement('div');
-		divDelete.className = 'delete-row';
-		tdItemDesc.appendChild(divDelete);
-
-		tr.appendChild(tdItemDesc);
-
+		tr.append(this.createCell('ITEM'), this.createCell('LOCATION'), this.createCell('ITEM_DESC'));
 		return tr;
 	}
 
-	// Llamado desde ModalHandler ⬇️
-	async insertNewRow() {
+	/**
+	 * Inserts a new, empty row into the modal's table.
+	 * It handles cleaning up the "no data" message if the table was empty.
+	 */
+	public async insertNewRow() {
 		try {
-			const tbodyExist = this.tableContent.querySelector('tbody');
-			const newRow = await this.createNewRow();
+			let tbody = this.tableContent.querySelector('tbody');
+			const newRow = this.createRowElement();
 
-			if (tbodyExist) {
-				await this.isTableEmptyOrSingleRow();
-				tbodyExist.appendChild(newRow);
+			if (tbody) {
+				tbody.appendChild(newRow);
 			} else {
-				const newTbody = document.createElement('tbody');
-				newTbody.appendChild(newRow);
-				this.tableContent.appendChild(newTbody);
+				tbody = document.createElement('tbody');
+				tbody.appendChild(newRow);
+				this.tableContent.appendChild(tbody);
 			}
 
 			this.updateRowCounter();
@@ -128,16 +125,15 @@ export class TableHandler {
 		}
 	}
 
-	async insertTbody() {
+	/**
+	 * Replaces the content of the modal's table with fresh data from the source table.
+	 */
+	public async insertTbody() {
 		try {
-			const newTbody = await this.createTbody();
+			const newTbody = this.createTbodyFromSource();
 
-			const tbodyExist = this.tableContent.querySelector('tbody');
-			tbodyExist && tbodyExist.remove();
-
-			if (newTbody && this.tableContent) {
-				this.tableContent.appendChild(newTbody);
-			}
+			this.tableContent.querySelector('tbody')?.remove();
+			this.tableContent.appendChild(newTbody);
 
 			this.updateRowCounter();
 		} catch (error) {
@@ -145,7 +141,10 @@ export class TableHandler {
 		}
 	}
 
-	setEventKeydownForTableContent() {
+	/**
+	 * Sets up the keydown event listener for table navigation (arrow keys).
+	 */
+	public setEventKeydownForTableContent() {
 		try {
 			if (!this.tableContent) {
 				console.warn('No se encontró el elemento #table-content');

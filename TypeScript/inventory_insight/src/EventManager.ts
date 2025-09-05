@@ -8,86 +8,94 @@ interface EventManagerProps {
 
 export class EventManager {
 	private readonly tableContent: HTMLTableElement | null;
-	private readonly uiIggridIndicator: UiIggridIndicator;
 	private readonly updateRowCounter: () => void;
 
 	constructor({ updateRowCounter, tableContent }: EventManagerProps) {
 		this.tableContent = tableContent;
-		this.uiIggridIndicator = new UiIggridIndicator();
 		this.updateRowCounter = updateRowCounter;
 	}
 
-	handleEvent({ ev }: { ev: MouseEvent }) {
-		const { target, type } = ev;
+	public handleEvent({ ev }: { ev: MouseEvent }): void {
+		const { target } = ev;
 
 		if (!(target instanceof HTMLElement)) {
-			throw new Error('El target del evento no es un elemento HTML válido');
+			console.warn('EventManager: El target del evento no es un elemento HTML válido.');
+			return;
 		}
 
 		if (!this.tableContent) {
-			throw new Error('Elementos necesarios no están inicializados');
+			console.error('EventManager: tableContent no está inicializado.');
+			return;
 		}
 
-		const { nodeName } = target;
-
-
-		if (type === 'click') {
-			this.handleClick(target, nodeName);
-		}
+		this.handleClick(target);
 	}
 
-	private handleClick(target: HTMLElement, nodeName: string) {
-		const { classList } = target;
-
-		if (classList.contains('delete-row')) {
+	private handleClick(target: HTMLElement): void {
+		// 1. Check for delete row action
+		if (target.classList.contains('delete-row')) {
 			this.deleteRow(target);
-		} else if (classList.contains('ui-iggrid-headertext')) {
-			const th = target.closest('th');
-			this.handleSortTable(th);
+			return;
 		}
 
-		if (nodeName === 'INPUT' && (target as HTMLInputElement).type === 'text') {
+		// 2. Check for sort table action
+		const headerCell = target.closest('th');
+		if (headerCell) {
+			this.handleSortTable(headerCell);
+			return;
+		}
+
+		// 3. Check for input focus action
+		if (target.matches('input.input-text')) {
 			const input = target as HTMLInputElement;
 			input.focus();
 			input.select();
-		} else if (nodeName === 'TH') {
-			this.handleSortTable(target);
 		}
 	}
 
-	private async handleSortTable(element: HTMLElement | null) {
-		if (!element) {
-			throw new Error('No se encontró el elemento <th> para ordenar la tabla');
+	private handleSortTable(clickedHeader: HTMLElement): void {
+		if (!this.tableContent) {
+			console.error('handleSortTable: tableContent no está inicializado.');
+			return;
 		}
 
-		const { classList, dataset } = element;
+		// --- Cleanup other headers ---
+		const allHeaders = this.tableContent.querySelectorAll('thead th');
+		
+		allHeaders.forEach((header) => {
+			if (header !== clickedHeader) {
+				header.classList.remove('ui-iggrid-colheaderasc', 'ui-iggrid-colheaderdesc');
+				header.setAttribute('title', 'haga clic para ordenar la columna');
+			}
+		});
 
+		UiIggridIndicator.deleteAllIndicators();
+		// --- End cleanup ---
+
+		const { classList, dataset } = clickedHeader;
 		const columnIndex = parseInt(dataset.columnIndex || '', 10);
 
 		if (isNaN(columnIndex)) {
-			throw new Error('Atributo "data-column-index" no encontrado en el elemento <th>');
+			console.error('Atributo "data-column-index" no encontrado o no es un número en el elemento <th>');
+			return;
 		}
 
-		this.uiIggridIndicator.setElementSelected(element);
-
-		const sortOrder = classList.contains('ui-iggrid-colheaderasc') ? 'desc' : 'asc';
+		const sortOrder = (classList.contains('ui-iggrid-colheaderasc') ? 'desc' : 'asc') as 'asc' | 'desc';
 
 		classList.toggle('ui-iggrid-colheaderasc', sortOrder === 'asc');
 		classList.toggle('ui-iggrid-colheaderdesc', sortOrder === 'desc');
 
-		this.uiIggridIndicator.showIndicator(sortOrder);
+		UiIggridIndicator.showIndicator(clickedHeader, sortOrder);
 		sortTable({ columnIndex, table: this.tableContent, sortOrder });
 	}
 
-	private deleteRow(element: HTMLElement | null) {
-		if (!element) {
-			throw new Error('No se encontró el elemento para eliminar la fila');
-		}
-
+	private deleteRow(element: HTMLElement): void {
 		const trSelected = element.closest('tr');
 		if (trSelected) {
 			trSelected.remove();
 			this.updateRowCounter();
+		} else {
+			console.warn('deleteRow: no se pudo encontrar el elemento <tr> padre para eliminar.');
 		}
 	}
 }

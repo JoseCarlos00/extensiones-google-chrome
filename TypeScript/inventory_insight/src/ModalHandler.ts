@@ -57,7 +57,7 @@ export class ModalHandler {
 			}
 
 			this.openModal();
-			UiIggridIndicator.deleteAllIndicator();
+			UiIggridIndicator.deleteAllIndicators();
 			this.focusFirstInput();
 		} catch (error) {
 			console.error(`[ModalHandler] Error in handleOpenModal: ${error}`);

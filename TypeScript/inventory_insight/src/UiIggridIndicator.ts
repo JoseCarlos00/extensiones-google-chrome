@@ -1,99 +1,44 @@
 export class UiIggridIndicator {
-  private indicator: HTMLElement | null;
-  private elementSelected: HTMLElement | null;
+	private static readonly SORT_ORDER_CONTENT = {
+		asc: '<span class="ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span>',
+		desc: '<span class="ui-iggrid-colindicator-desc ui-icon ui-icon-arrowthick-1-s"></span>',
+	};
 
-  constructor() {
-    this.indicator = null;
-    this.elementSelected = null;
-  }
+	private static readonly SORT_ORDER_TITLES = {
+		asc: 'ordenado ascendente',
+		desc: 'ordenado descendente',
+	};
 
-  private validateElement(element : HTMLElement | null) {
-    if (!element) {
-      throw new Error('El elemento proporcionado es nulo o indefinido.');
-    }
-  }
+	public static showIndicator(element: HTMLElement, sortOrder: 'asc' | 'desc'): void {
+		if (!element) {
+			console.error('[UiIggridIndicator.showIndicator] El elemento proporcionado es nulo.');
+			return;
+		}
 
-  setElementSelected(element : HTMLElement | null) {
-    this.validateElement(element);
-    this.elementSelected = element;
-    this.setContainerIndicator();
-  }
+		const indicatorContainer = element.querySelector<HTMLElement>('.ui-iggrid-indicatorcontainer');
+		if (!indicatorContainer) {
+			console.error(
+				'[UiIggridIndicator.showIndicator] No se encontró el contenedor del indicador en el elemento.',
+				element
+			);
+			return;
+		}
 
-  private setContainerIndicator() {
-    if (!this.elementSelected) {
-      throw new Error('No se ha seleccionado un elemento. Llama a setElementSelected primero.');
-    }
+		// Set title on the parent header element
+		element.setAttribute('title', this.SORT_ORDER_TITLES[sortOrder]);
 
-    this.indicator = this.elementSelected.querySelector('.ui-iggrid-indicatorcontainer');
-    if (!this.indicator) {
-      throw new Error('No se encontró el contenedor del indicador en el elemento seleccionado.');
-    }
-  }
+		// Set indicator content
+		indicatorContainer.innerHTML = this.SORT_ORDER_CONTENT[sortOrder];
+	}
 
-  private setContentIndicator(sortOrder : string) {
-    if (!this.indicator) {
-      throw new Error(
-        'El contenedor del indicador no está definido. Llama a setContainerIndicator primero.'
-      );
-    }
-
-    const sortOrderContent = {
-      asc: '<span class="ui-iggrid-colindicator-asc ui-icon ui-icon-arrowthick-1-n"></span>',
-      desc: '<span class="ui-iggrid-colindicator-desc ui-icon ui-icon-arrowthick-1-s"></span>',
-    };
-
-    const content = sortOrderContent[sortOrder as keyof typeof sortOrderContent];
-    if (!content) {
-      throw new Error(`El valor de sortOrder proporcionado (${sortOrder}) no es válido.`);
-    }
-
-    this.indicator.innerHTML = content;
-  }
-
-  private setAttributeTitle(sortOrder : string) {
-    if (!this.elementSelected) {
-      throw new Error('No se ha seleccionado un elemento. Llama a setElementSelected primero.');
-    }
-
-    const sortOrderTitles = {
-      asc: 'ordenado ascendente',
-      desc: 'ordenado descendente',
-    };
-
-    const title = sortOrderTitles[sortOrder as keyof typeof sortOrderTitles];
-    if (!title) {
-      throw new Error(`El valor de sortOrder proporcionado (${sortOrder}) no es válido.`);
-    }
-
-    this.elementSelected.setAttribute('title', title);
-  }
-
-  showIndicator(sortOrder : string) {
-    try {
-      this.setAttributeTitle(sortOrder);
-      this.setContentIndicator(sortOrder);
-    } catch (error) {
-      console.error(
-        'Error: [showIndicator] Ha ocurrido un error al mostrar el indicador de ordenamiento:',
-        error
-      );
-    }
-  }
-
-  static deleteAllIndicator() {
-    const uiIndicators = Array.from(
-      document.querySelectorAll(
-        '#myModalShowTable #tableContent thead th .ui-iggrid-indicatorcontainer span'
-      )
-    );
-
-    if (uiIndicators.length === 0) {
-      console.warn('No se encontraron elemento indicadores .ui-iggrid-indicatorcontainer span');
-      return;
-    }
-
-    uiIndicators.forEach(item => {
-      item.remove();
-    });
-  }
+	/**
+	 * Deletes all sorting indicators from the table headers.
+	 */
+	public static deleteAllIndicators(): void {
+		const indicators = document.querySelectorAll(
+			'#myModalShowTable #tableContent .ui-iggrid-indicatorcontainer span'
+		);
+		
+		indicators.forEach((indicator) => indicator.remove());
+	}
 }
