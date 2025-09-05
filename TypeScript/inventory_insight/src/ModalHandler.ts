@@ -1,7 +1,6 @@
-import { EventManager } from './EventManager';
 import { HandlerHideElements } from './HandlerHideElements';
 import { HandlerManagerCopy } from './HandlerManagerCopy';
-import { TableHandler } from './TableHandler';
+import { HandlerTableManager } from './HandlerTableManager';
 import { UiIggridIndicator } from './UiIggridIndicator';
 import { hideElementsIds } from './constants';
 
@@ -19,8 +18,7 @@ export class ModalHandler {
 	private tableContent: HTMLTableElement | null = null;
 
 	// Handlers & Managers
-	private tableHandler: TableHandler | null = null;
-	private eventManager: EventManager | null = null;
+	private handlerTableManager: HandlerTableManager | null = null;
 	private handlerHideElements: HandlerHideElements | null = null;
 	private handlerManagerCopy: HandlerManagerCopy | null = null;
 
@@ -52,8 +50,8 @@ export class ModalHandler {
 	 */
 	public async handleOpenModal(): Promise<void> {
 		try {
-			if (this.tableHandler) {
-				await this.tableHandler.insertTbody();
+			if (this.handlerTableManager) {
+				await this.handlerTableManager.insertTbody();
 			}
 
 			this.openModal();
@@ -124,7 +122,7 @@ export class ModalHandler {
 			throw new Error('Cannot initialize handlers without table elements.');
 		}
 
-		this.tableHandler = new TableHandler({
+		this.handlerTableManager = new HandlerTableManager({
 			tableContent: this.tableContent,
 			tbodyTable: this.tbodyTable,
 			updateRowCounter: this.updateRowCounter,
@@ -141,21 +139,12 @@ export class ModalHandler {
 			prefix: this.prefix,
 		});
 
-		this.eventManager = new EventManager({
-			updateRowCounter: this.updateRowCounter,
-			tableContent: this.tableContent,
-		});
-
 		if (!this.handlerHideElements) {
 			throw new Error('Could not initialize HandlerHideElements.');
 		}
 		
 		if (!this.handlerManagerCopy) {
 			throw new Error('Could not initialize HandlerManagerCopy.');
-		}
-
-		if (!this.eventManager) {
-			throw new Error('Could not initialize EventManager.');
 		}
 	}
 
@@ -175,19 +164,11 @@ export class ModalHandler {
 			document.dispatchEvent(new CustomEvent('close-popups'));
 		});
 
-		// Clicks within the table (delete row, sort, etc.)
-		this.tableContent.addEventListener('click', (e) => {
-			this.eventManager?.handleEvent({ ev: e as MouseEvent });
-		});
-
-		// Keyboard navigation within the table
-		this.tableHandler?.setEventKeydownForTableContent();
-
 		// Button to insert a new row
 		const btnInsertRow = document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`);
 		btnInsertRow?.addEventListener('click', (e) => {
 			e.stopPropagation();
-			this.tableHandler?.insertNewRow();
+			this.handlerTableManager?.insertNewRow();
 		});
 	}
 

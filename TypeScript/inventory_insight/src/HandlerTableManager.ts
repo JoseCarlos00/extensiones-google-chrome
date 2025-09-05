@@ -1,25 +1,54 @@
 import { EventManagerKeyDown } from './EventManagerKeydown.ts';
+import { EventManager } from './EventManager.ts';
 
 type CellType = 'ITEM' | 'LOCATION' | 'ITEM_DESC';
 
-interface TableHandlerParams {
+interface HandlerTableManagerParams {
 	tbodyTable: HTMLTableSectionElement;
 	tableContent: HTMLTableElement;
 	updateRowCounter: () => void;
 	isTableEmptyOrSingleRow: () => Promise<boolean>;
 }
 
-export class TableHandler {
+export class HandlerTableManager {
 	private tbodyTable: HTMLTableSectionElement;
 	private tableContent: HTMLTableElement;
 	private readonly updateRowCounter: () => void;
 	public readonly isTableEmptyOrSingleRow: () => Promise<boolean>;
 
-	constructor({ tbodyTable, tableContent, updateRowCounter, isTableEmptyOrSingleRow }: TableHandlerParams) {
+	private eventManager: EventManager | null = null;
+
+	constructor({ tbodyTable, tableContent, updateRowCounter, isTableEmptyOrSingleRow }: HandlerTableManagerParams) {
 		this.tbodyTable = tbodyTable;
 		this.tableContent = tableContent;
 		this.updateRowCounter = updateRowCounter;
 		this.isTableEmptyOrSingleRow = isTableEmptyOrSingleRow;
+
+		this.eventManager = new EventManager({
+			updateRowCounter: this.updateRowCounter,
+			tableContent: this.tableContent,
+		});
+	}
+
+	initialize() {
+		try {
+			if (!this.eventManager) {
+				throw new Error('Could not initialize EventManager.');
+			}
+
+			this.setEventListener();
+		} catch (error) {
+			console.error(`[TableHandler] Error during initialization: ${error}`);
+		}
+	}
+
+	setEventListener() {
+		this.setEventKeydownForTableContent();
+
+		// Clicks within the table (delete row, sort, etc.)
+		this.tableContent.addEventListener('click', (e) => {
+			this.eventManager?.handleEvent({ ev: e as MouseEvent });
+		});
 	}
 
 	/**
@@ -84,7 +113,11 @@ export class TableHandler {
 			const locationValue = getCellContent('ListPaneDataGrid_LOCATION');
 			const descValue = getCellContent('ListPaneDataGrid_ITEM_DESC');
 
-			newTr.append(this.createCell('ITEM', itemValue), this.createCell('LOCATION', locationValue), this.createCell('ITEM_DESC', descValue));
+			newTr.append(
+				this.createCell('ITEM', itemValue),
+				this.createCell('LOCATION', locationValue),
+				this.createCell('ITEM_DESC', descValue)
+			);
 
 			newTbody.appendChild(newTr);
 		}
@@ -100,6 +133,21 @@ export class TableHandler {
 		const tr = document.createElement('tr');
 		tr.append(this.createCell('ITEM'), this.createCell('LOCATION'), this.createCell('ITEM_DESC'));
 		return tr;
+	}
+
+	private setEventKeydownForTableContent() {
+		try {
+			if (!this.tableContent) {
+				console.warn('No se encontró el elemento #table-content');
+				return;
+			}
+
+			const eventManager = new EventManagerKeyDown();
+
+			this.tableContent.addEventListener('keydown', (e) => eventManager.handleEvent({ ev: e }));
+		} catch (error) {
+			console.warn('Error: Ha ocurrido un error al crear el Evento Keydown en #tableContent: ', error);
+		}
 	}
 
 	/**
@@ -138,24 +186,6 @@ export class TableHandler {
 			this.updateRowCounter();
 		} catch (error) {
 			console.error('Error: [insertTbody] Ha Ocurrido un error al insertar el new <tbody>:', error);
-		}
-	}
-
-	/**
-	 * Sets up the keydown event listener for table navigation (arrow keys).
-	 */
-	public setEventKeydownForTableContent() {
-		try {
-			if (!this.tableContent) {
-				console.warn('No se encontró el elemento #table-content');
-				return;
-			}
-
-			const eventManager = new EventManagerKeyDown();
-
-			this.tableContent.addEventListener('keydown', (e) => eventManager.handleEvent({ ev: e }));
-		} catch (error) {
-			console.warn('Error: Ha ocurrido un error al crear el Evento Keydown en #tableContent: ', error);
 		}
 	}
 }
