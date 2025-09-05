@@ -88,7 +88,7 @@ export class ModalHandler {
 	public isTableEmptyOrSingleRow = (): Promise<boolean> => {
 		return new Promise((resolve) => {
 			const firstCell = this.tableContent?.querySelector('td');
-			const cellText = firstCell?.textContent?.trim().toLowerCase() ?? '';
+			const cellText = firstCell?.textContent?.trim()?.toLowerCase() ?? '';
 
 			if (!firstCell || cellText.includes('no hay datos')) {
 				firstCell?.parentElement?.remove();
@@ -139,6 +139,10 @@ export class ModalHandler {
 			prefix: this.prefix,
 		});
 
+		if (!this.handlerTableManager) {
+			throw new Error('Could not initialize HandlerTableManager.');
+		}
+
 		if (!this.handlerHideElements) {
 			throw new Error('Could not initialize HandlerHideElements.');
 		}
@@ -160,14 +164,12 @@ export class ModalHandler {
 		// Specific components (like popup triggers) should use e.stopPropagation()
 		// to prevent this from firing.
 		this.modal.addEventListener('click', () => {
-			console.log('[ModalHandler] Click inside modal detected, dispatching close-popups.');
 			document.dispatchEvent(new CustomEvent('close-popups'));
 		});
 
 		// Button to insert a new row
 		const btnInsertRow = document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`);
-		btnInsertRow?.addEventListener('click', (e) => {
-			e.stopPropagation();
+		btnInsertRow?.addEventListener('click', () => {
 			this.handlerTableManager?.insertNewRow();
 		});
 	}

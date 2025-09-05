@@ -28,6 +28,8 @@ export class HandlerTableManager {
 			updateRowCounter: this.updateRowCounter,
 			tableContent: this.tableContent,
 		});
+
+		this.initialize();
 	}
 
 	initialize() {

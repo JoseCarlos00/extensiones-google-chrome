@@ -1,11 +1,5 @@
-export function sortTable({
-	columnIndex,
-	table,
-	sortOrder = 'asc',
-}: {
-	columnIndex: number;
-	table: HTMLTableElement | null;
-	sortOrder?: 'asc' | 'desc';
+export function sortTable({ columnIndex, table, sortOrder = 'asc' }: {
+	columnIndex: number; table: HTMLTableElement | null; sortOrder?: 'asc' | 'desc';
 }) {
 	if (!table) {
 		throw new Error('La tabla proporcionada es nula');
@@ -44,12 +38,9 @@ export function sortTable({
 			comparison = 1; // b viene antes que a
 		} else {
 			// Ambas tienen o no tienen 'item-exist', ordenar por valor del input
-			const aValue = inputA?.value;
-			const bValue = inputB?.value;
-			// return aValue.localeCompare(bValue);
-      if (aValue === undefined && bValue === undefined) comparison = 0;
-      else if (aValue === undefined) comparison = -1;
-      else if (bValue === undefined) comparison = 1;
+			const aValue = inputA?.value ?? '';
+			const bValue = inputB?.value ?? '';
+			comparison = aValue.localeCompare(bValue);
 		}
 
 		// Si sortOrder es 'desc', invertir la comparación
