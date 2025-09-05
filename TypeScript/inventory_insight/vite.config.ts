@@ -7,7 +7,7 @@ export default defineConfig({
     rollupOptions: {
       input: { // Define los puntos de entrada para la compilación de la extensión.
         popup: resolve(__dirname, 'popup.html'),
-        content: resolve(__dirname, 'src/content.ts'),
+        main: resolve(__dirname, 'src/main.ts'),
         style: resolve(__dirname, 'src/css/style.css'),
       },
       output: {

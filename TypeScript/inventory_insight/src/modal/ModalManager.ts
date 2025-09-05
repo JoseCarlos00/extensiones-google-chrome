@@ -63,7 +63,7 @@ export class ModalManager {
 		await new Promise((resolve) => setTimeout(resolve, 50));
 	}
 
-	private async insertModal(): Promise<void> {
+	protected async insertModal(): Promise<void> {
 		const body = document.querySelector('body');
 
 		if (!body) {
