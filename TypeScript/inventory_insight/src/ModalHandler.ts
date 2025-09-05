@@ -1,6 +1,6 @@
 import { EventManager  } from "./EventManager"
-import { EventManagerCopy } from "./EventManagerCopy"
-import { HideElements } from './HideElements';
+import { HandlerHideElements } from './HandlerHideElements';
+import { HandlerManagerCopy } from "./HandlerManagerCopy"
 import  { TableHandler } from "./TableHandler"
 import { UiIggridIndicator } from "./UiIggridIndicator"
 import { hideElementsIds } from "./constants";
@@ -38,10 +38,6 @@ export class ModalHandler {
 
 		if (!this.tableContent) {
 			throw new Error('No se encontró el elemento #tableContent');
-		}
-
-		if (!this.ListPanelHiddenMenu) {
-			throw new Error('No se encontró el elemento #ListPaneDataGrid_popover');
 		}
 
 		this.tableHandler = new TableHandler({
@@ -82,47 +78,6 @@ export class ModalHandler {
 		this.modal && (this.modal.style.display = 'block');
 	}
 
-	private setEventsForCopyButtons() {
-		const copyTable = document.querySelector(`${this.prefix} #${hideElementsIds.copyTable}`);
-
-		const tooltipContainer = document.querySelector(`${this.prefix} .tooltip-container .tooltip-content`);
-
-		const eventManager = new EventManagerCopy({
-			list: this.ListPanelHiddenMenu,
-			tableContent: this.tableContent,
-			btnCopySentenceSql: this.btnCopySentenceSql,
-			isTableEmptyOrSingleRow: this.isTableEmptyOrSingleRow,
-		});
-
-		if (!eventManager) {
-			throw new Error('No se encontró el EventManager');
-		}
-
-		if (copyTable) {
-			copyTable.addEventListener('click', (e) => {
-				eventManager.handleEvent({ ev: e });
-			});
-		} else {
-			console.warn(`No se encontró el elemento #${hideElementsIds.copyTable}`);
-		}
-
-		if (tooltipContainer) {
-			tooltipContainer.addEventListener('click', (e) => {
-				const { target } = e;
-
-				if (!(target instanceof HTMLElement)) return;
-
-				const { nodeName } = target;
-
-				if (nodeName === 'BUTTON') {
-					eventManager.handleEvent({ ev: e });
-				}
-			});
-		} else {
-			console.warn('No se encontró el elemento .tooltip-container .tooltip-content');
-		}
-	}
-
 	private async setEventClickModalTable() {
 		try {
 			if (!this.tableContent) {
@@ -135,11 +90,6 @@ export class ModalHandler {
 				return;
 			}
 
-			if (!this.ListPanelHiddenMenu) {
-				console.warn('No se encontró el elemento #ListPaneDataGrid_popover');
-				return;
-			}
-
 			if (!this.modal) {
 				console.warn('No se encontró el elemento modal');
 				return;
@@ -148,8 +98,6 @@ export class ModalHandler {
 			const eventManager = new EventManager({
 				updateRowCounter: this.updateRowCounter,
 				tableContent: this.tableContent,
-				list: this.ListPanelHiddenMenu,
-				btnCopySentenceSql: this.btnCopySentenceSql,
 			});
 
 			this.tableContent.addEventListener('click', (e) => eventManager.handleEvent({ ev: e }));
@@ -184,12 +132,6 @@ export class ModalHandler {
 			}
 
 			this.btnCopySentenceSql.addEventListener('click', () => {
-				const isHide = this.ListPanelHiddenMenu?.classList?.contains('hidden');
-
-				if (!isHide) {
-					this.ListPanelHiddenMenu?.classList?.add('hidden');
-				}
-
 				this.btnCopySentenceSql?.classList?.toggle('active');
 			});
 
@@ -222,8 +164,6 @@ export class ModalHandler {
 
 		this.tableHandler?.setEventKeydownForTableContent();
 		
-		this.setEventsForCopyButtons();
-		// this.setEventHideElement();
 		this.setEventInsertRow();
 	}
 
@@ -240,12 +180,16 @@ export class ModalHandler {
 				throw new Error('No se encontró el TableHandler');
 			}
 
-			new HideElements({
+			new HandlerHideElements({
 				prefix: this.prefix,
 			});
 
-			console.log(this.ListPanelHiddenMenu);
-			
+			new HandlerManagerCopy({
+				tableContent: this.tableContent,
+				isTableEmptyOrSingleRow: this.isTableEmptyOrSingleRow,
+				prefix: this.prefix,
+			});
+
 
 			await this.setEventsListeners();
 		} catch (error) {

@@ -1,14 +1,14 @@
 import { EventManagerHideElement } from './EventManagerHideElement';
 
-interface HideElementsOptions {
+interface HandlerHideElementsOptions {
 	prefix: string;
 }
 
-export class HideElements {
+export class HandlerHideElements {
 	private prefix: string;
 	private ListPanelHiddenMenu: HTMLElement | null;
 
-	constructor({ prefix }: HideElementsOptions) {
+	constructor({ prefix }: HandlerHideElementsOptions) {
 		this.prefix = prefix;
 		this.ListPanelHiddenMenu = null;
 

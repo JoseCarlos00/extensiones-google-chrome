@@ -3,29 +3,23 @@ import { ToastAlert } from './utils/ToastAlert.ts';
 import { QueryBuilder } from './QueryBuilder.ts';
 
 interface EventManagerCopyConstructor {
-	list: HTMLElement | null;
 	tableContent: HTMLTableElement | null;
-	btnCopySentenceSql: HTMLButtonElement | null;
 	isTableEmptyOrSingleRow: () => Promise<boolean>;
 }
 
 export class EventManagerCopy {
-	private readonly _listPaneDataGridPopover: HTMLElement | null;
 	private readonly tableContent: HTMLTableElement | null;
 	private elementSelected: HTMLElement | null;
-	private readonly selector: { item: string; location: string };
-	private readonly btnCopySentenceSql: HTMLButtonElement | null;
 	private isTableEmptyOrSingleRow: () => Promise<boolean>;
 
-	constructor({ list, tableContent, btnCopySentenceSql, isTableEmptyOrSingleRow }: EventManagerCopyConstructor) {
-		this._listPaneDataGridPopover = list;
-		this.tableContent = tableContent;
+	private readonly selector = {
+		item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
+		location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
+	};
+
+	constructor({ tableContent, isTableEmptyOrSingleRow }: EventManagerCopyConstructor) {
 		this.elementSelected = null;
-		this.selector = {
-			item: "td[aria-describedby='ListPaneDataGrid_ITEM'] input",
-			location: "td[aria-describedby='ListPaneDataGrid_LOCATION'] input",
-		};
-		this.btnCopySentenceSql = btnCopySentenceSql;
+		this.tableContent = tableContent;
 		this.isTableEmptyOrSingleRow = isTableEmptyOrSingleRow;
 	}
 
@@ -46,21 +40,10 @@ export class EventManagerCopy {
 				this.elementSelected = element;
 			}
 
-			if (!this.elementSelected || !this._listPaneDataGridPopover || !this.btnCopySentenceSql) {
+			if (!this.elementSelected) {
 				throw new Error(
 					'Error: [handleEvent] No se encontró un elemento seleccionado, la lista de elementos o el botón'
 				);
-			}
-
-			const isActive = this.btnCopySentenceSql.classList.contains('active');
-			const isHide = this._listPaneDataGridPopover.classList.contains('hidden');
-
-			if (!isHide) {
-				this._listPaneDataGridPopover.classList.add('hidden');
-			}
-
-			if (isActive) {
-				this.btnCopySentenceSql.classList.remove('active');
 			}
 
 			this.handleOnClick();
