@@ -1,8 +1,8 @@
-import { getValueLocalStorage } from './EventManagerHideElement.ts'
+import { getHideElementConfig } from './EventManagerHideElement.ts';
 import { ModalCreateHTML } from './modal/ModaCreateHTML.ts';
 import { hideElementsIds } from './constants.ts';
 
-const configurationElementHide = getValueLocalStorage();
+const configurationElementHide = getHideElementConfig();
 
 const validateProperty = (value: string, property: string) => {
   const config = configurationElementHide[value];

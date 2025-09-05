@@ -44,13 +44,17 @@ export class HandlerHideElements {
 		}
 
 		btnHideElement.addEventListener('click', (e) => {
+			// 1. Notificamos a todos los demás popups que se cierren.
+			document.dispatchEvent(new CustomEvent('close-popups'));
 			e.stopPropagation();
+			// 2. Abrimos/cerramos nuestro propio popup.
 			this.ListPanelHiddenMenu?.classList.toggle('hidden');
 		});
 
 		const eventManager = new EventManagerHideElement({ ListPanelHiddenMenu: this.ListPanelHiddenMenu, prefix: this.prefix });
 		
 		ulList.addEventListener('click', (e) => {
+			e.stopPropagation();
 			eventManager.handleEvent({ event: e });
 		});
 	}

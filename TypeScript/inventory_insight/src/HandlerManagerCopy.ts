@@ -7,76 +7,85 @@ interface HandlerManagerCopyConstructor {
 	prefix: string;
 }
 
+/**
+ * Manages the "Copy SQL" popup and its associated actions.
+ * This includes handling the main trigger button and the individual copy buttons.
+ */
 export class HandlerManagerCopy {
 	private readonly prefix: string;
-	public eventManager: EventManagerCopy | null;
-	private btnCopySentenceSql: HTMLButtonElement | null;
+	private readonly eventManager: EventManagerCopy;
+	private readonly triggerButton: HTMLButtonElement | null;
 
 	constructor({ tableContent, prefix, isTableEmptyOrSingleRow }: HandlerManagerCopyConstructor) {
 		this.prefix = prefix;
 		this.eventManager = new EventManagerCopy({ tableContent, isTableEmptyOrSingleRow });
-		this.btnCopySentenceSql = null;
+		this.triggerButton = document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`);
 
-		this.initialSetup();
+		this.initialize();
 	}
 
-	initialSetup() {
+	/**
+	 * Sets up all necessary event listeners for the component.
+	 */
+	private initialize(): void {
 		try {
-			this.btnCopySentenceSql = document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`);
-
-			if (!this.eventManager) {
-				throw new Error('Error: [initialSetup] No se pudo inicializar EventManagerCopy');
+			if (!this.triggerButton) {
+				throw new Error(`Could not find the trigger button: #${hideElementsIds.copyItems}`);
 			}
 
-			if (!this.btnCopySentenceSql) {
-				throw new Error('Error: [initialSetup] No se pudo inicializar btnCopySentenceSql');
-			}
+			this.setupTriggerButtonListener();
+			this.setupActionListeners();
 
-			this.btnCopySentenceSql.addEventListener('click', (e) => {
-				e.stopPropagation();
-				this.btnCopySentenceSql?.classList?.toggle('active');
-			});
-
-			this.setEventsForCopyButtons();
-
-			// Escucha un solo evento delegado
+			// Listen for the global event to close this popup
 			document.addEventListener('close-popups', () => this.close());
 		} catch (error) {
-			console.error(`[HandlerManagerCopy] Error en initialSetup: ${error}`);
+			console.error(`[HandlerManagerCopy] Error during initialization: ${error}`);
 		}
 	}
 
-	private setEventsForCopyButtons() {
-		const copyTable = document.querySelector(`${this.prefix} #${hideElementsIds.copyTable}`);
-		const tooltipContainer = document.querySelector(`${this.prefix} .tooltip-container .tooltip-content`);
-
-		if (copyTable) {
-			copyTable.addEventListener('click', (e) => {
-				this.eventManager?.handleEvent({ ev: e });
-			});
-		} else {
-			console.warn(`No se encontró el elemento #${hideElementsIds.copyTable}`);
-		}
-
-		if (tooltipContainer) {
-			tooltipContainer.addEventListener('click', (e) => {
-				const { target } = e;
-
-				if (!(target instanceof HTMLElement)) return;
-
-				const { nodeName } = target;
-
-				if (nodeName === 'BUTTON') {
-					this.eventManager?.handleEvent({ ev: e });
-				}
-			});
-		} else {
-			console.warn('No se encontró el elemento .tooltip-container .tooltip-content');
-		}
+	/**
+	 * Adds a click listener to the main button that toggles the SQL popup.
+	 */
+	private setupTriggerButtonListener(): void {
+		this.triggerButton?.addEventListener('click', (e) => {
+			// 1. Notify other popups to close.
+			document.dispatchEvent(new CustomEvent('close-popups'));
+			e.stopPropagation();
+			// 2. Toggle our own popup.
+			this.triggerButton?.classList.toggle('active');
+		});
 	}
 
+	/**
+	 * Sets up event listeners for the actual copy actions
+	 * (e.g., "Copy Table" and buttons inside the SQL popup).
+	 */
+	private setupActionListeners(): void {
+		const copyTableButton = document.querySelector<HTMLButtonElement>(`${this.prefix} #${hideElementsIds.copyTable}`);
+		const tooltipContent = document.querySelector<HTMLDivElement>(`${this.prefix} .tooltip-container .tooltip-content`);
+
+		// Listener for the "Copy Table" button
+		copyTableButton?.addEventListener('click', (e) => {
+			this.eventManager.handleEvent({ ev: e });
+		});
+
+		// Use event delegation for all buttons inside the SQL popup
+		tooltipContent?.addEventListener('click', (e) => {
+			e.stopPropagation();
+
+			const target = e.target as HTMLElement;
+			const button = target.closest('button');
+
+			if (button) {
+				this.eventManager.handleEvent({ ev: e });
+			}
+		});
+	}
+
+	/**
+	 * Closes the SQL popup by removing the 'active' class.
+	 */
 	private close() {
-		console.log('[HandlerManagerCopy] close');
-		this.btnCopySentenceSql?.classList.remove('active');
+		this.triggerButton?.classList.remove('active');
 	}
 }

@@ -1,95 +1,132 @@
 import { configurationInitial, type ConfigurationHide, hideElementsIds } from './constants.ts';
 
-export function getValueLocalStorage() {
-	const storedState = localStorage.getItem('storedStateHide');
+// --- LocalStorage Utilities ---
 
-	return JSON.parse(storedState ?? '{}') ?? configurationInitial;
+/**
+ * Retrieves the element visibility configuration from localStorage.
+ * Merges it with the default configuration to ensure all keys are present.
+ * @returns The configuration object.
+ */
+export function getHideElementConfig(): ConfigurationHide {
+	const storedState = localStorage.getItem('storedStateHide');
+	if (storedState) {
+		try {
+			const storedConfig = JSON.parse(storedState);
+			// Merge with default to handle new keys added to the app
+			return { ...configurationInitial, ...storedConfig };
+		} catch (error) {
+			console.error("Error parsing 'storedStateHide' from localStorage. Reverting to default.", error);
+		}
+	}
+	return configurationInitial;
 }
 
-export function setValueLocalStorage(configurationObject: ConfigurationHide) {
+/**
+ * Saves the element visibility configuration to localStorage.
+ * @param configurationObject The configuration object to save.
+ */
+export function saveHideElementConfig(configurationObject: ConfigurationHide) {
 	localStorage.setItem('storedStateHide', JSON.stringify(configurationObject));
 }
 
+// --- Event Manager ---
+
+interface EventManagerHideElementConstructor {
+	ListPanelHiddenMenu: HTMLElement;
+	prefix: string;
+}
+
+/**
+ * Manages click events within the "Hide Elements" popup menu.
+ * Handles toggling element visibility and persisting the state in localStorage.
+ */
 export class EventManagerHideElement {
 	private readonly prefix: string;
-	private configurationObjectHide = getValueLocalStorage();
-	private elementsMap: { [key: string]: HTMLElement | null };
-	private ListPanelHiddenMenu: HTMLElement;
-	private elementSelected: HTMLElement | null;
+	private readonly listPanel: HTMLElement;
+	private readonly config: ConfigurationHide;
+	private readonly elementsMap: Record<string, HTMLElement | null>;
 
-	constructor({ ListPanelHiddenMenu, prefix }: { ListPanelHiddenMenu: HTMLElement; prefix: string }) {
-		this.elementSelected = null;
+	constructor({ ListPanelHiddenMenu, prefix }: EventManagerHideElementConstructor) {
 		this.prefix = prefix;
-		this.ListPanelHiddenMenu = ListPanelHiddenMenu;
+		this.listPanel = ListPanelHiddenMenu;
+		this.config = getHideElementConfig();
 
+		// Cache the DOM elements that can be hidden/shown
 		this.elementsMap = {
-			'copy-table': document.querySelector(`${this.prefix} #${hideElementsIds.copyTable}`),
-			'insert-item': document.querySelector(`${this.prefix} #${hideElementsIds.insertItem}`),
-			'insert-row': document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`),
-			'copy-item': document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`),
-			'counter-row': document.querySelector(`${this.prefix} #${hideElementsIds.counterRow}`),
+			[hideElementsIds.copyTable]: document.querySelector(`${this.prefix} #${hideElementsIds.copyTable}`),
+			[hideElementsIds.insertItem]: document.querySelector(`${this.prefix} #${hideElementsIds.insertItem}`),
+			[hideElementsIds.insertRow]: document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`),
+			[hideElementsIds.copyItems]: document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`),
+			[hideElementsIds.counterRow]: document.querySelector(`${this.prefix} #${hideElementsIds.counterRow}`),
 		};
 	}
 
+	/**
+	 * Main event handler entry point.
+	 * @param event The DOM event.
+	 */
 	public handleEvent({ event }: { event: Event }) {
-		const { target, type } = event;
-		
-		if (type === 'click') {
-			this.elementSelected = this.getElementToHandle(target as HTMLElement);
+		if (event.type !== 'click') return;
 
-			if (this.elementSelected) {
-				this.handleClick();
-			}
+		const menuItem = this.getClickedMenuItem(event.target);
+		if (menuItem) {
+			this.handleMenuItemClick(menuItem);
 		}
 	}
 
-	private getElementToHandle(target: HTMLElement | null): HTMLElement | null {
-		if (!(target instanceof HTMLElement)) {
-			console.warn('El target no es un HTMLElement válido');
-			return null;
+	/**
+	 * Finds the parent `<li>` element from the event target.
+	 * @param target The element that was clicked.
+	 * @returns The `HTMLLIElement` if found, otherwise `null`.
+	 */
+	private getClickedMenuItem(target: EventTarget | null): HTMLLIElement | null {
+		if (target instanceof HTMLElement) {
+			// We are only interested in clicks on items inside the list
+			return target.closest('li.li-item');
 		}
-
-		return target?.closest('li') || target;
+		return null;
 	}
 
-	private handleClick() {
-		if (!this.elementSelected || !this.ListPanelHiddenMenu) {
-			throw new Error('Error: [handleClick] No se encontró un elemento seleccionado o la lista de elementos');
-		}
+	/**
+	 * Processes a click on a menu item.
+	 * @param menuItem The `<li>` element that was clicked.
+	 */
+	private handleMenuItemClick(menuItem: HTMLLIElement) {
+		const { hide: elementKey } = menuItem.dataset;
+		const icon = menuItem.querySelector<HTMLElement>('.ui-icon');
 
-		const { nodeName, dataset } = this.elementSelected;
-		const uiIcon = this.elementSelected.querySelector('.ui-icon');
-		const isHide = this.ListPanelHiddenMenu.classList.contains('hidden');
+		// Ensure the popup closes after a selection is made.
+		this.listPanel.classList.add('hidden');
 
-		if (!isHide) {
-			this.ListPanelHiddenMenu.classList.add('hidden');
-		}
-
-		if (nodeName !== 'LI' || !uiIcon || !dataset.hide) {
-			console.warn('Elemento no válido o faltan atributos.');
+		if (!elementKey || !icon) {
+			console.warn('Clicked menu item is missing "data-hide" attribute or an icon.', menuItem);
 			return;
 		}
 
-		this.toggleIcon(uiIcon);
-		this.handleHideElement(dataset.hide);
+		this.toggleElementVisibility(elementKey);
+		this.toggleMenuItemIcon(icon);
+		this.updateAndSaveConfig(elementKey);
 	}
 
-	private toggleIcon(uiIcon: Element) {
-		uiIcon.classList.toggle('ui-iggrid-icon-hide');
-		uiIcon.classList.toggle('ui-iggrid-icon-show');
-	}
-
-	private handleHideElement(hide: string) {
-		const elementToHide = this.elementsMap[hide];
-
-		if (!elementToHide) {
-			console.warn('No se encontró un [data-hide] válido');
-			return;
+	private toggleElementVisibility(elementKey: string) {
+		const elementToToggle = this.elementsMap[elementKey];
+		if (elementToToggle) {
+			elementToToggle.classList.toggle('hidden');
+		} else {
+			console.warn(`Element with key "${elementKey}" not found in elementsMap.`);
 		}
+	}
 
-		elementToHide.classList.toggle('hidden');
-		this.configurationObjectHide[hide].hide = elementToHide.classList.contains('hidden');
+	private toggleMenuItemIcon(icon: HTMLElement) {
+		icon.classList.toggle('ui-iggrid-icon-hide');
+		icon.classList.toggle('ui-iggrid-icon-show');
+	}
 
-		setValueLocalStorage(this.configurationObjectHide);
+	private updateAndSaveConfig(elementKey: string) {
+		const element = this.elementsMap[elementKey];
+		if (element && this.config[elementKey]) {
+			this.config[elementKey].hide = element.classList.contains('hidden');
+			saveHideElementConfig(this.config);
+		}
 	}
 }
