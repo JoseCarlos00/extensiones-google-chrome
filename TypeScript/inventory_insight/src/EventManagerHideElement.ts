@@ -11,13 +11,17 @@ export function setValueLocalStorage(configurationObject: ConfigurationHide) {
 }
 
 export class EventManagerHideElement {
-	private readonly prefix = '#myModalShowTable';
+	private readonly prefix: string;
 	private configurationObjectHide = getValueLocalStorage();
 	private elementsMap: { [key: string]: HTMLElement | null };
-	private listPaneDataGridPopover: HTMLElement | null;
+	private ListPanelHiddenMenu: HTMLElement;
 	private elementSelected: HTMLElement | null;
 
-	constructor({ list }: { list: HTMLElement | null }) {
+	constructor({ ListPanelHiddenMenu, prefix }: { ListPanelHiddenMenu: HTMLElement; prefix: string }) {
+		this.elementSelected = null;
+		this.prefix = prefix;
+		this.ListPanelHiddenMenu = ListPanelHiddenMenu;
+
 		this.elementsMap = {
 			'copy-table': document.querySelector(`${this.prefix} #${hideElementsIds.copyTable}`),
 			'insert-item': document.querySelector(`${this.prefix} #${hideElementsIds.insertItem}`),
@@ -25,9 +29,6 @@ export class EventManagerHideElement {
 			'copy-item': document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`),
 			'counter-row': document.querySelector(`${this.prefix} #${hideElementsIds.counterRow}`),
 		};
-
-		this.elementSelected = null;
-		this.listPaneDataGridPopover = list;
 	}
 
 	public handleEvent({ ev }: { ev: Event }) {
@@ -52,16 +53,16 @@ export class EventManagerHideElement {
 	}
 
 	private handleClick() {
-    if (!this.elementSelected || !this.listPaneDataGridPopover) {
-      throw new Error('Error: [handleClick] No se encontró un elemento seleccionado o la lista de elementos');
-    }
+		if (!this.elementSelected || !this.ListPanelHiddenMenu) {
+			throw new Error('Error: [handleClick] No se encontró un elemento seleccionado o la lista de elementos');
+		}
 
 		const { nodeName, dataset } = this.elementSelected;
 		const uiIcon = this.elementSelected.querySelector('.ui-icon');
-		const isHide = this.listPaneDataGridPopover.classList.contains('hidden');
+		const isHide = this.ListPanelHiddenMenu.classList.contains('hidden');
 
 		if (!isHide) {
-			this.listPaneDataGridPopover.classList.add('hidden');
+			this.ListPanelHiddenMenu.classList.add('hidden');
 		}
 
 		if (nodeName !== 'LI' || !uiIcon || !dataset.hide) {

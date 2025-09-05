@@ -132,6 +132,9 @@ export class ModalManager {
 	protected closeModal(): void {
 		if (this.modalElement) {
 			this.modalElement.style.display = 'none';
+
+			// Notificamos también que deben cerrarse popups
+			document.dispatchEvent(new CustomEvent('close-popups'));
 		}
 	}
 }

@@ -1,6 +1,6 @@
 import { EventManager  } from "./EventManager"
-import { EventManagerHideElement } from "./EventManagerHideElement"
 import { EventManagerCopy } from "./EventManagerCopy"
+import { HideElements } from './HideElements';
 import  { TableHandler } from "./TableHandler"
 import { UiIggridIndicator } from "./UiIggridIndicator"
 import { hideElementsIds } from "./constants";
@@ -9,7 +9,7 @@ export class ModalHandler {
 	private modal: HTMLElement | null;
 	private tbodyTable: HTMLTableSectionElement | null;
 	private tableContent: HTMLTableElement | null;
-	private listPaneDataGridPopover: HTMLUListElement | null;
+	private ListPanelHiddenMenu: HTMLUListElement | null;
 	private btnCopySentenceSql: HTMLButtonElement | null;
 	private prefix: string;
 
@@ -19,7 +19,7 @@ export class ModalHandler {
 		this.modal = null;
 		this.tbodyTable = null;
 		this.tableContent = null;
-		this.listPaneDataGridPopover = null;
+		this.ListPanelHiddenMenu = null;
 		this.btnCopySentenceSql = null;
 		this.prefix = `#${modalId}`;
 		this.tableHandler = null;
@@ -28,7 +28,7 @@ export class ModalHandler {
 	private async initialVariables() {
 		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
 		this.tableContent = document.querySelector(`${this.prefix} #tableContent`);
-		this.listPaneDataGridPopover = document.querySelector(`${this.prefix} #ListPaneDataGrid_popover`);
+		this.ListPanelHiddenMenu = document.querySelector(`${this.prefix} #ListPaneDataGrid_popover`);
 
 		this.btnCopySentenceSql = document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`);
 
@@ -40,7 +40,7 @@ export class ModalHandler {
 			throw new Error('No se encontró el elemento #tableContent');
 		}
 
-		if (!this.listPaneDataGridPopover) {
+		if (!this.ListPanelHiddenMenu) {
 			throw new Error('No se encontró el elemento #ListPaneDataGrid_popover');
 		}
 
@@ -88,7 +88,7 @@ export class ModalHandler {
 		const tooltipContainer = document.querySelector(`${this.prefix} .tooltip-container .tooltip-content`);
 
 		const eventManager = new EventManagerCopy({
-			list: this.listPaneDataGridPopover,
+			list: this.ListPanelHiddenMenu,
 			tableContent: this.tableContent,
 			btnCopySentenceSql: this.btnCopySentenceSql,
 			isTableEmptyOrSingleRow: this.isTableEmptyOrSingleRow,
@@ -135,7 +135,7 @@ export class ModalHandler {
 				return;
 			}
 
-			if (!this.listPaneDataGridPopover) {
+			if (!this.ListPanelHiddenMenu) {
 				console.warn('No se encontró el elemento #ListPaneDataGrid_popover');
 				return;
 			}
@@ -148,7 +148,7 @@ export class ModalHandler {
 			const eventManager = new EventManager({
 				updateRowCounter: this.updateRowCounter,
 				tableContent: this.tableContent,
-				list: this.listPaneDataGridPopover,
+				list: this.ListPanelHiddenMenu,
 				btnCopySentenceSql: this.btnCopySentenceSql,
 			});
 
@@ -178,53 +178,30 @@ export class ModalHandler {
 				return;
 			}
 
-			if (!this.listPaneDataGridPopover) {
+			if (!this.ListPanelHiddenMenu) {
 				console.warn('No se encontró el elemento #ListPaneDataGrid_popover');
 				return;
 			}
 
 			this.btnCopySentenceSql.addEventListener('click', () => {
-				const isHide = this.listPaneDataGridPopover?.classList?.contains('hidden');
+				const isHide = this.ListPanelHiddenMenu?.classList?.contains('hidden');
 
 				if (!isHide) {
-					this.listPaneDataGridPopover?.classList?.add('hidden');
+					this.ListPanelHiddenMenu?.classList?.add('hidden');
 				}
 
 				this.btnCopySentenceSql?.classList?.toggle('active');
+			});
+
+			// Delegación: cualquier click dentro del modal cierra popups
+			this.modal?.addEventListener('click', () => {
+				document.dispatchEvent(new CustomEvent('close-popups'));
 			});
 		} catch (error) {
 			console.warn('Error: Ha ocurrido un error al crear el Evento click en #setEventClick(): ', error);
 		}
 	}
 
-	private setEventHideElement() {
-		const btnHideElement = document.querySelector(`${this.prefix} #hide-elements`);
-
-		const ulList = document.querySelector(`${this.prefix} #list-elements`);
-
-		if (btnHideElement && this.listPaneDataGridPopover) {
-			btnHideElement.addEventListener('click', () => {
-				const isActive = this.btnCopySentenceSql?.classList.contains('active');
-
-				if (isActive) {
-					this.btnCopySentenceSql?.classList.remove('active');
-				}
-
-				this.listPaneDataGridPopover?.classList.toggle('hidden');
-			});
-		} else {
-			console.warn('No se encontró el elemento #hide-elements');
-		}
-
-		if (ulList) {
-			const eventManager = new EventManagerHideElement({ list: this.listPaneDataGridPopover });
-			ulList.addEventListener('click', (e) => {
-				eventManager.handleEvent({ ev: e });
-			});
-		} else {
-			console.warn('No se encontró el elemento #list-elements');
-		}
-	}
 
 	private setEventInsertRow() {
 		const btnInsertRow = document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`);
@@ -239,6 +216,17 @@ export class ModalHandler {
 		});
 	}
 
+	async setEventsListeners() {
+		await this.setEventClickModalTable();
+		await this.setEventClick();
+
+		this.tableHandler?.setEventKeydownForTableContent();
+		
+		this.setEventsForCopyButtons();
+		// this.setEventHideElement();
+		this.setEventInsertRow();
+	}
+
 	async setModalElement(modal: HTMLElement | null): Promise<void> {
 		try {
 			if (!modal) {
@@ -246,20 +234,20 @@ export class ModalHandler {
 			}
 
 			this.modal = modal;
-
 			await this.initialVariables();
-			await this.setEventClickModalTable();
-			await this.setEventClick();
 
 			if (!this.tableHandler) {
 				throw new Error('No se encontró el TableHandler');
 			}
 
-			this.tableHandler.setEventKeydownForTableContent();
+			new HideElements({
+				prefix: this.prefix,
+			});
 
-			this.setEventsForCopyButtons();
-			this.setEventHideElement();
-			this.setEventInsertRow();
+			console.log(this.ListPanelHiddenMenu);
+			
+
+			await this.setEventsListeners();
 		} catch (error) {
 			console.error(`Error en setModalElement: ${error}`);
 		}
