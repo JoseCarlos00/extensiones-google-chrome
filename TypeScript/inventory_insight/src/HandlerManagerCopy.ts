@@ -55,7 +55,6 @@ export class HandlerManagerCopy {
 			e.stopPropagation();
 			// 2. Toggle our own popup.
 			
-
 			// not active = Closed
 			// active = Open
 			if (prevClass) {

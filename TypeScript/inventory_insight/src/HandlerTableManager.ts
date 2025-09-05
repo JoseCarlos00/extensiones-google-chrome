@@ -1,5 +1,5 @@
 import { EventManagerKeyDown } from './EventManagerKeydown.ts';
-import { EventManager } from './EventManager.ts';
+import { EventTableManager } from './EventTableManager.ts';
 
 type CellType = 'ITEM' | 'LOCATION' | 'ITEM_DESC';
 
@@ -16,7 +16,7 @@ export class HandlerTableManager {
 	private readonly updateRowCounter: () => void;
 	public readonly isTableEmptyOrSingleRow: () => Promise<boolean>;
 
-	private eventManager: EventManager | null = null;
+	private eventManager: EventTableManager | null = null;
 
 	constructor({ tbodyTable, tableContent, updateRowCounter, isTableEmptyOrSingleRow }: HandlerTableManagerParams) {
 		this.tbodyTable = tbodyTable;
@@ -24,7 +24,7 @@ export class HandlerTableManager {
 		this.updateRowCounter = updateRowCounter;
 		this.isTableEmptyOrSingleRow = isTableEmptyOrSingleRow;
 
-		this.eventManager = new EventManager({
+		this.eventManager = new EventTableManager({
 			updateRowCounter: this.updateRowCounter,
 			tableContent: this.tableContent,
 		});

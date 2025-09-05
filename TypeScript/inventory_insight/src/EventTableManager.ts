@@ -1,16 +1,16 @@
 import { UiIggridIndicator } from './UiIggridIndicator.ts';
 import { sortTable } from './utils/sortTable.ts';
 
-interface EventManagerProps {
+interface EventTableManagerProps {
 	updateRowCounter: () => void;
 	tableContent: HTMLTableElement | null;
 }
 
-export class EventManager {
+export class EventTableManager {
 	private readonly tableContent: HTMLTableElement | null;
 	private readonly updateRowCounter: () => void;
 
-	constructor({ updateRowCounter, tableContent }: EventManagerProps) {
+	constructor({ updateRowCounter, tableContent }: EventTableManagerProps) {
 		this.tableContent = tableContent;
 		this.updateRowCounter = updateRowCounter;
 	}

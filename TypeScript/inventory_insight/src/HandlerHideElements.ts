@@ -51,8 +51,6 @@ export class HandlerHideElements {
 			e.stopPropagation();
 			// 2. Abrimos/cerramos nuestro propio popup.
 		
-			console.log('Click en #btnHideElement', 'prevClass:', prevClass);
-
 			// hidden = Closed
 			// not hidden = Open
 			if (prevClass) {
