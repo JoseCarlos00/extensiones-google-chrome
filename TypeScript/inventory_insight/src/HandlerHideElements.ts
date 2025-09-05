@@ -23,7 +23,7 @@ export class HandlerHideElements {
 			// Escucha un solo evento delegado
 			document.addEventListener('close-popups', () => this.close());
 		} catch (error) {
-			console.error('Error al inicializar HideElements:', error);
+			console.error('[HandlerHideElements]: Error al inicializar HideElements:', error);
 		}
 	}
 
@@ -43,19 +43,20 @@ export class HandlerHideElements {
 			throw new Error('No se encontró el elemento #list-elements');
 		}
 
-		btnHideElement.addEventListener('click', () => {
+		btnHideElement.addEventListener('click', (e) => {
+			e.stopPropagation();
 			this.ListPanelHiddenMenu?.classList.toggle('hidden');
 		});
 
 		const eventManager = new EventManagerHideElement({ ListPanelHiddenMenu: this.ListPanelHiddenMenu, prefix: this.prefix });
 		
 		ulList.addEventListener('click', (e) => {
-			e.stopPropagation();
-			eventManager.handleEvent({ ev: e });
+			eventManager.handleEvent({ event: e });
 		});
 	}
 
 	private close() {
+		console.log('[HandlerHideElements] close');
 		this.ListPanelHiddenMenu?.classList.add('hidden');
 	}
 }

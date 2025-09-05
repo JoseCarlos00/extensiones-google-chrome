@@ -31,9 +31,9 @@ export class EventManagerHideElement {
 		};
 	}
 
-	public handleEvent({ ev }: { ev: Event }) {
-		const { target, type } = ev;
-
+	public handleEvent({ event }: { event: Event }) {
+		const { target, type } = event;
+		
 		if (type === 'click') {
 			this.elementSelected = this.getElementToHandle(target as HTMLElement);
 

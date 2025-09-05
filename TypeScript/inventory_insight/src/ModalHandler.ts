@@ -1,232 +1,209 @@
-import { EventManager  } from "./EventManager"
+import { EventManager } from './EventManager';
 import { HandlerHideElements } from './HandlerHideElements';
-import { HandlerManagerCopy } from "./HandlerManagerCopy"
-import  { TableHandler } from "./TableHandler"
-import { UiIggridIndicator } from "./UiIggridIndicator"
-import { hideElementsIds } from "./constants";
+import { HandlerManagerCopy } from './HandlerManagerCopy';
+import { TableHandler } from './TableHandler';
+import { UiIggridIndicator } from './UiIggridIndicator';
+import { hideElementsIds } from './constants';
+
+interface ModalHandlerConstructor {
+	modalId: string;
+}
 
 export class ModalHandler {
-	private modal: HTMLElement | null;
-	private tbodyTable: HTMLTableSectionElement | null;
-	private tableContent: HTMLTableElement | null;
-	private ListPanelHiddenMenu: HTMLUListElement | null;
-	private btnCopySentenceSql: HTMLButtonElement | null;
-	private prefix: string;
+	// Configuration
+	private readonly prefix: string;
 
-	private tableHandler: TableHandler | null;
+	// DOM Elements
+	private modal: HTMLElement | null = null;
+	private tbodyTable: HTMLTableSectionElement | null = null;
+	private tableContent: HTMLTableElement | null = null;
 
-	constructor({ modalId }: { modalId: string }) {
-		this.modal = null;
-		this.tbodyTable = null;
-		this.tableContent = null;
-		this.ListPanelHiddenMenu = null;
-		this.btnCopySentenceSql = null;
+	// Handlers & Managers
+	private tableHandler: TableHandler | null = null;
+	private eventManager: EventManager | null = null;
+	private handlerHideElements: HandlerHideElements | null = null;
+	private handlerManagerCopy: HandlerManagerCopy | null = null;
+
+	constructor({ modalId }: ModalHandlerConstructor) {
 		this.prefix = `#${modalId}`;
-		this.tableHandler = null;
 	}
 
-	private async initialVariables() {
-		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
-		this.tableContent = document.querySelector(`${this.prefix} #tableContent`);
-		this.ListPanelHiddenMenu = document.querySelector(`${this.prefix} #ListPaneDataGrid_popover`);
-
-		this.btnCopySentenceSql = document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`);
-
-		if (!this.tbodyTable) {
-			throw new Error('No se encontró el elemento #ListPaneDataGrid tbody');
-		}
-
-		if (!this.tableContent) {
-			throw new Error('No se encontró el elemento #tableContent');
-		}
-
-		this.tableHandler = new TableHandler({
-			updateRowCounter: this.updateRowCounter,
-			tableContent: this.tableContent,
-			tbodyTable: this.tbodyTable,
-			isTableEmptyOrSingleRow: this.isTableEmptyOrSingleRow,
-		});
-	}
-
-	public isTableEmptyOrSingleRow = (): Promise<boolean> => {
-		return new Promise((resolve) => {
-			const firstRow = this.tableContent?.querySelector('td');
-			const txt = firstRow ? firstRow?.textContent?.trim()?.toLowerCase() : '';
-
-			if (!firstRow || txt?.includes('no hay datos')) {
-				firstRow?.remove();
-				resolve(true);
-				return;
-			}
-
-			resolve(false);
-		});
-	};
-
-	private focusFirstInput() {
-		const firstInput = this.tableContent?.querySelector('input.input-text') as HTMLInputElement | null;
-
-		if (firstInput) {
-			setTimeout(() => {
-				firstInput.focus();
-				firstInput.select();
-			}, 50);
-		}
-	}
-
-	async openModal() {
-		this.modal && (this.modal.style.display = 'block');
-	}
-
-	private async setEventClickModalTable() {
-		try {
-			if (!this.tableContent) {
-				console.warn('No se encontró el elemento #tableContent');
-				return;
-			}
-
-			if (!this.btnCopySentenceSql) {
-				console.warn('No se encontró el elemento #copy-sentence-sql');
-				return;
-			}
-
-			if (!this.modal) {
-				console.warn('No se encontró el elemento modal');
-				return;
-			}
-
-			const eventManager = new EventManager({
-				updateRowCounter: this.updateRowCounter,
-				tableContent: this.tableContent,
-			});
-
-			this.tableContent.addEventListener('click', (e) => eventManager.handleEvent({ ev: e }));
-
-			const modalContent = this.modal.querySelector('.modal-content');
-
-			if (!modalContent) {
-				console.warn('No se encontró el elemento .modal-content');
-				return;
-			}
-
-			modalContent.addEventListener('click', (e: Event) => {
-				if (e.target && e.target instanceof HTMLElement && e.target.classList.contains('close')) {
-					eventManager.handleEvent({ ev: e } as { ev: MouseEvent });
-				}
-			});
-		} catch (error) {
-			console.warn('Error: Ha ocurrido un error al crear el Evento click en #setEventClickModalTable(): ', error);
-		}
-	}
-
-	private async setEventClick() {
-		try {
-			if (!this.btnCopySentenceSql) {
-				console.warn('No se encontró el elemento #copy-sentence-sql');
-				return;
-			}
-
-			if (!this.ListPanelHiddenMenu) {
-				console.warn('No se encontró el elemento #ListPaneDataGrid_popover');
-				return;
-			}
-
-			this.btnCopySentenceSql.addEventListener('click', () => {
-				this.btnCopySentenceSql?.classList?.toggle('active');
-			});
-
-			// Delegación: cualquier click dentro del modal cierra popups
-			this.modal?.addEventListener('click', () => {
-				document.dispatchEvent(new CustomEvent('close-popups'));
-			});
-		} catch (error) {
-			console.warn('Error: Ha ocurrido un error al crear el Evento click en #setEventClick(): ', error);
-		}
-	}
-
-
-	private setEventInsertRow() {
-		const btnInsertRow = document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`);
-
-		if (!btnInsertRow) {
-			console.warn('No se encontró el elemento #insert-row');
-			return;
-		}
-
-		btnInsertRow.addEventListener('click', () => {
-			this.tableHandler && this.tableHandler.insertNewRow();
-		});
-	}
-
-	async setEventsListeners() {
-		await this.setEventClickModalTable();
-		await this.setEventClick();
-
-		this.tableHandler?.setEventKeydownForTableContent();
-		
-		this.setEventInsertRow();
-	}
-
-	async setModalElement(modal: HTMLElement | null): Promise<void> {
+	/**
+	 * Initializes the modal handler, setting up properties, handlers, and event listeners.
+	 * This is the main entry point and should be called once the modal element is in the DOM.
+	 */
+	public async setModalElement(modal: HTMLElement | null): Promise<void> {
 		try {
 			if (!modal) {
-				throw new Error('No se encontró el modal para abrir');
+				throw new Error('The provided modal element is null.');
 			}
-
 			this.modal = modal;
-			await this.initialVariables();
 
-			if (!this.tableHandler) {
-				throw new Error('No se encontró el TableHandler');
-			}
-
-			new HandlerHideElements({
-				prefix: this.prefix,
-			});
-
-			new HandlerManagerCopy({
-				tableContent: this.tableContent,
-				isTableEmptyOrSingleRow: this.isTableEmptyOrSingleRow,
-				prefix: this.prefix,
-			});
-
-
-			await this.setEventsListeners();
+			this.initializeProperties();
+			this.initializeHandlers();
+			this.setupEventListeners();
 		} catch (error) {
-			console.error(`Error en setModalElement: ${error}`);
+			console.error(`[ModalHandler] Error during initialization: ${error}`);
 		}
 	}
 
-	public updateRowCounter = (): void => {
-		const contador = document.querySelector(`${this.prefix} #${hideElementsIds.counterRow}`);
-
-		if (!contador) {
-			console.error('El elemento contador no se encuentra en el DOM.');
-			return;
-		}
-
-		if (!this.tableContent) {
-			console.error('La tabla no está inicializada.');
-			return;
-		}
-
-		const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
-
-		// Actualizar el texto del contador con el número de filas
-		contador.textContent = `Filas: ${rows.length}`;
-	};
-
-	async handleOpenModal() {
+	/**
+	 * Handles the process of opening the modal, populating data, and focusing.
+	 */
+	public async handleOpenModal(): Promise<void> {
 		try {
 			if (this.tableHandler) {
 				await this.tableHandler.insertTbody();
 			}
 
-			await this.openModal();
+			this.openModal();
 			UiIggridIndicator.deleteAllIndicator();
 			this.focusFirstInput();
 		} catch (error) {
-			console.error(`Error en handleOpenModal: ${error}`);
+			console.error(`[ModalHandler] Error in handleOpenModal: ${error}`);
+		}
+	}
+
+	/**
+	 * Callback to update the row counter UI. Passed to other components.
+	 */
+	public updateRowCounter = (): void => {
+		const counterElement = document.querySelector(`${this.prefix} #${hideElementsIds.counterRow}`);
+		if (!counterElement) {
+			console.error('Counter element not found in the DOM.');
+			return;
+		}
+
+		if (!this.tableContent) {
+			console.error('Table content is not initialized.');
+			return;
+		}
+
+		const rowCount = this.tableContent.querySelectorAll('tbody tr').length;
+		counterElement.textContent = `Filas: ${rowCount}`;
+	};
+
+	/**
+	 * Checks if the table is empty or has a "no data" row.
+	 * If so, it cleans the row and returns true. Passed to other components.
+	 */
+	public isTableEmptyOrSingleRow = (): Promise<boolean> => {
+		return new Promise((resolve) => {
+			const firstCell = this.tableContent?.querySelector('td');
+			const cellText = firstCell?.textContent?.trim().toLowerCase() ?? '';
+
+			if (!firstCell || cellText.includes('no hay datos')) {
+				firstCell?.parentElement?.remove();
+				resolve(true);
+				return;
+			}
+			resolve(false);
+		});
+	};
+
+	/**
+	 * Initializes crucial DOM element properties from the page.
+	 */
+	private initializeProperties(): void {
+		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
+		this.tableContent = document.querySelector<HTMLTableElement>(`${this.prefix} #tableContent`);
+
+		if (!this.tbodyTable) {
+			throw new Error('Could not find the source table body: #ListPaneDataGrid tbody');
+		}
+		if (!this.tableContent) {
+			throw new Error('Could not find the modal table content: #tableContent');
+		}
+	}
+
+	/**
+	 * Instantiates all necessary handlers and managers for the modal.
+	 */
+	private initializeHandlers(): void {
+		if (!this.tableContent || !this.tbodyTable) {
+			throw new Error('Cannot initialize handlers without table elements.');
+		}
+
+		this.tableHandler = new TableHandler({
+			tableContent: this.tableContent,
+			tbodyTable: this.tbodyTable,
+			updateRowCounter: this.updateRowCounter,
+			isTableEmptyOrSingleRow: this.isTableEmptyOrSingleRow,
+		});
+
+		this.handlerHideElements = new HandlerHideElements({
+			prefix: this.prefix,
+		});
+
+		this.handlerManagerCopy = new HandlerManagerCopy({
+			tableContent: this.tableContent,
+			isTableEmptyOrSingleRow: this.isTableEmptyOrSingleRow,
+			prefix: this.prefix,
+		});
+
+		this.eventManager = new EventManager({
+			updateRowCounter: this.updateRowCounter,
+			tableContent: this.tableContent,
+		});
+
+		if (!this.handlerHideElements) {
+			throw new Error('Could not initialize HandlerHideElements.');
+		}
+		
+		if (!this.handlerManagerCopy) {
+			throw new Error('Could not initialize HandlerManagerCopy.');
+		}
+
+		if (!this.eventManager) {
+			throw new Error('Could not initialize EventManager.');
+		}
+	}
+
+	/**
+	 * Sets up all event listeners for the modal and its contents.
+	 */
+	private setupEventListeners(): void {
+		if (!this.modal || !this.tableContent) {
+			throw new Error('Cannot set up event listeners on null elements.');
+		}
+
+		// Any click inside the modal dispatches an event to close all popups.
+		// Specific components (like popup triggers) should use e.stopPropagation()
+		// to prevent this from firing.
+		this.modal.addEventListener('click', () => {
+			console.log('[ModalHandler] Click inside modal detected, dispatching close-popups.');
+			document.dispatchEvent(new CustomEvent('close-popups'));
+		});
+
+		// Clicks within the table (delete row, sort, etc.)
+		this.tableContent.addEventListener('click', (e) => {
+			this.eventManager?.handleEvent({ ev: e as MouseEvent });
+		});
+
+		// Keyboard navigation within the table
+		this.tableHandler?.setEventKeydownForTableContent();
+
+		// Button to insert a new row
+		const btnInsertRow = document.querySelector(`${this.prefix} #${hideElementsIds.insertRow}`);
+		btnInsertRow?.addEventListener('click', (e) => {
+			e.stopPropagation();
+			this.tableHandler?.insertNewRow();
+		});
+	}
+
+	private openModal(): void {
+		if (this.modal) {
+			this.modal.style.display = 'block';
+		}
+	}
+
+	private focusFirstInput(): void {
+		const firstInput = this.tableContent?.querySelector<HTMLInputElement>('input.input-text');
+		if (firstInput) {
+			setTimeout(() => {
+				firstInput.focus();
+				firstInput.select();
+			}, 50);
 		}
 	}
 }

@@ -2,29 +2,48 @@ import { EventManagerCopy } from "./EventManagerCopy"
 import { hideElementsIds } from "./constants";
 
 interface HandlerManagerCopyConstructor {
-  tableContent: HTMLTableElement | null;
-  isTableEmptyOrSingleRow: () => Promise<boolean>;
-  prefix: string;
+	tableContent: HTMLTableElement | null;
+	isTableEmptyOrSingleRow: () => Promise<boolean>;
+	prefix: string;
 }
 
 export class HandlerManagerCopy {
 	private readonly prefix: string;
-
-	public eventManager: EventManagerCopy | null = null;
+	public eventManager: EventManagerCopy | null;
+	private btnCopySentenceSql: HTMLButtonElement | null;
 
 	constructor({ tableContent, prefix, isTableEmptyOrSingleRow }: HandlerManagerCopyConstructor) {
 		this.prefix = prefix;
-    this.eventManager = new EventManagerCopy({ tableContent, isTableEmptyOrSingleRow });
+		this.eventManager = new EventManagerCopy({ tableContent, isTableEmptyOrSingleRow });
+		this.btnCopySentenceSql = null;
 
 		this.initialSetup();
 	}
 
 	initialSetup() {
-    if (!this.eventManager) {
-      throw new Error('Error: [initialSetup] No se pudo inicializar EventManagerCopy');
-    }
+		try {
+			this.btnCopySentenceSql = document.querySelector(`${this.prefix} #${hideElementsIds.copyItems}`);
 
-		this.setEventsForCopyButtons();
+			if (!this.eventManager) {
+				throw new Error('Error: [initialSetup] No se pudo inicializar EventManagerCopy');
+			}
+
+			if (!this.btnCopySentenceSql) {
+				throw new Error('Error: [initialSetup] No se pudo inicializar btnCopySentenceSql');
+			}
+
+			this.btnCopySentenceSql.addEventListener('click', (e) => {
+				e.stopPropagation();
+				this.btnCopySentenceSql?.classList?.toggle('active');
+			});
+
+			this.setEventsForCopyButtons();
+
+			// Escucha un solo evento delegado
+			document.addEventListener('close-popups', () => this.close());
+		} catch (error) {
+			console.error(`[HandlerManagerCopy] Error en initialSetup: ${error}`);
+		}
 	}
 
 	private setEventsForCopyButtons() {
@@ -48,12 +67,16 @@ export class HandlerManagerCopy {
 				const { nodeName } = target;
 
 				if (nodeName === 'BUTTON') {
-          e.stopPropagation();
 					this.eventManager?.handleEvent({ ev: e });
 				}
 			});
 		} else {
 			console.warn('No se encontró el elemento .tooltip-container .tooltip-content');
 		}
+	}
+
+	private close() {
+		console.log('[HandlerManagerCopy] close');
+		this.btnCopySentenceSql?.classList.remove('active');
 	}
 }
