@@ -124,6 +124,7 @@
       button:focus {
         background-color: rgb(224, 49, 49);
         opacity: 1;
+        height: auto;
       }
 
       .row-counter {

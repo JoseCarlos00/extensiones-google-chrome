@@ -36,3 +36,6 @@ export const hideElementsIds = {
 	copyItems: 'copy-items',
 	counterRow: 'counter-row',
 };
+
+export const idModalPrincipal = 'myModalShowTable';
+export const idModalInsertItem = 'myModalInserToItem';

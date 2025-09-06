@@ -3,13 +3,14 @@ import { ModalHandler } from './ModalHandler.ts';
 import { ModalManagerInventory } from './ModalManagerInventory.ts';
 import { getHtmlContent } from './modalContent.ts';
 import { insertModalInsertItem } from './moda_Insert_Item/main.ts'
+import { idModalPrincipal, idModalInsertItem } from './constants.ts'
 
 window.addEventListener(
 	'load',
 	async () => {
 		try {
 			const selectoresModal: { modalId: string; sectionContainerClass: string } = {
-				modalId: 'myModalShowTable',
+				modalId: idModalPrincipal,
 				sectionContainerClass: 'modal-container',
 			};
 
@@ -37,6 +38,7 @@ window.addEventListener(
 
 			setTimeout(async () => {
 				await insertModalInsertItem({ idModaFather: selectoresModal.modalId });
+				modalManager.setModalInsertItem(idModalInsertItem);
 			}, 100);
 		} catch (error) {
 			console.error('Error: al inicializar el modal ', error);

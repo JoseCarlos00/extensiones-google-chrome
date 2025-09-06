@@ -1,3 +1,4 @@
+import type { IModalHandler } from './modal/ModalManager';
 import { HandlerHideElements } from './HandlerHideElements';
 import { HandlerManagerCopy } from './HandlerManagerCopy';
 import { HandlerTableManager } from './HandlerTableManager';
@@ -8,7 +9,7 @@ interface ModalHandlerConstructor {
 	modalId: string;
 }
 
-export class ModalHandler {
+export class ModalHandler implements IModalHandler {
 	// Configuration
 	private readonly prefix: string;
 
@@ -146,7 +147,7 @@ export class ModalHandler {
 		if (!this.handlerHideElements) {
 			throw new Error('Could not initialize HandlerHideElements.');
 		}
-		
+
 		if (!this.handlerManagerCopy) {
 			throw new Error('Could not initialize HandlerManagerCopy.');
 		}
