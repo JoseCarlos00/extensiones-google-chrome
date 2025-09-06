@@ -2,6 +2,7 @@ import { ButtonOpenModal, type ButtonOpenModalConfiguration } from './modal/Butt
 import { ModalHandler } from './ModalHandler.ts';
 import { ModalManagerInventory } from './ModalManagerInventory.ts';
 import { getHtmlContent } from './modalContent.ts';
+import { insertModalInsertItem } from './moda_Insert_Item/main.ts'
 
 window.addEventListener(
 	'load',
@@ -34,10 +35,9 @@ window.addEventListener(
 
 			await modalManager.initialize();
 
-			// setTimeout(async () => {
-			// 	await insertModalInsertItem();
-			// 	modalManager.setModalInsert();
-			// }, 100);
+			setTimeout(async () => {
+				await insertModalInsertItem({ idModaFather: selectoresModal.modalId });
+			}, 100);
 		} catch (error) {
 			console.error('Error: al inicializar el modal ', error);
 		}

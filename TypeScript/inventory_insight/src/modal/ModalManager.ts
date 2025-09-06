@@ -1,7 +1,10 @@
-import type { ModalHandler } from '../ModalHandler';
+export interface IModalHandler {
+	setModalElement(modalElement: HTMLElement): Promise<void>;
+	handleOpenModal(): Promise<void> | void;
+}
 
-export interface ModalManagerConstructor {
-	modalHandler: ModalHandler;
+export interface ModalManagerConstructor<T extends IModalHandler> {
+	modalHandler: T;
 	contentModalHtml: Element;
 	modalId: string;
 	sectionContainerClass: string;
@@ -9,12 +12,12 @@ export interface ModalManagerConstructor {
 	buttonOpenModalId: string;
 }
 
-export class ModalManager {
+export class ModalManager<T extends IModalHandler> {
 	protected readonly modalId: string;
 	protected readonly sectionContainerClass: string;
 	protected readonly buttonOpenModal: HTMLLIElement | null | undefined;
 	protected readonly buttonOpenModalId: string;
-	protected readonly modalHandler: ModalHandler;
+	protected readonly modalHandler: T;
 	protected readonly contentModalHtml: Element;
 
 	protected modalElement: HTMLElement | null = null;
@@ -28,7 +31,7 @@ export class ModalManager {
 		sectionContainerClass,
 		buttonOpenModal,
 		buttonOpenModalId,
-	}: ModalManagerConstructor) {
+	}: ModalManagerConstructor<T>) {
 		this.modalId = modalId;
 		this.sectionContainerClass = sectionContainerClass;
 		this.buttonOpenModal = buttonOpenModal;
@@ -95,7 +98,7 @@ export class ModalManager {
 			}
 
 			if (!this.modalHandler) {
-				throw new Error('No se proporcionó una instancia de ModalHandler.');
+				throw new Error('No se proporcionó una instancia de IModalHandler.');
 			}
 
 			await this.modalHandler.setModalElement(this.modalElement);

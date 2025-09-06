@@ -1,4 +1,4 @@
-import { ModalHandlerInsertItem } from "./ModalHandler"
+import { ModalHandler } from "./ModalHandler"
 import { ModalManagerInsertItem } from "./ModalManagerInsertItem"
 import { getHtmlContent } from "./modalContent"
 
@@ -12,18 +12,18 @@ export async function insertModalInsertItem({idModaFather}: {idModaFather: strin
 
     const buttonOpenModalId = 'insertItemModal';
 
-    const modalHandler = new ModalHandlerInsertItem({ modalId: selectoresModal.modalId, formId: selectoresModal.formId, idModaFather });
+    const modalHandler = new ModalHandler({ modalId: selectoresModal.modalId, formId: selectoresModal.formId, idModaFather });
     const ModalHtml = await getHtmlContent({ ...selectoresModal });
 
     const modalManager = new ModalManagerInsertItem({
       modalHandler,
       contentModalHtml: ModalHtml,
-      buttonOpenModal: '',
+      buttonOpenModal: null,
       buttonOpenModalId,
       ...selectoresModal,
     });
 
-    modalManager.initialize();
+    await modalManager.initialize();
   } catch (error) {
     console.error('Error: Ha ocurrido un error al inicializar el modal Insert Item ', error);
   }

@@ -1,11 +1,11 @@
-import { ModalManager, type ModalManagerConstructor } from './modal/ModalManager.ts';
+import { ModalManager, type IModalHandler, type ModalManagerConstructor } from './modal/ModalManager.ts';
 
-export class ModalManagerInventory extends ModalManager {
+export class ModalManagerInventory<T extends IModalHandler> extends ModalManager<T> {
 	// Declarar las propiedades específicas de esta clase hija
 	private modalInsert: HTMLElement | null = null;
 	private listPaneDataGridPopover: HTMLElement | null = null;
 
-	constructor(configuration: ModalManagerConstructor) {
+	constructor(configuration: ModalManagerConstructor<T>) {
 		super(configuration);
 	}
 

@@ -1,4 +1,6 @@
-export class ModalHandlerInsertItem {
+import type { IModalHandler } from '../modal/ModalManager';
+
+export class ModalHandler implements IModalHandler {
 	// Configuration
 	private readonly prefix: string;
 	private readonly formId: string;
@@ -105,11 +107,11 @@ export class ModalHandlerInsertItem {
 		}
 	}
 
-	private async openModal() {
+	private openModal() {
 		this.modal && (this.modal.style.display = 'block');
 	}
 
-	private async closeModal() {
+	private closeModal() {
 		this.modal && (this.modal.style.display = 'none');
 		this.datosReset();
 	}
@@ -131,11 +133,9 @@ export class ModalHandlerInsertItem {
 
 	async handleOpenModal() {
 		try {
-			await this.openModal();
+			this.openModal();
 
-			if (this.insertItem) {
-				setTimeout(() => this.insertItem?.focus(), 50);
-			}
+			setTimeout(() => this.insertItem?.focus(), 50);
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error}`);
 		}

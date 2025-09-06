@@ -1,7 +1,7 @@
-import { ModalManager, type ModalManagerConstructor } from '../modal/ModalManager';
+import { ModalManager, type IModalHandler, type ModalManagerConstructor } from '../modal/ModalManager';
 
-export class ModalManagerInsertItem extends ModalManager {
-	constructor(configuration: ModalManagerConstructor) {
+export class ModalManagerInsertItem<T extends IModalHandler> extends ModalManager<T> {
+	constructor(configuration: ModalManagerConstructor<T>) {
 		super(configuration);
 	}
 
