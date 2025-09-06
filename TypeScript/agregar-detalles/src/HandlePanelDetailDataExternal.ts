@@ -2,29 +2,24 @@ import { HandlePanelDetail } from "./HandlePanelDetail"
 import { ToastAlert } from "./utils/ToastAlert"
 
 export class HandlePanelDetailDataExternal extends HandlePanelDetail {
-	backgroundMessage: string;
-	headerDataExternalPrincipal: string;
-	backgroundMessageUOM: string;
+	backgroundMessage: string = "invalidate";
+	headerDataExternalPrincipal: string = 'not data';
+	backgroundMessageUOM: string = 'actualizar_datos_de_item_unit_of_measure';
+	isCancelGetDataExternal: boolean = false;
 	seeMoreInformationSelector: { [key: string]: string };
-	externalPanelElements: { [key: string]: HTMLElement };
-	internalPanelElements: { [key: string]: HTMLElement };
-	internalPanelValue: { [key: string]: string };
+	externalPanelElements: { [key: string]: HTMLElement } = {};
+	internalPanelElements: { [key: string]: HTMLElement } = {};
+	panelElements: { [key: string]: HTMLElement } = {};
+	internalPanelValue: { [key: string]: string } = {};
 	messageMap: { [key: string]: Function };
 
 	constructor() {
 		super();
 
-		this.backgroundMessage = 'invalidate';
-		this.headerDataExternalPrincipal = 'not data';
-		this.backgroundMessageUOM = 'actualizar_datos_de_item_unit_of_measure';
-
 		this.seeMoreInformationSelector = {
 			seeMoreInformation: '#seeMoreInformation',
 			capacityCJ: '#DetailPaneHeaderShowCapacityCJ',
 		};
-		this.externalPanelElements = {};
-		this.internalPanelElements = {};
-		this.internalPanelValue = {};
 
 		this.messageMap = {
 			[this.backgroundMessage]: (datos) => this.updateDetailsPanelInfo(datos),
@@ -34,18 +29,18 @@ export class HandlePanelDetailDataExternal extends HandlePanelDetail {
 
 	initializeInternalPanelElements() {
 		// Retorna un Objeto de Elementos
-		throw new Error('El método _initializeInternalPanelElements no esta definido');
+		throw new Error('El método initializeInternalPanelElements no esta definido');
 	}
 
 	initializeExternalPanelElements() {
 		// Retorna un Objeto de Elementos
-		throw new Error('El método _initializeExternalPanelElements no esta definido');
+		throw new Error('El método initializeExternalPanelElements no esta definido');
 	}
 
 	initializePanelElements() {
 		return new Promise((resolve, reject) => {
-			const internalElements = this.initializeInternalPanelElements();
-			const externalElements = this.initializeExternalPanelElements();
+			const internalElements = this.initializeInternalPanelElements() ?? {};
+			const externalElements = this.initializeExternalPanelElements() ?? {};
 
 			// Combina todos los elementos
 			const allElements = {
@@ -54,7 +49,7 @@ export class HandlePanelDetailDataExternal extends HandlePanelDetail {
 			};
 
 			const missingOptions = Object.entries(allElements)
-				.filter(([key, value]) => !value)
+				.filter(([_key, value]) => !value)
 				.map(([key]) => key);
 
 			if (missingOptions.length > 0) {
@@ -135,7 +130,7 @@ export class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		throw new Error('El método _updateDetailsPanelInfo no esta definido');
 	}
 
-	_setDataExternal(elementsToUpdate = []) {
+	setDataExternal(elementsToUpdate = []) {
 		if (elementsToUpdate.length === 0) {
 			console.warn('[setDataExternal]: [elementsToUpdate] esta vació');
 			return;
@@ -183,7 +178,7 @@ export class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	}
 
 	initializeDataExternal() {
-		this._listeningToBackgroundMessages();
+		this.listeningToBackgroundMessages();
 		this.setEventSeeMore();
 	}
 
@@ -294,7 +289,7 @@ export class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		});
 	}
 
-	_listeningToBackgroundMessages() {
+	listeningToBackgroundMessages() {
 		chrome.runtime.onMessage.addListener((message) => {
 			const { action, datos } = message;
 

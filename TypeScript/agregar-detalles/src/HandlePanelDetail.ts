@@ -32,12 +32,12 @@ export class HandlePanelDetail {
 	}
 
 	initializePanelElements() {
-		return new Promise((resolve) => setTimeout(resolve, 50));
+		throw new Error('El método initializePanelElements no esta definido');
 	}
 
 	async initializeHandlePanelDetail() {
 		try {
-			await this.initializePanelElements();
+		 	this.initializePanelElements();
 		} catch (error) {
 			console.error('Error: ha ocurrido un error al inizicailar HandlePanelDetail:', error);
 		}
@@ -48,8 +48,9 @@ export class HandlePanelDetail {
 		return element?.textContent.trim() || fallback;
 	}
 
-	public extraerDatosDeTr(tr: HTMLTableRowElement) {
-		if (!tr) return;
+	public extraerDatosDeTr(tr : HTMLTableRowElement) {
+		console.log('[extraerDatosDeTr]:', tr);
+		throw new Error('El método extraerDatosDeTr no esta definido');
 	}
 
 	public async cleanDetailPanel() {
