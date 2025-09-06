@@ -153,6 +153,22 @@ export class ToastAlert {
 			console.error('Error: a surgido un problema al crear una alerta', error);
 		}
 	}
+
+	static showAlertMinTop(message: string, type: ToastType = 'error') {
+		try {
+			const configuration: ToastConfig = {
+				message: message,
+				type: type,
+				time: 5000,
+				_className: 'toast-top-min-width',
+			};
+
+			const toastAlert = new ToastAlert(configuration);
+			toastAlert.createToast();
+		} catch (error) {
+			console.error('Error: a surgido un problema al crear una alerta', error);
+		}
+	}
 }
 
 // Insertar Estilos Adicionales

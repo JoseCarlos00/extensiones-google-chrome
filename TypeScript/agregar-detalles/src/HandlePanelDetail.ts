@@ -31,28 +31,28 @@ export class HandlePanelDetail {
 		this.isCancelGetDataExternal = value;
 	}
 
-	_initializePanelElements() {
+	initializePanelElements() {
 		return new Promise((resolve) => setTimeout(resolve, 50));
 	}
 
-	async _initializeHandlePanelDetail() {
+	async initializeHandlePanelDetail() {
 		try {
-			await this._initializePanelElements();
+			await this.initializePanelElements();
 		} catch (error) {
 			console.error('Error: ha ocurrido un error al inizicailar HandlePanelDetail:', error);
 		}
 	}
 
 	// Función auxiliar para extraer y limpiar valores de un elemento del DOM
-	_extractAndTrim(element, fallback = '—') {
+	public extractAndTrim(element: HTMLElement | null, fallback = '—') {
 		return element?.textContent.trim() || fallback;
 	}
 
-	_extraerDatosDeTr(tr) {
+	public extraerDatosDeTr(tr: HTMLTableRowElement) {
 		if (!tr) return;
 	}
 
-	async _cleanDetailPanel() {
+	public async cleanDetailPanel() {
 		for (const key in this.panelElements) {
 			const element = this.panelElements[key];
 
@@ -61,7 +61,7 @@ export class HandlePanelDetail {
 	}
 
 	public async insertInfo({ insert = [] }) {
-		await this._cleanDetailPanel();
+		await this.cleanDetailPanel();
 
 		// Asignar valores a los elementos del DOM si existen
 		if (insert.length === 0) {
@@ -74,10 +74,7 @@ export class HandlePanelDetail {
 		});
 	}
 
-	
-
-
-	public insertarTienda(shipmentId) {
+	public insertarTienda(shipmentId: string) {
 		// Insertar tienda si el elemento del cliente existe y hay un ID de envío
 		if (this.panelElements.customer && shipmentId) {
 			// Obtener la clave inicial y reemplazar la R si está al principio

@@ -72,9 +72,9 @@ export class ToastAlert {
 	}
 
 	private addEventListeners() {
-    if (!this.container) {
-      throw new Error('No se encontró el contenedor de alerta #toast-container');
-    }
+		if (!this.container) {
+			throw new Error('No se encontró el contenedor de alerta #toast-container');
+		}
 
 		const closeButton = this.container.querySelector('.toast-close-button');
 		const toastMessage = this.container.querySelector('.toast-message');
@@ -145,6 +145,22 @@ export class ToastAlert {
 				type: type,
 				time: 3000,
 				_className: 'toast-bottom-min-width',
+			};
+
+			const toastAlert = new ToastAlert(configuration);
+			toastAlert.createToast();
+		} catch (error) {
+			console.error('Error: a surgido un problema al crear una alerta', error);
+		}
+	}
+
+	static showAlertMinTop(message: string, type: ToastType = 'error') {
+		try {
+			const configuration: ToastConfig = {
+				message: message,
+				type: type,
+				time: 5000,
+				_className: 'toast-top-min-width',
 			};
 
 			const toastAlert = new ToastAlert(configuration);
