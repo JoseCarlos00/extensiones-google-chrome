@@ -1,0 +1,57 @@
+.wait {
+	display: inline-block;
+	height: 12.14px;
+	vertical-align: middle;
+	cursor: wait;
+	color: #fff !important;
+	background-color: #fff !important;
+	opacity: 0.5;
+	animation: wait 2s ease-in-out infinite;
+}
+
+@keyframes wait {
+	50% {
+		opacity: 0.2;
+	}
+}
+
+.anchorPanelDetail {
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+.anchorPanelDetail:not(.wait) {
+	color: #4f93e4;
+	text-decoration: none;
+	font-weight: bold;
+	display: block;
+}
+
+.anchorPanelDetail:hover {
+	text-decoration: underline !important;
+}
+
+.anchorPanelDetail.disabled {
+	pointer-events: none !important;
+	opacity: 0.8;
+	text-decoration: line-through !important;
+}
+
+.anchorPanelDetail:not(.disabled):not(.show-info) {
+	pointer-events: auto;
+}
+
+.anchorPanelDetail.show-info {
+	color: #fff !important;
+	pointer-events: none !important;
+}
+
+.detailpaneheaderlabelPersonality {
+	display: inline !important;
+	white-space: normal !important;
+	user-select: text;
+}
+
+.detailpaneheaderDiv {
+	margin-bottom: 10px;
+}

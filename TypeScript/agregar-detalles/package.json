@@ -1,0 +1,19 @@
+{
+  "name": "agregar-detalles",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "clear": "rm -rf dist",
+    "build": "tsc && vite build",
+    "build-del": "npm run clear && npm run build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.6",
+    "@types/node": "^24.3.1",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2"
+  }
+}
