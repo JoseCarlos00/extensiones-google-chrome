@@ -1,16 +1,17 @@
 {
-  "name": "inventory_insight",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "@types/node": "^24.3.1",
-    "typescript": "~5.8.3",
-    "vite": "^7.1.2"
-  }
+	"name": "inventory_insight",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"build-del": "rm -rf dist && tsc && vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@types/node": "^24.3.1",
+		"typescript": "~5.8.3",
+		"vite": "^7.1.2"
+	}
 }
