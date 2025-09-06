@@ -21,11 +21,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2776*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"shipment/line/HandleLineInsight.js",
 				"shipment/line/main.js"
 			],
@@ -44,13 +40,9 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2735*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"shipment/insight/HandleInsight.js",
-				"shipment/insight/ManangerPanelDetail.js",
+				"shipment/insight/ManagerPanelDetail.js",
 				"shipment/insight/main.js"
 			],
 			"css": ["style.css", "shipment/style.css"]
@@ -68,11 +60,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2783*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"transaction_history/HandleTransactionHistory.js",
 				"transaction_history/main.js"
 			],
@@ -84,11 +72,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2723*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"inventory_insight/HandleInventory.js",
 				"inventory_insight/main.js"
 			],
@@ -107,12 +91,8 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2780*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
-				"receipt/detail/HandleReceipLineInsight.js",
+				"ManagerPanelDetail.js",
+				"receipt/detail/HandleReceiptLineInsight.js",
 				"receipt/detail/main.js"
 			],
 			"css": ["style.css"]
@@ -123,12 +103,8 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2777*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
-				"receipt/insight/ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
+				"receipt/insight/ManagerPanelDetail.js",
 				"receipt/insight/HandleReceiptInsight.js",
 				"receipt/insight/main.js"
 			],
@@ -140,11 +116,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2779*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"receipt/container/HandleReceiptContainer.js",
 				"receipt/container/main.js"
 			],
@@ -170,12 +142,8 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/4026*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
-				"shipping/container/ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
+				"shipping/container/ManagerPanelDetail.js",
 				"shipping/container/HandleShippingContainer.js",
 				"shipping/container/main.js"
 			],
@@ -194,12 +162,8 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/3041*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
-				"shipping/load/ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
+				"shipping/load/ManagerPanelDetail.js",
 				"shipping/load/HandleShippingLoad.js",
 				"shipping/load/main.js"
 			],
@@ -211,11 +175,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2773*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"wave_insight/HandleWaveInsight.js",
 				"wave_insight/main.js"
 			],
@@ -234,11 +194,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2757*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"work_insight/HandleWorkInsight.js",
 				"work_insight/main.js"
 			],
@@ -257,11 +213,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2774*"
 			],
 			"js": [
-				"ToastAlert.js",
-				"ElementsHtml.js",
-				"HandlePanelDetail.js",
-				"HandlePanelDetailDataExternal.js",
-				"ManangerPanelDetail.js",
+				"ManagerPanelDetail.js",
 				"planned_shipment_insight/HandlePlannedShipment.js",
 				"planned_shipment_insight/main.js"
 			],
@@ -272,7 +224,7 @@
 				"https://wms.fantasiasmiguel.com.mx/SCALE/General/Error?error*",
 				"https://qawms.fantasiasmiguel.com.mx/SCALE/General/Error?error*"
 			],
-			"js": ["errrorSegurity.js"]
+			"js": ["errorSecurity.js"]
 		},
 		{
 			"matches": [
