@@ -1,8 +1,6 @@
 import { ModalCreateHTML } from '../modal/ModaCreateHTML';
-
-
 export async function getHtmlContent({ sectionContainerClass, modalId, formId }: { sectionContainerClass: string; modalId: string, formId: string }): Promise<HTMLElement> {
-  const modalContent = /*html*/`
+  const modalContent = /*html*/ `
     <form id="${formId}" class="insertar-item">
       <label for="insertItem"> 
         Insertar Item 
@@ -14,9 +12,14 @@ export async function getHtmlContent({ sectionContainerClass, modalId, formId }:
         Proporciona un item valido.
       </div>
 
-        <button class="button" id="registrarItems">
+      <div class="container-buttons">
+         <button class="button" id="registrarItems">
           <span class="text">Registrar</span>
         </button>
+         <button type="reset" class="button-clear" tabindex="0">
+          <span class="text">Limpiar</span>
+        </button>
+      </div>
     </form>
   `;
 

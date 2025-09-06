@@ -1,41 +1,58 @@
 import type { IModalHandler } from '../modal/ModalManager';
 
+interface ModalHandlerConstructor {
+	formId: string;
+	idModaFather: string;
+}
+
 export class ModalHandler implements IModalHandler {
 	// Configuration
-	private readonly prefix: string;
 	private readonly formId: string;
 	private readonly idModaFather: string;
 
-	private datos: string[] = [];
+	private data: string[] = [];
 
 	// DOM Elements
 	private modal: HTMLElement | null = null;
 	private formItem: HTMLFormElement | null = null;
 	private insertItem: HTMLTextAreaElement | null = null;
+	private tableContent: HTMLTableElement | null = null;
 
-	constructor({ modalId, formId, idModaFather }: { modalId: string; formId: string; idModaFather: string }) {
-		this.prefix = `#${modalId}`;
+	// Constructor
+
+	constructor({ formId, idModaFather }: ModalHandlerConstructor) {
 		this.formId = `#${formId}`;
 		this.idModaFather = `#${idModaFather}`;
 	}
 
-	datosReset() {
-		this.datos.length = 0;
+	private datosReset() {
+		this.data.length = 0;
 	}
 
 	private async initializeProperties() {
 		this.formItem = document.querySelector(this.formId);
-		this.formItem = this.insertItem = this.formItem?.insertItem;
+		this.insertItem = this.formItem?.insertItem;
+		this.tableContent = document.querySelector(`${this.idModaFather} #tableContent`);
+
+		if (!this.formItem) {
+			throw new Error('No se encontró el formulario #formInsertItem');
+		}
+
+		if (!this.insertItem) {
+			throw new Error('No se encontró el campo de texto #insertItem');
+		}
+
+		if (!this.tableContent) {
+			throw new Error('No se encontró la tabla #tableContent');
+		}
 	}
 
-	insertarItems() {
-		const table = document.querySelector(`${this.idModaFather} #tableContent}`);
-		
-		if (!table) {
+	private insertarItems() {
+		if (!this.tableContent) {
 			throw new Error('No se encontró la tabla #tableContent');
 		}
 
-		const rows = Array.from(table.querySelectorAll('tbody tr'));
+		const rows = Array.from(this.tableContent.querySelectorAll('tbody tr'));
 
 		if (rows.length === 0) {
 			console.warn('No se encontraron filas en la tabla');
@@ -43,10 +60,13 @@ export class ModalHandler implements IModalHandler {
 
 		rows.forEach((row) => {
 			const td = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"]');
-			const inputItem = row.querySelector('td[aria-describedby="ListPaneDataGrid_ITEM"] input') as HTMLInputElement | null;
-			const item = inputItem ? inputItem?.value?.trim() : '';
+			const inputItem = row.querySelector(
+				'td[aria-describedby="ListPaneDataGrid_ITEM"] input'
+			) as HTMLInputElement | null;
+			
+			const itemValue = inputItem ? inputItem?.value?.trim() : '';
 
-			if (item && this.datos.includes(item)) {
+			if (itemValue && this.data.includes(itemValue)) {
 				td?.classList?.add('item-exist');
 			}
 		});
@@ -57,7 +77,7 @@ export class ModalHandler implements IModalHandler {
 	registrarDatos = (e: SubmitEvent) => {
 		e.preventDefault();
 
-		const { insertItem, formItem, datos } = this;
+		const { insertItem, formItem, data } = this;
 
 		if (!insertItem || !formItem) {
 			console.error('No se encontró el formulario #formInsertItem y sus campos');
@@ -78,13 +98,13 @@ export class ModalHandler implements IModalHandler {
 				// match[1] contiene el valor sin la coma al final
 				const valorSinComa = match[1];
 
-				if (!datos.includes(valorSinComa)) {
-					datos.push(valorSinComa);
+				if (!data.includes(valorSinComa?.trim())) {
+					data.push(valorSinComa?.trim());
 				}
 			}
 		});
 
-		if (datos.length === 0) {
+		if (data.length === 0) {
 			insertItem.classList.add('is-invalid');
 			return;
 		}
@@ -108,12 +128,13 @@ export class ModalHandler implements IModalHandler {
 	}
 
 	private openModal() {
+		this.datosReset();
+		this.insertItem?.classList.remove('is-invalid');
 		this.modal && (this.modal.style.display = 'block');
 	}
 
 	private closeModal() {
 		this.modal && (this.modal.style.display = 'none');
-		this.datosReset();
 	}
 
 	public async setModalElement(modal: HTMLElement | null): Promise<void> {
@@ -131,13 +152,13 @@ export class ModalHandler implements IModalHandler {
 		}
 	}
 
-	async handleOpenModal() {
+	public async handleOpenModal() {
 		try {
 			this.openModal();
 
 			setTimeout(() => this.insertItem?.focus(), 50);
 		} catch (error) {
-			console.error(`Error en handleOpenModal: ${error}`);
+			console.error(`[ModalHandler Item] Error in handleOpenModal: ${error}`);
 		}
 	}
 }
