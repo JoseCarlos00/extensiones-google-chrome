@@ -1,88 +1,84 @@
-import { getTiendas, type Tiendas } from "./services/cloudTiendas";
-import { tiendas } from "./constants";
+import { getTiendas, type Tiendas } from './services/cloudTiendas';
+import { tiendas as defaultTiendas } from './constants';
+import type { IHandlerPanelDetail } from './ManagerPanelDetail';
 
-export class HandlePanelDetail {
-	getTiendas = getTiendas;
-	tiendas: Tiendas = tiendas;
-	panelElements: { [key: string]: HTMLElement } = {};
-	group1ExternalPanelElements: { [key: string]: HTMLElement } = {};
-	group2ExternalPanelElements: { [key: string]: HTMLElement } = {};
-	selectorsId: { [key: string]: string } = {};
-	externalData: { [key: string]: string } = {};
-	internalData: { [key: string]: string } = {};
+export abstract class HandlePanelDetail implements IHandlerPanelDetail {
+	protected tiendas: Tiendas = defaultTiendas;
+	public panelElements: { [key: string]: HTMLElement | null } = {};
 
-	isCancelGetDataExternal = false;
+	// --- Métodos abstractos que las subclases deben implementar ---
+	public abstract extraerDatosDeTr(tr: HTMLTableRowElement): void;
+	protected abstract initializePanelElements(): Promise<void> | void;
 
-	constructor() {
-		this.isCancelGetDataExternal = false;
-
-		this.getTiendas().then((res) => {
-			if (res === null || typeof res !== 'object' || Object.keys(res).length === 0) {
-				console.log('[fetch JSON.Bin.io] No se encontraron tiendas en el JSON.');
-				return;
-			}
-
-			this.tiendas = res;
-			this.tiendas.E = 'Tultitlan';
-		});
-	}
-
-	setIsCancelGetDataExternal(value = true) {
-		this.isCancelGetDataExternal = value;
-	}
-
-	initializePanelElements() {
-		throw new Error('El método initializePanelElements no esta definido');
-	}
-
-	async initializeHandlePanelDetail() {
+	// --- Lógica de inicialización común ---
+	public async initializeHandlePanelDetail(): Promise<void> {
 		try {
-		 	this.initializePanelElements();
+			await this.initializePanelElements();
+			await this.loadTiendas();
 		} catch (error) {
-			console.error('Error: ha ocurrido un error al inizicailar HandlePanelDetail:', error);
+			console.error('Error: ha ocurrido un error al inicializar HandlePanelDetail:', error);
 		}
 	}
 
-	// Función auxiliar para extraer y limpiar valores de un elemento del DOM
-	public extractAndTrim(element: HTMLElement | null, fallback = '—') {
-		return element?.textContent.trim() || fallback;
+	private async loadTiendas(): Promise<void> {
+		try {
+			const res = await getTiendas();
+			
+			if (res && Object.keys(res).length > 0) {
+				this.tiendas = { ...res, E: 'Tultitlan' };
+			} else {
+				console.log('[loadTiendas] No se encontraron tiendas en el JSON, usando las por defecto.');
+				this.tiendas.E = 'Tultitlan';
+			}
+		} catch (error) {
+			console.error('[loadTiendas] Error al cargar tiendas, usando las por defecto.', error);
+			this.tiendas.E = 'Tultitlan';
+		}
 	}
 
-	public extraerDatosDeTr(tr : HTMLTableRowElement) {
-		console.log('[extraerDatosDeTr]:', tr);
-		throw new Error('El método extraerDatosDeTr no esta definido');
+	// --- Implementación de la interfaz IHandlerPanelDetail ---
+	public setIsCancelGetDataExternal(_value: boolean = true): void {
+		// La implementación por defecto no hace nada.
+		// Las subclases que manejan datos externos deben sobreescribir este método.
 	}
 
-	public async cleanDetailPanel() {
+	public async cleanDetailPanel(): Promise<void> {
 		for (const key in this.panelElements) {
 			const element = this.panelElements[key];
 
-			element && (element.innerHTML = '');
+			if (element) {
+				element.innerHTML = '';
+				element.classList.remove('wait', 'show-info', 'disabled');
+			}
 		}
 	}
 
-	public async insertInfo({ insert = [] }) {
+	// --- Métodos de utilidad para las subclases ---
+	public extractAndTrim(element: Element | null, fallback = '—'): string {
+		return element?.textContent.trim() || fallback;
+	}
+
+	public async insertInfo(inserts: { element: HTMLElement | null; value: string }[]): Promise<void> {
 		await this.cleanDetailPanel();
 
-		// Asignar valores a los elementos del DOM si existen
-		if (insert.length === 0) {
+		if (inserts.length === 0) {
 			console.warn('[insertarInfo]: No se encontraron elementos para insertar');
 			return;
 		}
 
-		insert.forEach(({ element, value }: { element: HTMLElement; value: string }) => {
-			element && (element.textContent = value);
+		inserts.forEach(({ element, value }) => {
+			if (element) {
+				element.textContent = value;
+			}
 		});
 	}
 
 	public insertarTienda(shipmentId: string) {
-		// Insertar tienda si el elemento del cliente existe y hay un ID de envío
-		if (this.panelElements.customer && shipmentId) {
-			// Obtener la clave inicial y reemplazar la R si está al principio
+		const customerElement = this.panelElements.customer;
+		if (customerElement && shipmentId) {
 			const clave = shipmentId.trim().split('-')[0].replace(/^R/, '');
-
-			const tienda = this.tiendas?.hasOwnProperty(clave) ? this.tiendas[clave] : '—';
-			this.panelElements.customer.innerHTML = tienda;
+			const tienda = this.tiendas?.[clave] ?? '—';
+			customerElement.innerHTML = tienda;
 		}
 	}
 }

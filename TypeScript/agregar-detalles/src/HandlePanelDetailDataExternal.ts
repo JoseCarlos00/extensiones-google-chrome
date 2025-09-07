@@ -1,144 +1,147 @@
-import { HandlePanelDetail } from "./HandlePanelDetail"
-import { ToastAlert } from "./utils/ToastAlert"
+import { HandlePanelDetail } from './HandlePanelDetail';
+import { ToastAlert } from './utils/ToastAlert';
 
-export class HandlePanelDetailDataExternal extends HandlePanelDetail {
-	backgroundMessage: string = "invalidate";
-	headerDataExternalPrincipal: string = 'not data';
-	backgroundMessageUOM: string = 'actualizar_datos_de_item_unit_of_measure';
-	isCancelGetDataExternal: boolean = false;
-	seeMoreInformationSelector: { [key: string]: string };
-	externalPanelElements: { [key: string]: HTMLElement } = {};
-	internalPanelElements: { [key: string]: HTMLElement } = {};
-	panelElements: { [key: string]: HTMLElement } = {};
-	internalPanelValue: { [key: string]: string } = {};
-	messageMap: { [key: string]: Function };
+class BackgroundCommunicator {
+	private messageListeners: Map<string, (data: any) => void> = new Map();
+	private isCancelled: () => boolean;
+
+	constructor(isCancelledCallback: () => boolean) {
+		this.isCancelled = isCancelledCallback;
+		chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
+	}
+
+	private handleMessage(message: { action: string; datos: any }): void {
+		if (this.isCancelled()) {
+			return;
+		}
+
+		const handler = this.messageListeners.get(message.action);
+		if (handler) {
+			handler(message.datos);
+		} else {
+			console.error('[BackgroundCommunicator]: Mensaje de background desconocido:', message.action);
+		}
+	}
+
+	public addMessageHandler(action: string, handler: (data: any) => void): void {
+		this.messageListeners.set(action, handler);
+	}
+
+	public sendMessage(action: string, url: string): void {
+		chrome.runtime.sendMessage({ action, url }, (response) => {
+			if (chrome.runtime.lastError) {
+				console.error('Error al enviar mensaje:', chrome.runtime.lastError.message);
+				return;
+			}
+			console.log('Respuesta de background.js:', response?.status);
+		});
+	}
+}
+
+export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
+	// --- Propiedades de configuración para subclases ---
+	protected backgroundMessage: string = 'invalidate';
+	protected backgroundMessageUOM: string = 'actualizar_datos_de_item_unit_of_measure';
+	protected headerDataExternalPrincipal: string = 'not data';
+
+	// --- Estado ---
+	protected isCancelGetDataExternal: boolean = false;
+
+	// --- Colaboradores ---
+	private backgroundCommunicator: BackgroundCommunicator;
+
+	// --- Elementos del DOM ---
+	public externalPanelElements: { [key: string]: HTMLElement | null } = {};
+	public internalPanelElements: { [key: string]: HTMLElement | null } = {};
+	public internalPanelValue: { [key: string]: string } = {};
 
 	constructor() {
 		super();
-
-		this.seeMoreInformationSelector = {
-			seeMoreInformation: '#seeMoreInformation',
-			capacityCJ: '#DetailPaneHeaderShowCapacityCJ',
-		};
-
-		this.messageMap = {
-			[this.backgroundMessage]: (datos) => this.updateDetailsPanelInfo(datos),
-			datos_no_encontrados: () => this.removeClassWait(this.externalPanelElements),
-		};
+		this.backgroundCommunicator = new BackgroundCommunicator(() => this.isCancelGetDataExternal);
 	}
 
-	initializeInternalPanelElements() {
-		// Retorna un Objeto de Elementos
-		throw new Error('El método initializeInternalPanelElements no esta definido');
+	// --- Métodos abstractos para que las subclases implementen ---
+	protected abstract initializeInternalPanelElements(): { [key: string]: HTMLElement | null };
+	protected abstract initializeExternalPanelElements(): { [key: string]: HTMLElement | null };
+	protected abstract registerBackgroundMessageHandlers(): void;
+	public abstract getDataExternal(): void;
+
+	// --- Sobrescritura de métodos de la clase base y la interfaz ---
+	public setIsCancelGetDataExternal(value: boolean = true): void {
+		this.isCancelGetDataExternal = value;
 	}
 
-	initializeExternalPanelElements() {
-		// Retorna un Objeto de Elementos
-		throw new Error('El método initializeExternalPanelElements no esta definido');
-	}
-
-	initializePanelElements() {
+	protected initializePanelElements(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			const internalElements = this.initializeInternalPanelElements() ?? {};
-			const externalElements = this.initializeExternalPanelElements() ?? {};
+			this.internalPanelElements = this.initializeInternalPanelElements() ?? {};
+			this.externalPanelElements = this.initializeExternalPanelElements() ?? {};
 
-			// Combina todos los elementos
-			const allElements = {
-				...internalElements,
-				...externalElements,
-			};
+			const allElements = { ...this.internalPanelElements, ...this.externalPanelElements };
 
 			const missingOptions = Object.entries(allElements)
-				.filter(([_key, value]) => !value)
+				.filter(([, value]) => !value)
 				.map(([key]) => key);
 
 			if (missingOptions.length > 0) {
-				reject(
-					`No se encontraron los elementos necesarios para inicializar HandlePanelDetail: [${missingOptions.join(
-						', '
-					)}]`
-				);
+				return reject(`No se encontraron los elementos necesarios: [${missingOptions.join(', ')}]`);
 			}
 
-			// Asigna los elementos validados a sus respectivos objetos
-			this.internalPanelElements = internalElements;
-			this.externalPanelElements = externalElements;
 			this.panelElements = allElements;
-
-			setTimeout(resolve, 50);
+			resolve();
 		});
 	}
 
-	async cleanDetailPanel() {
-		for (const key in this.panelElements) {
-			const element = this.panelElements[key];
+	public async initializeHandlePanelDetail(): Promise<void> {
+		try {
+			await super.initializeHandlePanelDetail();
+			this.registerBackgroundMessageHandlers();
+			this.initializeDataExternal();
+		} catch (error) {
+			console.error('Error al inicializar HandlePanelDetailDataExternal:', error);
+			throw error;
+		}
+	}
 
+	public async cleanDetailPanel(): Promise<void> {
+		this.setIsCancelGetDataExternal(true);
+		await super.cleanDetailPanel();
+	}
+
+	// --- Manejo de estado de la UI ---
+	protected setElementState(elements: (HTMLElement | null)[], state: 'wait' | 'error' | 'clear', text?: string) {
+		const defaultTexts = {
+			wait: 'Cargando...',
+			error: 'No encontrado',
+			clear: '',
+		};
+		const textToSet = text ?? defaultTexts[state];
+
+		elements.forEach((element) => {
 			if (element) {
-				element.innerHTML = '';
-				element.classList.remove('wait');
+				element.innerHTML = textToSet;
+				element.classList.remove('wait', 'show-info');
+				if (state === 'wait') {
+					element.classList.add('wait');
+				}
 			}
-		}
+		});
 	}
 
-	insertSeeMoreInformation() {
-		const { seeMoreInformation } = this.panelElements;
-
-		if (seeMoreInformation) {
-			seeMoreInformation.classList.remove('disabled');
-			seeMoreInformation.innerHTML = 'Ver mas info...';
-		}
+	protected waitForData(elements: (HTMLElement | null)[]) {
+		this.setElementState(elements, 'wait');
 	}
 
-	waitForData(externalPanelElements: { [key: string]: HTMLElement }) {
-		const text = '1346-863-28886...';
-
-		if (!(externalPanelElements instanceof Object) || !externalPanelElements) {
-			console.error('[waitForData]: No se encontró el objeto [externalPanelElements]');
-			return;
-		}
-
-		for (const key in externalPanelElements) {
-			const element = externalPanelElements[key];
-
-			if (element) {
-				element.innerHTML = text;
-				element.classList.add('wait');
-			}
-		}
+	protected setDataNotFound(elements: (HTMLElement | null)[]) {
+		this.setElementState(elements, 'error');
 	}
 
-	removeClassWait(externalPanelElements: { [key: string]: HTMLElement }) {
-		const text = 'No encontrado';
-
-		if (!(externalPanelElements instanceof Object) || !externalPanelElements) {
-			console.error('[removeClassWait]: No se encontró el objeto [externalPanelElements]');
-			return;
-		}
-
-		for (const key in externalPanelElements) {
-			const element = externalPanelElements[key];
-
-			if (element) {
-				element.innerHTML = text;
-				element.classList.remove('wait');
-			}
-		}
-	}
-
-	updateDetailsPanelInfo(datos) {
-		// Actualizar la interfaz con los datos recibidos
-		throw new Error('El método _updateDetailsPanelInfo no esta definido');
-	}
-
-	setDataExternal(elementsToUpdate = []) {
+	protected setDataExternal(elementsToUpdate: { element: HTMLElement | null; value: string }[]): void {
 		if (elementsToUpdate.length === 0) {
 			console.warn('[setDataExternal]: [elementsToUpdate] esta vació');
 			return;
 		}
 
-		// Iterar sobre elementsToUpdate
-		elementsToUpdate.forEach(({ element, value }: { element: HTMLElement; value: string }) => {
-			// Actualizar el valor del elemento
+		elementsToUpdate.forEach(({ element, value }) => {
 			if (element) {
 				element.innerText = value;
 				element.classList.remove('wait');
@@ -146,72 +149,49 @@ export class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		});
 	}
 
-	sendBackgroundMessage(urlParams: string) {
-		chrome.runtime.sendMessage(
-			{
-				action: 'some_action',
-				url: urlParams,
-			},
-			(response) => {
-				console.log('Respuesta de background.js:', response.status);
-			}
-		);
+	// --- Fachada de comunicación con el Background Script ---
+	protected sendBackgroundMessage(url: string, action: string = 'some_action'): void {
+		this.backgroundCommunicator.sendMessage(action, url);
 	}
 
-	getDataExternal() {
-		// Obtener los datos de la API externa
-		throw new Error('El método _getDataExternal no esta definido');
+	protected addMessageHandler(action: string, handler: (data: any) => void): void {
+		this.backgroundCommunicator.addMessageHandler(action, handler.bind(this));
 	}
 
-	setEventSeeMore() {
-		const { seeMoreInformation } = this.panelElements;
-		// Agregar evento al botón "Ver más"
+	// --- Lógica de inicialización genérica para datos externos ---
+	protected initializeDataExternal(): void {
+		this.setEventSeeMore();
+	}
+
+	protected setEventSeeMore(): void {
+		const seeMoreInformation = this.panelElements.seeMoreInformation;
 		if (!seeMoreInformation) {
-			console.warn('No se encontró el botón "Ver más"');
 			return;
 		}
 
 		seeMoreInformation.addEventListener('click', () => {
+			if (seeMoreInformation.classList.contains('disabled')) return;
 			seeMoreInformation.classList.add('disabled');
 			this.getDataExternal();
 		});
 	}
 
-	initializeDataExternal() {
-		this.listeningToBackgroundMessages();
-		this.setEventSeeMore();
-	}
+	/**
+	 * Los métodos a continuación están relacionados con la función 'Capacidad CJ'.
+	 * Considere moverlos a un servicio dedicado o una clase base más específica
+	 * si esta funcionalidad es compartida por varios, pero no todos, los handlers.
+	 */
 
-	async initializeHandlePanelDetail() {
-		try {
-			await this.initializePanelElements();
-			this.initializeDataExternal();
-		} catch (error) {
-			console.error('Error: ha ocurrido un error al inizicailar HandlePanelDetailDataExternal:', error);
-		}
-	}
-
-	handleDataNoFoundCapacity() {
+	protected handleDataNoFoundCapacity(): void {
 		const { capacityCJ } = this.externalPanelElements;
-
 		if (capacityCJ) {
-			capacityCJ.innerHTML = 'No encontrado';
-			capacityCJ.classList.remove('wait');
+			this.setDataNotFound([capacityCJ]);
 			capacityCJ.classList.remove('disabled');
 			capacityCJ.classList.add('show-info');
 		}
 	}
 
-	handleDataNotFound(datos) {
-		const { header } = datos;
-
-		if (header === this.headerDataExternalPrincipal) {
-			this.removeClassWait(this.group1ExternalPanelElements);
-			return;
-		}
-	}
-
-	updateCapacityCJ(datos) {
+	protected updateCapacityCJ(datos: { capacityCJ?: string }): void {
 		const { capacityCJ } = this.panelElements;
 		const { capacityCJ: capacityCJValue = '' } = datos;
 
@@ -221,91 +201,54 @@ export class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		}
 
 		capacityCJ.innerHTML = `${capacityCJValue} CJ`;
-		capacityCJ.classList.remove('wait');
-		capacityCJ.classList.remove('disabled');
+		capacityCJ.classList.remove('wait', 'disabled');
 		capacityCJ.classList.add('show-info');
 	}
 
-	fetchCapacityData(item: string) {
+	protected fetchCapacityData(item: string): void {
 		try {
 			const urlParams = `https://wms.fantasiasmiguel.com.mx/scale/trans/itemUOM?Item=${item}&Company=FM&active=active`;
-			this.sendBackgroundMessage(urlParams);
+			this.sendBackgroundMessage(urlParams, this.backgroundMessageUOM);
 		} catch (error) {
 			console.error('Error: ha ocurrido un error al obtener la capacidad de item:', error);
 		}
 	}
 
-	getCurrentINternalItem() {
-		const { item } = this.internalPanelValue;
-		return item;
+	protected getCurrentItem(): string | undefined {
+		return document.querySelector('#DetailPaneHeaderItem')?.textContent?.trim();
 	}
 
-	getCurrentItem() {
-		const currentItem = document.querySelector('#DetailPaneHeaderItem')?.textContent?.trim();
-		return currentItem;
-	}
-
-	getCapacityCJ() {
+	protected getCapacityCJ(): void {
 		const item = this.getCurrentItem();
-		console.log('CurrentItem:', item);
-
 		if (!item) {
-			ToastAlert.showAlertMinTop('Ha ocurrido un error al obtener la capacidad del item');
+			ToastAlert.showAlertMinTop('Ha ocurrido un error al obtener el item actual.');
 			return;
 		}
 
 		const { capacityCJ } = this.externalPanelElements;
-
-		this.waitForData({ capacityCJ });
-		this.setIsCancelGetDataExternal(false);
-		this.fetchCapacityData(item);
+		if (capacityCJ) {
+			this.waitForData([capacityCJ]);
+			this.setIsCancelGetDataExternal(false);
+			this.fetchCapacityData(item);
+		}
 	}
 
-	initializeCapacityCJText() {
+	protected initializeCapacityCJText(): void {
 		const { capacityCJ } = this.externalPanelElements;
-
-		if (!capacityCJ) {
-			console.warn('No se encontró el elemento "Capacidad CJ"');
-			return;
+		if (capacityCJ) {
+			capacityCJ.classList.remove('disabled', 'show-info');
+			capacityCJ.innerHTML = 'Capacidad CJ...';
 		}
-
-		capacityCJ.classList.remove('disabled');
-		capacityCJ.classList.remove('show-info');
-		capacityCJ.innerHTML = 'Capacidad CJ...';
 	}
 
-	setClickEventCapacityCJ() {
+	protected setClickEventCapacityCJ(): void {
 		const { capacityCJ } = this.externalPanelElements;
+		if (!capacityCJ) return;
 
-		if (!capacityCJ) {
-			console.warn('No se encontró el elemento "Capacidad CJ"');
-			return;
-		}
-
-		capacityCJ.addEventListener('click', (e) => {
+		capacityCJ.addEventListener('click', () => {
+			if (capacityCJ.classList.contains('disabled')) return;
 			capacityCJ.classList.add('disabled');
-
 			this.getCapacityCJ();
-		});
-	}
-
-	listeningToBackgroundMessages() {
-		chrome.runtime.onMessage.addListener((message) => {
-			const { action, datos } = message;
-
-			console.log('msg action:', action);
-			console.log('this.backgroundMessage:', this.backgroundMessage);
-
-			if (this.isCancelGetDataExternal) {
-				return;
-			}
-
-			if (this.messageMap[action]) {
-				this.messageMap[action](datos);
-			} else {
-				console.error('[listeningToBackgroundMessages]: unknown background response message:', message.action);
-				console.log(this.messageMap);
-			}
 		});
 	}
 }
