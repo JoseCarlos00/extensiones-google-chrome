@@ -6,8 +6,7 @@ import type { BackgroundAction, ContentScriptAction } from '../messaging/actions
 export interface BackgroundMessage {
 	action: BackgroundAction;
 	url?: string;
-	datos?: any;
-	data?: any; // Usado por 'datos_no_encontrados_desde_detail'
+	data?: any;
 }
 
 /**
@@ -15,5 +14,5 @@ export interface BackgroundMessage {
  */
 export interface ContentScriptMessage {
 	action: ContentScriptAction;
-	datos: any;
+	data: any;
 }

@@ -54,7 +54,7 @@ export abstract class HandlePanelDetail implements IHandlerPanelDetail {
 	}
 
 	protected extractAndTrim(element: Element | null, fallback = '—'): string {
-		return element?.textContent.trim() || fallback;
+		return element?.textContent?.trim() || fallback;
 	}
 
 	public async insertInfo(inserts: { element: HTMLElement | null; value: string }[]): Promise<void> {

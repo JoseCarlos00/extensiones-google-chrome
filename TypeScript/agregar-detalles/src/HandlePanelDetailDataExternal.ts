@@ -19,7 +19,7 @@ class BackgroundCommunicator {
 
 		const handler = this.messageListeners.get(message.action);
 		if (handler) {
-			handler(message.datos);
+			handler(message.data);
 		}
 	}
 
@@ -29,6 +29,7 @@ class BackgroundCommunicator {
 
 	public sendMessage(action: BackgroundAction, payload: Omit<BackgroundMessage, 'action'>): void {
 		const message: BackgroundMessage = { action, ...payload };
+		
 		chrome.runtime.sendMessage(message, (response) => {
 			if (chrome.runtime.lastError) {
 				console.error('Error al enviar mensaje:', chrome.runtime.lastError.message);
@@ -42,7 +43,7 @@ class BackgroundCommunicator {
 export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	// --- Propiedades de configuración para subclases ---
 	// Las subclases deben especificar qué acción de background envían para obtener sus datos principales.
-	protected abstract backgroundMessageAction: BackgroundAction;
+	protected backgroundMessageAction: BackgroundAction | null = null;
 	// Acción que se escucha para actualizar la Unidad de Medida (UOM).
 	public readonly uomUpdateAction: ContentScriptAction = ContentScriptActions.UPDATE_ITEM_UOM;
 	protected headerDataExternalPrincipal: string = 'not data';

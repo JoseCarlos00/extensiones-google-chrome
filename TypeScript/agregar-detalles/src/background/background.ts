@@ -7,14 +7,15 @@ console.log('[background.ts] Service Worker running.');
 /**
  * Envía un mensaje al content script de la pestaña activa.
  * @param action La acción para el content script.
- * @param datos El payload de datos.
+ * @param data El payload de datos.
  */
-async function sendMessageToContentScript(action: ContentScriptAction, datos: any): Promise<void> {
-	console.log('[sendMessageToContentScript]', action, datos);
+async function sendMessageToContentScript(action: ContentScriptAction, data: any): Promise<void> {
+	console.log('[sendMessageToContentScript]', action, data);
 	try {
 		const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
 		if (tab?.id) {
-			const message: ContentScriptMessage = { action, datos };
+			const message: ContentScriptMessage = { action, data };
 			chrome.tabs.sendMessage(tab.id, message);
 		} else {
 			console.error('No se encontró una pestaña activa para enviar el mensaje.');
@@ -48,11 +49,12 @@ const actionForwardMap: Partial<Record<BackgroundAction, ContentScriptAction>> =
 chrome.runtime.onMessage.addListener((message: BackgroundMessage, sender, sendResponse) => {
 	console.log(`[background.ts] Acción recibida: ${message.action}`);
 
-	const { action, url, datos, data } = message;
+	const { action, url, data } = message;
 
 	// --- Manejadores especiales ---
 	if (action === BackgroundActions.OPEN_NEW_TAB) {
-		console.log('[Some Action]');
+		console.log('[OPEN_NEW_TAB]');
+		
 		if (url && sender.tab?.index !== undefined) {
 			chrome.tabs.create({ url, index: sender.tab.index + 1, active: false });
 			sendResponse({ status: 'OK' });
@@ -77,7 +79,7 @@ chrome.runtime.onMessage.addListener((message: BackgroundMessage, sender, sendRe
 	const forwardAction = actionForwardMap[action];
 	if (forwardAction) {
 		console.log(`[Acción de reenvío] De: ${action} -> A: ${forwardAction}`);
-		sendMessageToContentScript(forwardAction, datos);
+		sendMessageToContentScript(forwardAction, data);
 		return;
 	}
 

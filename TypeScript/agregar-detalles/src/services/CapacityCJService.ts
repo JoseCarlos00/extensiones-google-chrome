@@ -1,4 +1,5 @@
 import { ToastAlert } from '../utils/ToastAlert';
+import type { ContentScriptAction } from "../messaging/actions";
 
 /**
  * Define el contrato que un "host" (la clase que usa este servicio) debe cumplir.
@@ -6,15 +7,12 @@ import { ToastAlert } from '../utils/ToastAlert';
  */
 interface ICapacityCJHost {
 	readonly externalPanelElements: { capacityCJ?: HTMLElement | null };
-	readonly backgroundMessageUOM: string;
 	addMessageHandler(action: string, handler: (data: any) => void): void;
-	sendBackgroundMessage(url: string, action: string): void;
+	sendBackgroundMessage(url: string): void;
+	waitForData(elements: (HTMLElement | null)[]): void;
+	setDataNotFound(elements: (HTMLElement | null)[]): void;
 	setIsCancelGetDataExternal(value: boolean): void;
 	getCurrentItem(): string | undefined;
-	setExternalDataLoading(element: HTMLElement | null): void;
-	setExternalDataSuccess(element: HTMLElement | null, value: string): void;
-	setExternalDataError(element: HTMLElement | null, value?: string): void;
-	resetExternalDataUI(element: HTMLElement | null, initialText: string): void;
 }
 
 /**
@@ -23,7 +21,8 @@ interface ICapacityCJHost {
 export class CapacityCJService {
 	private host: ICapacityCJHost;
 	private capacityCJElement: HTMLElement | null;
-	private readonly initialText = 'Capacidad CJ...';
+	private readonly backgroundMessageUOM: ContentScriptAction = "actualizar_datos_de_item_unit_of_measure";
+
 
 	constructor(host: ICapacityCJHost) {
 		this.host = host;
@@ -46,15 +45,19 @@ export class CapacityCJService {
 	 * Restablece el texto y el estado del elemento de la interfaz de usuario.
 	 */
 	public resetText(): void {
-		this.host.resetExternalDataUI(this.capacityCJElement, this.initialText);
+		if (this.capacityCJElement) {
+			this.capacityCJElement.classList.remove('disabled', 'show-info');
+			this.capacityCJElement.innerHTML = 'Capacidad CJ...';
+		}
 	}
 
 	private registerEventHandlers(): void {
-		this.host.addMessageHandler(this.host.backgroundMessageUOM, this.updateCapacity.bind(this));
+		this.host.addMessageHandler(this.backgroundMessageUOM, this.updateCapacity.bind(this));
 		this.host.addMessageHandler('datos_no_encontrados', this.handleDataNotFound.bind(this));
 
 		this.capacityCJElement?.addEventListener('click', () => {
 			if (this.capacityCJElement?.classList.contains('disabled')) return;
+			this.capacityCJElement?.classList.add('disabled');
 			this.fetchData();
 		});
 	}
@@ -63,23 +66,29 @@ export class CapacityCJService {
 		const item = this.host.getCurrentItem();
 		if (!item) {
 			ToastAlert.showAlertMinTop('Ha ocurrido un error al obtener el item actual.');
+			this.capacityCJElement?.classList.remove('disabled');
 			return;
 		}
 
-		this.host.setExternalDataLoading(this.capacityCJElement);
+		this.host.waitForData([this.capacityCJElement]);
 		this.host.setIsCancelGetDataExternal(false);
 
 		const urlParams = `https://wms.fantasiasmiguel.com.mx/scale/trans/itemUOM?Item=${item}&Company=FM&active=active`;
-		this.host.sendBackgroundMessage(urlParams, this.host.backgroundMessageUOM);
+		this.host.sendBackgroundMessage(urlParams);
 	}
 
 	private handleDataNotFound(): void {
-		this.host.setExternalDataError(this.capacityCJElement);
+		this.host.setDataNotFound([this.capacityCJElement]);
+		this.capacityCJElement?.classList.remove('disabled');
+		this.capacityCJElement?.classList.add('show-info');
 	}
 
 	private updateCapacity(datos: { capacityCJ?: string }): void {
 		const { capacityCJ: capacityCJValue = '—' } = datos;
-		const displayText = `${capacityCJValue} CJ`;
-		this.host.setExternalDataSuccess(this.capacityCJElement, displayText);
+		if (!this.capacityCJElement) return;
+
+		this.capacityCJElement.innerHTML = `${capacityCJValue} CJ`;
+		this.capacityCJElement.classList.remove('wait', 'disabled');
+		this.capacityCJElement.classList.add('show-info');
 	}
 }
