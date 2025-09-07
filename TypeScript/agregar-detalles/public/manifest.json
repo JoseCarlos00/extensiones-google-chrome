@@ -21,7 +21,7 @@
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2783*"
 			],
 			"js": ["transaction_history/main.js"],
-			"css": ["style.css"]
+			"css": ["css/style.css"]
 		}
 	],
 	"action": {
