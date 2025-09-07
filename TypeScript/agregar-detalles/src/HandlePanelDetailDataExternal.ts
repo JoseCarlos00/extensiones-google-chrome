@@ -1,5 +1,4 @@
 import { HandlePanelDetail } from './HandlePanelDetail';
-import { ToastAlert } from './utils/ToastAlert';
 
 class BackgroundCommunicator {
 	private messageListeners: Map<string, (data: any) => void> = new Map();
@@ -127,12 +126,39 @@ export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		});
 	}
 
-	protected waitForData(elements: (HTMLElement | null)[]) {
+	public waitForData(elements: (HTMLElement | null)[]) {
 		this.setElementState(elements, 'wait');
 	}
 
-	protected setDataNotFound(elements: (HTMLElement | null)[]) {
+	public setDataNotFound(elements: (HTMLElement | null)[]) {
 		this.setElementState(elements, 'error');
+	}
+
+	public setExternalDataLoading(element: HTMLElement | null): void {
+		if (!element) return;
+		element.innerHTML = 'Cargando...';
+		element.classList.add('wait', 'disabled');
+		element.classList.remove('show-info');
+	}
+
+	public setExternalDataSuccess(element: HTMLElement | null, value: string): void {
+		if (!element) return;
+		element.innerHTML = value;
+		element.classList.remove('wait', 'disabled');
+		element.classList.add('show-info');
+	}
+
+	public setExternalDataError(element: HTMLElement | null, value: string = 'No encontrado'): void {
+		if (!element) return;
+		element.innerHTML = value;
+		element.classList.remove('wait', 'disabled');
+		element.classList.add('show-info');
+	}
+
+	public resetExternalDataUI(element: HTMLElement | null, initialText: string): void {
+		if (!element) return;
+		element.innerHTML = initialText;
+		element.classList.remove('wait', 'disabled', 'show-info');
 	}
 
 	protected setDataExternal(elementsToUpdate: { element: HTMLElement | null; value: string }[]): void {
@@ -150,11 +176,11 @@ export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	}
 
 	// --- Fachada de comunicación con el Background Script ---
-	protected sendBackgroundMessage(url: string, action: string = 'some_action'): void {
+	public sendBackgroundMessage(url: string, action: string = 'some_action'): void {
 		this.backgroundCommunicator.sendMessage(action, url);
 	}
 
-	protected addMessageHandler(action: string, handler: (data: any) => void): void {
+	public addMessageHandler(action: string, handler: (data: any) => void): void {
 		this.backgroundCommunicator.addMessageHandler(action, handler.bind(this));
 	}
 
@@ -176,79 +202,7 @@ export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
 		});
 	}
 
-	/**
-	 * Los métodos a continuación están relacionados con la función 'Capacidad CJ'.
-	 * Considere moverlos a un servicio dedicado o una clase base más específica
-	 * si esta funcionalidad es compartida por varios, pero no todos, los handlers.
-	 */
-
-	protected handleDataNoFoundCapacity(): void {
-		const { capacityCJ } = this.externalPanelElements;
-		if (capacityCJ) {
-			this.setDataNotFound([capacityCJ]);
-			capacityCJ.classList.remove('disabled');
-			capacityCJ.classList.add('show-info');
-		}
-	}
-
-	protected updateCapacityCJ(datos: { capacityCJ?: string }): void {
-		const { capacityCJ } = this.panelElements;
-		const { capacityCJ: capacityCJValue = '' } = datos;
-
-		if (!capacityCJ) {
-			console.warn('No se encontró el elemento de <capacidadCJ>');
-			return;
-		}
-
-		capacityCJ.innerHTML = `${capacityCJValue} CJ`;
-		capacityCJ.classList.remove('wait', 'disabled');
-		capacityCJ.classList.add('show-info');
-	}
-
-	protected fetchCapacityData(item: string): void {
-		try {
-			const urlParams = `https://wms.fantasiasmiguel.com.mx/scale/trans/itemUOM?Item=${item}&Company=FM&active=active`;
-			this.sendBackgroundMessage(urlParams, this.backgroundMessageUOM);
-		} catch (error) {
-			console.error('Error: ha ocurrido un error al obtener la capacidad de item:', error);
-		}
-	}
-
-	protected getCurrentItem(): string | undefined {
+	public getCurrentItem(): string | undefined {
 		return document.querySelector('#DetailPaneHeaderItem')?.textContent?.trim();
-	}
-
-	protected getCapacityCJ(): void {
-		const item = this.getCurrentItem();
-		if (!item) {
-			ToastAlert.showAlertMinTop('Ha ocurrido un error al obtener el item actual.');
-			return;
-		}
-
-		const { capacityCJ } = this.externalPanelElements;
-		if (capacityCJ) {
-			this.waitForData([capacityCJ]);
-			this.setIsCancelGetDataExternal(false);
-			this.fetchCapacityData(item);
-		}
-	}
-
-	protected initializeCapacityCJText(): void {
-		const { capacityCJ } = this.externalPanelElements;
-		if (capacityCJ) {
-			capacityCJ.classList.remove('disabled', 'show-info');
-			capacityCJ.innerHTML = 'Capacidad CJ...';
-		}
-	}
-
-	protected setClickEventCapacityCJ(): void {
-		const { capacityCJ } = this.externalPanelElements;
-		if (!capacityCJ) return;
-
-		capacityCJ.addEventListener('click', () => {
-			if (capacityCJ.classList.contains('disabled')) return;
-			capacityCJ.classList.add('disabled');
-			this.getCapacityCJ();
-		});
 	}
 }

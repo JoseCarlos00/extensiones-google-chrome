@@ -23,7 +23,7 @@ export abstract class HandlePanelDetail implements IHandlerPanelDetail {
 	private async loadTiendas(): Promise<void> {
 		try {
 			const res = await getTiendas();
-			
+
 			if (res && Object.keys(res).length > 0) {
 				this.tiendas = { ...res, E: 'Tultitlan' };
 			} else {
@@ -53,8 +53,7 @@ export abstract class HandlePanelDetail implements IHandlerPanelDetail {
 		}
 	}
 
-	// --- Métodos de utilidad para las subclases ---
-	public extractAndTrim(element: Element | null, fallback = '—'): string {
+	protected extractAndTrim(element: Element | null, fallback = '—'): string {
 		return element?.textContent.trim() || fallback;
 	}
 
@@ -80,5 +79,22 @@ export abstract class HandlePanelDetail implements IHandlerPanelDetail {
 			const tienda = this.tiendas?.[clave] ?? '—';
 			customerElement.innerHTML = tienda;
 		}
+	}
+
+	public getNameDataInternalSelector(key: string) {
+		return `[aria-describedby='ListPaneDataGrid_${key}']`;
+	}
+
+	public getDataInternal<T>(
+		tr: HTMLTableRowElement,
+		internalDataSelectors: { [K in keyof T]: string }
+	): T {
+		const data: Partial<T> = {};
+		
+		for (const key in internalDataSelectors) {
+			const selector = internalDataSelectors[key as keyof T];
+			data[key as keyof T] = this.extractAndTrim(tr.querySelector(selector)) as T[keyof T];
+		}
+		return data as T;
 	}
 }
