@@ -40,7 +40,7 @@ class BackgroundCommunicator {
 export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	// --- Propiedades de configuración para subclases ---
 	protected backgroundMessage: string = 'invalidate';
-	protected backgroundMessageUOM: string = 'actualizar_datos_de_item_unit_of_measure';
+	public backgroundMessageUOM: string = 'actualizar_datos_de_item_unit_of_measure';
 	protected headerDataExternalPrincipal: string = 'not data';
 
 	// --- Estado ---

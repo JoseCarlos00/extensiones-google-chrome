@@ -42,7 +42,7 @@ export class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataEx
 	protected initializeExternalPanelElements() {
 		return {
 			capacityCJ: document.querySelector('#DetailPaneHeaderShowCapacityCJ'),
-		};
+		} as { [key: string]: HTMLElement | null };
 	}
 
 	protected registerBackgroundMessageHandlers(): void {
