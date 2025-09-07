@@ -38,7 +38,7 @@ window.addEventListener("load", async () => {
 			title: "Capacidad Caja",
 		});
 
-		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderRow1Column1076");
+		const panelDetail = document.querySelector("#ScreenGroupColumnDetailPanelHeaderRow1Column1076") as HTMLElement;
 
 		const elementsHtmlToInsert = [
 			{ element: htmlWorkUnit },

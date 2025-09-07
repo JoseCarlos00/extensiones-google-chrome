@@ -1,7 +1,10 @@
 import { HandlePanelDetail } from './HandlePanelDetail';
+import type { ContentScriptAction, BackgroundAction } from './messaging/actions';
+import { BackgroundActions, ContentScriptActions } from './messaging/actions';
+import type { BackgroundMessage, ContentScriptMessage } from './background/types';
 
 class BackgroundCommunicator {
-	private messageListeners: Map<string, (data: any) => void> = new Map();
+	private messageListeners: Map<ContentScriptAction, (data: any) => void> = new Map();
 	private isCancelled: () => boolean;
 
 	constructor(isCancelledCallback: () => boolean) {
@@ -9,7 +12,7 @@ class BackgroundCommunicator {
 		chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
 	}
 
-	private handleMessage(message: { action: string; datos: any }): void {
+	private handleMessage(message: ContentScriptMessage): void {
 		if (this.isCancelled()) {
 			return;
 		}
@@ -17,17 +20,16 @@ class BackgroundCommunicator {
 		const handler = this.messageListeners.get(message.action);
 		if (handler) {
 			handler(message.datos);
-		} else {
-			console.error('[BackgroundCommunicator]: Mensaje de background desconocido:', message.action);
 		}
 	}
 
-	public addMessageHandler(action: string, handler: (data: any) => void): void {
+	public addMessageHandler(action: ContentScriptAction, handler: (data: any) => void): void {
 		this.messageListeners.set(action, handler);
 	}
 
-	public sendMessage(action: string, url: string): void {
-		chrome.runtime.sendMessage({ action, url }, (response) => {
+	public sendMessage(action: BackgroundAction, payload: Omit<BackgroundMessage, 'action'>): void {
+		const message: BackgroundMessage = { action, ...payload };
+		chrome.runtime.sendMessage(message, (response) => {
 			if (chrome.runtime.lastError) {
 				console.error('Error al enviar mensaje:', chrome.runtime.lastError.message);
 				return;
@@ -39,8 +41,10 @@ class BackgroundCommunicator {
 
 export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	// --- Propiedades de configuración para subclases ---
-	protected backgroundMessage: string = 'invalidate';
-	public backgroundMessageUOM: string = 'actualizar_datos_de_item_unit_of_measure';
+	// Las subclases deben especificar qué acción de background envían para obtener sus datos principales.
+	protected abstract backgroundMessageAction: BackgroundAction;
+	// Acción que se escucha para actualizar la Unidad de Medida (UOM).
+	public readonly uomUpdateAction: ContentScriptAction = ContentScriptActions.UPDATE_ITEM_UOM;
 	protected headerDataExternalPrincipal: string = 'not data';
 
 	// --- Estado ---
@@ -176,11 +180,11 @@ export abstract class HandlePanelDetailDataExternal extends HandlePanelDetail {
 	}
 
 	// --- Fachada de comunicación con el Background Script ---
-	public sendBackgroundMessage(url: string, action: string = 'some_action'): void {
-		this.backgroundCommunicator.sendMessage(action, url);
+	public sendBackgroundMessage(url: string): void {
+		this.backgroundCommunicator.sendMessage(BackgroundActions.OPEN_NEW_TAB, { url });
 	}
 
-	public addMessageHandler(action: string, handler: (data: any) => void): void {
+	public addMessageHandler(action: ContentScriptAction, handler: (data: any) => void): void {
 		this.backgroundCommunicator.addMessageHandler(action, handler.bind(this));
 	}
 
