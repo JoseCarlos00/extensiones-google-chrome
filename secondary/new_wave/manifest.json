@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
-	"name": "Mover Button Save",
+	"name": "New Wave",
 	"version": "1.0",
-	"description": "Mover Button save para generar Olas",
+	"description": "Crea funcionalidades para crear nuevas Olas",
 	"permissions": ["scripting", "tabs", "storage", "activeTab"],
 	"icons": {
 		"16": "images/move16.png",
