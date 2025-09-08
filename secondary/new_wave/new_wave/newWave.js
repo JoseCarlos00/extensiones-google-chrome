@@ -1,5 +1,5 @@
 (function () {
-	console.log('[loader.ts]');
+	console.log('[newWave.ts]');
 
 	const script = document.createElement('script');
 	// script.type = 'module'; // ¡Esta es la línea clave!

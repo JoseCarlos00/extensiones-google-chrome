@@ -28,7 +28,7 @@
 	],
 	"web_accessible_resources": [
 		{
-			"resources": ["new_wave/createNewWave.js"],
+			"resources": ["new_wave/createNewWave.js", "searchFilterName.js"],
 			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
 		}
 	],

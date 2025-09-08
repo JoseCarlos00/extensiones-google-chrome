@@ -1,3 +1,14 @@
+(function () {
+	console.log('[plannedInsight.ts]');
+
+	const script = document.createElement('script');
+	// script.type = 'module'; // ¡Esta es la línea clave!
+	// Obtenemos la URL del script principal desde los recursos de la extensión.
+	script.src = chrome.runtime.getURL('searchFilterName.js');
+	// Lo añadimos al <head> de la página para que se cargue y ejecute.
+	(document.head || document.documentElement).appendChild(script);
+})();
+
 // Constants for local/session storage keys to avoid magic strings
 const NEW_WAVE_ACTIVE_KEY = 'newWaveActive';
 const WAVE_DATA_KEY = 'waveData';
@@ -124,7 +135,6 @@ async function insertMenuNewWave() {
 
 		sessionStorage.setItem(WAVE_DATA_KEY, JSON.stringify(data));
 		console.log('[saveDataInStorage]: Guardado', data);
-
 	});
 }
 
@@ -134,7 +144,6 @@ async function insertMenuNewWave() {
 async function initialize() {
 	const menuNav = document.querySelector('#ScreenGroupMenu12068');
 
-	
 	if (!menuNav) {
 		console.error('[initialize]: Main menu navigation element not found.');
 		return;
