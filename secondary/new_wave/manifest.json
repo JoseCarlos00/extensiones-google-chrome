@@ -22,7 +22,7 @@
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2774*"],
-			"js": ["plannedInsight.js"],
+			"js": ["TableManager.js", "plannedInsight.js"],
 			"css": ["plannedInsight.css"]
 		}
 	],

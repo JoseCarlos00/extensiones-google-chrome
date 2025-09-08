@@ -98,7 +98,34 @@ async function insertMenuNewWave() {
 
 	waveFlowSelect.addEventListener('change', saveData);
 	waveNameInput.addEventListener('input', saveData);
-	waveNameInput.addEventListener('change', saveData); // Handles blur and datalist selection
+	waveNameInput.addEventListener('change', saveData);
+
+	const addShipmentToWave = document.querySelector('#ListPaneMenuActionAddShipmentToWave');
+
+	if (!addShipmentToWave) {
+		console.error('[initialize]: Add Shipment to Wave button not found.');
+		return;
+	}
+
+	const tableManager = new TableManager();
+	tableManager.initialize();
+
+	addShipmentToWave.addEventListener('click', () => {
+		const shipments = tableManager.processShipments();
+
+		if (shipments.length === 0) return;
+
+		const waveName = shipments.length > 1 ? 'Marino Clientes' : shipments[0];
+
+		const data = {
+			waveFlow: 'Flujo Express',
+			waveName,
+		};
+
+		sessionStorage.setItem(WAVE_DATA_KEY, JSON.stringify(data));
+		console.log('[saveDataInStorage]: Guardado', data);
+
+	});
 }
 
 /**
@@ -106,6 +133,7 @@ async function insertMenuNewWave() {
  */
 async function initialize() {
 	const menuNav = document.querySelector('#ScreenGroupMenu12068');
+
 	
 	if (!menuNav) {
 		console.error('[initialize]: Main menu navigation element not found.');
