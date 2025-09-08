@@ -21,20 +21,15 @@
 				"https://wms.fantasiasmiguel.com.mx/scale/insights/2783*",
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2783*"
 			],
-			"js": ["transaction_history/loader.js"],
+			"js": ["transaction_history/main.js"],
 			"css": ["css/style.css"]
-		}
-	],
-	"web_accessible_resources": [
+		},
 		{
-			"resources": [
-				"transaction_history/main.js",
-				"chunks/*.js"
-			],
 			"matches": [
-				"https://wms.fantasiasmiguel.com.mx/*",
-				"https://qawms.fantasiasmiguel.com.mx/*"
-			]
+				"https://wms.fantasiasmiguel.com.mx/scale/trans/itemUOM*",
+				"https://qawms.fantasiasmiguel.com.mx/scale/trans/itemUOM*"
+			],
+			"js": ["itemUnitOfMeasure.js"]
 		}
 	],
 	"action": {

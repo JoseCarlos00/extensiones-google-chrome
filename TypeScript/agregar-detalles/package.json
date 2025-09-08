@@ -1,19 +1,25 @@
 {
-  "name": "agregar-detalles",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "clear": "rm -rf dist",
-    "build": "tsc && vite build",
-    "build-del": "npm run clear && npm run build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "@types/chrome": "^0.1.6",
-    "@types/node": "^24.3.1",
-    "typescript": "~5.8.3",
-    "vite": "^7.1.2"
-  }
+	"name": "agregar-detalles",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"clear": "rm -rf dist",
+		"build": "tsc && vite build",
+		"build-del": "npm run clear && npm run build",
+		"preview": "vite preview",
+		"build:transaction_history": "vite build --config vite.transaction_history.config.ts",
+		"build:background": "vite build --config vite.background.config.ts",
+		"build:popup": "vite build --config vite.popup.config.ts",
+		"build:all": "npm run build:transaction_history && npm run build:background && npm run build:popup",
+		"build:all-del": "npm run clear && npm run build:transaction_history && npm run build:background && npm run build:popup"
+	},
+	"devDependencies": {
+		"@types/chrome": "^0.1.6",
+		"@types/node": "^24.3.1",
+		"glob": "^11.0.3",
+		"typescript": "~5.8.3",
+		"vite": "^7.1.2"
+	}
 }
