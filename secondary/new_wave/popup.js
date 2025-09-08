@@ -102,13 +102,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 	await restoreAutoRealizeCheckbox();
 	const activeTab = await getActiveTabURL();
 	console.log(activeTab);
-
+	
 	if (!activeTab?.url?.includes("scale/trans/newwave?excludeFromNavTrail=Y")) {
-		const container = document.querySelector(".mensaje-error");
-
-		container && container.classList.remove(".mensaje-error");
+		document.querySelector('.mensaje-error')?.classList?.remove('.mensaje-error');
 		return;
 	}
 
+	// If the URL is valid, we remove the class to hide the error and show the main content.
 	document.body.classList.remove("not-validate");
 });

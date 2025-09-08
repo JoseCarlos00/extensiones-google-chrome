@@ -1,4 +1,8 @@
-const waveFlowElementString = /*html*/ `
+// Constants for local/session storage keys to avoid magic strings
+const NEW_WAVE_ACTIVE_KEY = 'newWaveActive';
+const WAVE_DATA_KEY = 'waveData';
+
+const waveFlowElementString = /* html */ `
  <li class="pull-left menubutton ">
     <label for="wave-flow-select"
       style="margin: 0;padding: 0;margin-top: 12px;width: auto;height: 25px;display: block;font-size: 14px;font-weight: 500;">
@@ -28,99 +32,111 @@ const waveFlowElementString = /*html*/ `
 </li>
 `;
 
-async function inicio() {
-	const menuNav = document.querySelector("#ScreenGroupMenu12068");
-
-	insertMenuNewWave();
-
-	// Verificar si hay un estado guardado en el localStorage al cargar la página
-	const switchState = localStorage.getItem("newWaveActive");
-	const isChecked = switchState === "true" ? "checked=true" : "";
-
-	const html = /*html*/ `
-  <div class="switch-toggle-container">
-    <div class="checkbox-wrapper-35">
-    <input id="switch-new-wave" type="checkbox" class="switch" ${isChecked}>
-
-    <label for="switch-new-wave">
-      <span class="switch-x-text">New Wave: </span>
-      <span class="switch-x-toggletext">
-        <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
-        <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
-      </span>
-    </label>
-  </div>
-  </div>
-  `;
-
-	if (!menuNav) return;
-	menuNav.insertAdjacentHTML("beforeend", html);
-
-	await new Promise((resolve) => setTimeout(resolve, 50));
-	switchToggle();
-}
-
-function switchToggle() {
-	// Obtener el elemento del interruptor
-	const switchElement = document.getElementById("switch-new-wave");
-
-	console.log("[switchToggle]:", switchElement);
-	
-
-	// Agregar un evento de cambio al interruptor
-	switchElement.addEventListener("change", function () {
-		console.log("[switchToggle]:", this.checked);
-		
-		if (this.checked === true) {
-			localStorage.setItem("newWaveActive", true);
-		} else {
-			localStorage.removeItem("newWaveActive", false);
-		}
-	});
-}
-
-async function insertMenuNewWave() {
-	const insertToElement = document.querySelector('#InsightMenuActionCollapse')?.closest('li');
-
-	if (!insertToElement) {
-		console.error('[insertMenuNewWave]: Elemento no encontrado');
-		return;
-	}
-
-	insertToElement.insertAdjacentHTML('afterend', waveFlowElementString);
-
-	await new Promise((resolve) => setTimeout(resolve, 50));
-
-	const waveFlowSelect = document.querySelector('#wave-flow-select');
-	const waveNameInput = document.querySelector('#wave-name-input');
-
-	if (!waveFlowSelect || !waveNameInput) {
-		console.error('[insertMenuNewWave]: Elementos no encontrados');
-		return;
-	}
-
-	// función común para guardar
-	const saveData = () => {
-		console.log('[saveData]: Guardando');
-		saveDataInStorage(waveFlowSelect, waveNameInput);
-	};
-
-	// asignar listeners
-	waveFlowSelect.addEventListener('change', saveData);
-	waveNameInput.addEventListener('input', saveData);
-	waveNameInput.addEventListener('blur', saveData);
-	waveNameInput.addEventListener('change', saveData);
-}
-
+/**
+ * Saves the wave flow and name data to session storage.
+ * @param {HTMLSelectElement} waveFlowSelect The select element for wave flow.
+ * @param {HTMLInputElement} waveNameInput The input element for wave name.
+ */
 function saveDataInStorage(waveFlowSelect, waveNameInput) {
 	const data = {
 		waveFlow: waveFlowSelect.value,
 		waveName: waveNameInput.value,
 	};
 
-	sessionStorage.setItem('waveData', JSON.stringify(data));
+	sessionStorage.setItem(WAVE_DATA_KEY, JSON.stringify(data));
 	console.log('[saveDataInStorage]: Guardado', data);
 }
 
+/**
+ * Sets up event listeners for the "New Wave" toggle switch.
+ */
+function setupSwitchToggle() {
+	const switchElement = document.getElementById('switch-new-wave');
+	if (!switchElement) {
+		console.error('[setupSwitchToggle]: Switch element not found');
+		return;
+	}
 
-window.addEventListener("load", inicio, { once: true });
+	switchElement.addEventListener('change', function () {
+		if (this.checked) {
+			localStorage.setItem(NEW_WAVE_ACTIVE_KEY, 'true');
+		} else {
+			localStorage.removeItem(NEW_WAVE_ACTIVE_KEY);
+		}
+		console.log(`[New Wave] Active: ${this.checked}`);
+	});
+}
+
+/**
+ * Inserts the custom menu for creating a new wave and sets up its event listeners.
+ */
+async function insertMenuNewWave() {
+	const insertToElement = document.querySelector('#InsightMenuActionCollapse')?.closest('li');
+
+	if (!insertToElement) {
+		console.error('[insertMenuNewWave]: Target element for insertion not found');
+		return;
+	}
+
+	insertToElement.insertAdjacentHTML('afterend', waveFlowElementString);
+
+	// A small delay might be necessary for the page's framework to process the new DOM elements.
+	// A more robust solution could be using a MutationObserver if this proves unreliable.
+	await new Promise((resolve) => setTimeout(resolve, 50));
+
+	const waveFlowSelect = document.querySelector('#wave-flow-select');
+	const waveNameInput = document.querySelector('#wave-name-input');
+
+	if (!waveFlowSelect || !waveNameInput) {
+		console.error('[insertMenuNewWave]: Custom menu elements not found after insertion');
+		return;
+	}
+
+	const saveData = () => {
+		saveDataInStorage(waveFlowSelect, waveNameInput);
+	};
+
+	waveFlowSelect.addEventListener('change', saveData);
+	waveNameInput.addEventListener('input', saveData);
+	waveNameInput.addEventListener('change', saveData); // Handles blur and datalist selection
+}
+
+/**
+ * Initializes the script by inserting UI elements and setting up event listeners.
+ */
+async function initialize() {
+	const menuNav = document.querySelector('#ScreenGroupMenu12068');
+	
+	if (!menuNav) {
+		console.error('[initialize]: Main menu navigation element not found.');
+		return;
+	}
+
+	await insertMenuNewWave();
+
+	const switchState = localStorage.getItem(NEW_WAVE_ACTIVE_KEY);
+	const isChecked = switchState === 'true' ? 'checked' : '';
+
+	const switchHtml = /* html */ `
+  <div class="switch-toggle-container">
+    <div class="checkbox-wrapper-35">
+      <input id="switch-new-wave" type="checkbox" class="switch" ${isChecked}>
+      <label for="switch-new-wave">
+        <span class="switch-x-text">New Wave: </span>
+        <span class="switch-x-toggletext">
+          <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+          <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+        </span>
+      </label>
+    </div>
+  </div>
+  `;
+
+	menuNav.insertAdjacentHTML('beforeend', switchHtml);
+
+	// A small delay might be necessary for the page's framework to process the new DOM elements.
+	await new Promise((resolve) => setTimeout(resolve, 50));
+	setupSwitchToggle();
+}
+
+window.addEventListener('load', initialize, { once: true });
