@@ -1,4 +1,4 @@
-.my-botton-save {
+.my-button-save {
 	position: absolute !important;
 	height: 35px !important;
 	border: 1px solid #bcbcbc;
@@ -22,7 +22,6 @@
 	background-color: transparent;
 }
 
-/* Reducir spaciado */
 #GridPlaceHolder {
 	min-height: 20px;
 }

@@ -13,8 +13,8 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/newwave?excludeFromNavTrail=Y*"],
-			"js": ["new-wave/newWave.js", "new-wave/hiddenRows.js"],
-			"css": ["new-wave/newWave.css"]
+			"js": ["new_wave/newWave.js", "new_wave/hiddenRows.js"],
+			"css": ["new_wave/newWave.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/addshipmenttowave?excludeFromNavTrail=Y*"],
@@ -28,7 +28,7 @@
 	],
 	"web_accessible_resources": [
 		{
-			"resources": ["new-wave/test.js"],
+			"resources": ["new_wave/createNewWave.js"],
 			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
 		}
 	],
