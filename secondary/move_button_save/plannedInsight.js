@@ -28,22 +28,21 @@ const waveFlowElementString = /*html*/ `
 </li>
 `;
 
-function inicio() {
+async function inicio() {
 	const menuNav = document.querySelector("#ScreenGroupMenu12068");
 
 	insertMenuNewWave();
 
 	// Verificar si hay un estado guardado en el localStorage al cargar la página
 	const switchState = localStorage.getItem("newWaveActive");
-
 	const isChecked = switchState === "true" ? "checked=true" : "";
 
 	const html = /*html*/ `
   <div class="switch-toggle-container">
     <div class="checkbox-wrapper-35">
-    <input value="private" name="switch" id="switch-new-wave" type="checkbox" class="switch" ${isChecked}>
+    <input id="switch-new-wave" type="checkbox" class="switch" ${isChecked}>
 
-    <label for="switch">
+    <label for="switch-new-wave">
       <span class="switch-x-text">New Wave: </span>
       <span class="switch-x-toggletext">
         <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
@@ -57,15 +56,21 @@ function inicio() {
 	if (!menuNav) return;
 	menuNav.insertAdjacentHTML("beforeend", html);
 
-	setTimeout(switchToggle, 50);
+	await new Promise((resolve) => setTimeout(resolve, 50));
+	switchToggle();
 }
 
 function switchToggle() {
 	// Obtener el elemento del interruptor
 	const switchElement = document.getElementById("switch-new-wave");
 
+	console.log("[switchToggle]:", switchElement);
+	
+
 	// Agregar un evento de cambio al interruptor
 	switchElement.addEventListener("change", function () {
+		console.log("[switchToggle]:", this.checked);
+		
 		if (this.checked === true) {
 			localStorage.setItem("newWaveActive", true);
 		} else {

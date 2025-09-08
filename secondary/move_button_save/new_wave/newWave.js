@@ -54,7 +54,15 @@ async function inicio() {
 	// Auto realize
 	const autoRealize = document.querySelector(selector.autoRealize);
 	if (autoRealize && isAutoRealize) {
-		autoRealize.click();
+
+		const storage = sessionStorage.getItem('waveData') ?? {};
+		const { waveFlow, waveName } = JSON.parse(storage);
+		console.log('[newWave.js]:', { waveFlow, waveName });
+
+		if (!waveFlow || !waveName) {
+			autoRealize.click();
+		}
+		
 	}
 
 	const btnCancel = document.querySelector('#AddWaveActionCancel');

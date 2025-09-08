@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
 
 			if (raw) {
 				const { waveFlow, waveName } = JSON.parse(raw);
-				console.log('Recibido:', { waveFlow, waveName });
+				console.log('[createNewWave]:', { waveFlow, waveName });
 
 				assigningNameWave({ waveFlow, waveName });
 			} else {
@@ -21,11 +21,13 @@ window.addEventListener('load', () => {
 	function assigningNameWave({ waveName, waveFlow }) {
 		if (!waveFlow || !waveName) {
 			console.error('Error al asignar nameWave: Faltan datos');
-			console.log('Recibido:', { waveFlow, waveName });
+			console.log('[createNewWave]:', { waveFlow, waveName });
 			return;
 		}
 
 		console.log('Asignar:', { waveFlow, waveName });
+
+		const autoRealize = document.querySelector('#ScreenControlToggleSwitch37984 > div > div > div');
 		
 
 		try {
@@ -34,6 +36,7 @@ window.addEventListener('load', () => {
 			_webUi.detailsScreenBinding.viewModel.model.NewWave.AutoReleased(true);
 
 			sessionStorage.removeItem('waveData');
+			autoRealize?.click();
 			simulateClickSave();
 		} catch (error) {
 			console.error('Error al acceder a _webUi:', error);
