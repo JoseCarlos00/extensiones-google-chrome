@@ -23,7 +23,7 @@
 	],
 	"action": {
 		"default_popup": "popup.html",
-		"defaul_icon": {
+		"default_icon": {
 			"16": "images/touch16.png",
 			"32": "images/touch32.png",
 			"48": "images/touch48.png",
