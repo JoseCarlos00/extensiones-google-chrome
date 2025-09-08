@@ -59,7 +59,7 @@ function getLiContent(tiendas = tiendasDefault) {
   </datalist>
   `;
 
-	const liContent = `
+	const liContent = /*html*/`
     <div class="ui-state-default"
         style="width: 100%;height: 25px;text-align: center;display: block;margin-top: 8px;">
 

@@ -4,7 +4,7 @@
 	const script = document.createElement('script');
 	// script.type = 'module'; // ¡Esta es la línea clave!
 	// Obtenemos la URL del script principal desde los recursos de la extensión.
-	script.src = chrome.runtime.getURL('new-wave/test.js');
+	script.src = chrome.runtime.getURL('new_wave/createNewWave.js');
 	// Lo añadimos al <head> de la página para que se cargue y ejecute.
 	(document.head || document.documentElement).appendChild(script);
 })();
@@ -82,6 +82,11 @@ async function inicio() {
 function simulateClickSave() {
 	// Obtener el elemento para enviar un evento de clic
 	const btnSave = document.querySelector('#NewWaveActionSave');
+
+	if (!btnSave) {
+		console.error('[simulateClickSave]: Elemento no encontrado');
+		return;
+	}
 
 	// Crear un MouseEvent de clic artificial
 	let evt = new MouseEvent('click', {

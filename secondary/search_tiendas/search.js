@@ -7,20 +7,20 @@ class SearchStore {
 
 	async initialize() {
 		try {
-			await this.#insertElemet();
+			await this.insertElement();
 			this.#initializeVariables();
 			this.#addEventListeners();
 		} catch (error) {
-			console.error('Error: Ha ocurido un error al inicializar [Search Store]:', error);
+			console.error('Error: Ha ocurrido un error al inicializar [Search Store]:', error);
 		}
 	}
 
-	#insertElemet() {
+	 insertElement() {
 		return new Promise((resolve, reject) => {
 			const ul = document.querySelector('#topNavigationBar > nav > ul.nav.navbar-nav.navbar-right');
 
 			if (!ul) {
-				reject('No se enotro el elemento a insertar <ul>');
+				reject('No se encontró el elemento a insertar <ul>');
 			}
 
 			if (!(this.liElement instanceof Element)) {
@@ -37,11 +37,11 @@ class SearchStore {
 		this.clearButton = document.querySelector('#search_store_clearButton');
 
 		if (!this.searchInput) {
-			throw new Error('Error: No se encontro el elemento #search_store_input');
+			throw new Error('Error: No se encontró el elemento #search_store_input');
 		}
 
 		if (!this.clearButton) {
-			throw new Error('Error: No se encontro el elemento #search_store_clearButton');
+			throw new Error('Error: No se encontró el elemento #search_store_clearButton');
 		}
 	}
 

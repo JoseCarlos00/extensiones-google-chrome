@@ -10,7 +10,7 @@ const customsNames = {
 	3199656165: { value: "Flujo Tultitlan Piezas", property: "--flujo-tultitlan-piezas", propertyValue: "none" },
 	1192122430: { value: "Flujo Tultitlan Zona Bulk", property: "--flujo-tultitlan-zona-bulk", propertyValue: "none" },
 	1155736963: { value: "Mariano STD Auto ACTIVA", property: "--mariano-std-auto-activa", propertyValue: "none" },
-	1265266259: { value: "Mariano STD No Rall", property: "--mariano-std-no-rpln", propertyValue: "none" },
+	1265266259: { value: "Mariano STD No Rpln", property: "--mariano-std-no-rpln", propertyValue: "none" },
 	486474973: { value: "Tultitlan Crossdock", property: "--tultitlan-crossdock", propertyValue: "none" },
 };
 
