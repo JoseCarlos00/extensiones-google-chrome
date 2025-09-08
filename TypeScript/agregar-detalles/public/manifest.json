@@ -12,7 +12,8 @@
 		"128": "images/clipBoar128.png"
 	},
 	"background": {
-		"service_worker": "background.js"
+		"service_worker": "background.js",
+		"type": "module"
 	},
 	"content_scripts": [
 		{
@@ -20,8 +21,20 @@
 				"https://wms.fantasiasmiguel.com.mx/scale/insights/2783*",
 				"https://qawms.fantasiasmiguel.com.mx/scale/insights/2783*"
 			],
-			"js": ["transaction_history/main.js"],
+			"js": ["transaction_history/loader.js"],
 			"css": ["css/style.css"]
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"transaction_history/main.js",
+				"chunks/*.js"
+			],
+			"matches": [
+				"https://wms.fantasiasmiguel.com.mx/*",
+				"https://qawms.fantasiasmiguel.com.mx/*"
+			]
 		}
 	],
 	"action": {

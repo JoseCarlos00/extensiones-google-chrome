@@ -23,11 +23,10 @@ export class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataEx
 			containerId: this.getNameDataInternalSelector('ContainerId'), // ContainerId
 			userName: this.getNameDataInternalSelector('UserName'), // UserName
 			referenceId: this.getNameDataInternalSelector('ReferenceId'), // ReferenceId
-			activityDateTime: this.getNameDataInternalSelector('ActivityDateTime') // ActivityDateTime
+			activityDateTime: this.getNameDataInternalSelector('ActivityDateTime'), // ActivityDateTime
 		};
 	}
 
-	// --- Implementación de métodos abstractos de la clase base ---
 
 	protected initializeInternalPanelElements() {
 		return {
@@ -35,7 +34,7 @@ export class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataEx
 			containerId: document.querySelector(this.selectorsId.containerId),
 			userName: document.querySelector(this.selectorsId.userName),
 			customer: document.querySelector(this.selectorsId.customer),
-			activityDateTime: document.querySelector(this.selectorsId.activityDateTime)
+			activityDateTime: document.querySelector(this.selectorsId.activityDateTime),
 		} as { [key: string]: HTMLElement | null };
 	}
 
@@ -76,7 +75,7 @@ export class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataEx
 			{ element: this.internalPanelElements.workUnit, value: workUnit },
 			{ element: this.internalPanelElements.containerId, value: `LP: ${containerId}` },
 			{ element: this.internalPanelElements.userName, value: `Por: ${userName}` },
-			{ element: this.internalPanelElements.activityDateTime, value: activityDateTime }
+			{ element: this.internalPanelElements.activityDateTime, value: activityDateTime },
 		];
 
 		// 2. Mostrar la información en el panel de detalles
@@ -91,4 +90,12 @@ export class HandlePanelDetailTransactionHistory extends HandlePanelDetailDataEx
 		this.capacityCJService?.resetText();
 		this.insertarTienda(referenceId);
 	}
+}
+
+
+// Para mejorar la legibilidad y la seguridad de tipos, definimos una interfaz para los mensajes.
+export interface ExtensionMessage {
+	type: string;
+	payload?: any;
+	source?: 'extension-runtime'; // Propiedad para verificar el origen
 }

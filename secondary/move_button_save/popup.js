@@ -10,12 +10,12 @@ const customsNames = {
 	3199656165: { value: "Flujo Tultitlan Piezas", property: "--flujo-tultitlan-piezas", propertyValue: "none" },
 	1192122430: { value: "Flujo Tultitlan Zona Bulk", property: "--flujo-tultitlan-zona-bulk", propertyValue: "none" },
 	1155736963: { value: "Mariano STD Auto ACTIVA", property: "--mariano-std-auto-activa", propertyValue: "none" },
-	1265266259: { value: "Mariano STD No Rpln", property: "--mariano-std-no-rpln", propertyValue: "none" },
+	1265266259: { value: "Mariano STD No Rall", property: "--mariano-std-no-rpln", propertyValue: "none" },
 	486474973: { value: "Tultitlan Crossdock", property: "--tultitlan-crossdock", propertyValue: "none" },
 };
 
 const autoRealizeCheckbox = document.querySelector("#auto-realize");
-const checkboxs = document.querySelectorAll("main .checkbox");
+const checkBoxes = document.querySelectorAll("main .checkbox");
 
 autoRealizeCheckbox.addEventListener("change", async (e) => {
 	const checkbox = e.target;
@@ -24,7 +24,7 @@ autoRealizeCheckbox.addEventListener("change", async (e) => {
 	await storage.set({ autoRealize: checked });
 });
 
-checkboxs.forEach((checkbox) => {
+checkBoxes.forEach((checkbox) => {
 	checkbox.addEventListener("change", (e) => handleChecked(e));
 });
 
@@ -77,7 +77,7 @@ const restoreCheckboxesState = async () => {
 	const storedData = await storage.get("hiddenColumns");
 	const hiddenColumns = storedData.hiddenColumns || {};
 
-	checkboxs.forEach((checkbox) => {
+	checkBoxes.forEach((checkbox) => {
 		checkbox.checked = !hiddenColumns[checkbox.value]; // Marcar/desmarcar
 		checkbox.closest("label").classList.toggle("checked", !hiddenColumns[checkbox.value]);
 	});

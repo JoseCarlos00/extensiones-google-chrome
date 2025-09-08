@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
-	"name": "Mover Boton Save",
+	"name": "Mover Button Save",
 	"version": "1.0",
-	"description": "Mover boton save para generar Olas",
+	"description": "Mover Button save para generar Olas",
 	"permissions": ["scripting", "tabs", "storage", "activeTab"],
 	"icons": {
 		"16": "images/move16.png",
@@ -13,8 +13,8 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/newwave?excludeFromNavTrail=Y*"],
-			"js": ["new-wave/new_wave.js", "new-wave/hiddenRows.js"],
-			"css": ["new-wave/new_wave.css"]
+			"js": ["new-wave/newWave.js", "new-wave/hiddenRows.js"],
+			"css": ["new-wave/newWave.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/addshipmenttowave?excludeFromNavTrail=Y*"],
@@ -26,9 +26,15 @@
 			"css": ["plannedInsight.css"]
 		}
 	],
+	"web_accessible_resources": [
+		{
+			"resources": ["new-wave/test.js"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
+		}
+	],
 	"action": {
 		"default_popup": "popup.html",
-		"defaul_icon": {
+		"default_icon": {
 			"16": "images/move16.png",
 			"32": "images/move32.png",
 			"48": "images/move48.png",

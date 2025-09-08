@@ -7,13 +7,10 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				// Puntos de entrada de la extensión (popup, background)
-				popup: resolve(__dirname, 'src/popup/popup.html'),
+				popup: resolve(__dirname, 'popup.html'),
 				background: resolve(__dirname, 'src/background/background.ts'),
-
-				// Content Scripts: Define una entrada por cada página/script.
-				// El nombre del key (ej. 'transaction_history/main') define la ruta de salida.
 				'transaction_history/main': resolve(__dirname, 'src/transaction_history/main.ts'),
-				// 'shipment_insight/main': resolve(__dirname, 'src/shipment_insight/main.ts'), // <-- Ejemplo para otro script
+				'transaction_history/loader': resolve(__dirname, 'src/transaction_history/loader.ts'),
 			},
 			output: {
 				entryFileNames: '[name].js',

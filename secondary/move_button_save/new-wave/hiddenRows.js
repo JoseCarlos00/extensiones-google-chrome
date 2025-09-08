@@ -1,7 +1,7 @@
 window.addEventListener("load", async () => {
 	const tableE = document.querySelector("#WaveFlowGrid");
 
-	const storedData = await chrome.storage.local.get("hiddenColumns");
+	const storedData = await chrome.storage.local.get("hiddenColumns") || {};
 	const hiddenColumns = storedData.hiddenColumns || {};
 
 	const toggleRowVisibility = (isHidden, values) => {

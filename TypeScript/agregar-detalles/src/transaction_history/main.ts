@@ -2,7 +2,19 @@ import { ElementsHtml } from "../class/ElementsHtml"
 import { ManagerPanelDetail } from "../ManagerPanelDetail"
 import { HandlePanelDetailTransactionHistory } from "./HandleTransactionHistory"
 
+console.log('[main.ts]');
+
+
 window.addEventListener("load", async () => {
+	// Comprobar si las APIs de la extensión están disponibles.
+	if (typeof chrome?.runtime?.onMessage === "undefined") {
+		console.error(
+			"Error: chrome.runtime.onMessage no está disponible. El script podría no estar ejecutándose en un contexto de extensión válido.",
+			{ chrome, runtime: chrome?.runtime }
+		);
+		return;
+	}
+
 	try {
 		const selectorsId = {
 			workUnit: "#DetailPaneHeaderWorkUnit",
