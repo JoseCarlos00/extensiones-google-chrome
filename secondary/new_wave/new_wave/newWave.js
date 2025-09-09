@@ -40,56 +40,79 @@ async function insertNewButtonSave() {
 	}
 
 	elementForReference.insertAdjacentHTML('beforeend', newButton);
+
+	await delay(150);
 }
 
 async function inicio() {
+	console.log('[newWave.js]: Inicio');
+	
 	document.body.classList.add('new-wave');
 
 	await insertNewButtonSave();
-	// const liElementSave = document.querySelector(selector.btnSave);
+	
 	const isAutoRealize = await recoveryAutoREalizeValue();
-
-	await delay(150);
 
 	// Auto realize
 	const autoRealize = document.querySelector(selector.autoRealize);
-	if (autoRealize && isAutoRealize) {
 
-		const storage = sessionStorage.getItem('waveData') ?? {};
-		const { waveFlow, waveName } = JSON.parse(storage);
-		console.log('[newWave.js]:', { waveFlow, waveName });
-
-		if (!waveFlow || !waveName) {
-			autoRealize.click();
+	try {
+		if (autoRealize && isAutoRealize) {
+			const storage = sessionStorage.getItem('waveData') ?? '{}';
+			const { waveFlow, waveName } = JSON.parse(storage);
+			console.log('[newWave.js]:', { waveFlow, waveName });
+			if (!waveFlow || !waveName) {
+				console.log('Auto Realice');
+				autoRealize.click();
+			}
 		}
-		
+	} catch (error) {
+		console.error('Ha ocurrido un error al asignar el valor de AutoRealize', error);
 	}
 
 	const btnCancel = document.querySelector('#AddWaveActionCancel');
-	btnCancel?.addEventListener('click', () => localStorage.removeItem('newWaveActive'));
+	if (btnCancel) {
+		btnCancel.addEventListener('click', () => localStorage.removeItem('newWaveActive'));
+	} else {
+		console.warn('[newWave.js]: No existe el button Cancel');
+	}
 
 	const newButtonSave = document.querySelector('.save-personality .new-button-save');
-	newButtonSave?.addEventListener('click', simulateClickSave);
-
-	await delay(150);
+	if (newButtonSave) {
+		newButtonSave.addEventListener('click', simulateClickSave);
+	} else {
+		console.warn('[newWave.js]: No existe el button Save');
+	}
 
 	const btnWaveMaster = document.querySelector('#ui-id-12');
-	btnWaveMaster?.addEventListener('click', () => document.body.classList.remove('new-wave'));
+	if (btnWaveMaster) {
+		btnWaveMaster.addEventListener('click', () => document.body.classList.remove('new-wave'));
+	} else {
+		console.warn('[newWave.js]: No existe el button Wave Master');
+	}
 
 	const tbody = document.querySelector('#WaveFlowGrid > tbody');
-	const btnSave = document.querySelector('#NewWaveActionSave');
+
 
 	if (tbody) {
 		tbody.addEventListener('dblclick', (e) => {
-			btnSave?.click();
+			console.log('dblclick');
+			simulateClickSave();
 		});
+	} else {
+		console.warn('[newWave.js]: tbody no encontrado');
 	}
+
+	console.log('[newWave.js]: Fin');
+	
 }
 
 
 function simulateClickSave() {
 	// Obtener el elemento para enviar un evento de clic
 	const btnSave = document.querySelector('#NewWaveActionSave');
+	console.log('[simulateClickSave]:', btnSave);
+	
 
 	if (!btnSave) {
 		console.error('[simulateClickSave]: Elemento no encontrado');
@@ -120,4 +143,10 @@ function setEventClickMenuWaveMaster() {
 	});
 }
 
-window.addEventListener('load', inicio, { once: true });
+window.addEventListener('load', ()=> {
+	try {
+		inicio()
+	} catch (error) {
+		console.error('[newWave.js]: Error al iniciar', error);
+	}
+}, { once: true });
