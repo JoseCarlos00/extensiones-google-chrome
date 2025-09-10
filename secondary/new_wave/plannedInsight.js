@@ -122,11 +122,8 @@ async function insertMenuNewWave() {
 	tableManager.initialize();
 
 	addShipmentToWave.addEventListener('click', () => {
-		const shipments = tableManager.processShipments();
-
-		if (shipments.length === 0) return;
-
-		const waveName = shipments.length > 1 ? 'Marino Clientes' : shipments[0];
+		const waveName = tableManager.getWaveName();
+		if (!waveName) return;
 
 		const data = {
 			waveFlow: 'Flujo Express',

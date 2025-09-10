@@ -1,7 +1,10 @@
 class TableManager {
+	regex356 = /^356-C\b/;
+	regexE = /^E-\b/;
+	regexMae = /^4344-\b/;
+
 	constructor() {
 		this.bodyTable = null;
-		this.regex = /^356-C\b/;
 	}
 
 	initialize() {
@@ -32,7 +35,7 @@ class TableManager {
 	}
 
 	processShipments() {
-    const shipmentsIdSelected = this.getShipmentsIdSelected();
+		const shipmentsIdSelected = this.getShipmentsIdSelected();
 
 		if (shipmentsIdSelected.length === 0) {
 			console.warn('[processShipments]: No hay filas seleccionadas en la tabla');
@@ -40,7 +43,7 @@ class TableManager {
 		}
 
 		// Validar que TODOS cumplen el regex
-		const allValid = shipmentsIdSelected.every((id) => this.regex.test(id));
+		const allValid = shipmentsIdSelected.every((id) => this.regex356.test(id));
 
 		if (!allValid) {
 			console.warn('[processShipments]: Al menos un SHIPMENT_ID no cumple con el formato esperado');
@@ -49,5 +52,28 @@ class TableManager {
 
 		// Si todos cumplen, regresar el array limpio
 		return shipmentsIdSelected.map((id) => id.trim());
+	}
+
+	getWaveName() {
+		const shipmentsIdSelected = this.getShipmentsIdSelected();
+		if (shipmentsIdSelected.length === 0) return null;
+
+		// Verifica si todos son tipo 356-C
+		if (shipmentsIdSelected.every((id) => this.regex356.test(id))) {
+			return shipmentsIdSelected.length > 1 ? 'Marino Clientes' : shipmentsIdSelected[0];
+		}
+
+		// Verifica si todos son tipo E-
+		if (shipmentsIdSelected.every((id) => this.regexE.test(id))) {
+			return shipmentsIdSelected.length > 1 ? 'Mariano Express' : shipmentsIdSelected[0];
+		}
+
+		// Verifica si todos son tipo Maestros
+		if (shipmentsIdSelected.every((id) => this.regexMae.test(id))) {
+			return shipmentsIdSelected.length > 1 ? 'Maestros' : shipmentsIdSelected[0];
+		}
+
+		console.warn('[getWaveName]: Al menos un SHIPMENT_ID no cumple con el formato esperado');
+		return null;
 	}
 }
