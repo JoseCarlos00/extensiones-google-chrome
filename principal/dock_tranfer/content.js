@@ -27,8 +27,8 @@ function insertContainerID(containerID = '') {
 async function insertarContadores({ countActual = 0, countTotal = 0, countRestante = 0 }) {
 	const countersHtml = /*html*/ `
     <div class="containerContadores">
-      <p id='countRestante'>0</p>
-      <p>LP: <span id="countActual">0</span> DE <span id="countTotal">0</span></p>
+      <p id='countRestante'>${countRestante}</p>
+      <p>LP: <span id="countActual">${countActual}</span> DE <span id="countTotal">${countTotal}</span></p>
     </div>
     `;
 
@@ -36,13 +36,13 @@ async function insertarContadores({ countActual = 0, countTotal = 0, countRestan
 
 	await new Promise(setTimeout, 100);
 
-	const countRestanteE = document.querySelector('#countRestante');
-	const countActualE = document.querySelector('#countActual');
-	const countTotalE = document.querySelector('#countTotal');
+	// const countRestanteE = document.querySelector('#countRestante');
+	// const countActualE = document.querySelector('#countActual');
+	// const countTotalE = document.querySelector('#countTotal');
 
-	countRestanteE.innerHTML = countRestante;
-	countActualE.innerHTML = countActual;
-	countTotalE.innerHTML = countTotal;
+	// countRestanteE.innerHTML = countRestante;
+	// countActualE.innerHTML = countActual;
+	// countTotalE.innerHTML = countTotal;
 }
 
 function setContainers() {
@@ -127,34 +127,37 @@ async function content() {
 window.addEventListener('load', async () => {
 	isStorage = false;
 
-	const storageData = sessionStorage.getItem(NAME_STORAGE_DATA);
+	try {
+		const storageData = sessionStorage.getItem(NAME_STORAGE_DATA);
 
-	if (!storageData) {
-		content();
-		return;
+		if (!storageData) {
+			content();
+			return;
+		}
+
+		const dataContainerStorage = JSON.parse(storageData) || {};
+		const { containers = [], total: countTotal } = dataContainerStorage;
+
+		const countRestante = containers.length;
+
+		if (containers.length === 0) {
+			sessionStorage.removeItem(NAME_STORAGE_DATA);
+			content();
+			return;
+		}
+
+		// Obtén el primer objeto del array
+		const firstContainer = containers.shift();
+		if (!firstContainer) content();
+
+		isStorage = true;
+
+		sessionStorage.setItem(NAME_STORAGE_DATA, JSON.stringify({ containers, total }));
+
+		await insertarContadores({ countActual: firstContainer.current, countTotal, countRestante });
+
+		// insertContainerID(firstContainer.containerId);
+	} catch (error) {
+		console.error('[Dock Transfer]: Ha ocurrido un error', error);
 	}
-
-
-	const dataContainerStorage = JSON.parse(storageData) || {};
-	const { containers = [], total: countTotal } = dataContainerStorage;
-
-	const countRestante = containers.length;
-
-	if (containers.length === 0) {
-		sessionStorage.removeItem(NAME_STORAGE_DATA);
-		content();
-		return;
-	}
-
-	// Obtén el primer objeto del array
-	const firstContainer = containers.shift();
-	if (!firstContainer) content();
-	
-	isStorage = true;
-
-	sessionStorage.setItem(NAME_STORAGE_DATA, JSON.stringify({ containers, total }));
-
-	await insertarContadores({ countActual: firstContainer.current, countTotal, countRestante });
-
-	// insertContainerID(firstContainer.containerId);
 });
