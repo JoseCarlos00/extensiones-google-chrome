@@ -52,7 +52,6 @@ class ShippingLoad {
 			this.tableDockDoor = document.querySelector("#tableDockDoor");
 
 			this.verifyDataStorage();
-
 			this.showHiddenDoorInTable();
 
 			this.setEventListenerToSave();

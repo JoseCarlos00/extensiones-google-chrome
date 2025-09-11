@@ -72,7 +72,7 @@ class RefreshDockDoor {
 			LocalStorageHelper.remove(this.nameDataStorageDoors);
 
 			let nuevaVentana = window.open(
-				"https://wms.fantasiasmiguel.com.mx/scale/insights/3041?selectRows=Y",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/3041?selectRows=Y&isBlur=Y",
 				"_blank",
 				"width=800,height=600"
 			);
