@@ -2,6 +2,7 @@ import { LocalStorageHelper } from "../utils/LocalStorageHelper"
 import { RefreshDockDoor } from "./refreshDockDoor"
 import { ToastAlert } from "../utils/ToastAlert"
 import { NAME_DATA_STORAGE_DOORS, TABLE_HTML } from "../constants";
+import { getTableDockDoor } from "../utils/GetDockDoors"
 
 const SELECTORS = {
 	DOCK_DOOR_INPUT: '#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input',
@@ -91,11 +92,19 @@ export class ShippingLoad {
 				return reject(new Error("No existe el Elemento a insertar la tabla: [#ScreenGroupSubAccordion11736]"));
 			}
 
-			if (!TABLE_HTML) {
-				return reject(new Error("No existe la constante de tabla HTML: [TABLE_HTML]"));
+			const tableDockDoor = getTableDockDoor()
+
+			if (tableDockDoor) {
+				elementToInsert.insertAdjacentHTML("beforeend", TABLE_HTML);
+			} else {
+				if (!TABLE_HTML) {
+					reject('No se encontró el elemento: TABLE_HTML');
+				}
+
+				elementToInsert.insertAdjacentHTML('beforeend', TABLE_HTML);
 			}
 
-			elementToInsert.insertAdjacentHTML("beforeend", TABLE_HTML);
+			
 			setTimeout(resolve, 50);
 		});
 	}
@@ -210,9 +219,6 @@ export class ShippingLoad {
 
 window.addEventListener("load", async () => {
 	try {
-		// @ts-ignore - _webUi es una variable global del contexto de la página
-		console.log("Dock Door List:", _webUi.config.ConfigValue["DockDoor_List"]);
-
 		const shippingLoad = new ShippingLoad();
 		await shippingLoad.init();
 
