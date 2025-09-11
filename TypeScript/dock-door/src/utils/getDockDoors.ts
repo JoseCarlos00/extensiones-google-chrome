@@ -7,27 +7,27 @@ const createObjectDockList = (dockDoorList: DataContent[]): DockListData | null 
 	}
 
 
-  const listEMB = dockDoorList.map(({ Identifier }) => Identifier?.includes('EMB-'));
+	let listEMB: Partial<DataContent>[] = [];
+	let listOthers: Partial<DataContent>[] = [];
 
-  console.log({listEMB});
+ dockDoorList.forEach((dockDoor) => {
+		if (dockDoor.Description.startsWith('EMB-')) {
+			listEMB.push({ Description: dockDoor.Description });
+		} else {
+			listOthers.push({ Description: dockDoor.Description });
+		}
+ });
+
+  console.log({ listEMB });
+  console.log({ listOthers });
   
-
-	// const newObject: DockListData[] = dockDoorList.map(item => {});
 
 	return {
 		EMB: {
-			data: [
-				{
-					Description: 'EMB-01',
-				},
-			],
+			data: listEMB,
 		},
 		Otras: {
-			data: [
-				{
-					Description: 'AMZ-01',
-				},
-			],
+			data: listOthers,
 		},
 	} as DockListData;
 };
@@ -46,7 +46,7 @@ export const getTableDockDoor = (): HTMLTableElement | null => {
     }
 
 		const table = CreateTable.createTableDockDoor(parseObject);
-
+		
     return table
 	} catch (error) {
     console.error('[getTableDockDoor]: Error: Ha ocurrido un error al crear la tabla Dock Door');

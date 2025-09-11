@@ -94,8 +94,16 @@ export class ShippingLoad {
 
 			const tableDockDoor = getTableDockDoor()
 
+
 			if (tableDockDoor) {
-				elementToInsert.insertAdjacentHTML("beforeend", TABLE_HTML);
+				elementToInsert.insertAdjacentHTML(
+					'beforeend',
+					`
+					<div class="table-content">
+						${tableDockDoor.outerHTML}
+					</div>
+				`
+				);
 			} else {
 				if (!TABLE_HTML) {
 					reject('No se encontró el elemento: TABLE_HTML');
