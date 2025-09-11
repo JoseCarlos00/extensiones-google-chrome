@@ -3,79 +3,96 @@ import { RefreshDockDoor } from "./refreshDockDoor"
 import { ToastAlert } from "../utils/ToastAlert"
 import { NAME_DATA_STORAGE_DOORS, TABLE_HTML } from "../CONST";
 
+const SELECTORS = {
+	DOCK_DOOR_INPUT: '#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input',
+	TABLE_INSERT_POINT: '#ScreenGroupSubAccordion11736',
+	TABLE_DOCK_DOOR: '#tableDockDoor',
+	SAVE_BUTTON: '#ShippingLoadMenuActionSave',
+	DOOR_LIST_CONTAINER: 'body > div.ui-igcombo-dropdown ul.ui-igcombo-listitemholder',
+};
+
 export class ShippingLoad {
-	private nameDataStorageDoors: string = NAME_DATA_STORAGE_DOORS;
-	private dataStorageDoors: Set<string> | null = null;
-	private inputDockDoor: HTMLInputElement | null  = null;
-	private doorAssigned: string | null = null;
-	private isDataStorageDoors: boolean = false;
+	private readonly nameDataStorageDoors: string = NAME_DATA_STORAGE_DOORS;
+	private dataStorageDoors: Set<string> = new Set();
+	private inputDockDoor: HTMLInputElement | null = null;
+	private doorAssigned: string = "";
 	private tableDockDoor: HTMLElement | null = null;
 
-	constructor() {
-		try {
-			this.dataStorageDoors = this.getStorageData();
-			this.inputDockDoor = document.querySelector(
-				"#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input"
-			);
-
-			this.doorAssigned = this.inputDockDoor?.value ?? "";
-			this.isDataStorageDoors = this.dataStorageDoors.size > 0;
-
-			if (this.dataStorageDoors.size === 0) {
-				ToastAlert.showAlertFullTop("No se encontraron datos guardados de puertas asignadas", "info");
-			}
-
-			// Tabla de datos
-			this.tableDockDoor = null;
-		} catch (error) {
-			console.error("Ha ocurrido un error al crear [ShippingLoad]:", error);
-		}
+	private get hasDataStorageDoors(): boolean {
+		return this.dataStorageDoors.size > 0;
 	}
 
-	getStorageData() {
-		// Recupera los datos del almacenamiento y los convierte en un Set
+	private getStorageData(): Set<string> {
 		const storedData = LocalStorageHelper.get(this.nameDataStorageDoors);
 		return new Set(Array.isArray(storedData) ? storedData : []);
 	}
 
-	verifyDataStorage() {
-		console.log("[verifyDataStorage]", this.isDataStorageDoors);
+	private verifyDataStorage() {
+		console.log("[verifyDataStorage]", this.hasDataStorageDoors);
 
-		if (this.isDataStorageDoors && this.tableDockDoor) {
+		if (this.hasDataStorageDoors && this.tableDockDoor) {
 			this.tableDockDoor.classList.remove("hidden");
 		} else {
-			this.tableDockDoor?.classList?.add("hidden");
+			this.tableDockDoor?.classList.add("hidden");
 		}
 	}
 
 	async init() {
 		try {
-			await this.insertTableAvailableDoors();
-			this.tableDockDoor = document.querySelector("#tableDockDoor");
-
-			this.verifyDataStorage();
-			this.showHiddenDoorInTable();
-
-			this.setEventListenerToSave();
-			this.setEventStorageChange();
-			this.hiddenDoorList();
+			this.loadInitialData();
+			this.queryDOMElements();
+			await this.injectUIComponents();
+			this.updateUI();
+			this.setupEventListeners();
 		} catch (error: any) {
 			console.error("Ha ocurrido un error al inicializar [ShippingLoad]:", error?.message, error);
 		}
 	}
 
-	// Insertar tabla de puertas disponibles en el DOM
-	insertTableAvailableDoors() {
+	private loadInitialData() {
+		this.dataStorageDoors = this.getStorageData();
+		if (!this.hasDataStorageDoors) {
+			ToastAlert.showAlertFullTop("No se encontraron datos guardados de puertas asignadas", "info");
+		}
+	}
+
+	private queryDOMElements() {
+		this.inputDockDoor = document.querySelector(SELECTORS.DOCK_DOOR_INPUT);
+		if (!this.inputDockDoor) {
+			console.warn("El input para 'dock door' no fue encontrado.");
+		}
+		this.doorAssigned = this.inputDockDoor?.value ?? "";
+	}
+
+	private async injectUIComponents() {
+		await this.insertTableAvailableDoors();
+		this.tableDockDoor = document.querySelector(SELECTORS.TABLE_DOCK_DOOR);
+		if (!this.tableDockDoor) {
+			throw new Error("La tabla de dock doors no pudo ser encontrada después de la inserción.");
+		}
+	}
+
+	private updateUI() {
+		this.verifyDataStorage();
+		this.showHiddenDoorInTable();
+		this.hiddenDoorList();
+	}
+
+	private setupEventListeners() {
+		this.setEventListenerToSave();
+		this.setEventStorageChange();
+	}
+
+	private insertTableAvailableDoors(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			const elementToInsert = document.querySelector("#ScreenGroupSubAccordion11736");
+			const elementToInsert = document.querySelector(SELECTORS.TABLE_INSERT_POINT);
 
 			if (!elementToInsert) {
-				reject("No existe el Elemento a insertar la tabla: [#ScreenGroupSubAccordion11736]");
-				return;
+				return reject(new Error("No existe el Elemento a insertar la tabla: [#ScreenGroupSubAccordion11736]"));
 			}
 
 			if (!TABLE_HTML) {
-				reject("No existe la constante de tabla HTML: [tableHTML]");
+				return reject(new Error("No existe la constante de tabla HTML: [TABLE_HTML]"));
 			}
 
 			elementToInsert.insertAdjacentHTML("beforeend", TABLE_HTML);
@@ -83,89 +100,78 @@ export class ShippingLoad {
 		});
 	}
 
-	setEventStorageChange() {
-		window.addEventListener("storage", async ({ key }) => {
+	private setEventStorageChange() {
+		window.addEventListener("storage", ({ key }) => {
 			if (key === this.nameDataStorageDoors) {
 				this.dataStorageDoors = this.getStorageData();
-				this.isDataStorageDoors = this.dataStorageDoors.size > 0;
-				this.hiddenDoorList();
-				this.showHiddenDoorInTable();
-				this.verifyDataStorage();
+				this.updateUI();
 				ToastAlert.showAlertFullTop("Información de puertas asignadas actualizada", "info");
 			}
 		});
 	}
 
-	setEventListenerToSave() {
-		const btnSave = document.querySelector("#ShippingLoadMenuActionSave");
+	private setEventListenerToSave() {
+		const btnSave = document.querySelector(SELECTORS.SAVE_BUTTON);
 
 		btnSave?.addEventListener("click", () => this.addToDoorLocalStorage());
 
 		document.addEventListener("keydown", ({ key }) => {
-			if (key === "Enter") {
-				this.addToDoorLocalStorage();
-			}
+			if (key === "Enter") this.addToDoorLocalStorage();
 		});
 	}
 
-	showHiddenDoorInTable() {
+	private showHiddenDoorInTable() {
 		try {
 			if (!this.tableDockDoor) {
 				throw new Error("No existe el elemento a insertar la tabla de puertas no disponibles");
 			}
 
 			const rows = Array.from(this.tableDockDoor.querySelectorAll("tbody tr td"));
-
 			if (rows.length === 0) {
 				throw new Error("No hay filas en la tabla");
 			}
 
 			rows.forEach((td) => {
 				const doorValue = td?.textContent?.trim();
-				td?.classList?.remove("not-available");
+				td.classList.remove("not-available");
 
-				if (this.dataStorageDoors?.has(doorValue)) {
-					td?.classList?.add("not-available");
+				if (doorValue && this.dataStorageDoors.has(doorValue)) {
+					td.classList.add("not-available");
 				}
 			});
 		} catch (error: any) {
 			console.error("Error en showHiddenDoorInTable:", error.message, error);
-			return;
 		}
 	}
 
-	hiddenDoorList() {
+	private hiddenDoorList() {
 		try {
-			// Selección de contenedor base (reemplázalo con un selector más específico si es posible)
-			const listContainer = document.querySelector("body > div:nth-child(27) ul.ui-igcombo-listitemholder");
+			// Este selector es muy específico y puede romperse si la interfaz de usuario cambia.
+			const listContainer = document.querySelector(SELECTORS.DOOR_LIST_CONTAINER);
 
 			if (!listContainer) {
-				throw new Error("Contenedor de la lista no encontrado.");
+				// No siempre está presente, así que no lanzamos error, solo advertimos.
+				console.warn("Contenedor de la lista de puertas no encontrado. Puede que no esté visible.");
+				return;
 			}
 
-			// Selección de elementos a procesar
-			const doorListInputs = listContainer.querySelectorAll("li.ui-igcombo-listitem .comboInfo .emphasizedText");
-
-			if (!doorListInputs || doorListInputs.length === 0) {
-				throw new Error("No se encontraron los elementos inputs a ocultar.");
+			const doorListItems = listContainer.querySelectorAll("li.ui-igcombo-listitem .comboInfo .emphasizedText");
+			if (doorListItems.length === 0) {
+				console.warn("No se encontraron elementos de puerta en la lista.");
+				return;
 			}
 
-			// Procesar elementos en un solo bucle
-			doorListInputs.forEach((doorElement) => {
+			doorListItems.forEach((doorElement) => {
 				const liElement = doorElement.closest("li.ui-igcombo-listitem");
-
 				if (!liElement) {
 					console.warn(`[hiddenDoorList]: No se encontró el elemento <li> para ${doorElement}.`);
 					return;
 				}
 
-				// Mostrar por defecto
 				liElement.classList.remove("hidden");
-
-				// Obtener valor y verificar en `dataStorageDoors`
 				const doorValue = doorElement?.textContent?.trim();
 
-				if (this.dataStorageDoors?.has(doorValue)) {
+				if (doorValue && this.dataStorageDoors.has(doorValue)) {
 					liElement.classList.add("hidden");
 				}
 			});
@@ -174,27 +180,28 @@ export class ShippingLoad {
 		}
 	}
 
-	addToDoorLocalStorage() {
+	private addToDoorLocalStorage() {
 		try {
-			if (!this.dataStorageDoors) {
-				throw new Error("El [dataStorageDoors] no existe.");
+			const valueInputDock = this.inputDockDoor?.value?.trim() ?? "";
+
+			if (!valueInputDock && !this.doorAssigned) {
+				// No hay valor nuevo ni anterior, no hay nada que hacer.
+				return;
 			}
 
-			const valueInputDork = this.inputDockDoor?.value?.trim() ?? "";
-
-			if (!valueInputDork && !this.doorAssigned) {
-				throw new Error("No hay valor en el input 'dock door' para guardar.");
+			if (valueInputDock !== this.doorAssigned) {
+				// Si había una puerta asignada, la liberamos
+				if (this.doorAssigned) {
+					this.dataStorageDoors.delete(this.doorAssigned);
+				}
+				// Si hay una nueva puerta, la ocupamos
+				if (valueInputDock) {
+					this.dataStorageDoors.add(valueInputDock);
+				}
 			}
 
-			if (valueInputDork !== this.doorAssigned) {
-				this.dataStorageDoors.delete(this.doorAssigned as string);
-				this.dataStorageDoors.add(valueInputDork);
-			}
-
-			// Convertir el Set a un array y guardarlo en localStorage
 			LocalStorageHelper.save(this.nameDataStorageDoors, Array.from(this.dataStorageDoors));
-
-			console.log("Puertas guardadas exitosamente:");
+			console.log("Puertas guardadas exitosamente:", this.dataStorageDoors);
 		} catch (error) {
 			console.error("Error guardando puertas en storage:", error);
 		}
@@ -203,17 +210,15 @@ export class ShippingLoad {
 
 window.addEventListener("load", async () => {
 	try {
-		console.log('Dock Door List:', _webUi.config.ConfigValue['DockDoor_List']);
+		// @ts-ignore - _webUi es una variable global del contexto de la página
+		console.log("Dock Door List:", _webUi.config.ConfigValue["DockDoor_List"]);
+
 		const shippingLoad = new ShippingLoad();
 		await shippingLoad.init();
 
-		try {
-			const refreshDockDoor = new RefreshDockDoor();
-			await refreshDockDoor.render();
-		} catch (error) {
-			console.error("Error in inicializar la clase refreshDockDoor:", error);
-		}
+		const refreshDockDoor = new RefreshDockDoor();
+		await refreshDockDoor.render();
 	} catch (error) {
-		console.error("Error in inicializar la clase ShippingLoad:", error);
+		console.error("Error al inicializar la extensión Dock Door:", error);
 	}
 });

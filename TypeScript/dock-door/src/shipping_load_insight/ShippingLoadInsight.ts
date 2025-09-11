@@ -2,30 +2,32 @@ import { MODAL_HTML, NAME_DATA_STORAGE_DOORS } from "../CONST"
 import { LocalStorageHelper } from "../utils/LocalStorageHelper"
 import { ToastAlert } from "../utils/ToastAlert"
 
+const SELECTORS = {
+	TBODY: '#ListPaneDataGrid > tbody',
+	TABLE_HEADERS: '#ListPaneDataGrid_headers',
+	DOCK_DOOR_HEADER: '#ListPaneDataGrid_DOCK_DOOR_LOCATION',
+	NAV_BAR_INSERT_POINT: '#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav',
+	MODAL: '#modalShowDockDoor',
+	MODAL_OPEN_BUTTON: '#openShowDockDoors',
+	MODAL_CLOSE_BUTTON: '.close',
+	MODAL_TABLE: '#tableDockDoor',
+	NEW_WAVE_BUTTON: '#ListPaneMenuActionNew',
+	EDIT_WAVE_BUTTON: '#ListPaneMenuActionEdit',
+	DOCK_DOOR_CELLS: 'td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]',
+};
+
 export class ShippingLoadInsight {
 	private closeWindow: boolean = false;
-	private nameDataStorageDoors: string = NAME_DATA_STORAGE_DOORS;
+	private readonly nameDataStorageDoors: string = NAME_DATA_STORAGE_DOORS;
 	private dataStorageDoors: Set<string> = new Set();
-	private idModal: string = 'modalShowDockDoor';
-	private idButtonOpenModal: string = 'openShowDockDoors';
 	private tbodyElement: HTMLElement | null;
 	private tableDockDoorModal: HTMLElement | null;
 
 	constructor() {
-		// Constantes
-		this.tbodyElement = document.querySelector('#ListPaneDataGrid > tbody');
-
-		if (!this.nameDataStorageDoors) {
-			throw new Error('NAME_DATA_STORAGE_DOORS is not defined');
-		}
-
-		if (!this.tbodyElement) {
-			throw new Error('tbodyElement is not defined');
-		}
-
-		// Tabla de datos en el Modal
+		this.tbodyElement = null;
 		this.tableDockDoorModal = null;
 
+		// Listener para cerrar la ventana desde la otra pestaña
 		window.addEventListener('message', ({ data }) => {
 			if (data === 'cerrar') {
 				this.closeWindow = true;
@@ -33,99 +35,101 @@ export class ShippingLoadInsight {
 		});
 	}
 
-	async preInit() {
-		const tableHeaders = document.querySelector('#ListPaneDataGrid_headers') as HTMLElement;
-
-		if (!tableHeaders) {
-			throw new Error('tableHeaders is not defined. [#ListPaneDataGrid_headers]');
+	private async preInit() {
+		this.tbodyElement = document.querySelector(SELECTORS.TBODY);
+		if (!this.tbodyElement) {
+			throw new Error('El elemento principal de la tabla (tbody) no fue encontrado.');
 		}
 
-		this.verifyDockDoorHeader();
-		this.observeChangesInTheDOM(tableHeaders, () => this.verifyDockDoorHeader());
+		const tableHeaders = document.querySelector(SELECTORS.TABLE_HEADERS) as HTMLElement;
+
+		if (!tableHeaders) {
+			throw new Error('Los encabezados de la tabla no fueron encontrados.');
+		}
+
+		this.checkDockDoorColumn();
+		this.observeChangesInTheDOM(tableHeaders, () => this.checkDockDoorColumn());
 	}
 
-	verifyDockDoorHeader() {
-		const dockDoorHeader = document.querySelector('#ListPaneDataGrid_DOCK_DOOR_LOCATION');
+	private checkDockDoorColumn() {
+		const dockDoorHeader = document.querySelector(SELECTORS.DOCK_DOOR_HEADER);
+		const btnOpenModal = document.getElementById(SELECTORS.MODAL_OPEN_BUTTON.substring(1));
 
 		if (dockDoorHeader) {
-			const btnOpenModal = document.getElementById(this.idButtonOpenModal);
-
 			btnOpenModal?.classList.remove('disabled');
 		} else {
-			const btnOpenModal = document.getElementById(this.idButtonOpenModal);
 			btnOpenModal?.classList.add('disabled');
-
 			ToastAlert.showAlertFullTop('Active la columna Dock Door', 'error');
 		}
 	}
 
 	async init() {
 		try {
-			await this.preInit(); // Valida elementos iniciales
-			await this.insertModalInDOM(); // Inserta el modal
-			this.initializeModalOpen(); // Configura eventos del modal
-			this.tableDockDoorModal = document.querySelector('#tableDockDoor');
-			this.setEventListeners(); // Configura eventos adicionales
+			await this.preInit();
+			await this.insertModalInDOM();
+			this.tableDockDoorModal = document.querySelector(SELECTORS.MODAL_TABLE);
+			this.initializeModal();
+			this.setupGeneralEventListeners();
 
 			// Asegura que el DOM esté cargado antes de ejecutar
 			setTimeout(() => this.setDockDoorList(true), 50);
 		} catch (error: any) {
-			console.error('Ha ocurrido un error al inicializar [ShippingLoadInsight]:', error?.message, error);
+			console.error('Ha ocurrido un error al inicializar [ShippingLoadInsight]:', error.message, error);
 		}
 	}
 
-	insertModalInDOM() {
+	private insertModalInDOM(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			const ulElementoToInsert = document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav');
+			const ulElementToInsert = document.querySelector(SELECTORS.NAV_BAR_INSERT_POINT);
 
 			const li = /*html*/ `
         <li class="navdetailpane visible-sm visible-md visible-lg">
-          <a id='${this.idButtonOpenModal}' href="javascript:void(0);" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Mostrar Dock Doors" data-balloon-pos="right">
+          <a id='${SELECTORS.MODAL_OPEN_BUTTON.substring(1)}' href="javascript:void(0);" data-toggle="detailpane" class="navimageanchor visiblepane" aria-label="Mostrar Dock Doors" data-balloon-pos="right">
             <i class="far fa-door-open navimage"></i>
           </a>
         </li>
         `;
 
-			if (!ulElementoToInsert) {
-				reject('[insertModalInDOM] No se encontró el elemento <ul> a insertar');
+			if (!ulElementToInsert) {
+				return reject(new Error('[insertModalInDOM] No se encontró el punto de inserción en la barra de navegación.'));
 			}
 
 			if (!MODAL_HTML) {
-				reject('[insertModalInDOM] No se encontró el HTML de la modal');
+				return reject(new Error('[insertModalInDOM] No se encontró el HTML del modal.'));
 			}
 
-			ulElementoToInsert?.insertAdjacentHTML('beforeend', li);
+			ulElementToInsert.insertAdjacentHTML('beforeend', li);
 			document.body.insertAdjacentHTML('beforeend', MODAL_HTML);
 
 			setTimeout(resolve, 50);
 		});
 	}
 
-	initializeModalOpen() {
+	private initializeModal() {
 		try {
-			const modal = document.getElementById(this.idModal);
-			const btnOpen = document.getElementById(this.idButtonOpenModal);
-			const btnClose = modal?.querySelector('.close') as HTMLElement;
+			const modal = document.getElementById(SELECTORS.MODAL.substring(1));
+			const btnOpen = document.getElementById(SELECTORS.MODAL_OPEN_BUTTON.substring(1));
+			const btnClose = modal?.querySelector(SELECTORS.MODAL_CLOSE_BUTTON) as HTMLElement;
 
 			if (!modal) {
-				throw new Error("No se encontró el modal <div> con id '#modalShowDock'");
+				throw new Error("El elemento del modal no fue encontrado.");
 			}
 
 			if (!btnOpen) {
-				throw new Error(`No se encontró el botón openModal con id'${this.idButtonOpenModal}'`);
+				throw new Error("El botón para abrir el modal no fue encontrado.");
 			}
 
 			if (!btnClose) {
-				throw new Error("No se encontró el botón closeModal con clase '.close'");
+				throw new Error("El botón para cerrar el modal no fue encontrado.");
 			}
 
-			this.setEventListenersModal({ modal, btnOpen, btnClose });
+			this.setupModalEventListeners({ modal, btnOpen, btnClose });
 		} catch (error: any) {
 			console.error('Ha ocurrido un error al inicializar [initializeModalOpen]:', error?.message, error);
 		}
 	}
 
-	setEventListenersModal({ modal, btnOpen, btnClose }: { modal: HTMLElement, btnOpen: HTMLElement, btnClose: HTMLElement }) {
+	private setupModalEventListeners({ modal, btnOpen, btnClose }: { modal: HTMLElement, btnOpen: HTMLElement, btnClose: HTMLElement }) {
 		// Cuando el usuario hace clic en el botón, abre el modal
 		btnOpen.addEventListener('click', () => {
 			this.showHiddenDoorInTableModal();
@@ -139,9 +143,7 @@ export class ShippingLoadInsight {
 
 		// Cuando el usuario hace clic fuera del modal, ciérralo
 		window.addEventListener('click', ({ target }) => {
-			const element = target;
-
-			if (element === modal) {
+			if (target === modal) {
 				modal.style.display = 'none';
 			}
 		});
@@ -155,7 +157,7 @@ export class ShippingLoadInsight {
 		});
 	}
 
-	observeChangesInTheDOM(elementHTML: HTMLElement, handleMutation: () => void) {
+	private observeChangesInTheDOM(elementHTML: HTMLElement, handleMutation: () => void) {
 		// Configuración del observer
 		const observerConfig = {
 			attributes: false, // Observar cambios en atributos
@@ -170,22 +172,22 @@ export class ShippingLoadInsight {
 		observer.observe(elementHTML, observerConfig);
 	}
 
-	setEventListeners() {
+	private setupGeneralEventListeners() {
 		if (!this.tbodyElement) {
-			throw new Error('No se encontró el elemento <tbody> con id #ListPaneDataGrid > tbody');
+			throw new Error('El elemento tbody no está disponible para configurar los listeners.');
 		}
 
-		const btnNewWave = document.querySelector('#ListPaneMenuActionNew');
-		const btnEditWave = document.querySelector('#ListPaneMenuActionEdit');
+		const btnNewWave = document.querySelector(SELECTORS.NEW_WAVE_BUTTON);
+		const btnEditWave = document.querySelector(SELECTORS.EDIT_WAVE_BUTTON);
 
 		this.observeChangesInTheDOM(this.tbodyElement, () => this.setDockDoorList());
 
-		btnNewWave?.addEventListener('click', () => this.setDockDoorList());
-		btnEditWave?.addEventListener('click', () => this.setDockDoorList());
+		btnNewWave?.addEventListener('click', () => this.setDockDoorList(false));
+		btnEditWave?.addEventListener('click', () => this.setDockDoorList(false));
 	}
 
-	setDockDoorList(closeWindow = false) {
-		const dockDoors = document.querySelectorAll('td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]');
+	private setDockDoorList(isInitialSync: boolean = false) {
+		const dockDoors = document.querySelectorAll(SELECTORS.DOCK_DOOR_CELLS);
 
 		if (!dockDoors || dockDoors.length === 0) {
 			console.warn('[setDockDoorList]: No se encontraron elementos td[DOCK_DOOR_LOCATION]');
@@ -195,13 +197,13 @@ export class ShippingLoadInsight {
 		}
 
 		// Función de normalización
-		const normalizeString = (str: string) => str?.normalize('NFKC').replace(/\s+/g, ' ').trim();
+		const normalizeString = (str: string | null | undefined) => str?.normalize('NFKC').replace(/\s+/g, ' ').trim();
 
 		// Vacía el conjunto actual
 		this.dataStorageDoors.clear();
 
 		dockDoors.forEach((doorElement) => {
-			const doorValue = normalizeString(doorElement?.textContent);
+			const doorValue = normalizeString(doorElement.textContent);
 
 			// Filtrar valores nulos, vacíos o solo espacios
 			if (doorValue) {
@@ -214,7 +216,7 @@ export class ShippingLoadInsight {
 		LocalStorageHelper.save(this.nameDataStorageDoors, Array.from(this.dataStorageDoors));
 
 		// Cerrar ventanas
-		if (closeWindow || this.closeWindow) {
+		if (isInitialSync || this.closeWindow) {
 			setTimeout(() => {
 				window.close();
 			}, 50);
@@ -222,39 +224,39 @@ export class ShippingLoadInsight {
 	}
 
 	showHiddenDoorInTableModal() {
-		try {
-			if (!this.tableDockDoorModal) {
-				throw new Error('No existe el elemento a insertar la tabla de puertas no disponibles');
-			}
+		if (!this.tableDockDoorModal) {
+			console.error('Error en showHiddenDoorInTableModal: La tabla del modal no fue encontrada.');
+			return;
+		}
 
+		try {
 			const rows = Array.from(this.tableDockDoorModal.querySelectorAll('tbody tr td'));
 
 			if (rows.length === 0) {
-				throw new Error('No hay filas en la tabla');
+				console.warn('No se encontraron filas en la tabla del modal.');
+				return;
 			}
 
 			rows.forEach((td) => {
-				const doorValue = td?.textContent?.trim();
+				const doorValue = td.textContent?.trim();
+				td.classList.remove('not-available');
 
-				td?.classList?.remove('not-available');
-
-				if (this.dataStorageDoors.has(doorValue)) {
-					td?.classList?.add('not-available');
+				if (doorValue && this.dataStorageDoors.has(doorValue)) {
+					td.classList.add('not-available');
 				}
 			});
 
 			this.tableDockDoorModal.classList.remove('hidden');
 		} catch (error: any) {
 			console.error('Error en showHiddenDoorInTableModal:', error.message, error);
-			return;
 		}
 	}
 }
 
 window.addEventListener("load", async () => {
 	try {
-		const loadManager = new ShippingLoadInsight();
-		loadManager.init();
+		const shippingLoadInsight = new ShippingLoadInsight();
+		await shippingLoadInsight.init();
 	} catch (error: any) {
 		console.error('Error al crear el objeto de la clase "ShippingLoadInsight"', error?.message, error);
 	}
