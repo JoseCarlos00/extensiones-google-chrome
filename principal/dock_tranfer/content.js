@@ -27,6 +27,37 @@ function insertContainerID(containerID = '') {
 	}, 1500);
 }
 
+function validateCont() {
+	if (jQuery.trim(_contIdObj.value).length == 0) {
+		focusContainerId();
+
+		if (isStorage) {
+			reInitialize();
+			console.error('Error: Cargar Siguiente LP. Moving to next container.');
+			processNextContainer();
+		} else {
+			manh.ils.form.handleError(document.getElementById('ContErrorMsg').value);
+		}
+		return false;
+	} else return true;
+}
+
+function validateDestLoc() {
+	if (jQuery.trim(_destLocObj.value).length == 0) {
+		focusDestinationLocation();
+
+		if (isStorage) {
+			reInitialize();
+			console.error('Error: Cargar Siguiente LP. Moving to next container.');
+			processNextContainer();
+		} else {
+			manh.ils.form.handleError(document.getElementById('DestLocErrorMsg').value);
+		}
+		return false;
+	} else return true;
+}
+
+
 async function insertarContadores() {
 	const countersHtml = /*html*/ `
     <div class="containerContadores hidden">
@@ -47,6 +78,7 @@ async function insertarContadores() {
 
 function updateCounters({ countRestante, countActual, countTotal }) {
 	containerCounter && containerCounter.classList.remove('hidden');
+	containerCounter && (containerCounter.hidden = false);
 
 	countRestanteE && (countRestanteE.innerHTML = countRestante);
 	countActualE && (countActualE.innerHTML = countActual);
@@ -109,8 +141,6 @@ function processNextContainer() {
 		// Last container was processed.
 		sessionStorage.removeItem(NAME_STORAGE_DATA);
 		isStorage = false;
-		containerCounter.hidden = true;
-		
 
 		updateCounters({
 			countRestante: 0,
@@ -122,6 +152,9 @@ function processNextContainer() {
 
 		setTimeout(() => {
 			updateCounters({ countRestante: 0, countActual: 0, countTotal: 0 });
+
+			containerCounter.hidden = true;
+			containerCounter.classList.add('hidden');
 
 			if (!document.querySelector('.container')) {
 				content();
@@ -212,6 +245,7 @@ window.addEventListener('load', async () => {
 
 		isStorage = true;
 		containerCounter && containerCounter.classList.remove('hidden');
+		containerCounter && (containerCounter.hidden = false);
 
 		sessionStorage.setItem(NAME_STORAGE_DATA, JSON.stringify({ containers, total: countTotal }));
 
