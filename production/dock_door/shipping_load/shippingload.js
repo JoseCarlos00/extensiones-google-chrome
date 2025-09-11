@@ -1,18 +1,25 @@
+(function () {
+	const script = document.createElement("script");
+	script.src = chrome.runtime.getURL("test.js");
+
+	(document.head || document.documentElement).appendChild(script);
+})()
+
 class ShippingLoad {
 	constructor() {
 		try {
-			this.nameDataStorgaeDoors = NAME_DATA_STORAGE_DOORS;
+			this.nameDataStorageDoors = NAME_DATA_STORAGE_DOORS;
 
-			this.dataStorgaeDoors = this.getStorageData();
+			this.dataStorageDoors = this.getStorageData();
 
 			this.inputDockDoor = document.querySelector(
 				"#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input"
 			);
 
 			this.doorAssigned = this.inputDockDoor?.value ?? "";
-			this.isDataStorageDoors = this.dataStorgaeDoors.size > 0;
+			this.isDataStorageDoors = this.dataStorageDoors.size > 0;
 
-			if (this.dataStorgaeDoors.size === 0) {
+			if (this.dataStorageDoors.size === 0) {
 				ToastAlert.showAlertFullTop("No se encontraron datos guardados de puertas asignadas", "info");
 			}
 
@@ -25,7 +32,7 @@ class ShippingLoad {
 
 	getStorageData() {
 		// Recupera los datos del almacenamiento y los convierte en un Set
-		const storedData = LocalStorageHelper.get(this.nameDataStorgaeDoors);
+		const storedData = LocalStorageHelper.get(this.nameDataStorageDoors);
 		return new Set(Array.isArray(storedData) ? storedData : []);
 	}
 
@@ -41,7 +48,7 @@ class ShippingLoad {
 
 	async init() {
 		try {
-			await this.insertTableAvailebleDoors();
+			await this.insertTableAvailableDoors();
 			this.tableDockDoor = document.querySelector("#tableDockDoor");
 
 			this.verifyDataStorage();
@@ -57,7 +64,7 @@ class ShippingLoad {
 	}
 
 	// Insertar tabla de puertas disponibles en el DOM
-	insertTableAvailebleDoors() {
+	insertTableAvailableDoors() {
 		return new Promise((resolve, reject) => {
 			const elementToInsert = document.querySelector("#ScreenGroupSubAccordion11736");
 
@@ -77,9 +84,9 @@ class ShippingLoad {
 
 	setEventStorageChange() {
 		window.addEventListener("storage", async ({ key }) => {
-			if (key === this.nameDataStorgaeDoors) {
-				this.dataStorgaeDoors = this.getStorageData();
-				this.isDataStorageDoors = this.dataStorgaeDoors.size > 0;
+			if (key === this.nameDataStorageDoors) {
+				this.dataStorageDoors = this.getStorageData();
+				this.isDataStorageDoors = this.dataStorageDoors.size > 0;
 				this.hiddenDoorList();
 				this.showHiddenDoorInTable();
 				this.verifyDataStorage();
@@ -116,7 +123,7 @@ class ShippingLoad {
 				const doorValue = td?.textContent?.trim();
 				td?.classList?.remove("not-available");
 
-				if (this.dataStorgaeDoors.has(doorValue)) {
+				if (this.dataStorageDoors.has(doorValue)) {
 					td?.classList?.add("not-available");
 				}
 			});
@@ -157,7 +164,7 @@ class ShippingLoad {
 				// Obtener valor y verificar en `daataStorgaeDoors`
 				const doorValue = doorElement?.textContent?.trim();
 
-				if (this.dataStorgaeDoors.has(doorValue)) {
+				if (this.dataStorageDoors.has(doorValue)) {
 					liElement.classList.add("hidden");
 				}
 			});
@@ -168,7 +175,7 @@ class ShippingLoad {
 
 	addToDoorLocalStorage() {
 		try {
-			if (!this.dataStorgaeDoors) {
+			if (!this.dataStorageDoors) {
 				throw new Error("El [daataStorgaeDoors] no existe.");
 			}
 
@@ -179,12 +186,12 @@ class ShippingLoad {
 			}
 
 			if (valueInputDoork !== this.doorAssigned) {
-				this.dataStorgaeDoors.delete(this.doorAssigned);
-				this.dataStorgaeDoors.add(valueInputDoork);
+				this.dataStorageDoors.delete(this.doorAssigned);
+				this.dataStorageDoors.add(valueInputDoork);
 			}
 
 			// Convertir el Set a un array y guardarlo en localStorage
-			LocalStorageHelper.save(this.nameDataStorgaeDoors, Array.from(this.dataStorgaeDoors));
+			LocalStorageHelper.save(this.nameDataStorageDoors, Array.from(this.dataStorageDoors));
 
 			console.log("Puertas guardadas exitosamente:");
 		} catch (error) {

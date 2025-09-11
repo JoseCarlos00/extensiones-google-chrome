@@ -2,14 +2,14 @@ class ShippingLoadInsight {
 	constructor() {
 		// Constantes
 		this.closeWindow = false;
-		this.nameDataStorgaeDoors = NAME_DATA_STORAGE_DOORS;
-		this.dataStorgaeDoors = new Set();
+		this.nameDataStorageDoors = NAME_DATA_STORAGE_DOORS;
+		this.dataStorageDoors = new Set();
 
 		this.idModal = "modalShowDockDoor";
 		this.idButtonOpenModal = "openShowDockDoors";
 		this.tbodyElement = document.querySelector("#ListPaneDataGrid > tbody");
 
-		if (!this.nameDataStorgaeDoors) {
+		if (!this.nameDataStorageDoors) {
 			throw new Error("NAME_DATA_STORAGE_DOORS is not defined");
 		}
 
@@ -34,11 +34,11 @@ class ShippingLoadInsight {
 			throw new Error("tableHeaders is not defined. [#ListPaneDataGrid_headers]");
 		}
 
-		this.verifiryDockDoorHeader();
-		this.observeChangesInTheDOM(tableHeaders, () => this.verifiryDockDoorHeader());
+		this.verifyDockDoorHeader();
+		this.observeChangesInTheDOM(tableHeaders, () => this.verifyDockDoorHeader());
 	}
 
-	verifiryDockDoorHeader() {
+	verifyDockDoorHeader() {
 		const dockDoorHeader = document.querySelector("#ListPaneDataGrid_DOCK_DOOR_LOCATION");
 
 		if (dockDoorHeader) {
@@ -62,7 +62,7 @@ class ShippingLoadInsight {
 			this.setEventListeners(); // Configura eventos adicionales
 
 			// Asegura que el DOM esté cargado antes de ejecutar
-			setTimeout(() => this.setDoockDoorList(true), 50);
+			setTimeout(() => this.setDockDoorList(true), 50);
 		} catch (error) {
 			console.error("Ha ocurrido un error al inicializar [ShippingLoadInsight]:", error?.message, error);
 		}
@@ -172,19 +172,19 @@ class ShippingLoadInsight {
 		const btnNewWave = document.querySelector("#ListPaneMenuActionNew");
 		const btnEditWave = document.querySelector("#ListPaneMenuActionEdit");
 
-		this.observeChangesInTheDOM(this.tbodyElement, () => this.setDoockDoorList());
+		this.observeChangesInTheDOM(this.tbodyElement, () => this.setDockDoorList());
 
-		btnNewWave?.addEventListener("click", () => this.setDoockDoorList());
-		btnEditWave?.addEventListener("click", () => this.setDoockDoorList());
+		btnNewWave?.addEventListener("click", () => this.setDockDoorList());
+		btnEditWave?.addEventListener("click", () => this.setDockDoorList());
 	}
 
-	setDoockDoorList(closeWindow = false) {
+	setDockDoorList(closeWindow = false) {
 		const dockDoors = document.querySelectorAll('td[aria-describedby="ListPaneDataGrid_DOCK_DOOR_LOCATION"]');
 
 		if (!dockDoors || dockDoors.length === 0) {
-			console.warn("[setDoockDoorList]: No se encontraron elementos td[DOCK_DOOR_LOCATION]");
-			this.dataStorgaeDoors.clear();
-			LocalStorageHelper.remove(this.nameDataStorgaeDoors);
+			console.warn("[setDockDoorList]: No se encontraron elementos td[DOCK_DOOR_LOCATION]");
+			this.dataStorageDoors.clear();
+			LocalStorageHelper.remove(this.nameDataStorageDoors);
 			return;
 		}
 
@@ -192,20 +192,20 @@ class ShippingLoadInsight {
 		const normalizeString = (str) => str?.normalize("NFKC").replace(/\s+/g, " ").trim();
 
 		// Vacía el conjunto actual
-		this.dataStorgaeDoors.clear();
+		this.dataStorageDoors.clear();
 
 		dockDoors.forEach((doorElement) => {
 			const doorValue = normalizeString(doorElement?.textContent);
 
 			// Filtrar valores nulos, vacíos o solo espacios
 			if (doorValue) {
-				this.dataStorgaeDoors.add(doorValue);
+				this.dataStorageDoors.add(doorValue);
 			}
 		});
 
 		// Guarda en localStorage
-		console.log("Guarda en localStorage:", this.nameDataStorgaeDoors, this.dataStorgaeDoors);
-		LocalStorageHelper.save(this.nameDataStorgaeDoors, Array.from(this.dataStorgaeDoors));
+		console.log("Guarda en localStorage:", this.nameDataStorageDoors, this.dataStorageDoors);
+		LocalStorageHelper.save(this.nameDataStorageDoors, Array.from(this.dataStorageDoors));
 
 		// Cerrar ventanas
 		if (closeWindow || this.closeWindow) {
@@ -232,7 +232,7 @@ class ShippingLoadInsight {
 
 				td?.classList?.remove("not-available");
 
-				if (this.dataStorgaeDoors.has(doorValue)) {
+				if (this.dataStorageDoors.has(doorValue)) {
 					td?.classList?.add("not-available");
 				}
 			});

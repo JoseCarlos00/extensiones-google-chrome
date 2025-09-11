@@ -1,7 +1,7 @@
 class RefreshDockDoor {
 	constructor() {
 		try {
-			this.nameDataStorgaeDoors = NAME_DATA_STORAGE_DOORS;
+			this.nameDataStorageDoors = NAME_DATA_STORAGE_DOORS;
 			this.idButtonRefreshDoor = "openRefreshDockDoors";
 
 			// Tabla de datos
@@ -69,7 +69,7 @@ class RefreshDockDoor {
 		try {
 			ToastAlert.showAlertFullTop("Actualizando Dock Doors", "info");
 			this.tableDockDoor?.classList?.add("hidden");
-			LocalStorageHelper.remove(this.nameDataStorgaeDoors);
+			LocalStorageHelper.remove(this.nameDataStorageDoors);
 
 			let nuevaVentana = window.open(
 				"https://wms.fantasiasmiguel.com.mx/scale/insights/3041?selectRows=Y",

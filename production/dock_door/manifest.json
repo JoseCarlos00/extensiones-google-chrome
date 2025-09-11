@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
 	"name": "Dock Door",
-	"version": "1.1",
-	"description": "Muestar una tabla de dock door disponibles",
+	"version": "1.2",
+	"description": "Muestra una tabla de dock door disponibles",
 	"permissions": [],
 	"icons": {
 		"16": "images/inventory16.png",
@@ -27,10 +27,16 @@
 				"CONST.js",
 				"utils/ToastAlert.js",
 				"utils/LocalStorageHelper.js",
-				"shipping_load/Shippingload.js",
+				"shipping_load/ShippingLoad.js",
 				"shipping_load/refreshDockDoor.js"
 			],
 			"css": ["shipping_load/shippingLoad.css", "balloon.css"]
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["CONST.js","test.js"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
 		}
 	],
 	"action": {

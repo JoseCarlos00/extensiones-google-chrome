@@ -152,7 +152,7 @@ const TABLE_HTML = /*html*/ `
   </div>
 `;
 
-const MODAL_HTML = `
+const MODAL_HTML = /*html*/`
 <section class="modal-container">
   <div id="modalShowDockDoor" class="modal">
     <div class="modal-content">
@@ -180,4 +180,4 @@ const MODAL_HTML = `
 </section>
 `;
 
-const NAME_DATA_STORAGE_DOORS = "doorAssigtmentList";
+const NAME_DATA_STORAGE_DOORS = "doorAssignmentList";
