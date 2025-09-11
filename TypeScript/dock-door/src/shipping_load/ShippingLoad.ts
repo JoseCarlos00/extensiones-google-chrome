@@ -3,14 +3,6 @@ import { RefreshDockDoor } from "./refreshDockDoor"
 import { ToastAlert } from "../utils/ToastAlert"
 import { NAME_DATA_STORAGE_DOORS, TABLE_HTML } from "../CONST";
 
-
-(function () {
-	const script = document.createElement("script");
-	script.src = chrome.runtime.getURL("test.js");
-
-	(document.head || document.documentElement).appendChild(script);
-})()
-
 export class ShippingLoad {
 	private nameDataStorageDoors: string = NAME_DATA_STORAGE_DOORS;
 	private dataStorageDoors: Set<string> | null = null;
@@ -211,6 +203,7 @@ export class ShippingLoad {
 
 window.addEventListener("load", async () => {
 	try {
+		console.log('Dock Door List:', _webUi.config.ConfigValue['DockDoor_List']);
 		const shippingLoad = new ShippingLoad();
 		await shippingLoad.init();
 

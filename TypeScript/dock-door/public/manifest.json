@@ -18,13 +18,13 @@
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload*"],
-			"js": ["shipping_load/ShippingLoad.js"],
+			"js": ["shipping_load/loader.js"],
 			"css": ["shipping_load/shippingLoad.css", "balloon.css"]
 		}
 	],
 	"web_accessible_resources": [
 		{
-			"resources": ["CONST.js", "test.js"],
+			"resources": ["shipping_load/ShippingLoad.js"],
 			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
 		}
 	],

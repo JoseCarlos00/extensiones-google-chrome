@@ -1,4 +1,4 @@
-/* Contenero principal del acordion */
+/* Contenedor principal del accordion */
 #ScreenGroupSubAccordion11736 {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);

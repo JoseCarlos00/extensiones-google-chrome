@@ -10,11 +10,12 @@ export default defineConfig({
 		emptyOutDir: false,
 		rollupOptions: {
 			input: [
+				resolve(__dirname, 'src/shipping_load/loader.ts'),
 				resolve(__dirname, 'src/shipping_load/ShippingLoad.ts'),
 				resolve(__dirname, 'src/shipping_load/shippingLoad.css'),
 			],
 			output: {
-				entryFileNames: 'shipping_load/ShippingLoad.js',
+				entryFileNames: 'shipping_load/[name].js',
 				assetFileNames: 'shipping_load/[name].[ext]',
 			},
 		},
