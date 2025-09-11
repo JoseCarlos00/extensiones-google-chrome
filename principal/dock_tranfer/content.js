@@ -20,17 +20,12 @@ const contenedoresHTML = /*html*/ `
 `;
 
 function saveErrorContainer(containerId, msg) {
-	console.log('saveErrorContainer:', { containerId, msg });
-	
 	if (!containerId) return;
 
 	const joinMsg = `${containerId}: ${msg}`;
 
 	const storageData = JSON.parse(sessionStorage.getItem(NAME_STORAGE_DATA_ERROR) || '[]') || [];
 	const storageDataMsg = JSON.parse(sessionStorage.getItem(NAME_STORAGE_DATA_ERROR_MSG) || '[]') || [];
-
-	console.log({joinMsg});
-
 
 	const uniqueContainers = new Set(storageDataMsg);
 	if (uniqueContainers.has(joinMsg)) return;
@@ -49,10 +44,12 @@ function getErrorContainer() {
 	return { storageData, storageDataMsg };
 }
 
-function setErrorContainer() {
+function setErrorContainer(labelTitle) {
 	const { storageData, storageDataMsg } = getErrorContainer();
-	console.log('Mensajes con error\n:', storageDataMsg.join('\n'));
+	console.log('Mensajes con error:');
+	console.log(storageDataMsg.join('\n'));
 	
+
 	if (storageData.length === 0) return;
 
 	const textareaE = document.querySelector('.container > .textarea');
@@ -65,18 +62,7 @@ function setErrorContainer() {
 	labelTitle && (labelTitle.textContent = 'Contenedores con errores');
 }
 
-function insertContainerID(containerID = '') {
-	if (!containerID) return;
-
-	_contIdObj.value = containerID;
-
-	setTimeout(() => {
-		getContainer();
-
-		setTimeout(onSubmit, 1000);
-	}, 1500);
-}
-
+/** Métodos ILS SCALE */
 function validateCont() {
 	if (jQuery.trim(_contIdObj.value).length == 0) {
 		focusContainerId();
@@ -107,6 +93,47 @@ function validateDestLoc() {
 		}
 		return false;
 	} else return true;
+}
+
+function handleTransferContainer(httpResponse) {
+	if (httpResponse.statusCode == 200) {
+		//read success message from server response
+		manh.ils.utilities.statusBox.show(httpResponse.responseObject.Message);
+		var currentTime = new Date().getTime();
+		_processStartTime = '/Date(' + currentTime + '+0000)/';
+		reInitialize();
+
+		if (isStorage) {
+			console.warn('Success: Cargar Siguiente LP');
+			processNextContainer();
+		}
+	} else {
+		var error = httpResponse.responseObject;
+		if (error.ErrorType == manh.ils.errorType.toLocation) focusDestinationLocation();
+		else focusContainerId();
+
+		if (isStorage) {
+			saveErrorContainer(_contIdObj.value, error.Message);
+			reInitialize();
+			console.error('Error: Cargar Siguiente LP. Moving to next container.');
+			processNextContainer();
+		} else {
+			manh.ils.form.handleError(error.Message);
+		}
+	}
+}
+
+/** FIN */
+function insertContainerID(containerID = '') {
+	if (!containerID) return;
+
+	_contIdObj.value = containerID;
+
+	setTimeout(() => {
+		getContainer();
+
+		setTimeout(onSubmit, 1000);
+	}, 1500);
 }
 
 
@@ -148,8 +175,6 @@ function setContainers() {
 
 	const lineas = textareaE?.value?.trim().split('\n') || [];
 
-	console.log('lineas:', lineas);
-
 	if (lineas.length === 0) return;
 
 	lineas.forEach((linea) => {
@@ -157,8 +182,7 @@ function setContainers() {
 	});
 
 	textareaE.value = '';
-	console.log('contenedores:', containers);
-
+	
 	const countTotal = containers.length;
 
 	if (countTotal === 0) return;
@@ -213,7 +237,7 @@ function processNextContainer() {
 			}
 
 			manh.ils.utilities.statusBox.show('All containers processed successfully');
-			setErrorContainer();
+			setErrorContainer(labelTitle);
 		}, 2000);
 
 		return;
@@ -229,34 +253,6 @@ function processNextContainer() {
 	});
 
 	insertContainerID(nextContainer.containerId);
-}
-
-function handleTransferContainer(httpResponse) {
-	if (httpResponse.statusCode == 200) {
-		//read success message from server response
-		manh.ils.utilities.statusBox.show(httpResponse.responseObject.Message);
-		var currentTime = new Date().getTime();
-		_processStartTime = '/Date(' + currentTime + '+0000)/';
-		reInitialize();
-
-		if (isStorage) {
-			console.warn('Success: Cargar Siguiente LP');
-			processNextContainer();
-		}
-	} else {
-		var error = httpResponse.responseObject;
-		if (error.ErrorType == manh.ils.errorType.toLocation) focusDestinationLocation();
-		else focusContainerId();
-
-		if (isStorage) {
-			saveErrorContainer(_contIdObj.value, error.Message);
-			reInitialize();
-			console.error('Error: Cargar Siguiente LP. Moving to next container.');
-			processNextContainer();
-		} else {
-			manh.ils.form.handleError(error.Message);
-		}
-	}
 }
 
 async function content() {
