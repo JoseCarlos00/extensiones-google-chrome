@@ -1,4 +1,7 @@
 const NAME_STORAGE_DATA = 'container-for-dock-transfer';
+const NAME_STORAGE_DATA_ERROR = 'container-for-dock-transfer-error';
+const NAME_STORAGE_DATA_ERROR_MSG = 'container-for-dock-transfer-error-msg';
+
 let isStorage = false;
 
 let countRestanteE = null;
@@ -6,14 +9,61 @@ let countActualE = null;
 let countTotalE = null;
 let containerCounter = null
 
+let labelTitle = null;
 
 const contenedoresHTML = /*html*/ `
 <div class="container">
-	<label for="containers">Contenedores</label>
+	<label class="label-title" for="containers">Contenedores</label>
 	<textarea id="containers" class="textarea" style="opacity: 1" placeholder="FMA0002459969..." rows="5"></textarea>   
 	<button class="bnt-transfer"><span>Button</span></button> 
 </div>
 `;
+
+function saveErrorContainer(containerId, msg) {
+	console.log('saveErrorContainer:', { containerId, msg });
+	
+	if (!containerId) return;
+
+	const joinMsg = `${containerId}: ${msg}`;
+
+	const storageData = JSON.parse(sessionStorage.getItem(NAME_STORAGE_DATA_ERROR) || '[]') || [];
+	const storageDataMsg = JSON.parse(sessionStorage.getItem(NAME_STORAGE_DATA_ERROR_MSG) || '[]') || [];
+
+	console.log({joinMsg});
+
+
+	const uniqueContainers = new Set(storageDataMsg);
+	if (uniqueContainers.has(joinMsg)) return;
+
+	storageDataMsg.push(joinMsg);
+	storageData.push(containerId);
+
+	sessionStorage.setItem(NAME_STORAGE_DATA_ERROR_MSG, JSON.stringify(storageDataMsg));
+	sessionStorage.setItem(NAME_STORAGE_DATA_ERROR, JSON.stringify(storageData));
+}
+
+function getErrorContainer() {
+	const storageData = JSON.parse(sessionStorage.getItem(NAME_STORAGE_DATA_ERROR) || '[]') || [];
+	const storageDataMsg = JSON.parse(sessionStorage.getItem(NAME_STORAGE_DATA_ERROR_MSG) || '[]') || [];
+
+	return { storageData, storageDataMsg };
+}
+
+function setErrorContainer() {
+	const { storageData, storageDataMsg } = getErrorContainer();
+	console.log('Mensajes con error\n:', storageDataMsg.join('\n'));
+	
+	if (storageData.length === 0) return;
+
+	const textareaE = document.querySelector('.container > .textarea');
+	if (!textareaE) return;
+
+	textareaE.value = storageData.join('\n');
+	sessionStorage.removeItem(NAME_STORAGE_DATA_ERROR);
+	sessionStorage.removeItem(NAME_STORAGE_DATA_ERROR_MSG);
+
+	labelTitle && (labelTitle.textContent = 'Contenedores con errores');
+}
 
 function insertContainerID(containerID = '') {
 	if (!containerID) return;
@@ -32,6 +82,7 @@ function validateCont() {
 		focusContainerId();
 
 		if (isStorage) {
+			saveErrorContainer(_contIdObj.value, document.getElementById('ContErrorMsg').value);
 			reInitialize();
 			console.error('Error: Cargar Siguiente LP. Moving to next container.');
 			processNextContainer();
@@ -47,6 +98,7 @@ function validateDestLoc() {
 		focusDestinationLocation();
 
 		if (isStorage) {
+			saveErrorContainer(_contIdObj.value, document.getElementById('DestLocErrorMsg').value);
 			reInitialize();
 			console.error('Error: Cargar Siguiente LP. Moving to next container.');
 			processNextContainer();
@@ -90,14 +142,14 @@ function setContainers() {
 	let counter = 1;
 
 	const textareaE = document.querySelector('.container > .textarea');
-	console.log('textareaE:', textareaE);
-	
+	labelTitle && (labelTitle.textContent = 'Contenedores');
+
 	if (textareaE?.value === '') return;
 
 	const lineas = textareaE?.value?.trim().split('\n') || [];
 
 	console.log('lineas:', lineas);
-	
+
 	if (lineas.length === 0) return;
 
 	lineas.forEach((linea) => {
@@ -161,6 +213,7 @@ function processNextContainer() {
 			}
 
 			manh.ils.utilities.statusBox.show('All containers processed successfully');
+			setErrorContainer();
 		}, 2000);
 
 		return;
@@ -196,6 +249,7 @@ function handleTransferContainer(httpResponse) {
 		else focusContainerId();
 
 		if (isStorage) {
+			saveErrorContainer(_contIdObj.value, error.Message);
 			reInitialize();
 			console.error('Error: Cargar Siguiente LP. Moving to next container.');
 			processNextContainer();
@@ -210,6 +264,7 @@ async function content() {
 
 	await new Promise(setTimeout, 100);
 	
+	labelTitle = document.querySelector('.label-title');
 
 	document.querySelector('.bnt-transfer')?.removeEventListener('click', setContainers);
 	document.querySelector('.bnt-transfer')?.addEventListener('click', setContainers);
