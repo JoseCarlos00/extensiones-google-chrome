@@ -65,7 +65,7 @@ export class RefreshDockDoor {
 			LocalStorageHelper.remove(this.nameDataStorageDoors);
 
 			const refreshUrl =
-				"https://wms.fantasiasmiguel.com.mx/scale/insights/3041?selectRows=Y&isBlur=Y"
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/3041?selectRows=Y&RefreshMode=Y"
 			const windowFeatures = "width=800,height=600";
 			const newWindow = window.open(refreshUrl, "_blank", windowFeatures);
 

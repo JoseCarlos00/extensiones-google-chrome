@@ -17,22 +17,16 @@ const SELECTORS = {
 };
 
 export class ShippingLoadInsight {
-	private closeWindow: boolean = false;
 	private readonly nameDataStorageDoors: string = NAME_DATA_STORAGE_DOORS;
+	private readonly isRefreshMode: boolean;
+	
 	private dataStorageDoors: Set<string> = new Set();
-	private tbodyElement: HTMLElement | null;
-	private tableDockDoorModal: HTMLElement | null;
+	private tbodyElement: HTMLElement | null = null;
+	private tableDockDoorModal: HTMLElement | null = null;
 
 	constructor() {
-		this.tbodyElement = null;
-		this.tableDockDoorModal = null;
-
-		// Listener para cerrar la ventana desde la otra pestaña
-		window.addEventListener('message', ({ data }) => {
-			if (data === 'cerrar') {
-				this.closeWindow = true;
-			}
-		});
+		const urlParams = new URLSearchParams(window.location.search);
+		this.isRefreshMode = urlParams.has('selectRows') && urlParams.has('RefreshMode');
 	}
 
 	private async preInit() {
@@ -59,22 +53,38 @@ export class ShippingLoadInsight {
 			btnOpenModal?.classList.remove('disabled');
 		} else {
 			btnOpenModal?.classList.add('disabled');
-			ToastAlert.showAlertFullTop('Active la columna Dock Door', 'error');
+			ToastAlert.showAlertFullTop('Active la columna [Dock Door]', 'error');
 		}
 	}
 
 	async init() {
 		try {
-			await this.preInit();
-			await this.insertModalInDOM();
-			this.tableDockDoorModal = document.querySelector(SELECTORS.MODAL_TABLE);
-			this.initializeModal();
-			this.setupGeneralEventListeners();
+			if (this.isRefreshMode) {
+				// Modo de refresco: solo sincroniza los datos y cierra la ventana.
+				await new Promise(resolve => setTimeout(resolve, 500)); // Espera para que el contenido cargue
+				this.tbodyElement = document.querySelector(SELECTORS.TBODY);
 
-			// Asegura que el DOM esté cargado antes de ejecutar
-			setTimeout(() => this.setDockDoorList(true), 50);
+				if (!this.tbodyElement) {
+					throw new Error('El elemento principal de la tabla (tbody) no fue encontrado para el refresco.');
+				}
+
+				this.setDockDoorList();
+			} else {
+				// Modo normal: inicializa la UI completa.
+				await this.preInit();
+				await this.insertModalInDOM();
+				this.tableDockDoorModal = document.querySelector(SELECTORS.MODAL_TABLE);
+				this.initializeModal();
+				this.setupGeneralEventListeners();
+
+				// Sincronización inicial de puertas, después de un breve retardo
+				setTimeout(() => this.setDockDoorList(), 50);
+			}
 		} catch (error: any) {
 			console.error('Ha ocurrido un error al inicializar [ShippingLoadInsight]:', error.message, error);
+			if (this.isRefreshMode) {
+				window.close(); // Si hay un error en modo refresco, intenta cerrar la ventana.
+			}
 		}
 	}
 
@@ -182,44 +192,41 @@ export class ShippingLoadInsight {
 
 		this.observeChangesInTheDOM(this.tbodyElement, () => this.setDockDoorList());
 
-		btnNewWave?.addEventListener('click', () => this.setDockDoorList(false));
-		btnEditWave?.addEventListener('click', () => this.setDockDoorList(false));
+		btnNewWave?.addEventListener('click', () => this.setDockDoorList());
+		btnEditWave?.addEventListener('click', () => this.setDockDoorList());
 	}
 
-	private setDockDoorList(isInitialSync: boolean = false) {
+	private setDockDoorList() {
 		const dockDoors = document.querySelectorAll(SELECTORS.DOCK_DOOR_CELLS);
 
 		if (!dockDoors || dockDoors.length === 0) {
 			console.warn('[setDockDoorList]: No se encontraron elementos td[DOCK_DOOR_LOCATION]');
 			this.dataStorageDoors.clear();
 			LocalStorageHelper.remove(this.nameDataStorageDoors);
-			return;
+		} else {
+			// Función de normalización
+			const normalizeString = (str: string | null | undefined) => str?.normalize('NFKC').replace(/\s+/g, ' ').trim();
+
+			// Vacía el conjunto actual
+			this.dataStorageDoors.clear();
+
+			dockDoors.forEach((doorElement) => {
+				const doorValue = normalizeString(doorElement.textContent);
+
+				// Filtrar valores nulos, vacíos o solo espacios
+				if (doorValue) {
+					this.dataStorageDoors.add(doorValue);
+				}
+			});
+
+			// Guarda en localStorage
+			console.log('Guarda en localStorage:', this.nameDataStorageDoors, this.dataStorageDoors);
+			LocalStorageHelper.save(this.nameDataStorageDoors, Array.from(this.dataStorageDoors));
 		}
 
-		// Función de normalización
-		const normalizeString = (str: string | null | undefined) => str?.normalize('NFKC').replace(/\s+/g, ' ').trim();
-
-		// Vacía el conjunto actual
-		this.dataStorageDoors.clear();
-
-		dockDoors.forEach((doorElement) => {
-			const doorValue = normalizeString(doorElement.textContent);
-
-			// Filtrar valores nulos, vacíos o solo espacios
-			if (doorValue) {
-				this.dataStorageDoors.add(doorValue);
-			}
-		});
-
-		// Guarda en localStorage
-		console.log('Guarda en localStorage:', this.nameDataStorageDoors, this.dataStorageDoors);
-		LocalStorageHelper.save(this.nameDataStorageDoors, Array.from(this.dataStorageDoors));
-
-		// Cerrar ventanas
-		if (isInitialSync || this.closeWindow) {
-			setTimeout(() => {
-				window.close();
-			}, 50);
+		// Si estamos en modo refresco, cierra la ventana después de procesar.
+		if (this.isRefreshMode) {
+			setTimeout(() => window.close(), 50);
 		}
 	}
 
