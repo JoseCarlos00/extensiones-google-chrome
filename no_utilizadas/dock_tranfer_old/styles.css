@@ -56,7 +56,7 @@
   }
 }
 
-.bnt-transfer {
+.bnt-tranfer {
   outline: none;
   cursor: pointer;
   border: none;
@@ -82,18 +82,18 @@
   animation: entradaElemento 0.5s ease-in-out;
 }
 
-.bnt-transfer span {
+.bnt-tranfer span {
   position: relative;
   z-index: 10;
   transition: color 0.4s;
 }
 
-.bnt-transfer:hover span {
+.bnt-tranfer:hover span {
   color: black;
 }
 
-.bnt-transfer::before,
-.bnt-transfer::after {
+.bnt-tranfer::before,
+.bnt-tranfer::after {
   position: absolute;
   top: 0;
   left: 0;
@@ -102,7 +102,7 @@
   z-index: 0;
 }
 
-.bnt-transfer::before {
+.bnt-tranfer::before {
   content: '';
   background: #000;
   width: 120%;
@@ -111,19 +111,19 @@
   transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
 }
 
-.bnt-transfer:hover::before {
+.bnt-tranfer:hover::before {
   transform: translate3d(100%, 0, 0);
 }
 
-.bnt-transfer:active {
+.bnt-tranfer:active {
   opacity: 0.5;
 }
 
-.bnt-transfer:focus {
+.bnt-tranfer:focus {
   border: 2px solid #6800ff;
 }
 
-.bnt-transfer:disabled {
+.bnt-tranfer:disabled {
   opacity: 0.7;
 }
 
@@ -397,103 +397,3 @@
     opacity: 0.2;
   }
 }
-
-.insertar:hover { 
-      transform: scale(1.1); 
-  }
-  .divFinal {
-      position: absolute;
-      top: 56px;
-      left: 461px;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  }
-  .insertar {
-      width: 72px;
-      height: 30px;
-  }
-  .textoInput {
-      height: 30px;
-      margin-bottom: 12px;
-      text-align: center;
-  }
-
-  .notificacion {
-      position: absolute;
-      top: -31px;
-      opacity: -1;
-      background-color: #9494d2;
-      text-align: center;
-      transition: opacity 0.5s ease;
-  }
-  .color{
-      background-color: #000000;
-      color: white;
-  }
-  .ocultar {
-    opacity: 1;
-  }
-  .divFinal > p {
-      font-size: 0.8rem;
-  }
-  .divFinal > p span {
-      font-weight: bold;
-  }
-  #count {
-      transition: all 1s ease-out;
-  }
-  #countRestante {
-    position: absolute;
-    width: 30px;
-  }
-
-  .container {
-    position: absolute;
-    width: 300px;
-    right: 87px;
-
-    
-    display: flex;
-    flex-direction: column;
-  }
-
-  .container, .textarea {
-    transition: opacity 0.5s ease;
-  }
-
-  .dockTransfer-button {
-    height: min-content;
-    width: min-content;
-    cursor: pointer;
-    align-self: flex-end;
-    margin-bottom: 20px;
-  }
-
-  .dockTransfer-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #000;
-    border-radius: 4.5rem;
-    background-color: rgba(0, 0, 0, 1);
-    padding: 0rem 1.1rem;
-    text-align: center;
-    color: rgba(255, 255, 255, 1);
-    outline: 0;
-    transition: all  .2s ease;
-    text-decoration: none;
-  }
-
-  .dockTransfer-button:hover {
-    background-color: transparent;
-    color: rgba(0, 0, 0, 1);
-
-    & .icon:hover {
-      color: #000;
-    }
-  }
-  .icon {
-    color: #fff;
-  }

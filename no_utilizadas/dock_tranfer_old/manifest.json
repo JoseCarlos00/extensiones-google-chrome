@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "Dock tranfer 2",
+    "version": "1.0",
+    "description": "Agrega la funcionalidad para hacer Dock tranfer dada una lista de contenedores",
+    "permissions": ["scripting", "activeTab", "storage"],
+    "icons": {
+      "16": "images/list16.png",
+      "32": "images/list32.png",
+      "48": "images/list48.png",
+      "128": "images/list128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "https://wms.fantasiasmiguel.com.mx/RF/ImmediateDockTransfer.aspx*"
+        ],
+        "js": ["content.js","popup.js", "styles.js"],
+        "css": ["styles.css"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon" :  {
+        "16": "images/list16.png",
+        "32": "images/list32.png",
+        "48": "images/list48.png",
+        "128": "images/list128.png"
+      }
+    }
+  }
+  
