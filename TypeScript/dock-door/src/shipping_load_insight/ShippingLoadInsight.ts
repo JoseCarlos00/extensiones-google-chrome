@@ -60,6 +60,8 @@ export class ShippingLoadInsight {
 	async init() {
 		try {
 			if (this.isRefreshMode) {
+				document.body.classList.add('is-refresh-mode');
+
 				// Modo Refresco: Espera a que la tabla se cargue, extrae los datos y cierra.
 				await new Promise(resolve => setTimeout(resolve, 250)); // Espera inicial
 				this.tbodyElement = document.querySelector(SELECTORS.TBODY);
