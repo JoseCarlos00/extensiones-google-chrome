@@ -1,0 +1,40 @@
+{
+	"manifest_version": 3,
+	"name": "Dock Door",
+	"version": "1.2",
+	"description": "Muestra una tabla de dock door disponibles",
+	"permissions": [],
+	"icons": {
+		"16": "images/inventory16.png",
+		"32": "images/inventory32.png",
+		"48": "images/inventory48.png",
+		"128": "images/inventory128.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/3041*"],
+			"js": ["shipping_load_insight/ShippingLoadInsight.js"],
+			"css": ["style.css", "balloon.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/details/shippingload*"],
+			"js": ["shipping_load/ShippingLoad.js"],
+			"css": ["shipping_load/shippingLoad.css", "balloon.css"]
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["CONST.js", "test.js"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "images/inventory16.png",
+			"32": "images/inventory32.png",
+			"48": "images/inventory48.png",
+			"128": "images/inventory128.png"
+		}
+	}
+}

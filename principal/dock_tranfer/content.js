@@ -147,7 +147,7 @@ async function insertarContadores() {
 
 	document.body?.insertAdjacentHTML('afterbegin', countersHtml);
 
-	await new Promise(setTimeout, 100);
+	await new Promise((resolve) => setTimeout(resolve, 100));
 
 	countRestanteE = document.querySelector('#countRestante');
 	countActualE = document.querySelector('#countActual');
@@ -258,7 +258,7 @@ function processNextContainer() {
 async function content() {
 	document.body?.insertAdjacentHTML('afterbegin', contenedoresHTML);
 
-	await new Promise(setTimeout, 100);
+	await new Promise((resolve) => setTimeout(resolve, 100));
 	
 	labelTitle = document.querySelector('.label-title');
 
