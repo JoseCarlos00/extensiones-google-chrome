@@ -60,15 +60,39 @@ export class ShippingLoadInsight {
 	async init() {
 		try {
 			if (this.isRefreshMode) {
-				// Modo de refresco: solo sincroniza los datos y cierra la ventana.
-				await new Promise(resolve => setTimeout(resolve, 500)); // Espera para que el contenido cargue
+				// Modo Refresco: Espera a que la tabla se cargue, extrae los datos y cierra.
+				await new Promise(resolve => setTimeout(resolve, 250)); // Espera inicial
 				this.tbodyElement = document.querySelector(SELECTORS.TBODY);
 
 				if (!this.tbodyElement) {
 					throw new Error('El elemento principal de la tabla (tbody) no fue encontrado para el refresco.');
 				}
 
-				this.setDockDoorList();
+				let observer: MutationObserver;
+				let processed = false;
+
+				const runProcess = () => {
+					if (processed) return;
+					processed = true;
+					clearTimeout(fallbackTimeout);
+					if (observer) observer.disconnect();
+					this.setDockDoorList(); // Procesa los datos y cierra la ventana
+				};
+
+				// Fallback: Si no hay cambios en 5 segundos, procesa lo que haya y cierra.
+				const fallbackTimeout = setTimeout(() => {
+					console.warn('Timeout: No se detectaron cambios en la tabla. Forzando procesamiento y cierre.');
+					runProcess();
+				}, 5000);
+
+				// Observador: se activa cuando se añaden filas a la tabla.
+				observer = new MutationObserver(runProcess);
+				observer.observe(this.tbodyElement, { childList: true, subtree: true });
+
+				// Comprobación inicial: si las filas ya están cargadas, procesa inmediatamente.
+				if (this.tbodyElement.querySelector('tr')) {
+					runProcess();
+				}
 			} else {
 				// Modo normal: inicializa la UI completa.
 				await this.preInit();
