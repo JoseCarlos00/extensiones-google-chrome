@@ -1,7 +1,7 @@
 import { LocalStorageHelper } from "../utils/LocalStorageHelper"
 import { RefreshDockDoor } from "./refreshDockDoor"
 import { ToastAlert } from "../utils/ToastAlert"
-import { NAME_DATA_STORAGE_DOORS, TABLE_HTML } from "../CONST";
+import { NAME_DATA_STORAGE_DOORS, TABLE_HTML } from "../constants";
 
 const SELECTORS = {
 	DOCK_DOOR_INPUT: '#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input',

@@ -1,4 +1,4 @@
-import { MODAL_HTML, NAME_DATA_STORAGE_DOORS } from "../CONST"
+import { MODAL_HTML, NAME_DATA_STORAGE_DOORS } from "../constants"
 import { LocalStorageHelper } from "../utils/LocalStorageHelper"
 import { ToastAlert } from "../utils/ToastAlert"
 
