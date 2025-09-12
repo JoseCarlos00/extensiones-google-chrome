@@ -1,6 +1,7 @@
-import type { IModalHandlerCopy } from "../modal/ModalManagerEventToCopy"
-import { copyToClipboard } from "../utils/copyToClipBoard"
-import { ToastAlert } from "../utils/ToastAlert"
+import type { IModalHandlerCopy } from '../modal/ModalManagerEventToCopy';
+import { copyToClipboard } from '../utils/copyToClipBoard';
+import { ToastAlert } from '../utils/ToastAlert';
+import { TableManager } from '../TableManager';
 
 interface ModalHandlerConstructor {
 	modalId: string;
@@ -12,67 +13,29 @@ export class ModalHandler implements IModalHandlerCopy {
 
 	// DOM Elements
 	private modal: HTMLElement | null = null;
-	private tbody: HTMLTableSectionElement | null = null;
 	private internalDataSelector: { internalNumber: string };
 	private internalReceiptNum: HTMLElement | null = null;
-	private selectedRows: HTMLTableRowElement[] = [];
+
+	// Class
+	private tableManager = new TableManager();
 
 	constructor({ modalId }: ModalHandlerConstructor) {
 		this.prefix = `#${modalId}`;
 
 		this.internalDataSelector = {
-			internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_RECEIPT_NUM']",
+			internalNumber: 'INTERNAL_RECEIPT_NUM',
 		};
 	}
 
 	private async initializeProperties() {
-		this.tbody = document.querySelector('#ListPaneDataGrid > tbody');
 		this.internalReceiptNum = document.querySelector(`${this.prefix} #internal_receipt_num`);
 	}
 
-	resetInternalNumber() {
+	private resetInternalNumber() {
 		this.internalReceiptNum && (this.internalReceiptNum.textContent = '');
 	}
 
-	async getRowsSelected() {
-    if (!this.tbody) {
-      console.error('No se encontró la tabla tbody');
-      return;
-    }
-
-		const rows = Array.from(this.tbody.rows);
-
-		if (rows.length === 0) {
-			console.warn('No se encontraron th[data-role="checkbox"]');
-			return null;
-		}
-
-		const selectedRows = rows.filter((row) => {
-			const checkbox = row.querySelector('th span[name="chk"]') as HTMLElement | null;
-
-			if (checkbox) {
-				const { chk } = checkbox.dataset;
-				return chk === 'on';
-			}
-		});
-
-		this.selectedRows = selectedRows;
-	}
-
-	async getInternalData() {
-		if (this.selectedRows.length === 0) {
-			console.warn('No se encontraron filas');
-			return;
-		}
-
-		const internalNumbers = this.selectedRows
-			.map((row) => row.querySelector(this.internalDataSelector.internalNumber)?.textContent.trim())
-			.filter(Boolean);
-
-		return internalNumbers;
-	}
-
-	private async setInternalData() {
+	private setInternalData() {
 		this.resetInternalNumber();
 
 		if (!this.internalReceiptNum) {
@@ -80,7 +43,10 @@ export class ModalHandler implements IModalHandlerCopy {
 			return;
 		}
 
-		const internalNumbers = await this.getInternalData();
+		const internalNumbers = this.tableManager.getSelectedRowForSelector(this.internalDataSelector.internalNumber);
+
+		console.log({ internalNumbers });
+		
 
 		if (internalNumbers && internalNumbers.length > 0) {
 			this.internalReceiptNum.textContent = internalNumbers[0] as string;
@@ -108,8 +74,7 @@ export class ModalHandler implements IModalHandlerCopy {
 
 	public async handleOpenModal() {
 		try {
-			await this.getRowsSelected();
-			await this.setInternalData();
+			this.setInternalData();
 			this.openModal();
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error}`);
@@ -118,7 +83,7 @@ export class ModalHandler implements IModalHandlerCopy {
 
 	public handleCopyToClipboard() {
 		try {
-			const codeText = document.querySelector('code.language-sql');
+			const codeText = this.modal?.querySelector('code.language-sql');
 			const texto = codeText ? codeText.textContent : '';
 
 			if (!texto) {
