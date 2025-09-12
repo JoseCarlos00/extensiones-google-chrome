@@ -1,0 +1,23 @@
+{
+	"name": "modal-sql",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"clear": "rm -rf dist",
+		"build:del": "rm -rf dist && tsc && vite build",
+		"build:shipping_load_insight": "vite build --config vite.shipping_load_insight.config",
+		"build:shipping_load": "vite build --config vite.shipping_load.config",
+		"build:popup": "vite build --config vite.popup.config.ts",
+		"build:all": "npm run build:shipping_load_insight && npm run build:shipping_load && npm run build:popup",
+		"build:all-del": "npm run clear && npm run build:shipping_load_insight && npm run build:shipping_load && npm run build:popup"
+	},
+	"devDependencies": {
+		"@types/node": "^24.3.1",
+		"typescript": "~5.8.3",
+		"vite": "^7.1.2"
+	}
+}

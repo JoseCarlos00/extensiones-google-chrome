@@ -1,0 +1,140 @@
+{
+	"manifest_version": 3,
+	"name": "Modal Crear Sentencea SQL",
+	"version": "1.0",
+	"description": "Crea un modal con un sentecia SQL",
+	"permissions": [],
+	"icons": {
+		"16": "images/sql-16.png",
+		"32": "images/sql-32.png",
+		"48": "images/sql-48.png",
+		"128": "images/sql-128.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"tabs/TabsComponent.js",
+				"shipping_container_insight/content/updateContainer.js",
+				"shipping_container_insight/content/updateStatus.js",
+				"shipping_container_insight/content/adjustmentPositive.js",
+				"shipping_container_insight/handlers/UpdateContainer.js",
+				"shipping_container_insight/handlers/UpdateStatus.js",
+				"shipping_container_insight/handlers/AdjustmentPositive.js",
+				"shipping_container_insight/ModalManagerShippingContainer.js",
+				"shipping_container_insight/ModalHandler.js",
+				"shipping_container_insight/modalContent.js",
+				"shipping_container_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css", "tabs/tabs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"inventory_insight/ModalManagerInventory.js",
+				"inventory_insight/ModalHandler.js",
+				"inventory_insight/modalContent.js",
+				"inventory_insight/main.js"
+			],
+			"css": [
+				"style.css",
+				"balloon.css",
+				"highlight/default.min.css",
+				"highlight/vs.css",
+				"inventory_insight/style.css"
+			]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"shipment_line_insight/ModalManagerShipmentLineInsight.js",
+				"shipment_line_insight/ModalHandler.js",
+				"shipment_line_insight/modalContent.js",
+				"shipment_line_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"shipment_insight/ModalManagerShipmentInsight.js",
+				"shipment_insight/ModalHandler.js",
+				"shipment_insight/modalContent.js",
+				"shipment_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"tabs/TabsComponent.js",
+				"work_insight/content/adjustmentPositive.js",
+				"work_insight/content/updateWorkUnit.js",
+				"work_insight/handler/adjustmentPositive.js",
+				"work_insight/handler/UpdateWorkUnit.js",
+				"work_insight/ModalManagerWorkInsight.js",
+				"work_insight/ModalHandler.js",
+				"work_insight/modalContent.js",
+				"work_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css", "tabs/tabs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"receipt_line_insight/ModalManagerReceiptLineInsight.js",
+				"receipt_line_insight/ModalHandler.js",
+				"receipt_line_insight/modalContent.js",
+				"receipt_line_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
+			"js": [
+				"ButtonOpenModal.js",
+				"ModalManager.js",
+				"ToastAlert.js",
+				"ModaCreateHTML.js",
+				"receipt_insight/ModalManagerReceiptInsight.js",
+				"receipt_insight/ModalHandler.js",
+				"receipt_insight/modalContent.js",
+				"receipt_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "images/sql-16.png",
+			"32": "images/sql-32.png",
+			"48": "images/sql-48.png",
+			"128": "images/sql-128.png"
+		}
+	}
+}
