@@ -8,12 +8,6 @@ export class ModalManagerInventory<T extends IModalHandler> extends ModalManager
 		super(configuration);
 	}
 
-	// Sobrescribir el método de la clase base para añadir nueva lógica
-	public async initializeModalLogic(): Promise<void> {
-		// Ejecutar primero la lógica de la clase base
-		await super.initializeModalLogic();
-	}
-
 	// Sobrescribir los event listeners para manejar la lógica más compleja de la tecla 'Escape'
 	protected setEventListeners(): void {
 		// Reutilizamos los listeners básicos de la clase padre

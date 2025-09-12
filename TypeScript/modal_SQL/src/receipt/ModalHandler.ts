@@ -16,7 +16,7 @@ export class ModalHandler implements IModalHandlerCopy {
 	private internalDataSelector: { internalNumber: string };
 	private internalReceiptNum: HTMLElement | null = null;
 
-	// Class
+	// Managers
 	private tableManager = new TableManager();
 
 	constructor({ modalId }: ModalHandlerConstructor) {
@@ -44,9 +44,6 @@ export class ModalHandler implements IModalHandlerCopy {
 		}
 
 		const internalNumbers = this.tableManager.getSelectedRowForSelector(this.internalDataSelector.internalNumber);
-
-		console.log({ internalNumbers });
-		
 
 		if (internalNumbers && internalNumbers.length > 0) {
 			this.internalReceiptNum.textContent = internalNumbers[0] as string;

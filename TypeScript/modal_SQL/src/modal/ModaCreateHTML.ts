@@ -1,12 +1,15 @@
 interface ModalCreateHTMLConfig {
 	modalId: string;
 	sectionContainerClass: string;
+	widthContent?: string;
 }
 
 export class ModalCreateHTML {
 	public contentModal: HTMLElement | null;
 	private readonly _modalId: string;
 	private readonly sectionContainerClass: string;
+	private readonly widthContent?: string;
+
 
 	constructor({ modalId, sectionContainerClass }: ModalCreateHTMLConfig) {
 		this.contentModal = null;
@@ -55,6 +58,9 @@ export class ModalCreateHTML {
 	private createContentModal(): HTMLDivElement {
 		const contentModal = document.createElement('div');
 		contentModal.className = 'modal-content';
+
+		this.widthContent && (contentModal.style.width = this.widthContent);
+
 
 		return contentModal;
 	}
