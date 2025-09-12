@@ -1,3 +1,4 @@
+import { idButtonCopySQL } from "../constants"
 import { ButtonOpenModal, type ButtonOpenModalConfiguration } from "../modal/ButtonOpenModal"
 import { ModalManagerEventToCopy } from "../modal/ModalManagerEventToCopy"
 import { getHtmlContent } from "./modalContent"
@@ -10,7 +11,7 @@ window.addEventListener(
       const selectoresModal = {
 				modalId: 'myModalSQL',
 				sectionContainerClass: 'modal-container',
-				buttonCopyId: 'btnCopySQL',
+				buttonCopyId: idButtonCopySQL,
 			};
 
       const buttonConfiguration: ButtonOpenModalConfiguration = {

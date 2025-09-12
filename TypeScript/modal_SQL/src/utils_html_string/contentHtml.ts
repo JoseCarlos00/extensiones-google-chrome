@@ -1,5 +1,8 @@
+import { idButtonCopySQL } from "../constants";
+
+
 export const btnCopy = /*html*/ `
-  <button class="btn-copy-code" tabindex="2"
+  <button id="${idButtonCopySQL}" class="btn-copy-code" tabindex="2"
   style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none;">
   <div
     style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
