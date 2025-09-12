@@ -1,6 +1,6 @@
-import { ButtonOpenModal, type ButtonOpenModalConfiguration } from "../../modal/ButtonOpenModal"
-import { ModalManagerEventToCopy } from "../../modal/ModalManagerEventToCopy"
-import { getHtmlContent } from "../modalContent"
+import { ButtonOpenModal, type ButtonOpenModalConfiguration } from "../modal/ButtonOpenModal"
+import { ModalManagerEventToCopy } from "../modal/ModalManagerEventToCopy"
+import { getHtmlContent } from "./modalContent"
 import { ModalHandler } from "./ModalHandler"
 
 window.addEventListener(

@@ -1,6 +1,6 @@
-import type { IModalHandlerCopy } from "../../modal/ModalManagerEventToCopy"
-import { copyToClipboard } from "../../utils/copyToClipBoard"
-import { ToastAlert } from "../../utils/ToastAlert"
+import type { IModalHandlerCopy } from "../modal/ModalManagerEventToCopy"
+import { copyToClipboard } from "../utils/copyToClipBoard"
+import { ToastAlert } from "../utils/ToastAlert"
 
 interface ModalHandlerConstructor {
 	modalId: string;
