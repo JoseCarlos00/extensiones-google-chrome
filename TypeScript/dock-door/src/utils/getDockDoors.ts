@@ -18,8 +18,7 @@ const createObjectDockList = (dockDoorList: DataContent[]): DockListData | null 
 		}
  });
 
-  console.log({ listEMB });
-  console.log({ listOthers });
+  console.log(listOthers, listEMB);
   
 
 	return {

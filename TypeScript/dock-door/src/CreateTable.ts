@@ -31,8 +31,8 @@ export class CreateTable {
 			this.dockDoorList = DockDoorList as DockListData;
 		}
 
-		this.colNumberEMB = Math.ceil(this.dockDoorList['EMB'].data.length / this.rowsNumber) | 5;
-		this.colNumberOthers = Math.ceil(this.dockDoorList['Otras'].data.length / this.rowsNumber) | 2;
+		this.colNumberEMB = Math.ceil(this.dockDoorList['EMB'].data.length / this.rowsNumber) ?? 5;
+		this.colNumberOthers = Math.ceil(this.dockDoorList['Otras'].data.length / this.rowsNumber) ?? 2;
 	}
 
 	private createTable() {
