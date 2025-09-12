@@ -1,4 +1,4 @@
-import DockDoorList from "./dockList.json";
+import DockDoorList from './dockList.json';
 
 export type DataContent = {
 	Description: string;
@@ -20,6 +20,9 @@ export interface DockListData {
 
 export class CreateTable {
 	private dockDoorList: DockListData | null = null;
+	private readonly rowsNumber: number = 15;
+	private colNumberEMB: number;
+	private colNumberOthers: number;
 
 	constructor(dockList?: DockListData | null) {
 		if (dockList) {
@@ -27,6 +30,9 @@ export class CreateTable {
 		} else {
 			this.dockDoorList = DockDoorList as DockListData;
 		}
+
+		this.colNumberEMB = Math.ceil(this.dockDoorList['EMB'].data.length / this.rowsNumber) | 5;
+		this.colNumberOthers = Math.ceil(this.dockDoorList['Otras'].data.length / this.rowsNumber) | 2;
 	}
 
 	private createTable() {
@@ -49,14 +55,14 @@ export class CreateTable {
 
 		const thEmb = document.createElement('th');
 		thEmb.textContent = 'EMB';
-		thEmb.setAttribute('colspan', '5');
+		thEmb.setAttribute('colspan', this.colNumberEMB.toString());
 		thEmb.setAttribute('align', 'center');
-    
+
 		const thOthers = document.createElement('th');
 		thOthers.textContent = 'Otras';
-		thOthers.setAttribute('colspan', '2');
+		thOthers.setAttribute('colspan', this.colNumberOthers.toString());
 		thOthers.setAttribute('align', 'center');
-    
+
 		tr.appendChild(thEmb);
 		tr.appendChild(thOthers);
 
@@ -75,11 +81,11 @@ export class CreateTable {
 		const dockListData = this.dockDoorList;
 		const groupOrder = ['EMB', 'Otras']; // Order based on thead
 		const groupColumns: { [key: string]: number } = {
-			EMB: 5,
-			Otras: 2,
+			EMB: this.colNumberEMB,
+			Otras: this.colNumberOthers,
 		};
-    
-		const numRows = 15;
+
+		const numRows = this.rowsNumber;
 
 		for (let i = 0; i < numRows; i++) {
 			const tr = this.createRow();
@@ -113,21 +119,20 @@ export class CreateTable {
 		return tr;
 	}
 
-  private createCell() {
+	private createCell() {
 		const td = document.createElement('td');
 		return td;
 	}
 
-
 	public static createTableDockDoor(dockList?: DockListData | null): HTMLTableElement | null {
 		try {
-      const createTable = new CreateTable(dockList);
+			const createTable = new CreateTable(dockList);
 			const table = createTable.createTable();
 
 			return table;
-    } catch (error) {
-      console.error('Error al crear la tabla de dock doors:', error);
-      return null;
-    }
+		} catch (error) {
+			console.error('Error al crear la tabla de dock doors:', error);
+			return null;
+		}
 	}
 }
