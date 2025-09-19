@@ -12,6 +12,8 @@
 // Constants for local/session storage keys to avoid magic strings
 const NEW_WAVE_ACTIVE_KEY = 'newWaveActive';
 const WAVE_DATA_KEY = 'waveData';
+const LASTED_WAVE_KEY = 'lastedWave';
+
 
 const waveFlowElementString = /* html */ `
  <li class="pull-left menubutton ">
@@ -19,7 +21,7 @@ const waveFlowElementString = /* html */ `
       style="margin: 0;padding: 0;margin-top: 12px;width: auto;height: 25px;display: block;font-size: 14px;font-weight: 500;">
       <select id="wave-flow-select"
         style="height: 25px; width: 100%; text-align: left; color: #fff; background-color: #2d2f3b; border-radius: 4px; cursor: pointer;">
-        <option value="Flujo Express" selected>Flujo Express</option>
+        <option value="Flujo Express">Flujo Express</option>
         <option value="Mariano STD Auto ACTIVA">Mariano STD Auto ACTIVA</option>
         <option value="Mariano STD No Rpln">Mariano STD No Rpln</option>
       </select>
@@ -53,6 +55,8 @@ function saveDataInStorage(waveFlowSelect, waveNameInput) {
 		waveFlow: waveFlowSelect.value,
 		waveName: waveNameInput.value,
 	};
+
+	localStorage.setItem(LASTED_WAVE_KEY, waveFlowSelect.value);
 
 	sessionStorage.setItem(WAVE_DATA_KEY, JSON.stringify(data));
 	console.log('[saveDataInStorage]: Guardado', data);
@@ -102,6 +106,14 @@ async function insertMenuNewWave() {
 		console.error('[insertMenuNewWave]: Custom menu elements not found after insertion');
 		return;
 	}
+
+	const lastWaveFlow = localStorage.getItem(LASTED_WAVE_KEY);
+	if (lastWaveFlow) {
+		waveFlowSelect.value = lastWaveFlow;
+	}
+
+	// Inicializa los datos de la ola en sessionStorage.
+	saveDataInStorage(waveFlowSelect, waveNameInput);
 
 	const saveData = () => {
 		saveDataInStorage(waveFlowSelect, waveNameInput);

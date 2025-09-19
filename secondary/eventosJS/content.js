@@ -1,3 +1,16 @@
+const nameStorage = 'isShowLog';
+let isShowLog = JSON.parse(localStorage.getItem(nameStorage) ?? '{"isShowLog":false}');
+
+function setEventStorage() {
+	window.addEventListener('storage', (event) => {
+		if (event.key === nameStorage) {
+			console.log('storage:', {name: event.key, newValue: event.newValue });
+			
+			isShowLog = JSON.parse(event.newValue ?? '{"isShowLog":false}');
+		}
+	});
+}
+
 function setEventKeydown() {
 	const actionsButtons = {
 		menuCanvas: document.getElementById('clickMenuCanvas'),
@@ -26,6 +39,10 @@ function setEventKeydown() {
 	}
 
 	window.addEventListener('keydown', ({ ctrlKey, shiftKey, altKey, key }) => {
+		if (isShowLog && isShowLog.isShowLog === true) {
+			console.log({ key, ctrlKey, shiftKey, altKey });
+		}
+
 		// Verifica si se presionó Ctrl (Control) y Shift al mismo tiempo
 		if (ctrlKey && shiftKey) {
 			if (key === 'F') {
@@ -106,9 +123,17 @@ async function insertAnchorElement() {
 	container.append(menuCanvas, menuFilter, actionPlay, closeCanvas); // Agregar el anchor al div
 
 	document.body.appendChild(container);
+
+	await new Promise((resolve) => setTimeout(resolve, 100));
 }
 
 window.addEventListener('load', async () => {
-	await insertAnchorElement();
-	setEventKeydown();
+	try {
+		await insertAnchorElement();
+		setEventKeydown();
+		setEventStorage();
+	} catch (error) {
+		console.error('Ha ocurrido un error al crear "EVENTOS JS"');
+		
+	}
 });

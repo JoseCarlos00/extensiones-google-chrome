@@ -13,7 +13,13 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/*"],
-			"js": ["content.js"]
+			"js": ["loader.js"]
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["content.js"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/*"]
 		}
 	],
 	"action": {
