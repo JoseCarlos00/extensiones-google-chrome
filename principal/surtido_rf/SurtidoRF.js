@@ -100,13 +100,14 @@ class SurtidoRF {
 				console.warn("Confirmar button OK");
 				this.btnOK.click();
 			}, this.confirmDelay);
-		} else {
-			console.warn("Se forzo a enviar el formulario");
-			setTimeout(() => {
-				console.warn("Confirmar button OK");
-				this.btnOK.click();
-			}, this.confirmDelay);
-		}
+		} 
+		// else {
+		// 	console.warn("Se forzo a enviar el formulario");
+		// 	setTimeout(() => {
+		// 		console.warn("Confirmar button OK");
+		// 		this.btnOK.click();
+		// 	}, this.confirmDelay);
+		// }
 	}
 
 	static inputsHiddenTest() {
