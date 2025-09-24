@@ -10,6 +10,14 @@ class PrintInjector {
 	constructor({ ulSelector, urlPrefix }) {
 		this.ulSelector = ulSelector;
 		this.urlPrefix = urlPrefix;
+
+		this.liButtonHTML = /*html*/ `
+      <li class="navdetailpane visible-sm visible-md visible-lg">
+        <a id='printButton' href="#" data-toggle="detailpane" aria-label="Imprimir Tabla" data-balloon-pos="right" class="navimageanchor visiblepane">
+          <i class="far fa-print navimage"></i>
+        </a>
+      </li>
+			`;
 	}
 
 	/**
@@ -25,12 +33,11 @@ class PrintInjector {
 			return;
 		}
 
-		const li = /*html*/ `
-      <li class="navdetailpane visible-sm visible-md visible-lg">
-        <a id='printButton' href="#" data-toggle="detailpane" aria-label="Imprimir Tabla" data-balloon-pos="right" class="navimageanchor visiblepane">
-          <i class="far fa-print navimage"></i>
-        </a>
-      </li>`;
+		const li = this.liButtonHTML;
+		if (!li) {
+			console.error('No se encontró el button HTML para la inyección.');
+			return;
+		}
 
 		ul.insertAdjacentHTML('beforeend', li);
 

@@ -3,6 +3,8 @@ let isShowLog = JSON.parse(localStorage.getItem(nameStorage) ?? '{"isShowLog":fa
 
 function setEventStorage() {
 	window.addEventListener('storage', (event) => {
+		console.log('storage:', event);
+		
 		if (event.key === nameStorage) {
 			console.log('storage:', {name: event.key, newValue: event.newValue });
 			
@@ -45,20 +47,20 @@ function setEventKeydown() {
 
 		// Verifica si se presionó Ctrl (Control) y Shift al mismo tiempo
 		if (ctrlKey && shiftKey) {
-			if (key === 'F') {
+			if (key === 'f' || key === 'F') {
 				actionsButtons.menuFilter?.click();
 			}
 			return;
 		}
 
 		/** Menu principal Ctrl + m*/
-		if (ctrlKey && key === 'm') {
+		if (ctrlKey && (key === 'm' || key === 'M')) {
 			actionsButtons.menuCanvas?.click();
 			return;
 		}
 
 		/** Boton play Alt + p */
-		if (altKey && key === 'p') {
+		if (altKey && (key === 'p' || key === 'P')) {
 			console.log('actionsButtons.actionPlay');
 
 			actionsButtons.actionPlay?.click();
@@ -130,8 +132,8 @@ async function insertAnchorElement() {
 window.addEventListener('load', async () => {
 	try {
 		await insertAnchorElement();
-		setEventKeydown();
 		setEventStorage();
+		setEventKeydown();
 	} catch (error) {
 		console.error('Ha ocurrido un error al crear "EVENTOS JS"');
 		
