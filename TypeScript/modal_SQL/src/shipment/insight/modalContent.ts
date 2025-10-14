@@ -9,7 +9,7 @@ export async function getHtmlContent({ sectionContainerClass, modalId }: { secti
     trailing_sts <span class="hljs-operator">=</span> <span class="hljs-number input" id="${idTrailingSts}" contenteditable="true" style="margin-bottom: 6px;"></span>
     leading_sts <span class="hljs-operator">=</span> <span class="hljs-number input" id="${idLeadingSts}" contenteditable="true"></span>
 <span class="hljs-keyword">WHERE</span> internal_shipment_num 
-  <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="${idInternalShipmentNum}" contenteditable="true"></span>
+  <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="${idInternalShipmentNum}" contenteditable="false"></span>
   );</code>
 </pre>
 `;

@@ -64,7 +64,7 @@ export class ModalHandler implements IModalHandlerCopy {
 	}
 
 	private async getRowsSelected() {
-    const selectedRows = this.tableManager.getSelectedRows();
+		const selectedRows = this.tableManager.getSelectedRows();
 
 		this.selectedRows = selectedRows;
 	}
@@ -91,17 +91,16 @@ export class ModalHandler implements IModalHandlerCopy {
 		this.resetInternalNumber();
 		await this.getRowsSelected();
 
-    if (!this.internalShipmentLineNum) {
-      console.warn('No se encontró el elemento #internal_shipment_line_num');
-      return;
-    }
+		if (!this.internalShipmentLineNum) {
+			console.warn('No se encontró el elemento #internal_shipment_line_num');
+			return;
+		}
 
 		const internalNumbers = await this.getInternalData();
 
 		if (internalNumbers.length > 0) {
 			this.internalShipmentLineNum.textContent = internalNumbers.join(',\n');
 		}
-
 	}
 
 	private async openModal() {
@@ -126,7 +125,7 @@ export class ModalHandler implements IModalHandlerCopy {
 			await this.openModal();
 			await this.setInternalData();
 
-      this.status1?.focus();
+			this.status1?.focus();
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error}`);
 		}
@@ -134,19 +133,46 @@ export class ModalHandler implements IModalHandlerCopy {
 
 	public handleCopyToClipboard() {
 		try {
-			const codeText = this.modal?.querySelector('code.language-sql');
-			const texto = codeText ? codeText.textContent : '';
+			const query = this.getQuery();
 
-			if (!texto) {
+			if (!query) {
 				console.warn('El texto generado está vacío');
 				ToastAlert.showAlertFullTop('No se pudo generar texto para copiar', 'warning');
 				return;
 			}
 
-			copyToClipboard(texto);
+			copyToClipboard(query);
 		} catch (error) {
 			console.error(`Error en handleCopyToClipboard: ${error}`);
 			return;
 		}
+	}
+
+	private validateStatusNumber(status: string): boolean {
+		const statusNumberPattern = /^(100|300|301|400|401|650|600|700|900)$/;
+		return statusNumberPattern.test(status);
+	}
+
+	private getQuery() {
+		const codeText = document.querySelector('code.language-sql')?.textContent || '';
+
+		if (!this.internalShipmentLineNum) {
+			console.warn('No se encontró el elemento #internal_shipment_Line_num');
+			return '';
+		}
+
+		if (!this.status1) {
+			console.warn('No se encontró el elemento #status1');
+			return '';
+		}
+
+		const status1 = this.status1.textContent?.trim() || '';
+
+		if (status1 && !this.validateStatusNumber(status1)) {
+			ToastAlert.showAlertFullTop(`El estado status1 "${status1}" no es válido.`, 'warning');
+			throw new Error(`El estado status1 "${status1}" no es válido.`);
+		}
+
+		return codeText;
 	}
 }

@@ -7,7 +7,7 @@ export async function getHtmlContent({ sectionContainerClass, modalId }: { secti
   <span class="hljs-keyword">SET</span> 
     status1 <span class="hljs-operator">=</span> <span class="hljs-number input" id="status1" contenteditable="true"></span>
 <span class="hljs-keyword">WHERE</span> internal_shipment_line_num 
-  <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal_shipment_line_num" contenteditable="true"></span>
+  <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal_shipment_line_num" contenteditable="false"></span>
   );</code>
 </pre>
 `;
