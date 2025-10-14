@@ -50,7 +50,7 @@ export class TableManager {
 		}
 
 		const selectorClass = `tr[aria-selected=true]`;
-		const selectedRows = Array.from(this.bodyTable.querySelectorAll(selectorClass));
+		const selectedRows = Array.from(this.bodyTable.querySelectorAll(selectorClass)) as HTMLTableRowElement[];
 
 		if (selectedRows.length === 0) {
 			console.warn('No Hay filas seleccionadas en la tabla');
