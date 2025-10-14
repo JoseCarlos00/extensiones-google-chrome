@@ -1,13 +1,7 @@
 import { ModalCreateHTML } from '../../modal/ModaCreateHTML';
 import { btnCopy } from '../../utils_html_string/contentHtml';
 
-export async function getHtmlContent({
-	sectionContainerClass,
-	modalId,
-}: {
-	sectionContainerClass: string;
-	modalId: string;
-}): Promise<HTMLElement> {
+export async function getHtmlContent({ sectionContainerClass, modalId }: { sectionContainerClass: string, modalId: string }): Promise<HTMLElement> {
 	const modalContent = /*html*/`
 <pre class="position-relative">${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipment_detail
   <span class="hljs-keyword">SET</span> 

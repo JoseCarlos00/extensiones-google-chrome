@@ -3,6 +3,7 @@ import { copyToClipboard } from '../../utils/copyToClipBoard';
 import { TableManager } from '../../TableManager';
 import type { IModalHandlerCopy } from '../../modal/ModalManagerEventToCopy';
 import { idButtonCopySQL } from '../../constants';
+import { idInternalShipmentNum, idTrailingSts} from "./const";
 
 interface ModalHandlerConstructor {
 	modalId: string;
@@ -16,11 +17,10 @@ export class ModalHandler implements IModalHandlerCopy {
 	private tbodyTable: HTMLTableSectionElement | null = document.querySelector('#ListPaneDataGrid > tbody');
 	private modal: HTMLElement | null = null;
 	private internalDataSelector: { internalNumber: string };
-	private internalShipmentLineNum: HTMLElement | null = null;
-	private status1: HTMLElement | null = null;
 
-	private idInternalShipmentLineNum: string = 'internal_shipment_line_num';
-	private idStatus1: string = 'status1';
+	// Dom Element Internal
+	private internalShipmentNum: HTMLElement | null = null;
+	private trailingSts: HTMLElement | null = null;
 
 	private btnCopy: HTMLElement | null = null;
 
@@ -30,7 +30,7 @@ export class ModalHandler implements IModalHandlerCopy {
 
 	constructor({ modalId }: ModalHandlerConstructor) {
 		this.internalDataSelector = {
-			internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_LINE_NUM']",
+			internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_SHIPMENT_NUM']",
 		};
 
 		this.prefix = `#${modalId}`;
@@ -38,20 +38,20 @@ export class ModalHandler implements IModalHandlerCopy {
 	}
 
 	private initializeProperties() {
-		this.internalShipmentLineNum = document.querySelector(`${this.prefix} #${this.idInternalShipmentLineNum}`);
-		this.status1 = document.querySelector(`${this.prefix} #${this.idStatus1}`);
+		this.internalShipmentNum = document.querySelector(`${this.prefix} #${idInternalShipmentNum}`);
+		this.trailingSts = document.querySelector(`${this.prefix} #${idTrailingSts}`);
 		this.btnCopy = document.querySelector(`${this.prefix} #${idButtonCopySQL}`);
 
 		if (!this.tbodyTable) {
 			throw new Error('No se encontró el elemento tbody de la tabla con id ListPaneDataGrid');
 		}
 
-		if (!this.internalShipmentLineNum) {
-			throw new Error('No se encontró el elemento #internal_shipment_line_num');
+		if (!this.internalShipmentNum) {
+			throw new Error('No se encontró el elemento #internal_shipment_num');
 		}
 
-		if (!this.status1) {
-			throw new Error('No se encontró el elemento #status1');
+		if (!this.trailingSts) {
+			throw new Error('No se encontró el elemento #trailingSts');
 		}
 
 		if (!this.btnCopy) {
@@ -60,7 +60,7 @@ export class ModalHandler implements IModalHandlerCopy {
 	}
 
 	private resetInternalNumber() {
-		this.internalShipmentLineNum && (this.internalShipmentLineNum.textContent = '');
+		this.internalShipmentNum && (this.internalShipmentNum.textContent = '');
 	}
 
 	private async getRowsSelected() {
@@ -90,7 +90,7 @@ export class ModalHandler implements IModalHandlerCopy {
 	private async setInternalData() {
 		this.resetInternalNumber();
 
-    if (!this.internalShipmentLineNum) {
+    if (!this.internalShipmentNum) {
       console.warn('No se encontró el elemento #internal_shipment_line_num');
       return;
     }
@@ -98,7 +98,7 @@ export class ModalHandler implements IModalHandlerCopy {
 		const internalNumbers = await this.getInternalData();
 
 		if (internalNumbers.length > 0) {
-			this.internalShipmentLineNum.textContent = internalNumbers.join(',\n');
+			this.internalShipmentNum.textContent = internalNumbers.join(',\n');
 		}
 	}
 
@@ -125,7 +125,7 @@ export class ModalHandler implements IModalHandlerCopy {
 			await this.getRowsSelected();
 			await this.setInternalData();
 
-      this.status1?.focus();
+      this.trailingSts?.focus();
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error}`);
 		}
