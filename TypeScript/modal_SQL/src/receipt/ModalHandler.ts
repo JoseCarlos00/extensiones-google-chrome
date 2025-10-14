@@ -2,6 +2,7 @@ import type { IModalHandlerCopy } from '../modal/ModalManagerEventToCopy';
 import { copyToClipboard } from '../utils/copyToClipBoard';
 import { ToastAlert } from '../utils/ToastAlert';
 import { TableManager } from '../TableManager';
+import { idButtonCopySQL } from '../constants';
 
 interface ModalHandlerConstructor {
 	modalId: string;
@@ -15,6 +16,7 @@ export class ModalHandler implements IModalHandlerCopy {
 	private modal: HTMLElement | null = null;
 	private internalDataSelector: { internalNumber: string };
 	private internalReceiptNum: HTMLElement | null = null;
+	private btnCopy: HTMLElement | null = null;
 
 	// Managers
 	private tableManager = new TableManager();
@@ -29,6 +31,7 @@ export class ModalHandler implements IModalHandlerCopy {
 
 	private async initializeProperties() {
 		this.internalReceiptNum = document.querySelector(`${this.prefix} #internal_receipt_num`);
+		this.btnCopy = document.querySelector(`${this.prefix} #${idButtonCopySQL}`);
 	}
 
 	private resetInternalNumber() {
@@ -73,6 +76,8 @@ export class ModalHandler implements IModalHandlerCopy {
 		try {
 			this.setInternalData();
 			this.openModal();
+
+			this.btnCopy && this.btnCopy.focus();
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error}`);
 		}

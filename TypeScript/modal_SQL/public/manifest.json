@@ -17,6 +17,14 @@
 				"shipping_container_insight/main.js"
 			],
 			"css": ["style.css", "balloon.css", "default.min.css", "vs.css", "tabs.css"]
+		},
+		{
+			"matches": [
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2780*",
+				"https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"
+			],
+			"js": ["receipt/main.js"],
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css"]
 		}
 	],
 	"action": {
