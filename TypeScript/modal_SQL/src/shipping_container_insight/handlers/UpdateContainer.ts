@@ -107,7 +107,7 @@ export class UpdateContainerId {
 
 	setEventCopyToClipBoard() {
 		// Event to copy
-		const btnCopy = document.querySelector(`#${idBtnUpdateContainer}e`);
+		const btnCopy = document.querySelector(`#${idBtnUpdateContainer}`);
 
 		if (!btnCopy) {
 			console.error(`Button with ID ${idBtnUpdateContainer} not found.`);

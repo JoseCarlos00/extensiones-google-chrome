@@ -11,10 +11,11 @@ export class ModalCreateHTML {
 	private readonly widthContent?: string;
 
 
-	constructor({ modalId, sectionContainerClass }: ModalCreateHTMLConfig) {
+	constructor({ modalId, sectionContainerClass, widthContent }: ModalCreateHTMLConfig) {
 		this.contentModal = null;
 		this._modalId = modalId;
 		this.sectionContainerClass = sectionContainerClass;
+		this.widthContent = widthContent;
 	}
 
 	private createButtonClose(): HTMLButtonElement {
@@ -60,7 +61,6 @@ export class ModalCreateHTML {
 		contentModal.className = 'modal-content';
 
 		this.widthContent && (contentModal.style.width = this.widthContent);
-
 
 		return contentModal;
 	}

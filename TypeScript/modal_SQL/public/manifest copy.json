@@ -1,0 +1,72 @@
+{
+	"manifest_version": 3,
+	"name": "Modal Crear Sentencia SQL",
+	"version": "2.0",
+	"description": "Crea un modal con un Sentencia SQL",
+	"permissions": [],
+	"icons": {
+		"16": "images/sql-16.png",
+		"32": "images/sql-32.png",
+		"48": "images/sql-48.png",
+		"128": "images/sql-128.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/4026*"],
+			"js": [
+				"shipping_container_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css", "tabs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
+			"js": [
+				"inventory_insight/main.js"
+			],
+			"css": [
+				"style.css",
+				"balloon.css",
+				"default.min.css",
+				"vs.css",
+				"inventory_insight/style.css"
+			]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2776*"],
+			"js": [
+				"shipment_line_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
+			"js": [
+				"shipment_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
+			"js": [
+				"work_insight/main.js"
+			],
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css", "tabs.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*", "https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
+			"js": [
+				"receipt/main.js"
+			],
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "images/sql-16.png",
+			"32": "images/sql-32.png",
+			"48": "images/sql-48.png",
+			"128": "images/sql-128.png"
+		}
+	}
+}
