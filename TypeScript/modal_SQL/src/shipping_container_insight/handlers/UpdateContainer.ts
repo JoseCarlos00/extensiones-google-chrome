@@ -20,13 +20,15 @@ export class UpdateContainerId {
 
 	private containerIdElement: HTMLElement | null = null;
 	private parentContainerIdElement: HTMLElement | null = null;
-	private inputInsertLogisticUnit: HTMLInputElement | null = null;
+	public inputInsertLogisticUnit: HTMLInputElement | null = null;
+
 	private internalData: {
 		internalNumContainerId: string;
 		internalNumParentContainerId: string[];
 		LP: string;
 		internalsNumbers: string[];
 	};
+
 	private selectors: {
 		internalContainerNum: string;
 		containerId: string;

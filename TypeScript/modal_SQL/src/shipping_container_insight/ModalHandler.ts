@@ -70,6 +70,11 @@ export class ModalHandler implements IModalHandler {
 		try {
 			this.handleAction();
 			this.openModal();
+
+			if (this.updateContainerId?.inputInsertLogisticUnit) {
+				this.updateContainerId.inputInsertLogisticUnit.focus();
+			}
+
 		} catch (error) {
 			console.error(`[ModalHandler] Error in handleOpenModal: ${error}`);
 		}

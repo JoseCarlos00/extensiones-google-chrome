@@ -9,9 +9,9 @@ export default defineConfig({
 	build: {
 		emptyOutDir: false,
 		rollupOptions: {
-			input: resolve(__dirname, 'src/shipping_load_insight/ShippingLoadInsight.ts'),
+			input: resolve(__dirname, 'src/shipping_container_insight/main.ts'),
 			output: {
-				entryFileNames: 'shipping_load_insight/ShippingLoadInsight.js',
+				entryFileNames: 'shipping_container_insight/main.js',
 				inlineDynamicImports: true,
 			},
 		},

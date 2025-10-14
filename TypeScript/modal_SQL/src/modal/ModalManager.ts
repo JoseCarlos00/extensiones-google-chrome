@@ -111,9 +111,7 @@ export class ModalManager<T extends IModalHandler> {
 	protected setEventListeners(): void {
 		if (!this.btnOpen || !this.btnClose || !this.modalElement) return;
 
-		this.btnOpen.addEventListener('click', () => {
-			this.modalHandler.handleOpenModal();
-		});
+		this.btnOpen.addEventListener('click', () => this.handleOpenModal());
 
 		this.btnClose.addEventListener('click', () => {
 			this.closeModal();
@@ -130,6 +128,12 @@ export class ModalManager<T extends IModalHandler> {
 				this.closeModal();
 			}
 		});
+	}
+
+	public async handleOpenModal(): Promise<void> {
+		if (this.modalHandler && typeof this.modalHandler.handleOpenModal === 'function') {
+			await this.modalHandler.handleOpenModal();
+		}
 	}
 
 	protected closeModal(): void {

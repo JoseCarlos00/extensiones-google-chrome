@@ -16,7 +16,7 @@
 			"js": [
 				"shipping_container_insight/main.js"
 			],
-			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css", "tabs/tabs.css"]
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css", "tabs.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
@@ -26,8 +26,8 @@
 			"css": [
 				"style.css",
 				"balloon.css",
-				"highlight/default.min.css",
-				"highlight/vs.css",
+				"default.min.css",
+				"vs.css",
 				"inventory_insight/style.css"
 			]
 		},
@@ -36,21 +36,21 @@
 			"js": [
 				"shipment_line_insight/main.js"
 			],
-			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2735*"],
 			"js": [
 				"shipment_insight/main.js"
 			],
-			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css"]
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
 			"js": [
 				"work_insight/main.js"
 			],
-			"css": ["style.css", "balloon.css", "highlight/default.min.css", "highlight/vs.css", "tabs/tabs.css"]
+			"css": ["style.css", "balloon.css", "default.min.css", "vs.css", "tabs.css"]
 		},
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*", "https://wms.fantasiasmiguel.com.mx/scale/insights/2777*"],
