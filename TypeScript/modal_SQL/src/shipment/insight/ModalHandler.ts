@@ -90,6 +90,8 @@ export class ModalHandler implements IModalHandlerCopy {
 	private async setInternalData() {
 		this.resetInternalNumber();
 
+		await this.getRowsSelected();
+
     if (!this.internalShipmentNum) {
       console.warn('No se encontró el elemento #internal_shipment_line_num');
       return;
@@ -122,7 +124,6 @@ export class ModalHandler implements IModalHandlerCopy {
 	public async handleOpenModal() {
 		try {
 			await this.openModal();
-			await this.getRowsSelected();
 			await this.setInternalData();
 
       this.trailingSts?.focus();
