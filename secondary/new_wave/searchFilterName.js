@@ -2,14 +2,19 @@
 // Context a nivel de pagina
 const WAVE_DATA_KEY = 'waveData';
 
-window.addEventListener('load', async () => {
+(async () => {
 	const ADD_ALL_SHIP_TO_WAVE = document.querySelector('#ListPaneMenuActionAddFilteredShipmentsToWave');
 
 	if (!ADD_ALL_SHIP_TO_WAVE) {
 		return;
 	}
 
+	const waveNameInput = document.querySelector('#wave-name-input');
+
   ADD_ALL_SHIP_TO_WAVE.addEventListener('click', () => {
+
+		if (waveNameInput.value.trim() !== '') return;
+
     const { searchName } = window.serviceParameters ?? {}
 
     if (searchName.toUpperCase().trim() === 'CLIENTES' || searchName.toUpperCase().trim() === 'TIENDAS') {
@@ -23,4 +28,4 @@ window.addEventListener('load', async () => {
 			console.log('[saveDataInStorage]: Guardado', data);
     }
   });
-});
+})();

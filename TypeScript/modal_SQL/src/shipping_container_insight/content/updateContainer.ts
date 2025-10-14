@@ -1,5 +1,17 @@
+import { updateContainer } from '../consts';
+
+const {
+	idBtnUpdateContainer,
+	idInsertLogisticUnit,
+	idNumbersInternalsContainers,
+	idInternalContainerIdNum,
+	idContainerId,
+	idInternalParentContainerIdNum,
+	idParentContainerId,
+} = updateContainer;
+
 const btnCopy = /*html*/ `
-<button class="btn-copy-code" tabindex="2"
+<button id="${idBtnUpdateContainer}" class="btn-copy-code" tabindex="2"
 style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none;">
 <div
   style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
@@ -15,13 +27,13 @@ style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443)
 </button>`;
 
 export const contentModal = /*html*/ `
-<label class="insert-logistic-unit">Contenedor: <input tabindex="1" id="insertLogisticUnit" autocomplete="off" type="text" placeholder="Ingrese un Contenedor"></label>
+<label class="insert-logistic-unit">Contenedor: <input tabindex="1" id="${idInsertLogisticUnit}" autocomplete="off" type="text" placeholder="Ingrese un Contenedor"></label>
 
 <pre class="position-relative change-container-id">
 ${btnCopy}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
 <span class="hljs-keyword">SET</span> 
-  container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-operator">=</span> <span class="hljs-string" id="internal-container-id-num"></span> <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="container-id" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>,
-  parent_container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="internal-parent-container-id-num"></span>) <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="parent-container-id" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>
-<span class="hljs-keyword">WHERE</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="numbers-internals-containers"></span>);</code>
+  container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-operator">=</span> <span class="hljs-string" id="${idInternalContainerIdNum}"></span> <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="${idContainerId}" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>,
+  parent_container_id <span class="hljs-operator">=</span> <span class="hljs-keyword">CASE</span> <span class="hljs-keyword">WHEN</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="${idInternalParentContainerIdNum}"></span>) <span class="hljs-keyword">THEN</span> <span class="hljs-string" id="${idParentContainerId}" contenteditable="true">'CONTENEDOR'</span> <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">null</span> <span class="hljs-keyword">END</span>
+<span class="hljs-keyword">WHERE</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="${idNumbersInternalsContainers}"></span>);</code>
 </pre>
 `;

@@ -24,6 +24,13 @@ function waitForElement(selector, timeout = 3000, interval = 200) {
 }
 
 async function initialize() {
+	const { extensionEnabled } = await chrome.storage.local.get({ extensionEnabled: true });
+	if (!extensionEnabled) {
+		document.body.classList.add('new-wave-disabled');
+		console.log('[New Wave] Extensión deshabilitada. No se ejecutará plannedInsight.js.');
+		return;
+	}
+	
 	const newWaveActive = localStorage.getItem(NEW_WAVE_ACTIVE_KEY);
 	if (newWaveActive !== 'true') return;
 

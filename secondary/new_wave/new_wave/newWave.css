@@ -1,94 +1,102 @@
-.my-button-save {
-	position: absolute !important;
-	height: 35px !important;
-	border: 1px solid #bcbcbc;
-
-	& a#NewWaveActionSave {
-		padding-top: 0.35rem !important;
-		height: 33px !important;
-	}
-
-	& a#NewWaveActionSave:hover {
-		background-color: #a233c1;
-		height: 33px !important;
-		color: #fff;
+body.new-wave-disabled {
+	.my-button-save, .save-personality {
+		display: none !important;
 	}
 }
 
-.nav > li.disabled {
-	background-color: #494e53;
-}
-.nav > li.disabled > a#NewWaveActionSave {
-	background-color: transparent;
-}
+body:not(.new-wave-disabled) {
+	.my-button-save {
+		position: absolute !important;
+		height: 35px !important;
+		border: 1px solid #bcbcbc;
 
-#GridPlaceHolder {
-	min-height: 20px;
-}
+		& a#NewWaveActionSave {
+			padding-top: 0.35rem !important;
+			height: 33px !important;
+		}
 
-#WaveFlowGrid > tbody tr td {
-	padding: 0.8rem;
-}
-
-.new-wave #ScreenGroupSubAccordion12897 {
-	display: none !important;
-}
-
-.hidden {
-	display: none;
-}
-
-.save-personality {
-	display: inline-block;
-	margin-left: 16px;
-
-	input {
-		width: 100px;
-		height: 34px;
-		background-color: #337ab7;
-		border-color: #bcbcbc;
-		color: #fff;
+		& a#NewWaveActionSave:hover {
+			background-color: #a233c1;
+			height: 33px !important;
+			color: #fff;
+		}
 	}
 
-	input:hover {
-		background-color: #a233c1;
+	.nav > li.disabled {
+		background-color: #494e53;
 	}
-}
+	.nav > li.disabled > a#NewWaveActionSave {
+		background-color: transparent;
+	}
 
-table#WaveFlowGrid tbody {
-	--default-display: table-row;
+	#GridPlaceHolder {
+		min-height: 20px;
+	}
 
-	tr[data-id="2168485273"] {
-		display: var(--flujo-express, var(--default-display));
+	#WaveFlowGrid > tbody tr td {
+		padding: 0.8rem;
 	}
-	tr[data-id="655614933"] {
-		display: var(--flujo-nacionalizaciones, var(--default-display));
+
+	.new-wave #ScreenGroupSubAccordion12897 {
+		display: none !important;
 	}
-	tr[data-id="2012109031"] {
-		display: var(--flujo-tultitlan-amd, var(--default-display));
+
+	.hidden {
+		display: none;
 	}
-	tr[data-id="1832152421"] {
-		display: var(--flujo-tultitlan-normal, var(--default-display));
+
+	.save-personality {
+		display: inline-block;
+		margin-left: 16px;
+
+		input {
+			width: 100px;
+			height: 34px;
+			background-color: #337ab7;
+			border-color: #bcbcbc;
+			color: #fff;
+		}
+
+		input:hover {
+			background-color: #a233c1;
+		}
 	}
-	tr[data-id="756146214"] {
-		display: var(--flujo-tultitlan-pedido1-3, var(--default-display));
-	}
-	tr[data-id="3593612721"] {
-		display: var(--flujo-tultitlan-picos-new, var(--default-display));
-	}
-	tr[data-id="3199656165"] {
-		display: var(--flujo-tultitlan-piezas, var(--default-display));
-	}
-	tr[data-id="1192122430"] {
-		display: var(--flujo-tultitlan-zona-bulk, var(--default-display));
-	}
-	tr[data-id="1155736963"] {
-		display: var(--mariano-std-auto-activa, var(--default-display));
-	}
-	tr[data-id="1265266259"] {
-		display: var(--mariano-std-no-rpln, var(--default-display));
-	}
-	tr[data-id="486474973"] {
-		display: var(--tultitlan-crossdock, var(--default-display));
+
+	table#WaveFlowGrid tbody {
+		--default-display: table-row;
+
+		tr[data-id='2168485273'] {
+			display: var(--flujo-express, var(--default-display));
+		}
+		tr[data-id='655614933'] {
+			display: var(--flujo-nacionalizaciones, var(--default-display));
+		}
+		tr[data-id='2012109031'] {
+			display: var(--flujo-tultitlan-amd, var(--default-display));
+		}
+		tr[data-id='1832152421'] {
+			display: var(--flujo-tultitlan-normal, var(--default-display));
+		}
+		tr[data-id='756146214'] {
+			display: var(--flujo-tultitlan-pedido1-3, var(--default-display));
+		}
+		tr[data-id='3593612721'] {
+			display: var(--flujo-tultitlan-picos-new, var(--default-display));
+		}
+		tr[data-id='3199656165'] {
+			display: var(--flujo-tultitlan-piezas, var(--default-display));
+		}
+		tr[data-id='1192122430'] {
+			display: var(--flujo-tultitlan-zona-bulk, var(--default-display));
+		}
+		tr[data-id='1155736963'] {
+			display: var(--mariano-std-auto-activa, var(--default-display));
+		}
+		tr[data-id='1265266259'] {
+			display: var(--mariano-std-no-rpln, var(--default-display));
+		}
+		tr[data-id='486474973'] {
+			display: var(--tultitlan-crossdock, var(--default-display));
+		}
 	}
 }

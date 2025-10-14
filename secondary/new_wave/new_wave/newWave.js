@@ -1,4 +1,4 @@
-(function () {
+function loadCreateNewWaveScript () {
 	console.log('[newWave.ts]');
 
 	const script = document.createElement('script');
@@ -7,7 +7,7 @@
 	script.src = chrome.runtime.getURL('new_wave/createNewWave.js');
 	// Lo añadimos al <head> de la página para que se cargue y ejecute.
 	(document.head || document.documentElement).appendChild(script);
-})();
+};
 
 
 const selector = {
@@ -45,6 +45,15 @@ async function insertNewButtonSave() {
 }
 
 async function inicio() {
+	const { extensionEnabled } = await chrome.storage.local.get({ extensionEnabled: true });
+	if (!extensionEnabled) {
+		document.body.classList.add('new-wave-disabled');
+		console.log('[New Wave] Extensión deshabilitada. No se ejecutará newWave.js.');
+		return;
+	}
+
+	loadCreateNewWaveScript();
+
 	console.log('[newWave.js]: Inicio');
 	
 	document.body.classList.add('new-wave');

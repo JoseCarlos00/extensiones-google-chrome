@@ -1,4 +1,4 @@
-import { idButtonCopySQL } from "../constants"
+import { idButtonCopySQL } from "./consts"
 import { ButtonOpenModal, type ButtonOpenModalConfiguration } from "../modal/ButtonOpenModal"
 import { ModalManagerTabs } from "../modal/ModalManagerTabs"
 import { getHtmlContent } from "./modalContent"
@@ -23,7 +23,7 @@ window.addEventListener(
 
       const buttonOpenModal = ButtonOpenModal.getButtonOpenModal(buttonConfiguration);
 
-      const modalHandler = new ModalHandler({ ...selectoresModal });
+      const modalHandler = new ModalHandler();
       const ModalHtml = await getHtmlContent({ ...selectoresModal });
 
       const modalManager = new ModalManagerTabs({

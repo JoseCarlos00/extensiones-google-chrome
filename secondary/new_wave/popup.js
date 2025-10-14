@@ -16,6 +16,7 @@ const customsNames = {
 
 const autoRealizeCheckbox = document.querySelector("#auto-realize");
 const checkBoxes = document.querySelectorAll("main .checkbox");
+const masterSwitch = document.querySelector("#master-switch");
 
 autoRealizeCheckbox.addEventListener("change", async (e) => {
 	const checkbox = e.target;
@@ -26,6 +27,17 @@ autoRealizeCheckbox.addEventListener("change", async (e) => {
 
 checkBoxes.forEach((checkbox) => {
 	checkbox.addEventListener("change", (e) => handleChecked(e));
+});
+
+masterSwitch.addEventListener("change", async (e) => {
+	const checkbox = e.target;
+	const isEnabled = checkbox.checked;
+	const label = checkbox.closest("label");
+
+	updateIcon(isEnabled);
+	await storage.set({ extensionEnabled: isEnabled });
+	label.classList.toggle("checked", isEnabled);
+	console.log(`Extensión ${isEnabled ? "Habilitada" : "Deshabilitada"}`);
 });
 
 const handleChecked = async (e) => {
@@ -90,6 +102,16 @@ const restoreAutoRealizeCheckbox = async () => {
 	autoRealizeCheckbox.checked = autoRealize;
 };
 
+const restoreMasterSwitch = async () => {
+	// Por defecto, la extensión está habilitada.
+	const data = await storage.get({ extensionEnabled: true });
+	const isEnabled = data.extensionEnabled;
+
+	updateIcon(isEnabled);
+	masterSwitch.checked = isEnabled;
+	masterSwitch.closest("label").classList.toggle("checked", isEnabled);
+};
+
 async function getActiveTabURL() {
 	const queryOptions = { active: true, currentWindow: true };
 	const [tab] = await chrome.tabs.query(queryOptions);
@@ -97,7 +119,25 @@ async function getActiveTabURL() {
 	return tab;
 }
 
+function updateIcon(isEnabled) {
+	const path = isEnabled ?
+		{
+			"16": "images/move16.png",
+			"32": "images/move32.png",
+			"48": "images/move48.png",
+			"128": "images/move128.png"
+		} :
+		{
+			"16": "images/move16_disabled.png",
+			"32": "images/move32_disabled.png",
+			"48": "images/move48_disabled.png",
+			"128": "images/move128_disabled.png"
+		};
+	chrome.action.setIcon({ path });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+	await restoreMasterSwitch();
 	await restoreCheckboxesState();
 	await restoreAutoRealizeCheckbox();
 	const activeTab = await getActiveTabURL();

@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+(() => {
 	try {
 
 		 const raw = sessionStorage.getItem('waveData');
@@ -65,4 +65,4 @@ window.addEventListener('load', () => {
 		btnSave.dispatchEvent(evt);
 	}
 
-});
+})();

@@ -1,6 +1,13 @@
 window.addEventListener("load", async () => {
 	const tableE = document.querySelector("#WaveFlowGrid");
 
+	const { extensionEnabled } = await chrome.storage.local.get({ extensionEnabled: true });
+	if (!extensionEnabled) {
+		document.body.classList.add('new-wave-disabled');
+		console.log('[New Wave] Extensión deshabilitada. No se ejecutará hiddenRows.js.');
+		return;
+	}
+
 	const storedData = await chrome.storage.local.get("hiddenColumns") || {};
 	const hiddenColumns = storedData.hiddenColumns || {};
 

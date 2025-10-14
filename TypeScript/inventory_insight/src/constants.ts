@@ -33,7 +33,7 @@ export const hideElementsIds = {
 	copyTable: 'copy-table',
 	insertItem: 'insert-item',
 	insertRow: 'insert-row',
-	copyItems: 'copy-items',
+	copyItems: 'copy-item',
 	counterRow: 'counter-row',
 };
 

@@ -1,5 +1,8 @@
+import { updateStatus } from "../consts";
+const { idBtnCopySts, idNumbersInternalsContainers, idStsContainer} = updateStatus;
+
 export const btnCopySts = /*html*/ `
-<button class="btn-copy-code-sts" tabindex="2"
+<button id="${idBtnCopySts}" class="btn-copy-code-sts" tabindex="2"
 style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443);display: flex;align-items: center;justify-content: flex-end;height: 25px;font-size: 11.5px;opacity: 1;transition: opacity 300ms ease-in;border: none;">
 <div
   style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
@@ -17,7 +20,7 @@ style="position: absolute;top: 3px; z-index: 1;color: rgba(255, 255, 255, 0.443)
 export const contentModalSts = /*html*/ `
 <pre class="position-relative change-sts">
 ${btnCopySts}<code class="language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">UPDATE</span> shipping_container
-<span class="hljs-keyword">SET</span> status <span class="hljs-operator">=</span> <span id="sts-container" class="hljs-string" contenteditable="true" style="border-bottom: 1px solid; min-width: 40px; display: inline-block;"></span> 
-<span class="hljs-keyword">WHERE</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="numbers-internals-containers"></span>);</code>
+<span class="hljs-keyword">SET</span> status <span class="hljs-operator">=</span> <span id="${idStsContainer}" class="hljs-string" contenteditable="true" style="border-bottom: 1px solid; min-width: 40px; display: inline-block;"></span> 
+<span class="hljs-keyword">WHERE</span> internal_container_num <span class="hljs-keyword">IN</span> (<span class="hljs-string" id="${idNumbersInternalsContainers}"></span>);</code>
 </pre>
 `;

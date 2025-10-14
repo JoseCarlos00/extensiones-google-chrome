@@ -1,4 +1,4 @@
-(function () {
+function loadSearchFilterNameScript () {
 	console.log('[plannedInsight.ts]');
 
 	const script = document.createElement('script');
@@ -7,7 +7,7 @@
 	script.src = chrome.runtime.getURL('searchFilterName.js');
 	// Lo añadimos al <head> de la página para que se cargue y ejecute.
 	(document.head || document.documentElement).appendChild(script);
-})();
+};
 
 // Constants for local/session storage keys to avoid magic strings
 const NEW_WAVE_ACTIVE_KEY = 'newWaveActive';
@@ -59,6 +59,7 @@ function saveDataInStorage(waveFlowSelect, waveNameInput) {
 	localStorage.setItem(LASTED_WAVE_KEY, waveFlowSelect.value);
 
 	sessionStorage.setItem(WAVE_DATA_KEY, JSON.stringify(data));
+	localStorage.setItem(NEW_WAVE_ACTIVE_KEY, 'true');
 	console.log('[saveDataInStorage]: Guardado', data);
 }
 
@@ -134,6 +135,8 @@ async function insertMenuNewWave() {
 	tableManager.initialize();
 
 	addShipmentToWave.addEventListener('click', () => {
+		if (waveNameInput.value.trim() !== '') return;
+
 		const waveName = tableManager.getWaveName();
 		if (!waveName) return;
 
@@ -143,6 +146,7 @@ async function insertMenuNewWave() {
 		};
 
 		sessionStorage.setItem(WAVE_DATA_KEY, JSON.stringify(data));
+		localStorage.setItem(NEW_WAVE_ACTIVE_KEY, 'true');
 		console.log('[saveDataInStorage]: Guardado', data);
 	});
 }
@@ -151,6 +155,16 @@ async function insertMenuNewWave() {
  * Initializes the script by inserting UI elements and setting up event listeners.
  */
 async function initialize() {
+	const { extensionEnabled } = await chrome.storage.local.get({ extensionEnabled: true });
+	if (!extensionEnabled) {
+		document.body.classList.add('new-wave-disabled');
+		console.log('[New Wave] Extensión deshabilitada. No se ejecutará plannedInsight.js.');
+		return;
+	}
+
+	loadSearchFilterNameScript();
+	
+	// Espera a que el DOM esté completamente cargado.
 	const menuNav = document.querySelector('#ScreenGroupMenu12068');
 
 	if (!menuNav) {
