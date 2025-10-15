@@ -114,6 +114,12 @@ export class ModalHandler implements IModalHandlerCopy {
 		this.modal && (this.modal.style.display = 'block');
 	}
 
+	private cleanValues() {
+		this.resetInternalNumber();
+		this.trailingSts && (this.trailingSts.textContent = '');
+		this.leadingSts && (this.leadingSts.textContent = '');
+	}
+
 	public async setModalElement(modal: HTMLElement | null): Promise<void> {
 		try {
 			if (!modal) {
@@ -129,6 +135,7 @@ export class ModalHandler implements IModalHandlerCopy {
 
 	public async handleOpenModal() {
 		try {
+			this.cleanValues();
 			await this.openModal();
 			await this.setInternalData();
 
