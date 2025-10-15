@@ -1,5 +1,5 @@
 import type { IModalHandler } from '../modal/ModalManager';
-import { AdjustmentPositive } from './handlers/AdjustmentPositive';
+import { InternalNUmber } from './handlers/internalNum';
 // import { UpdateStatus } from './handlers/UpdateStatus';
 // import { UpdateContainerId } from './handlers/UpdateContainer';
 
@@ -10,7 +10,7 @@ export class ModalHandler implements IModalHandler {
 	// Handlers & Managers
 	// private updateContainerId: UpdateContainerId | null = null;
 	// private updateStatus: UpdateStatus | null = null;
-	private adjustmentPositive: AdjustmentPositive | null = null;
+	private internalNUmber: InternalNUmber | null = null;
 
 	/**
 	 * Initializes the modal handler, setting up properties, handlers, and event listeners.
@@ -31,8 +31,8 @@ export class ModalHandler implements IModalHandler {
 	}
 
 	private initializeHandlers() {
-		if (!this.adjustmentPositive) {
-			throw new Error('AdjustmentPositive handler is not initialized.');
+		if (!this.internalNUmber) {
+			throw new Error('InternalNUmber handler is not initialized.');
 		}
 
 		// if (!this.updateStatus) {
@@ -43,7 +43,7 @@ export class ModalHandler implements IModalHandler {
 		// 	throw new Error('UpdateContainerId handler is not initialized.');
 		// }
 
-		// this.adjustmentPositive.initializeProperties();
+		this.internalNUmber.initializeProperties();
 		// this.updateStatus.initializeProperties();
 		// this.updateContainerId.initializeProperties();
 	}
@@ -56,8 +56,6 @@ export class ModalHandler implements IModalHandler {
 			console.log('error:', error.message);
 			// await this.updateContainerId?.cleanValues();
 			// await this.updateStatus?.cleanValues();
-		} finally {
-			// await this.adjustmentPositive?.setValueForAdjustment();
 		}
 	}
 
@@ -79,7 +77,7 @@ export class ModalHandler implements IModalHandler {
 	}
 
 	private async initializeProperties() {
-		this.adjustmentPositive = new AdjustmentPositive();
+		this.internalNUmber = new InternalNUmber();
 		// this.updateStatus = new UpdateStatus();
 		// this.updateContainerId = new UpdateContainerId();
 	}
