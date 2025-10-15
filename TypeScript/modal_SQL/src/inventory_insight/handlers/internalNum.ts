@@ -13,22 +13,31 @@ export class InternalNUmber {
 		item: string;
 		qty: string;
 		location: string;
-		containerId: string;
+		internalNumber: string;
 	};
 	private internalData: string;
 	private eventManager: EventManager | null = null;
+	private prefixClass: string;
 
+	private queryElements: Record<HTMLInputElement | null>= {
+		OH: null,
+		AL: null,
+		IT: null,
+		SU: null,
+		DIV_INTERNAL_NUM: null,
+	};
 
-	constructor() {
+	constructor({ prefixClass }: { prefixClass: string }) {
 		this.selectors = {
 			item: "td[aria-describedby='ListPaneDataGrid_ITEM']",
 			qty: "td[aria-describedby='ListPaneDataGrid_QUANTITY']",
 			location: "td[aria-describedby='ListPaneDataGrid_LOCATION']",
-			containerId: "td[aria-describedby='ListPaneDataGrid_CONTAINER_ID']",
+			internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
 		};
 
 		this.internalData = '';
 		this.adjustmentPositiveForm = null;
+		this.prefixClass = prefixClass;
 	}
 
 	public async initializeProperties() {
@@ -40,6 +49,26 @@ export class InternalNUmber {
 
 			this.eventManager?.initialize();
 
+			const internalElements = {
+				OH: document.querySelector(`${this.prefixClass} #input_OH`),
+				AL: document.querySelector(`${this.prefixClass} #input_AL`),
+				IT: document.querySelector(`${this.prefixClass} #input_IT`),
+				SU: document.querySelector(`${this.prefixClass} #input_SU`),
+				DIV_INTERNAL_NUM: document.querySelector(`${this.prefixClass} #internal-inventory-numbers`),
+			};
+
+			const missingOptions = Object.entries(internalElements)
+				.filter(([_key, value]) => !value)
+				.map(([key]) => key);
+
+			if (missingOptions.length > 0) {
+				throw new Error(
+					`No se encontraron los elementos necesarios para inicializar [ModalHandler]: [${missingOptions.join(', ')}]`
+				);
+			}
+
+			// Asignar los elementos validados a `queryElement`
+			this.queryElements = internalElements;
 
 			this.setEventCopyToClipBoard();
 		} catch (error: any) {
@@ -80,7 +109,7 @@ export class InternalNUmber {
 		this.adjustmentPositiveForm && (this.adjustmentPositiveForm.value = '');
 	}
 
-	 async setInternalData(rows: HTMLTableRowElement[]) {
+	async setInternalData(rows: HTMLTableRowElement[]) {
 		await this.cleanInternalData();
 
 		if (rows.length === 0) {
@@ -93,7 +122,7 @@ export class InternalNUmber {
 				const qtyValue = row.querySelector(this.selectors.qty)?.textContent?.trim() ?? '';
 				const locationValue = row.querySelector(this.selectors.location)?.textContent?.trim() ?? '';
 
-				const containerIdE = row.querySelector(this.selectors.containerId)?.textContent?.trim();
+				const containerIdE = row.querySelector(this.selectors.internalNumber)?.textContent?.trim();
 
 				if (containerIdE) {
 					return null;
