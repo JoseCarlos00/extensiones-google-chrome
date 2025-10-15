@@ -39,53 +39,7 @@
   width: min-content;
   background-color: #f3f3f3;
 
-  .radio-container {
-    background-color: #eee;
-    /* From Uiverse.io by Nilsobn */
-    .radio-inputs {
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      border-radius: 4px;
-      background-color: #eee;
-      box-sizing: border-box;
-      padding: 0.25rem;
-      width: 340px;
-      font-size: 14px;
-      height: 46px;
-    }
-
-    .radio-inputs .radio {
-      margin: 0;
-      padding: 0;
-      flex: 1 1 auto;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .radio-inputs .radio input {
-      display: none;
-    }
-
-    .radio-inputs .radio .name {
-      display: flex;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      border: none;
-      padding: 0.5rem 0;
-      color: rgba(51, 65, 85, 1);
-      transition: all 0.15s ease-in-out;
-    }
-
-    .radio-inputs .radio input:checked + .name {
-      background-color: #fff;
-      font-weight: 600;
-    }
-  }
-
-  .opcs-btn-container {
+  .opts-btn-container {
     display: inline-flex;
     width: 300px;
     align-items: center;
@@ -162,7 +116,7 @@
       }
     }
 
-    .aling-top {
+    .align-top {
       float: left;
       padding-left: 8px;
     }

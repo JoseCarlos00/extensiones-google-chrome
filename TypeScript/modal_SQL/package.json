@@ -13,7 +13,7 @@
 		"build:shipment_line_insight": "vite build --config vite.shipment_line_insight.config",
 		"build:shipment_insight": "vite build --config vite.shipment_insight.config",
 		"build:work_insight": "vite build --config vite.work_insight.config.ts",
-		"build:inventory_insight": "vite build --config vite.inventory_insight.config.ts",
+		"build:inventory_insight": "rm -rf dist/inventory_insight && vite build --config vite.inventory_insight.config.ts",
 		"build:popup": "vite build --config vite.popup.config.ts",
 		"build:all": "npm run build:receipt && npm run build:shipping_container_insight && npm run build:shipment_line_insight && npm run build:shipment_insight && npm run build:inventory_insight && npm run build:popup",
 		"build:all-del": "npm run clear && npm run build:receipt && npm run build:shipping_container_insight && npm run build:shipment_line_insight && npm run build:shipment_insight && npm run build:inventory_insight && npm run build:popup"
