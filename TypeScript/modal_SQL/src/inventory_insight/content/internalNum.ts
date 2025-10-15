@@ -1,6 +1,6 @@
 import { buttonCopyRounded } from '../../utils/buttonCopy'
 import { internalNumber } from '../consts';
-const { idBtnCopyInternalNumber } = internalNumber;
+const { idBtnCopyInternalNumber, idInputOh, idInputAl, idInputIt, idInputSu, idInternalNumberInv: idInternalInvNumber } = internalNumber;
 
 const btnCopyInternalNumber = buttonCopyRounded(idBtnCopyInternalNumber);
 
@@ -33,27 +33,30 @@ const codeContainer = /*html*/ `
 
       <div class="container-type ms-3" data-type="OH">
         <span>ON_HAND_QTY</span> <span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="input_OH"/>
+          value=""  id="${idInputOh}"/>
       </div>
 
       <div class="container-type ms-3" data-type="AL">
         <span>ALLOCATED_QTY</span> <span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="input_AL"/>
+          value=""  id="${idInputAl}"/>
       </div>
 
       <div class="container-type ms-3" data-type="IT">
         <span>IN_TRANSIT_QTY</span> <span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="input_IT"/>
+          value=""  id="${idInputIt}"/>
       </div>
 
       <div class="container-type ms-3" data-type="SU">
         <span>SUSPENSE_QTY </span><span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="input_SU"/>
+          value=""  id="${idInputSu}"/>
       </div>
 
       <div class="mb-1 mt-2">
-        <span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">=</span><span
-          class="hljs-string">'Mariano'</span>
+        <span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">=</span><span class="hljs-string">'Mariano'</span>
+      </div>
+
+      <div class="mb-1 mt-2">
+        <span class="hljs-keyword">AND</span> company <span class="hljs-operator">=</span><span class="hljs-string">'FM'</span>
       </div>
 
       <div class="internal-num-code">
@@ -66,26 +69,13 @@ const codeContainer = /*html*/ `
           <span class="ms-2 hljs-keyword align-top multi-internal">IN&nbsp;</span><span
             class="align-top multi-internal">(</span>
           <span class="hljs-operator single-internal-operator">&nbsp;=&nbsp;</span>
-          <div contenteditable class="internal-inventory-numbers hljs-string" id="internal-inventory-numbers"></div>
+          <div contenteditable class="internal-inventory-numbers hljs-string" id="${idInternalInvNumber}"></div>
           <span class="multi-internal">);</span>
         </div>
       </div>
-
-      <div class="item-loc-code">
-        <div class="ms-2 mb-1">
-          <span class="hljs-keyword">AND</span> location <span class="hljs-operator">=</span> <input class="hljs-string"
-            type="text" name="location" id="location">
-        </div>
-
-        <div class="ms-2">
-          <span class="hljs-keyword">AND</span> item <span class="hljs-operator">=</span> <input class="hljs-string"
-            type="text" name="item" id="item">
-        </div>
-      </div>
-
     </div>  
   `;
 
 export const containerMain = document.createElement('div');
-containerMain.className = 'main-code-container single internal-num OH';
+containerMain.className = 'main-code-container internal-number single internal-num OH';
 containerMain.innerHTML =  inputChecks + codeContainer;

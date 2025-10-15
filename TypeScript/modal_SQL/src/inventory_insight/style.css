@@ -38,6 +38,7 @@
 .main-code-container {
   width: min-content;
   background-color: #f3f3f3;
+  padding: 4px;
 
   .opts-btn-container {
     display: inline-flex;
