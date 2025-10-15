@@ -12,20 +12,6 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
-			"js": [
-				"inventory_insight/main.js"
-			],
-			"css": [
-				"style.css",
-				"balloon.css",
-				"default.min.css",
-				"vs.css",
-				"inventory_insight/style.css"
-			]
-		},
-	
-		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
 			"js": [
 				"work_insight/main.js"
