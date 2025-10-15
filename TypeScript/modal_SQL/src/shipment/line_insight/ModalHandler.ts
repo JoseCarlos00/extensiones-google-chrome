@@ -88,7 +88,6 @@ export class ModalHandler implements IModalHandlerCopy {
 	}
 
 	private async setInternalData() {
-		this.resetInternalNumber();
 		await this.getRowsSelected();
 
 		if (!this.internalShipmentLineNum) {
