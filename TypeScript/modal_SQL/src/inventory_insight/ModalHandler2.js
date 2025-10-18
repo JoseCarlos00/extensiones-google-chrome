@@ -27,82 +27,6 @@ class ModalHandler {
 		this._isInitialVariables = true;
 	}
 
-	/**
-	 * Initializes the variables by selecting DOM elements.
-	 * Throws an error if any element is not found.
-	 */
-	async _initialVariables() {
-		try {
-			const prefix = `#${this.modalId} .main-code-container .code-container`;
-
-			const internalElements = {
-				OH: document.querySelector(`${prefix} #input_OH`),
-				AL: document.querySelector(`${prefix} #input_AL`),
-				IT: document.querySelector(`${prefix} #input_IT`),
-				SU: document.querySelector(`${prefix} #input_SU`),
-				DIV_INTERNAL_NUM: document.querySelector(`${prefix} #internal-inventory-numbers`),
-				LOCATION: document.querySelector(`${prefix} #location`),
-				ITEM: document.querySelector(`${prefix} #item`),
-			};
-
-			const missingOptions = Object.entries(internalElements)
-				.filter(([key, value]) => !value)
-				.map(([key]) => key);
-
-			if (missingOptions.length > 0) {
-				this._isInitialVariables = false;
-				throw new Error(
-					`No se encontraron los elementos necesarios para inicializar [ModalHandler]: [${missingOptions.join(", ")}]`
-				);
-			}
-
-			// Asignar los elementos validados a `queryElement`
-			this.queryElements = internalElements;
-		} catch (error) {
-			console.error(`Error en initialVariables: ${error}`);
-		}
-	}
-
-	async _openModal() {
-		this.modal.style.display = "block";
-	}
-
-	resetSelectedRows() {
-		this._selectedRows.length = 0;
-	}
-
-	async _getRowsSelected() {
-		const rows = Array.from(this.tbodyTable.rows);
-
-		if (rows.length === 0) {
-			console.error('No se encontraron th[data-role="checkbox"]');
-			return null;
-		}
-
-		const selectedRows = rows.filter((row) => {
-			const checkbox = row.querySelector('th span[name="chk"]');
-
-			if (checkbox) {
-				const { chk } = checkbox.dataset;
-				return chk === "on";
-			}
-		});
-
-		this._selectedRows = selectedRows;
-	}
-
-	async _resetValuesQueryElements() {
-		// Recorrer las claves del objeto
-		Object.keys(this.queryElements).forEach((key) => {
-			const element = this.queryElements[key];
-
-			if (element && element.tagName === "INPUT") {
-				element.value = "";
-			} else if (element && element.tagName === "DIV") {
-				element.textContent = "";
-			}
-		});
-	}
 
 	async _setValuesForQueryElements() {
 		try {
@@ -221,40 +145,6 @@ class ModalHandler {
 		}
 	}
 
-	async _getSelectedRowsNum() {
-		return this._selectedRows.length;
-	}
-
-	async _addClassSelectedRows() {
-		const containerPrincipal = document.querySelector("#myModal .main-code-container");
-
-		if (!containerPrincipal) {
-			console.error("[updateModalContent] No se encontró el elemento .main-code-container");
-			return;
-		}
-
-		const rowNum = (await this._getSelectedRowsNum()) ?? 0;
-
-		containerPrincipal.classList.toggle("single", rowNum <= 1);
-		containerPrincipal.classList.toggle("multiple", rowNum >= 2);
-	}
-
-	async setModalElement(modal) {
-		try {
-			if (!modal) {
-				throw new Error("No se encontró el modal para abrir");
-			}
-
-			this.modal = modal;
-			await this._initialVariables();
-
-			if (!this.tbodyTable) {
-				throw new Error("No se encontró el elemento tbody");
-			}
-		} catch (error) {
-			console.error(`Error en setModalElement: ${error}`);
-		}
-	}
 
 	async handleOpenModal() {
 		try {
