@@ -23,7 +23,7 @@ window.addEventListener(
 
       const buttonOpenModal = ButtonOpenModal.getButtonOpenModal(buttonConfiguration);
 
-      const modalHandler = new ModalHandler();
+      const modalHandler = new ModalHandler({ modalId: selectoresModal.modalId! });
       const ModalHtml = await getHtmlContent({ ...selectoresModal });
 
       const modalManager = new ModalManagerTabs({

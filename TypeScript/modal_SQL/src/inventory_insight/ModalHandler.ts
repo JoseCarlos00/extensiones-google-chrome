@@ -1,4 +1,5 @@
 import type { IModalHandler } from '../modal/ModalManager';
+import { TableManager } from '../TableManager'
 import { InternalNUmber } from './handlers/internalNum';
 // import { UpdateStatus } from './handlers/UpdateStatus';
 // import { UpdateContainerId } from './handlers/UpdateContainer';
@@ -8,9 +9,17 @@ export class ModalHandler implements IModalHandler {
 	private modal: HTMLElement | null = null;
 
 	// Handlers & Managers
-	// private updateContainerId: UpdateContainerId | null = null;
-	// private updateStatus: UpdateStatus | null = null;
-	private internalNUmber: InternalNUmber | null = null;
+	private internalNumber: InternalNUmber | null = null;
+
+	private prefixClass: string;
+	private selectedRows: HTMLTableRowElement[] = [];
+
+	// Managers
+	private tableManager = new TableManager();
+
+	constructor({ modalId }: { modalId: string }) {
+		this.prefixClass = `#${modalId}`;
+	}
 
 	/**
 	 * Initializes the modal handler, setting up properties, handlers, and event listeners.
@@ -31,32 +40,34 @@ export class ModalHandler implements IModalHandler {
 	}
 
 	private initializeHandlers() {
-		if (!this.internalNUmber) {
+		if (!this.internalNumber) {
 			throw new Error('InternalNUmber handler is not initialized.');
 		}
 
-		// if (!this.updateStatus) {
-		// 	throw new Error('UpdateStatus handler is not initialized.');
-		// }
-
-		// if (!this.updateContainerId) {
-		// 	throw new Error('UpdateContainerId handler is not initialized.');
-		// }
-
-		this.internalNUmber.initializeProperties();
-		// this.updateStatus.initializeProperties();
-		// this.updateContainerId.initializeProperties();
+		this.internalNumber.initializeProperties();
 	}
 
 	private async handleAction() {
 		try {
-			// await this.updateContainerId?.handleChangeContainerId();
-			// await this.updateStatus?.handleChangeStatus();
+			await this.internalNumber?.setValueInternalNumber(this.selectedRows);
 		} catch (error: any) {
 			console.log('error:', error.message);
-			// await this.updateContainerId?.cleanValues();
-			// await this.updateStatus?.cleanValues();
+			await this.internalNumber?.cleanValues();
 		}
+	}
+
+	private addClassSelectedRows() {
+		const containerPrincipal = document.querySelector(`${this.prefixClass} .main-code-container`);
+
+		if (!containerPrincipal) {
+			console.error('[updateModalContent] No se encontró el elemento .main-code-container');
+			return;
+		}
+
+		const rowNum = this.selectedRows.length;
+
+		containerPrincipal.classList.toggle('single', rowNum <= 1);
+		containerPrincipal.classList.toggle('multiple', rowNum >= 2);
 	}
 
 	/**
@@ -64,22 +75,17 @@ export class ModalHandler implements IModalHandler {
 	 */
 	public async handleOpenModal(): Promise<void> {
 		try {
+			this.selectedRows = this.tableManager.getSelectedRows();
+			this.addClassSelectedRows();
 			this.handleAction();
 			this.openModal();
-
-			// if (this.updateContainerId?.inputInsertLogisticUnit) {
-			// 	this.updateContainerId.inputInsertLogisticUnit.focus();
-			// }
-
 		} catch (error) {
 			console.error(`[ModalHandler] Error in handleOpenModal: ${error}`);
 		}
 	}
 
 	private async initializeProperties() {
-		this.internalNUmber = new InternalNUmber();
-		// this.updateStatus = new UpdateStatus();
-		// this.updateContainerId = new UpdateContainerId();
+		this.internalNumber = new InternalNUmber({ prefixClass: this.prefixClass });
 	}
 
 	private openModal(): void {
