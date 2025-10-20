@@ -20,6 +20,7 @@ class PedidosAutorizados {
 			return false; // Indica que la inicialización falló.
 		}
 
+    processingTable();
 		this.insertButtonSQL();
 		await new Promise((resolve) => setTimeout(resolve, 100));
 		this.setEventListener();
@@ -166,5 +167,6 @@ ORDER BY 2,erp_order;`;
 	}
 }
 
-const extractor = new PedidosAutorizados();
-extractor.processingTable();
+window.addEventListener('load', () => {
+	new PedidosAutorizados();
+});
