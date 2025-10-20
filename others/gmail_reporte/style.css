@@ -1,0 +1,28 @@
+.mi-toast {
+	position: fixed;
+	bottom: 70px;
+	left: 50%;
+	transform: translateX(50%);
+	background: #323232;
+	color: white;
+	padding: 10px 15px;
+	border-radius: 5px;
+	z-index: 10001;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	opacity: 0.95;
+}
+
+#btn-generate-SQL {
+	background-color: transparent;
+	color: rgb(68, 71, 70);
+	border: none;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	
+  &:hover {
+    background-color: #f0f1f1 !important;
+	  border-radius: 50%;
+  }
+}

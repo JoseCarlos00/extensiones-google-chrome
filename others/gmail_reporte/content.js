@@ -63,7 +63,6 @@ class PedidosAutorizados {
 
 			if (match && match[1]) {
 				const tiendaName = match[1].trim()?.toLowerCase().replace(/-\s+/g, '-');
-				// console.log({tiendaName, match, Elm: tiendaElement});
 
 				// Buscar la tienda en el array 'shipments' (de tiendas.js)
 				const tiendaInfo = shipments.find((s) => s.customer === tiendaName);
@@ -84,7 +83,6 @@ class PedidosAutorizados {
 		});
 
 		this.setPedidos(pedidosResult);
-		console.log('Pedidos procesados:', this.getPedidos());
 	}
 
 	getSentenceSQL() {
@@ -117,12 +115,6 @@ ORDER BY 2,erp_order;`;
 		const button = document.createElement('button');
 		button.id = this.idButtonSQL;
 		button.title = 'Generar Consulta';
-		button.style.backgroundColor = 'transparent';
-		button.style.color = '#444746';
-		button.style.border = 'none';
-		button.style.width = '40px';
-		button.style.height = '40px';
-		button.style.cursor = 'pointer';
 	
 		// Crear el SVG y sus partes
 		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
