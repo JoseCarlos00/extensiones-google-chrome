@@ -152,6 +152,7 @@ ORDER BY 2,erp_order;`;
 
 			navigator.clipboard.writeText(text).then(() => {
 				console.log('Contenido copiado al portapapeles');
+				this.showToast('Contenido copiado al portapapeles');
 			});
 		} catch (err) {
 			console.error('Error al copiar al portapapeles:', err);
@@ -166,7 +167,7 @@ ORDER BY 2,erp_order;`;
 
   setTimeout(() => {
     toast.remove();
-  }, 2000);
+  }, 2500);
 }
 }
 
