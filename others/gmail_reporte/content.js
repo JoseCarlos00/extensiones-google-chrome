@@ -87,7 +87,7 @@ class PedidosAutorizados {
   erp_order,
   CASE 
       WHEN erp_order IN (${erpOrders}) THEN 'Sí'
-      ELSE 'No'
+      ELSE 'No Existe'
   END AS en_lista
 FROM shipment_detail
 WHERE warehouse = 'Mariano'
