@@ -20,7 +20,7 @@ class PedidosAutorizados {
 			return false; // Indica que la inicialización falló.
 		}
 
-    processingTable();
+    this.processingTable();
 		this.insertButtonSQL();
 		await new Promise((resolve) => setTimeout(resolve, 100));
 		this.setEventListener();
@@ -165,6 +165,17 @@ ORDER BY 2,erp_order;`;
 			console.error('Error al copiar al portapapeles:', err);
 		}
 	}
+
+	showToast(message) {
+  const toast = document.createElement('div');
+  toast.innerText = message;
+  toast.className = 'mi-toast';
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 2000);
+}
 }
 
 window.addEventListener('load', () => {
