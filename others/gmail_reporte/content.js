@@ -13,6 +13,8 @@ class PedidosAutorizados {
 	}
 
 	async initialize() {
+		console.log({ isValidTitle: this.isValidTitle, titleE: this.titleE });
+		
 		if (!this.isValidTitle) {
 			// Si el título no es el esperado, no continuamos.
 			// Podemos mostrar un mensaje si es necesario para depuración.
