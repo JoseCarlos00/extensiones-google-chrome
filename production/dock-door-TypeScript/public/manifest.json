@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "Dock Door",
-	"version": "1.2",
+	"version": "1.2.1",
 	"description": "Muestra una tabla de dock door disponibles",
 	"permissions": [],
 	"icons": {
