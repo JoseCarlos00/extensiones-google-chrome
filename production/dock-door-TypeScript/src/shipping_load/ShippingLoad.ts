@@ -2,14 +2,14 @@ import { LocalStorageHelper } from "../utils/LocalStorageHelper"
 import { RefreshDockDoor } from "./refreshDockDoor"
 import { ToastAlert } from "../utils/ToastAlert"
 import { NAME_DATA_STORAGE_DOORS, TABLE_HTML } from "../constants";
-import { getTableDockDoor } from "../utils/GetDockDoors"
+import { getTableDockDoor } from "../utils/getDockDoors"
 
 const SELECTORS = {
 	DOCK_DOOR_INPUT: '#ShippingLoadInfoSectionDockDoorValue > div > div.ui-igcombo-fieldholder.ui-igcombo-fieldholder-ltr.ui-corner-left > input',
 	TABLE_INSERT_POINT: '#ScreenGroupSubAccordion11736',
 	TABLE_DOCK_DOOR: '#tableDockDoor',
 	SAVE_BUTTON: '#ShippingLoadMenuActionSave',
-	DOOR_LIST_CONTAINER: 'body > div.ui-igcombo-dropdown ul.ui-igcombo-listitemholder',
+	DOOR_LIST_CONTAINER: 'body > div:nth-child(27) ul.ui-igcombo-listitemholder',
 };
 
 export class ShippingLoad {
