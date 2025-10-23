@@ -53,7 +53,7 @@ const shipments = [
 		idCode: '4344',
 	},
 	{
-		customer: 'mex-adornos',
+		customer: 'mex-centro adornos',
 		idCode: '444',
 	},
 	{
@@ -79,6 +79,10 @@ const shipments = [
 	{
 		customer: 'mex-centro grande',
 		idCode: '417',
+	},
+	{
+		customer: 'mex-centro almacen (mayoreo)',
+		idCode: '357',
 	},
 	{
 		customer: 'mex-interlomas',
@@ -194,6 +198,6 @@ const shipments = [
 	},
 	{
 		customer: 'ver-veracruz',
-    idCode: '4573',
+		idCode: '4573',
 	},
 ];

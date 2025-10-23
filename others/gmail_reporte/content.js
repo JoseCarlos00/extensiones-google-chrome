@@ -174,5 +174,8 @@ ORDER BY 2,erp_order;`;
 }
 
 window.addEventListener('load', () => {
-	new PedidosAutorizados();
+	console.log('Pedidos Autorizados: "load"');
+	setTimeout(() => {
+		new PedidosAutorizados();
+	}, 1000);
 });
