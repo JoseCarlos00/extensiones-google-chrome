@@ -16,7 +16,7 @@ interface SentenceSQLValue {
 
 export class SentenceSQLManager {
 	private prefixClass: string;
-	queryElements: QueryElement;
+	public queryElements: QueryElement;
 
 	constructor({ queryElements, prefixClass }: GetSentenceSQLParams) {
 		this.queryElements = queryElements;

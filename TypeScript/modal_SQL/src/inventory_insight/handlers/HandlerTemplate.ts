@@ -42,7 +42,7 @@ export class HandlerTemplate {
 	private prefixClass: string;
 	private idButtonCopy: string;
 
-	private queryElements: QueryElement = {
+	public queryElements: QueryElement = {
 		OH: null,
 		AL: null,
 		IT: null,

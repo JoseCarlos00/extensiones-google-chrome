@@ -79,6 +79,8 @@ export class ModalHandler implements IModalHandler {
 			this.addClassSelectedRows();
 			this.handleAction();
 			this.openModal();
+
+			this.internalNumber?.queryElements?.OH?.focus();
 		} catch (error) {
 			console.error(`[ModalHandler] Error in handleOpenModal: ${error}`);
 		}
