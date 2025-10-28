@@ -3,8 +3,6 @@ let isShowLog = JSON.parse(localStorage.getItem(nameStorage) ?? '{"isShowLog":fa
 
 function setEventStorage() {
 	window.addEventListener('storage', (event) => {
-		console.log('storage:', event);
-		
 		if (event.key === nameStorage) {
 			console.log('storage:', {name: event.key, newValue: event.newValue });
 			

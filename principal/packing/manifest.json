@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Packing",
   "version": "1.0",
-  "description": "Muestar una lista de los articulos y cantidad a empacar",
+  "description": "Muestra una lista de los artículos y cantidad a empacar",
   "permissions": ["scripting", "activeTab", "storage"],
   "icons": {
     "16": "images/inventory16.png",
@@ -14,8 +14,14 @@
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/packing*"],
-      "js": ["ContextMenuHandler.js", "ToastAlert.js"],
+      "js": ["loader.js","ContextMenuHandler.js", "ToastAlert.js"],
       "css": ["style.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["Confirm.js"],
+      "matches": ["https://wms.fantasiasmiguel.com.mx/*"]
     }
   ],
   "action": {

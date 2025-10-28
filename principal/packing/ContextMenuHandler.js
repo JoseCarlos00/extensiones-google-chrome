@@ -98,7 +98,7 @@ class ContextMenuHandler {
   handleClickCopy() {
     if (this.selectedElementForCopy) {
       const contentText = this.selectedElementForCopy.textContent;
-      this.copyToClipboar(contentText);
+      this.copyToClipboard(contentText);
     } else {
       ToastAlert.showAlertMinBotton('No es un area valida para copiar', 'error');
     }
@@ -115,11 +115,11 @@ class ContextMenuHandler {
     this.selectedElementForCopy = nodeName === 'TD' ? element : null;
 
     if (this.selectedElementForCopy) {
-      this.copyToClipboar(this.selectedElementForCopy.textContent.trim());
+      this.copyToClipboard(this.selectedElementForCopy.textContent.trim());
     }
   }
 
-  async copyToClipboar(textoACopiar) {
+  async copyToClipboard(textoACopiar) {
     try {
       if (!textoACopiar) {
         throw new Error('No se encontró el contenido a copiar');
