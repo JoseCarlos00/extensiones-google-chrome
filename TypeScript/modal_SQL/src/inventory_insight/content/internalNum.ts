@@ -10,10 +10,10 @@ const inputChecks = /*html*/ `
       <input class="opc-btn" id="opc-oh" type="checkbox" checked="true" data-type="OH" />
       <label class="opc-label" for="opc-oh">OH</label>
 
-      <input class="opc-btn" id="opc-al" type="checkbox" data-type="AL" />
+      <input class="opc-btn" id="opc-al" type="checkbox" checked="true" data-type="AL" />
       <label class="opc-label" for="opc-al">AL</label>
 
-      <input class="opc-btn" id="opc-it" type="checkbox" data-type="IT" />
+      <input class="opc-btn" id="opc-it" type="checkbox" checked="true" data-type="IT" />
       <label class="opc-label" for="opc-it">IT</label>
 
       <input class="opc-btn" id="opc-su" type="checkbox" data-type="SU" />
@@ -69,13 +69,12 @@ const codeContainer = /*html*/ `
           <span class="ms-2 hljs-keyword align-top multi-internal">IN&nbsp;</span><span
             class="align-top multi-internal">(</span>
           <span class="hljs-operator single-internal-operator">&nbsp;=&nbsp;</span>
-          <div contenteditable class="internal-inventory-numbers hljs-string" id="${idInternalInvNumber}"></div>
-          <span class="multi-internal">);</span>
+          <div contenteditable class="internal-inventory-numbers hljs-string" id="${idInternalInvNumber}"></div><span class="multi-internal">);</span>
         </div>
       </div>
     </div>  
   `;
 
 export const containerMain = document.createElement('div');
-containerMain.className = 'main-code-container internal-number single internal-num OH';
+containerMain.className = 'main-code-container internal-number single internal-num OH AL IT';
 containerMain.innerHTML =  inputChecks + codeContainer;

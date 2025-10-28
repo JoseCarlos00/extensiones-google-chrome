@@ -1,19 +1,20 @@
-import { copyToClipboard } from "../../utils/copyToClipBoard"
-import { ToastAlert } from "../../utils/ToastAlert"
-import { EventManager } from "../EventManager";
+import { copyToClipboard } from '../../utils/copyToClipBoard';
+import { ToastAlert } from '../../utils/ToastAlert';
+import { EventManager } from '../EventManager';
+import { SentenceSQLManager } from '../SentenceSQL'
 
-interface QueryElement {
-  OH: HTMLInputElement | null;
-  AL: HTMLInputElement | null;
-  IT: HTMLInputElement | null;
-  SU: HTMLInputElement | null;
-  DIV_INTERNAL_NUM: HTMLElement | null;
+export interface QueryElement {
+	OH: HTMLInputElement | null;
+	AL: HTMLInputElement | null;
+	IT: HTMLInputElement | null;
+	SU: HTMLInputElement | null;
+	DIV_INTERNAL_NUM: HTMLElement | null;
 }
 
 type EventManagerSelector = {
-		containerPrincipalSelector: string;
-		inputCheckboxSelector: string;
-	}
+	containerPrincipalSelector: string;
+	inputCheckboxSelector: string;
+};
 
 export interface HandlerTemplateParams {
 	prefixClass: string;
@@ -22,12 +23,12 @@ export interface HandlerTemplateParams {
 	idInputAl: string;
 	idInputIt: string;
 	idInputSu: string;
-  idItem?: string;
-  idLocation?: string;
-  idInternalNumberInv?: string;
+	idItem?: string;
+	idLocation?: string;
+	idInternalNumberInv?: string;
 	eventManagerSelectors: EventManagerSelector;
+	classType: string;
 }
-
 
 export class HandlerTemplate {
 	private selectors: {
@@ -37,7 +38,6 @@ export class HandlerTemplate {
 		internalNumber: string;
 	};
 
-	private internalData: string;
 	private eventManager: EventManager | null = null;
 	private prefixClass: string;
 	private idButtonCopy: string;
@@ -58,6 +58,8 @@ export class HandlerTemplate {
 	private idInternalNumberInv: string;
 	private eventManagerSelector: EventManagerSelector;
 
+	private sentenceSQLManager: SentenceSQLManager;
+
 
 	constructor({
 		prefixClass,
@@ -68,6 +70,7 @@ export class HandlerTemplate {
 		idInputSu,
 		idInternalNumberInv,
 		eventManagerSelectors,
+		classType,
 	}: HandlerTemplateParams) {
 		this.selectors = {
 			item: "td[aria-describedby='ListPaneDataGrid_ITEM']",
@@ -76,7 +79,6 @@ export class HandlerTemplate {
 			internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
 		};
 
-		this.internalData = '';
 		this.prefixClass = prefixClass;
 		this.idButtonCopy = idBtnCopy;
 		this.idInputOh = idInputOh;
@@ -85,6 +87,11 @@ export class HandlerTemplate {
 		this.idInputSu = idInputSu;
 		this.idInternalNumberInv = idInternalNumberInv || 'internal-inventory-numbers';
 		this.eventManagerSelector = eventManagerSelectors;
+
+		this.sentenceSQLManager = new SentenceSQLManager({
+			queryElements: this.queryElements,
+			prefixClass: classType,
+		});
 	}
 
 	public async initializeProperties() {
@@ -117,21 +124,23 @@ export class HandlerTemplate {
 			// Asignar los elementos validados a `queryElement`
 			this.queryElements = internalElements;
 
+			this.sentenceSQLManager.queryElements = this.queryElements;
+
 			this.setEventCopyToClipBoard();
 		} catch (error: any) {
 			console.error('[AdjustmentPositive.initializeProperties: Error:', error.message);
 		}
 	}
 
-	private handleCopyToClipBoar() {
+	private handleCopyToClipBoard() {
 		try {
-			const codeText = this.internalData;
+			const statementSQL = this.sentenceSQLManager.getStatementSQL();
 
-			if (codeText) {
-				copyToClipboard(codeText);
+			if (statementSQL) {
+				copyToClipboard(statementSQL);
 			}
 		} catch (error: any) {
-			console.error('Error en handleCopyToClipBoar: ', error.message);
+			console.error('Error en handleCopyToClipBoard: ', error.message);
 			ToastAlert.showAlertMinButton('Ha ocurrido al copiar al portapapeles');
 		}
 	}
@@ -145,11 +154,7 @@ export class HandlerTemplate {
 			return;
 		}
 
-		btnCopy.addEventListener('click', () => this.handleCopyToClipBoar());
-	}
-
-	private async cleanInternalData() {
-		this.internalData = '';
+		btnCopy.addEventListener('click', () => this.handleCopyToClipBoard());
 	}
 
 	private resetElementValues() {
@@ -174,7 +179,6 @@ export class HandlerTemplate {
 	public async cleanValues() {
 		this.resetElementValues();
 		this.resetSelectedRows();
-		await this.cleanInternalData();
 	}
 
 	private setElementValues() {
@@ -208,7 +212,7 @@ export class HandlerTemplate {
 	public async setValueInternalNumber(rows?: HTMLTableRowElement[]) {
 		try {
 			await this.cleanValues();
-      this.setSelectedRows(rows || this.selectedRows);
+			this.setSelectedRows(rows || this.selectedRows);
 			this.setElementValues();
 		} catch (error: any) {
 			console.error('Error en setValueForAdjustment: ', error.message);
