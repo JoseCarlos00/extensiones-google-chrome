@@ -1,7 +1,7 @@
 import { ModalCreateHTML } from "../modal/ModaCreateHTML"
 import { TabsComponent } from "../utils/TabsComponent"
-import { containerMain } from "./content/internalNum"
-// import { contentModal } from "./content/updateContainer"
+import { containerMain as containerMainInternalNum } from "./content/internalNum"
+import { containerMain as contentModalAddInventory } from "./content/addInventory"
 // import { contentModalSts } from "./content/updateStatus"
 
 
@@ -14,9 +14,9 @@ export async function getHtmlContent({ sectionContainerClass, modalId }: { secti
 	}
 
 	const tabs = [
-		{ tab: 'Internal Num', content: containerMain },
+		{ tab: 'Internal Num', content: containerMainInternalNum },
 		{ tab: "Item - Location", content: '' },
-		{ tab: "Add Inv", content: '' }
+		{ tab: "Add Inv", content: contentModalAddInventory }
 	];
 
 	const tabsContainer = TabsComponent.getTabs({ tabs });

@@ -1,6 +1,6 @@
 import { buttonCopyRounded } from '../../utils/buttonCopy'
 import { internalNumber } from '../consts';
-const { idBtnCopyInternalNumber, idInputOh, idInputAl, idInputIt, idInputSu, idInternalNumberInv: idInternalInvNumber } = internalNumber;
+const { idBtnCopyInternalNumber, idInputOH, idInputAL, idInputIT, idInputSU: idInputSU, idInternalNumberInv: idInternalInvNumber } = internalNumber;
 
 const btnCopyInternalNumber = buttonCopyRounded(idBtnCopyInternalNumber);
 
@@ -33,22 +33,22 @@ const codeContainer = /*html*/ `
 
       <div class="container-type ms-3" data-type="OH">
         <span>ON_HAND_QTY</span> <span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="${idInputOh}"/>
+          value=""  id="${idInputOH}"/>
       </div>
 
       <div class="container-type ms-3" data-type="AL">
         <span>ALLOCATED_QTY</span> <span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="${idInputAl}"/>
+          value=""  id="${idInputAL}"/>
       </div>
 
       <div class="container-type ms-3" data-type="IT">
         <span>IN_TRANSIT_QTY</span> <span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="${idInputIt}"/>
+          value=""  id="${idInputIT}"/>
       </div>
 
       <div class="container-type ms-3" data-type="SU">
         <span>SUSPENSE_QTY </span><span class="hljs-operator">=</span> <input class="hljs-number" type="number"
-          value=""  id="${idInputSu}"/>
+          value=""  id="${idInputSU}"/>
       </div>
 
       <div class="mb-1 mt-2">

@@ -19,10 +19,10 @@ type EventManagerSelector = {
 export interface HandlerTemplateParams {
 	prefixClass: string;
 	idBtnCopy: string;
-	idInputOh: string;
-	idInputAl: string;
-	idInputIt: string;
-	idInputSu: string;
+	idInputOH: string;
+	idInputAL: string;
+	idInputIT: string;
+	idInputSU: string;
 	idItem?: string;
 	idLocation?: string;
 	idInternalNumberInv?: string;
@@ -51,10 +51,10 @@ export class HandlerTemplate {
 	};
 
 	private selectedRows: HTMLTableRowElement[] = [];
-	private idInputOh: string;
-	private idInputAl: string;
-	private idInputIt: string;
-	private idInputSu: string;
+	private idInputOH: string;
+	private idInputAL: string;
+	private idInputIT: string;
+	private idInputSU: string;
 	private idInternalNumberInv: string;
 	private eventManagerSelector: EventManagerSelector;
 
@@ -64,10 +64,10 @@ export class HandlerTemplate {
 	constructor({
 		prefixClass,
 		idBtnCopy,
-		idInputOh,
-		idInputAl,
-		idInputIt,
-		idInputSu,
+		idInputOH,
+		idInputAL,
+		idInputIT,
+		idInputSU,
 		idInternalNumberInv,
 		eventManagerSelectors,
 		classType,
@@ -81,10 +81,10 @@ export class HandlerTemplate {
 
 		this.prefixClass = prefixClass;
 		this.idButtonCopy = idBtnCopy;
-		this.idInputOh = idInputOh;
-		this.idInputAl = idInputAl;
-		this.idInputIt = idInputIt;
-		this.idInputSu = idInputSu;
+		this.idInputOH = idInputOH;
+		this.idInputAL = idInputAL;
+		this.idInputIT = idInputIT;
+		this.idInputSU = idInputSU;
 		this.idInternalNumberInv = idInternalNumberInv || 'internal-inventory-numbers';
 		this.eventManagerSelector = eventManagerSelectors;
 
@@ -104,10 +104,10 @@ export class HandlerTemplate {
 			this.eventManager?.initialize();
 
 			const internalElements = {
-				OH: document.querySelector(`${this.prefixClass} #${this.idInputOh}`),
-				AL: document.querySelector(`${this.prefixClass} #${this.idInputAl}`),
-				IT: document.querySelector(`${this.prefixClass} #${this.idInputIt}`),
-				SU: document.querySelector(`${this.prefixClass} #${this.idInputSu}`),
+				OH: document.querySelector(`${this.prefixClass} #${this.idInputOH}`),
+				AL: document.querySelector(`${this.prefixClass} #${this.idInputAL}`),
+				IT: document.querySelector(`${this.prefixClass} #${this.idInputIT}`),
+				SU: document.querySelector(`${this.prefixClass} #${this.idInputSU}`),
 				DIV_INTERNAL_NUM: document.querySelector(`${this.prefixClass} #${this.idInternalNumberInv}`),
 			} as QueryElement;
 

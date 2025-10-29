@@ -2,10 +2,10 @@ export const idButtonCopySQL = 'openModalSqlBtn';
 
 export const internalNumber = {
 	idBtnCopyInternalNumber: 'btnCopyCodeInternalNumber',
-	idInputOh: 'internal-number-input-oh',
-	idInputAl: 'internal-number-input-al',
-	idInputIt: 'internal-number-input-it',
-	idInputSu: 'internal-number-input-su',
+	idInputOH: 'internal-number-input-oh',
+	idInputAL: 'internal-number-input-al',
+	idInputIT: 'internal-number-input-it',
+	idInputSU: 'internal-number-input-su',
 	idInternalNumberInv: 'internal-numbers-internal-inventory-numbers',
 };
 

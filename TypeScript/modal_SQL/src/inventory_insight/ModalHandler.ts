@@ -1,7 +1,7 @@
 import type { IModalHandler } from '../modal/ModalManager';
 import { TableManager } from '../TableManager'
-import { InternalNUmber } from './handlers/internalNum';
-// import { UpdateStatus } from './handlers/UpdateStatus';
+import { InternalNUmber } from './handlers/InternalNum';
+import { AddInventory } from './handlers/AddInventory';
 // import { UpdateContainerId } from './handlers/UpdateContainer';
 
 export class ModalHandler implements IModalHandler {
@@ -10,6 +10,8 @@ export class ModalHandler implements IModalHandler {
 
 	// Handlers & Managers
 	private internalNumber: InternalNUmber | null = null;
+	private addInventory: AddInventory | null = null;
+
 
 	private prefixClass: string;
 	private selectedRows: HTMLTableRowElement[] = [];
@@ -45,11 +47,18 @@ export class ModalHandler implements IModalHandler {
 		}
 
 		this.internalNumber.initializeProperties();
+
+		if (!this.addInventory) {
+			throw new Error('AddInventory handler is not initialized.');
+		}
+
+		this.addInventory.initializeProperties();
 	}
 
 	private async handleAction() {
 		try {
 			await this.internalNumber?.setValueInternalNumber(this.selectedRows);
+			await this.addInventory?.setValueInternalNumber(this.selectedRows);
 		} catch (error: any) {
 			console.log('error:', error.message);
 			await this.internalNumber?.cleanValues();
@@ -81,6 +90,7 @@ export class ModalHandler implements IModalHandler {
 			this.openModal();
 
 			this.internalNumber?.queryElements?.OH?.focus();
+			this.addInventory?.queryElements?.OH?.focus();
 		} catch (error) {
 			console.error(`[ModalHandler] Error in handleOpenModal: ${error}`);
 		}
@@ -88,6 +98,7 @@ export class ModalHandler implements IModalHandler {
 
 	private async initializeProperties() {
 		this.internalNumber = new InternalNUmber({ prefixClass: this.prefixClass });
+		this.addInventory = new AddInventory({ prefixClass: this.prefixClass });
 	}
 
 	private openModal(): void {
