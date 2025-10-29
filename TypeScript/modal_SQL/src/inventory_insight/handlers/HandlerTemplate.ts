@@ -1,7 +1,7 @@
 import { copyToClipboard } from '../../utils/copyToClipBoard';
 import { ToastAlert } from '../../utils/ToastAlert';
 import { EventManager } from '../EventManager';
-import { SentenceSQLManager } from '../SentenceSQL'
+import type { SentenceSQLManager } from '../SentenceSQL'
 
 export interface QueryElement {
 	OH: HTMLInputElement | null;
@@ -28,6 +28,7 @@ export interface HandlerTemplateParams {
 	idInternalNumberInv?: string;
 	eventManagerSelectors: EventManagerSelector;
 	classType: string;
+	SentenceSQLManager: typeof SentenceSQLManager;
 }
 
 export class HandlerTemplate {
@@ -60,7 +61,6 @@ export class HandlerTemplate {
 
 	private sentenceSQLManager: SentenceSQLManager;
 
-
 	constructor({
 		prefixClass,
 		idBtnCopy,
@@ -71,6 +71,7 @@ export class HandlerTemplate {
 		idInternalNumberInv,
 		eventManagerSelectors,
 		classType,
+		SentenceSQLManager,
 	}: HandlerTemplateParams) {
 		this.selectors = {
 			item: "td[aria-describedby='ListPaneDataGrid_ITEM']",

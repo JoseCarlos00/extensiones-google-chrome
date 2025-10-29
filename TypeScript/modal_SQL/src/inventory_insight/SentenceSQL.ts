@@ -1,12 +1,12 @@
 import { ToastAlert } from "../utils/ToastAlert"
 import type { QueryElement } from "./handlers/HandlerTemplate"
 
-interface GetSentenceSQLParams {
+export interface GetSentenceSQLParams {
   queryElements: QueryElement;
   prefixClass: string;
 }
 
-interface SentenceSQLValue {
+export interface SentenceSQLValue {
   OH: string;
   AL: string;
   IT: string;
@@ -15,7 +15,7 @@ interface SentenceSQLValue {
 }
 
 export class SentenceSQLManager {
-	private prefixClass: string;
+	protected prefixClass: string;
 	public queryElements: QueryElement;
 
 	constructor({ queryElements, prefixClass }: GetSentenceSQLParams) {
@@ -23,7 +23,7 @@ export class SentenceSQLManager {
 		this.prefixClass = prefixClass;
 	}
 
-	private getStatementWhere(values: SentenceSQLValue) {
+	protected getStatementWhere(values: SentenceSQLValue) {
 		const { DIV_INTERNAL_NUM } = values;
 		const selectedRowsNum = DIV_INTERNAL_NUM.split(',\n').length;
 
@@ -37,7 +37,7 @@ export class SentenceSQLManager {
 		return `\nWHERE warehouse = 'Mariano'\nAND company = 'FM'\n${typeWhereMap['internal']()};`;
 	}
 
-	private getStatementSet(values: SentenceSQLValue) {
+	protected getStatementSet(values: SentenceSQLValue) {
 		const inputOptionsSet = Array.from(
 			document.querySelectorAll(`.main-code-container.${this.prefixClass} .opts-btn-container input`)
 		) as HTMLInputElement[];
