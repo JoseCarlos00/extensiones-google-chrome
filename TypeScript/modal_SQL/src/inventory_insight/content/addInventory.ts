@@ -76,5 +76,5 @@ const codeContainer = /*html*/ `
   `;
 
 export const containerMain = document.createElement('div');
-containerMain.className = 'main-code-container internal-number single add-inventory OH AL IT';
+containerMain.className = 'main-code-container single add-inventory OH AL IT';
 containerMain.innerHTML =  inputChecks + codeContainer;

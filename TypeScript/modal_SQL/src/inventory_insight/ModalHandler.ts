@@ -66,17 +66,19 @@ export class ModalHandler implements IModalHandler {
 	}
 
 	private addClassSelectedRows() {
-		const containerPrincipal = document.querySelector(`${this.prefixClass} .main-code-container`);
+		const containerPrincipal = document.querySelectorAll(`${this.prefixClass} .main-code-container`);
 
-		if (!containerPrincipal) {
-			console.error('[updateModalContent] No se encontró el elemento .main-code-container');
+		if (containerPrincipal.length === 0) {
+			console.error('[updateModalContent] No se encontraron elementos con la clase ".main-code-container"');
 			return;
 		}
 
 		const rowNum = this.selectedRows.length;
-
-		containerPrincipal.classList.toggle('single', rowNum <= 1);
-		containerPrincipal.classList.toggle('multiple', rowNum >= 2);
+		
+		containerPrincipal.forEach((item) => {
+			item.classList.toggle('single', rowNum <= 1);
+			item.classList.toggle('multiple', rowNum >= 2);
+		});
 	}
 
 	/**
