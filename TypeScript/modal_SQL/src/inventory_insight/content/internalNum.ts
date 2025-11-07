@@ -55,7 +55,7 @@ const codeContainer = /*html*/ `
         <span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">=</span><span class="hljs-string">'Mariano'</span>
       </div>
 
-      <div class="mb-1 mt-2">
+      <div class="ms-2 mb-1">
         <span class="hljs-keyword">AND</span> company <span class="hljs-operator">=</span><span class="hljs-string">'FM'</span>
       </div>
 

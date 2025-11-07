@@ -51,7 +51,8 @@ class SentenceSQLManagerAddInv extends SentenceSQLManager {
 			.filter((item) => {
 				const type = item.dataset.type as keyof typeof typeSetMap;
 				const val = values[type];
-				return item.checked && val !== undefined && val !== null && val !== '';
+				// Solo incluir si el input está seleccionado Y si el valor correspondiente existe y no está vacío.
+				return item.checked && val;
 			})
 			.map((item) => {
 				const type = item.dataset.type as keyof typeof typeSetMap;

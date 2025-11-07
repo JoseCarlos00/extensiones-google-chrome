@@ -161,7 +161,7 @@
 	}
 
 	&.internal-num .code-container .internal-num-code,
-	&.item-loc .code-container .internal-num-code,
+	&.item-location .code-container .internal-num-code,
 	&.add-inventory .code-container .internal-num-code {
 		display: block;
 	}

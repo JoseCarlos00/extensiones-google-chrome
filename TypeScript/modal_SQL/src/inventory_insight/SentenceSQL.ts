@@ -1,8 +1,8 @@
 import { ToastAlert } from "../utils/ToastAlert"
 import type { QueryElement } from "./handlers/HandlerTemplate"
 
-export interface GetSentenceSQLParams {
-  queryElements: QueryElement;
+export interface GetSentenceSQLParams<T extends QueryElement = QueryElement> {
+  queryElements: T;
   prefixClass: string;
 }
 
@@ -14,12 +14,10 @@ export interface SentenceSQLValue {
   DIV_INTERNAL_NUM: string;
 }
 
-export class SentenceSQLManager {
+export class SentenceSQLManager<T extends QueryElement = QueryElement> {
 	protected prefixClass: string;
-	public queryElements: QueryElement;
 
-	constructor({ queryElements, prefixClass }: GetSentenceSQLParams) {
-		this.queryElements = queryElements;
+	constructor({ prefixClass }: GetSentenceSQLParams<T>) {
 		this.prefixClass = prefixClass;
 	}
 
@@ -77,9 +75,9 @@ export class SentenceSQLManager {
 		return result;
 	}
 
-	public getStatementSQL() {
+	public getStatementSQL(queryElements: T) {
 		try {
-			const { OH, AL, IT, SU, DIV_INTERNAL_NUM } = this.queryElements;
+			const { OH, AL, IT, SU, DIV_INTERNAL_NUM } = queryElements;
 
 			const values: SentenceSQLValue = {
 				OH: OH?.value?.trim() || '',

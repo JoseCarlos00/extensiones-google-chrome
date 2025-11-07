@@ -1,7 +1,7 @@
 import { copyToClipboard } from '../../utils/copyToClipBoard';
 import { ToastAlert } from '../../utils/ToastAlert';
 import { EventManager } from '../EventManager';
-import type { SentenceSQLManager } from '../SentenceSQL'
+import type { GetSentenceSQLParams, SentenceSQLManager } from '../SentenceSQL'
 
 export interface QueryElement {
 	OH: HTMLInputElement | null;
@@ -16,7 +16,7 @@ type EventManagerSelector = {
 	inputCheckboxSelector: string;
 };
 
-export interface HandlerTemplateParams {
+export interface HandlerTemplateParams<T extends QueryElement> {
 	prefixClass: string;
 	idBtnCopy: string;
 	idInputOH: string;
@@ -27,39 +27,39 @@ export interface HandlerTemplateParams {
 	idLocation?: string;
 	idInternalNumberInv?: string;
 	eventManagerSelectors: EventManagerSelector;
-	classType: string;
-	SentenceSQLManager: typeof SentenceSQLManager;
+	classType: string;	
+	SentenceSQLManager: new (params: GetSentenceSQLParams<T>) => SentenceSQLManager<T>;
 }
 
-export class HandlerTemplate {
-	private selectors: {
+export class HandlerTemplate<T extends QueryElement = QueryElement> {
+	protected selectors: {
 		item: string;
 		qty: string;
 		location: string;
 		internalNumber: string;
 	};
 
-	private eventManager: EventManager | null = null;
-	private prefixClass: string;
-	private idButtonCopy: string;
+	protected eventManager: EventManager | null = null;
+	protected prefixClass: string;
+	protected idButtonCopy: string;
 
-	public queryElements: QueryElement = {
+	public queryElements: T = ({
 		OH: null,
 		AL: null,
 		IT: null,
 		SU: null,
 		DIV_INTERNAL_NUM: null,
-	};
+	} as T);
 
-	private selectedRows: HTMLTableRowElement[] = [];
-	private idInputOH: string;
-	private idInputAL: string;
-	private idInputIT: string;
-	private idInputSU: string;
-	private idInternalNumberInv: string;
+	protected selectedRows: HTMLTableRowElement[] = [];
+	protected idInputOH: string;
+	protected idInputAL: string;
+	protected idInputIT: string;
+	protected idInputSU: string;
+	protected idInternalNumberInv: string;
 	private eventManagerSelector: EventManagerSelector;
 
-	private sentenceSQLManager: SentenceSQLManager;
+	private sentenceSQLManager: SentenceSQLManager<T>;
 
 	constructor({
 		prefixClass,
@@ -71,8 +71,8 @@ export class HandlerTemplate {
 		idInternalNumberInv,
 		eventManagerSelectors,
 		classType,
-		SentenceSQLManager,
-	}: HandlerTemplateParams) {
+		SentenceSQLManager
+	}: HandlerTemplateParams<T>) {
 		this.selectors = {
 			item: "td[aria-describedby='ListPaneDataGrid_ITEM']",
 			qty: "td[aria-describedby='ListPaneDataGrid_QUANTITY']",
@@ -110,7 +110,7 @@ export class HandlerTemplate {
 				IT: document.querySelector(`${this.prefixClass} #${this.idInputIT}`),
 				SU: document.querySelector(`${this.prefixClass} #${this.idInputSU}`),
 				DIV_INTERNAL_NUM: document.querySelector(`${this.prefixClass} #${this.idInternalNumberInv}`),
-			} as QueryElement;
+			} as T;
 
 			const missingOptions = Object.entries(internalElements)
 				.filter(([_key, value]) => !value)
@@ -125,8 +125,6 @@ export class HandlerTemplate {
 			// Asignar los elementos validados a `queryElement`
 			this.queryElements = internalElements;
 
-			this.sentenceSQLManager.queryElements = this.queryElements;
-
 			this.setEventCopyToClipBoard();
 		} catch (error: any) {
 			console.error('[AdjustmentPositive.initializeProperties: Error:', error.message);
@@ -135,7 +133,7 @@ export class HandlerTemplate {
 
 	private handleCopyToClipBoard() {
 		try {
-			const statementSQL = this.sentenceSQLManager.getStatementSQL();
+			const statementSQL = this.sentenceSQLManager.getStatementSQL(this.queryElements);
 
 			if (statementSQL) {
 				copyToClipboard(statementSQL);
@@ -160,7 +158,7 @@ export class HandlerTemplate {
 
 	private resetElementValues() {
 		Object.keys(this.queryElements).forEach((key) => {
-			const element = this.queryElements[key as keyof QueryElement];
+			const element = this.queryElements[key as keyof T];
 			if (element instanceof HTMLInputElement) {
 				element.value = '';
 			} else if (element instanceof HTMLElement) {
