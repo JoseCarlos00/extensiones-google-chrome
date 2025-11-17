@@ -62,3 +62,15 @@
   > div {
   margin-bottom: 1px !important;
 }
+
+#initPackingButton:disabled {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  cursor: not-allowed !important;
+}
+
+#insertButtonAction.disabled {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}

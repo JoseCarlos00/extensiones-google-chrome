@@ -14,13 +14,13 @@
   "content_scripts": [
     {
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/packing*"],
-      "js": ["loader.js","ContextMenuHandler.js", "ToastAlert.js"],
+      "js": ["loader.js","ContextMenuHandler.js"],
       "css": ["style.css"]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["Confirm.js"],
+      "resources": ["Confirm.js", "ToastAlert.js"],
       "matches": ["https://wms.fantasiasmiguel.com.mx/*"]
     }
   ],
