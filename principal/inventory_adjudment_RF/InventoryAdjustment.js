@@ -6,7 +6,10 @@ class InventoryAdjustment extends IventoryManager {
 	}
 
 	parseLine(linea) {
-		const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
+		// const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
+		const match = linea.match(/^(\d+-\d+-\d+)[\s,]+(\d+)[\s,]+([^,\s]+)(?:[\s,]+([^\W_]+))?/);
+
+
 		if (!match) return null;
 
 		const item = match[1] ?? "";

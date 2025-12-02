@@ -6,7 +6,9 @@ class InventoryTransfer extends IventoryManager {
 	}
 
 	parseLine(linea) {
-		const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)(?:\s+(\S+))?/);
+		// const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)\s+(\S+)(?:\s+(\S+))?/);
+		const match = linea.match(/^(\d+-\d+-\d+)[\s,]+([^,\s]+)[\s,]+([^,\s]+)[\s,]+([^,\s]+)(?:[\s,]+([^,\s]+))?/);
+
 		if (!match) return null;
 
 		const item = match[1] ?? "";

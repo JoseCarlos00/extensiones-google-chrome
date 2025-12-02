@@ -35,6 +35,7 @@ class ModalHandler {
 			tbody.appendChild(row);
 		});
 
+		console.log(tbody);
 		this.pedidoManager.replaceContentBody(tbody.innerHTML);
 	}
 
