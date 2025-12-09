@@ -20,7 +20,7 @@ const WAVE_DATA_KEY = 'waveData';
     if (searchName.toUpperCase().trim() === 'CLIENTES' || searchName.toUpperCase().trim() === 'TIENDAS') {
       
       const data = {
-				waveFlow: 'Mariano STD Auto ACTIVA',
+				waveFlow: 'Mariano STD No Rpln',
 				waveName: searchName,
 			};
 

@@ -22,7 +22,6 @@ const waveFlowElementString = /* html */ `
       <select id="wave-flow-select"
         style="height: 25px; width: 100%; text-align: left; color: #fff; background-color: #2d2f3b; border-radius: 4px; cursor: pointer;">
         <option value="Flujo Express">Flujo Express</option>
-        <option value="Mariano STD Auto ACTIVA">Mariano STD Auto ACTIVA</option>
         <option value="Mariano STD No Rpln">Mariano STD No Rpln</option>
       </select>
     </label>
