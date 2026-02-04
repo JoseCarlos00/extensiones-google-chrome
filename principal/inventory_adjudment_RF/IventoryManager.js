@@ -257,6 +257,7 @@ class IventoryManager {
 			this.assigneateValueInForm({ firstDataToInsert });
 
 			this.saveDataToSessionStorage(this.nameDataStorage, dataStorage);
+			
 			this.submitFormData();
 		} catch (error) {
 			console.error("Error al insertar datos:", error.message);
