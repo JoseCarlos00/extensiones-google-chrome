@@ -5,8 +5,7 @@ export default defineConfig({
 	build: {
 		rollupOptions: {
 			input: {
-				downloadExcel: resolve(__dirname, 'src/downloadExcel.js'),
-				downloadInventoryInsight: resolve(__dirname, 'src/downloadInventoryInsight.js'),
+				downloadExcel: resolve(__dirname, 'src/downloadExcel.js')
 			},
 			output: {
 				entryFileNames: '[name].js',

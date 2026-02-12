@@ -14,7 +14,7 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/*", "https://qawms.fantasiasmiguel.com.mx/scale/*"],
-			"js": ["downloadExcel.js", "downloadInventoryInsight.js", "xlsx.full.min.js"],
+			"js": ["downloadExcel.js", "xlsx.full.min.js"],
 			"css": ["balloon.css"]
 		}
 	],
