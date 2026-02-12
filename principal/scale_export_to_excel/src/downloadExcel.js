@@ -1,47 +1,58 @@
+import { idButtonDownload } from "./constants";
+import { buttonExcelDownloadSend, initInventoryInsight } from "./downloadInventoryInsight";
+
 async function main() {
+  let isInventoryInsight = false;
+
   try {
-    await insertButtonDownload();
+    if (window.location.href.includes('/insights/2723')) {
+			isInventoryInsight = true;
+		}
+
+    insertButtonDownload(isInventoryInsight);
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     setEventDownload();
+
+    if (isInventoryInsight) initInventoryInsight();
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-function insertButtonDownload() {
-  const buttonExcel = /* html */`
+function insertButtonDownload(isInventoryInsight) {
+  const buttonExcel = /* html */ `
     <li class="pull-right menubutton" aria-label="Bajar filas visibles" data-balloon-pos="left">
-      <a id="exportToExcel"  class=" menuicon" href="javascript:void(0);"><svg 
+      <a id="${idButtonDownload}"  class=" menuicon" href="javascript:void(0);"><svg 
           xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="13.5" height="18">
           <path
-            d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM155.7 250.2L192 302.1l36.3-51.9c7.6-10.9 22.6-13.5 33.4-5.9s13.5 22.6 5.9 33.4L221.3 344l46.4 66.2c7.6 10.9 5 25.8-5.9 33.4s-25.8 5-33.4-5.9L192 385.8l-36.3 51.9c-7.6 10.9-22.6 13.5-33.4 5.9s-13.5-22.6-5.9-33.4L162.7 344l-46.4-66.2c-7.6-10.9-5-25.8 5.9-33.4s25.8-5 33.4 5.9z"
+            d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM155.7 250.2L192 302.1l36.3-51.9c7.6-10.9 22.6-13.5 33.4-5.9s13.5 22.6 5.9 33.4L221.3 344l46.4 66.2c7.6 10.9 5 25.8-5.9 33.4s-25.8 5-33.4-5.9L192 385.8l-36.3 51.9c-7.6 10.9-22.6 13.5-33.4 
             fill="#fff">
           </path>
         </svg>
       </a>
     </li>   
   `;
-  return new Promise((resolve, reject) => {
-    const anchorExcel = document.getElementById('MenuExportToExcel');
 
-    if (!anchorExcel) {
-      throw new Error("No se encotro el enlace de export to excel <a id'MenuExportToExcel'>");
-    }
+	const buttons= isInventoryInsight ? buttonExcelDownloadSend + buttonExcel : buttonExcel;
+	const anchorExcel = document.getElementById('MenuExportToExcel');
 
-    const elementToInsert = anchorExcel.closest('li.menubutton');
+	if (!anchorExcel) {
+		throw new Error("No se encontró el enlace de export to excel <a id'MenuExportToExcel'>");
+	}
 
-    if (!elementToInsert) {
-      throw new Error('No se encontro el elemento a insertar <li.menubutton>');
-    }
-    elementToInsert.setAttribute('aria-label', 'Descargar Todo');
-    elementToInsert.setAttribute('data-balloon-pos', 'left');
-    elementToInsert.insertAdjacentHTML('afterend', buttonExcel);
+	const elementToInsert = anchorExcel.closest('li.menubutton');
 
-    setTimeout(resolve, 50);
-  });
+	if (!elementToInsert) {
+		throw new Error('No se encontró el elemento a insertar <li.menubutton>');
+	}
+	elementToInsert.setAttribute('aria-label', 'Descargar Todo');
+	elementToInsert.setAttribute('data-balloon-pos', 'left');
+	elementToInsert.insertAdjacentHTML('afterend', buttons);
 }
 
 function setEventDownload() {
-  const btnDownload = document.getElementById('exportToExcel');
+  const btnDownload = document.getElementById(idButtonDownload);
 
   if (!btnDownload) {
     throw new Error('No se encontró el botón para descargar');
@@ -52,7 +63,8 @@ function setEventDownload() {
 
     try {
       const table = await constructTable();
-      await exportTable(table);
+      const title = (await getTitleDocument()) ?? 'Document';
+      await exportTable(table, title);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -150,20 +162,19 @@ function getTitleDocument() {
   });
 }
 
-async function exportTable(table) {
-  try {
-    if (!table) {
-      throw new Error('No se encontró la <table> para exportar');
-    }
+export async function exportTable(table, fileName) {
+	try {
+		if (!table) {
+			throw new Error('No se encontró la <table> para exportar');
+		}
 
-    // Usa SheetJS para crear un libro y agregar una hoja con los datos de la tabla
-    const workbook = XLSX.utils.table_to_book(table);
-    const title = (await getTitleDocument()) ?? 'Document';
+		// Usa SheetJS para crear un libro y agregar una hoja con los datos de la tabla
+		const workbook = XLSX.utils.table_to_book(table);
 
-    XLSX.writeFile(workbook, `${title}.xlsx`);
-  } catch (error) {
-    console.error('Error:', error);
-  }
+		XLSX.writeFile(workbook, `${fileName}.xlsx`);
+	} catch (error) {
+		console.error('Error:', error);
+	}
 }
 
 window.addEventListener('load', main, { once: true });
