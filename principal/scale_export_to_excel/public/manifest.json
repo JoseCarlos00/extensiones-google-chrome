@@ -2,8 +2,8 @@
 	"manifest_version": 3,
 	"name": "Export to Excel For Scale",
 	"version": "1.0",
-	"author": "Jose Carlos Aguirre Romero>",
-	"description": "Agrega el boton de donload exel a SCALE",
+	"author": "Jose Carlos Aguirre Romero",
+	"description": "Agrega el botón de download excel a SCALE",
 	"permissions": [],
 	"icons": {
 		"16": "images/excel16.png",
@@ -14,7 +14,7 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/*", "https://qawms.fantasiasmiguel.com.mx/scale/*"],
-			"js": ["downloadExel.js", "xlsx.full.min.js"],
+			"js": ["downloadExcel.js", "downloadInventoryInsight.js", "xlsx.full.min.js"],
 			"css": ["balloon.css"]
 		}
 	],
