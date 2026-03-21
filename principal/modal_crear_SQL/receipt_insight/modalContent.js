@@ -22,6 +22,7 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword">ON</span> UOM.item = RD.item 
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword">AND</span> UOM.company = RD.company
 <span class="hljs-keyword">WHERE</span> UOM.sequence = <span class="hljs-number">3</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword">AND</span> RD.open_qty > <span class="hljs-number">0</span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword">AND</span> RD.INTERNAL_RECEIPT_NUM = <span class="hljs-string" id="internal_receipt_num">'INTERNAL_RECEIPT_NUMBER'</span>;
 </code></pre>
 `;
