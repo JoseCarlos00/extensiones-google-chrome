@@ -1,0 +1,4 @@
+/* LINES */
+#ReceiptdetailkoGrid_container, #ReceiptParentContainerkoGrid_container {
+  width: fit-content !important;
+}
