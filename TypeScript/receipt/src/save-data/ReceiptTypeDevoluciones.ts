@@ -1,22 +1,22 @@
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
-import { IReceiptTypeHandler, RowData } from './IReceiptTypeHandler'
+import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
+import { RowData } from './IReceiptTypeHandler'
 
 export interface ReceiptTypeDevolucionesConfiguration {
 	nameStorage: string;
 	eventNameStorageChange?: string;
 }
 
-export class ReceiptTypeDevoluciones implements IReceiptTypeHandler {
+export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler {
 	readonly pattern = '-TR-111-';
 	readonly nameStorage: string;
 
-	private readonly eventStorageChange: string;
 	private readonly receiptType = 'DEVOLUCIONES';
 
-	constructor({ nameStorage, eventNameStorageChange }: ReceiptTypeDevolucionesConfiguration) {
+	constructor({ nameStorage, eventNameStorageChange = 'storageChange' }: ReceiptTypeDevolucionesConfiguration) {
+		super(eventNameStorageChange);
 		this.nameStorage = nameStorage;
-		this.eventStorageChange = eventNameStorageChange ?? 'storageChange';
 	}
 
 	handleSaveData({ items }: { items: Array<unknown> }) {
@@ -51,25 +51,5 @@ export class ReceiptTypeDevoluciones implements IReceiptTypeHandler {
 		if (rowData.status !== 'Check In Pending') return null;
 
 		return [rowData.receiptId as string, rowData.licensePlateId as string];
-	}
-
-	deleteData() {
-		try {
-			const data = LocalStorageHelper.get(this.nameStorage);
-			if (!data?.dataContainer) {
-				ToastAlert.showAlertFullTop('No hay datos para eliminar.', 'info');
-				return;
-			}
-			const confirmDelete = confirm(`¿Estás seguro de eliminar los datos guardados?\nEsta acción no se puede deshacer`);
-
-			if (confirmDelete) {
-				LocalStorageHelper.remove(this.nameStorage);
-				ToastAlert.showAlertMinButton('Datos eliminados con éxito', 'success');
-				window.dispatchEvent(new Event(this.eventStorageChange));
-			}
-		} catch (error: any) {
-			console.error('Error al eliminar los datos guardados:', error?.message);
-			ToastAlert.showAlertFullTop('Ha ocurrido un error al eliminar los datos');
-		}
 	}
 }
