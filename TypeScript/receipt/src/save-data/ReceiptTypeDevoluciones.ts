@@ -1,7 +1,7 @@
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
-import { RowData } from './IReceiptTypeHandler'
+import type { ReceiptData, RowData } from './IReceiptTypeHandler'
 
 export interface ReceiptTypeDevolucionesConfiguration {
 	nameStorage: string;
@@ -47,7 +47,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler {
 		}
 	}
 
-	extractReceiptData(rowData: RowData): [string, string] | null {
+	extractReceiptData(rowData: RowData): ReceiptData {
 		if (rowData.status !== 'Check In Pending') return null;
 
 		return [rowData.receiptId as string, rowData.licensePlateId as string];

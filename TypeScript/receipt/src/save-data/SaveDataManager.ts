@@ -129,7 +129,7 @@ export class SaveDataManager {
 			if (confirmDelete) {
 				handlersWithData.forEach((handler) => LocalStorageHelper.remove(handler.nameStorage));
 				this.markSaveData(true);
-				ToastAlert.showAlertMinButton('Datos eliminados con éxito', 'success');
+				ToastAlert.showAlertMinBottom('Datos eliminados con éxito', 'success');
 				window.dispatchEvent(new Event(this.eventStorageChange));
 			}
 		} catch (error: any) {

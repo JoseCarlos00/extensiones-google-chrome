@@ -1,6 +1,6 @@
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
-import { IReceiptTypeHandler, RowData } from './IReceiptTypeHandler';
+import { IReceiptTypeHandler, ReceiptData, RowData } from './IReceiptTypeHandler';
 
 export abstract class BaseReceiptTypeHandler implements IReceiptTypeHandler {
 	abstract readonly pattern: string;
@@ -11,7 +11,7 @@ export abstract class BaseReceiptTypeHandler implements IReceiptTypeHandler {
 		this.eventStorageChange = eventStorageChange;
 	}
 
-	abstract extractReceiptData(rowData: RowData): [string, string] | null;
+	abstract extractReceiptData(rowData: RowData): ReceiptData;
 	abstract handleSaveData(params: { items: Array<unknown> }): void;
 
 	deleteData(): void {
@@ -31,7 +31,7 @@ export abstract class BaseReceiptTypeHandler implements IReceiptTypeHandler {
 			}
 		} catch (error: any) {
 			console.error('Error al eliminar los datos guardados:', error?.message);
-			ToastAlert.showAlertFullTop('Ha ocurrido un error al eliminar los datos');
+			ToastAlert.showAlertFullTop('Ha ocurrido un error al eliminar los datos', 'error');
 		}
 	}
 }

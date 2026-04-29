@@ -8,9 +8,9 @@ export async function copyToClipboard(textoACopiar: string) {
 
 		await navigator.clipboard.writeText(textoACopiar);
 
-		ToastAlert.showAlertMinButton('Copiado al portapapeles', 'success');
+		ToastAlert.showAlertMinBottom('Copiado al portapapeles', 'success');
 	} catch (err) {
 		console.error('Error al copiar al portapapeles:', err);
-		ToastAlert.showAlertMinButton('Ha ocurrido al copiar al portapapeles');
+		ToastAlert.showAlertMinBottom('Ha ocurrido al copiar al portapapeles', 'error');
 	}
 }
