@@ -4,7 +4,6 @@ import { EventClickManagerStorage } from './EventClickManagerStorage'
 import { IReceiptTypeHandler } from './IReceiptTypeHandler'
 
 export interface SaveDataManagerConfiguration {
-	tbodyTable: HTMLTableSectionElement;
 	buttonSaveData: Element;
 	buttonDeleteData: Element;
 	receiptTypeHandlers: IReceiptTypeHandler[];
@@ -112,30 +111,8 @@ export class SaveDataManager {
 	}
 
 	handleDeleteData() {
-		try {
-			const handlersWithData = this.receiptTypeHandlers.filter((handler) => {
-				const data = LocalStorageHelper.get(handler.nameStorage);
-				return !!data?.dataContainer;
-			});
-
-			if (handlersWithData.length === 0) {
-				console.warn('No hay datos para eliminar');
-				this.markSaveData(true);
-				return;
-			}
-
-			const confirmDelete = confirm(`¿Estás seguro de eliminar los datos guardados?\nEsta acción no se puede deshacer`);
-
-			if (confirmDelete) {
-				handlersWithData.forEach((handler) => LocalStorageHelper.remove(handler.nameStorage));
-				this.markSaveData(true);
-				ToastAlert.showAlertMinBottom('Datos eliminados con éxito', 'success');
-				window.dispatchEvent(new Event(this.eventStorageChange));
-			}
-		} catch (error: any) {
-			console.error('Error al eliminar los datos guardados:', error.message, error);
-			ToastAlert.showAlertFullTop('Ha ocurrido un error al guardar los datos');
-		}
+		this.receiptTypeHandlers.forEach((handler) => handler.deleteData());
+		this.markSaveData(true);
 	}
 
 	markSaveData(isRemoveMark: boolean = false) {

@@ -9,17 +9,17 @@ export interface ReceiptTypeTrasladosConfiguration {
 }
 
 export class ReceiptTypeTraslados extends BaseReceiptTypeHandler {
-	readonly pattern = 'TR_E-';
+	readonly pattern = /^TR_E-/;
 	readonly nameStorage: string;
 
 	private readonly receiptType = 'TRASLADOS';
 
-	constructor({ nameStorage, eventNameStorageChange = 'storageChange' }: ReceiptTypeTrasladosConfiguration) {
+	constructor({ nameStorage, eventNameStorageChange }: ReceiptTypeTrasladosConfiguration) {
 		super(eventNameStorageChange);
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<unknown> }) {
+	handleSaveData({ items }: { items: Array<string> }) {
 		try {
 			// Obtener los datos
 			let trailerId = this.getTrailerId();
@@ -72,10 +72,10 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler {
 	}
 
 	extractReceiptData(rowData: RowData): ReceiptData {
-			if (rowData.status !== 'Check In Pending') return null;
-	
-			return rowData.licensePlateId as string;
-		}
+		if (rowData.status !== 'Check In Pending') return null;
+
+		return rowData.licensePlateId as string;
+	}
 
 	private getTrailerId() {
 		try {

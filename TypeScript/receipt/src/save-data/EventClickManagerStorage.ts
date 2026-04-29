@@ -11,6 +11,8 @@ export class EventClickManagerStorage {
 	private readonly licensePlateId = 'ListPaneDataGrid_LICENSE_PLATE_ID';
 	private readonly status = 'ListPaneDataGrid_STATUS_NAME';
 	private readonly receiptId = 'ListPaneDataGrid_RECEIPT_ID';
+	private readonly item = 'ListPaneDataGrid_ITEM';
+	private readonly openQty = 'ListPaneDataGrid_OPEN_QTY';
 
 	private readonly receiptTypeHandlers: IReceiptTypeHandler[];
 
@@ -29,14 +31,13 @@ export class EventClickManagerStorage {
 		if (!receiptId) return;
 
 		// Dinámico: busca el handler que coincida con el patrón
-		const handler = this.receiptTypeHandlers.find((h) => receiptId.includes(h.pattern));
+		const handler = this.receiptTypeHandlers.find((h) => h.pattern.test(receiptId));
 
 		if (!handler) {
 			console.warn(`No handler found for receiptId: ${receiptId}`);
 			return;
 		}
 
-		// const receiptType = ... // derivado del handler si lo necesitas
 		const dataReceipt = this.extractItems(rows, handler);
 		handler.handleSaveData({ items: dataReceipt });
 	}
@@ -46,15 +47,26 @@ export class EventClickManagerStorage {
 			const normalize = (el: Element | null | undefined) =>
 				el?.textContent?.normalize('NFKC')?.replace(/\s+/g, ' ')?.trim() ?? '';
 
+			const normalizeNumber = (el: Element | null | undefined): string => {
+				const text = el?.textContent?.normalize('NFKC')?.trim() ?? '';
+
+				if (!text) return '';
+
+				const cleaned = text.replace(/,/g, ''); // quitar separadores de miles
+				const num = Number(cleaned);
+
+				return isNaN(num) ? '' : num.toString();
+			};
+
 			return rows
 				.map((row) => {
 					const rowData: RowData = {
 						licensePlateId: normalize(row.querySelector(`td[aria-describedby=${this.licensePlateId}]`)),
 						status: normalize(row.querySelector(`td[aria-describedby=${this.status}]`)),
 						receiptId: normalize(row.querySelector(`td[aria-describedby=${this.receiptId}]`)),
+						item: normalize(row.querySelector(`td[aria-describedby=${this.item}]`)),
+						openQty: normalizeNumber(row.querySelector(`td[aria-describedby=${this.openQty}]`)),
 					};
-
-					if (rowData.status !== 'Check In Pending') return null;
 
 					return handler.extractReceiptData(rowData);
 				})

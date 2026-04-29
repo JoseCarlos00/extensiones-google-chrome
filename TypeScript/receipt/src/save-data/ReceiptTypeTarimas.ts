@@ -3,23 +3,23 @@ import { ToastAlert } from '../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
 import type { ReceiptData, RowData } from './IReceiptTypeHandler'
 
-export interface ReceiptTypeDevolucionesConfiguration {
+export interface ReceiptTypeTarimasConfiguration {
 	nameStorage: string;
 	eventNameStorageChange?: string;
 }
 
-export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<[string, string]> {
-	readonly pattern = /\d+-TR-111-\d+/;
+export class ReceiptTypeTarimas extends BaseReceiptTypeHandler {
+	readonly pattern = /^R/;
 	readonly nameStorage: string;
 
-	private readonly receiptType = 'DEVOLUCIONES';
+	private readonly receiptType = 'TARIMAS';
 
-	constructor({ nameStorage, eventNameStorageChange }: ReceiptTypeDevolucionesConfiguration) {
+	constructor({ nameStorage, eventNameStorageChange }: ReceiptTypeTarimasConfiguration) {
 		super(eventNameStorageChange);
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<[string, string]> }) {
+	handleSaveData({ items }: { items: Array<unknown> }) {
 		try {
 			if (items.length === 0) {
 				ToastAlert.showAlertFullTop('No hay contenedores para guardar.', 'info');
@@ -28,7 +28,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<[string, str
 
 			const groupedMap = new Map<string, string[]>();
 
-			items.forEach(([receiptId, container]) => {
+			(items as [string, string][]).forEach(([receiptId, container]) => {
 				if (!groupedMap.has(receiptId)) groupedMap.set(receiptId, []);
 				groupedMap.get(receiptId)!.push(container);
 			});
@@ -47,7 +47,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<[string, str
 		}
 	}
 
-	extractReceiptData(rowData: RowData): [string, string] | null {
+	extractReceiptData(rowData: RowData): ReceiptData {
 		if (rowData.status !== 'Check In Pending') return null;
 
 		return [rowData.receiptId as string, rowData.licensePlateId as string];

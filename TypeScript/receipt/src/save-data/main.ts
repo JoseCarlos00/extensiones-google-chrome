@@ -15,3 +15,5 @@ const manager = new SaveDataManager({
 		new ReceiptTypeDevoluciones({ nameStorage: namesStorages.devoluciones }),
 	],
 });
+
+manager.initialize();
