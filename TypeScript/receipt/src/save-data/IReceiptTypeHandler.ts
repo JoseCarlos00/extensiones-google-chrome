@@ -1,12 +1,21 @@
 export interface RowData {
 	receiptId: string;
-	licensePlateId?: string;
-	status?: string;
-	item?: string;
-	openQty?: string;
+	licensePlateId: string;
+	status: string;
+	item: string;
+	openQty: string;
 }
 
-export type ReceiptData = [string, string] | string | null;
+
+export type Devoluciones = string[];
+export type Traslados = string;
+export type Tarimas = { item: string; openQty: string };
+
+export type ReceiptData = Devoluciones | Traslados | null;
+
+export type DataTraslados = { trailerId: string; containers: string[] };
+export type DataDevoluciones = { receiptId: string; containers: Devoluciones };
+export type DataTarimas = { receiptId: string; items: Tarimas[] };
 
 
 export interface IReceiptTypeHandler<T = unknown> {

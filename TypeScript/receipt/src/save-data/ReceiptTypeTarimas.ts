@@ -1,14 +1,14 @@
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
-import type { ReceiptData, RowData } from './IReceiptTypeHandler'
+import type { ReceiptData, RowData, Tarimas } from './IReceiptTypeHandler'
 
 export interface ReceiptTypeTarimasConfiguration {
 	nameStorage: string;
 	eventNameStorageChange?: string;
 }
 
-export class ReceiptTypeTarimas extends BaseReceiptTypeHandler {
+export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<Tarimas> {
 	readonly pattern = /^R/;
 	readonly nameStorage: string;
 
@@ -19,7 +19,7 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler {
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<unknown> }) {
+	handleSaveData({ items }: { items: Array<Tarimas> }) {
 		try {
 			if (items.length === 0) {
 				ToastAlert.showAlertFullTop('No hay contenedores para guardar.', 'info');
@@ -28,7 +28,7 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler {
 
 			const groupedMap = new Map<string, string[]>();
 
-			(items as [string, string][]).forEach(([receiptId, container]) => {
+			items.forEach(([receiptId, container]) => {
 				if (!groupedMap.has(receiptId)) groupedMap.set(receiptId, []);
 				groupedMap.get(receiptId)!.push(container);
 			});
@@ -47,9 +47,9 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler {
 		}
 	}
 
-	extractReceiptData(rowData: RowData): ReceiptData {
+	extractReceiptData(rowData: RowData): Tarimas | null {
 		if (rowData.status !== 'Check In Pending') return null;
 
-		return [rowData.receiptId as string, rowData.licensePlateId as string];
+		return { item: rowData.item, openQty: rowData.openQty };
 	}
 }

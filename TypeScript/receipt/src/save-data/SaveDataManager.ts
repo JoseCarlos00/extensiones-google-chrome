@@ -17,7 +17,7 @@ export class SaveDataManager {
 
 	private eventClickManager: EventClickManagerStorage | undefined;
 	private readonly eventStorageChange: string;
-	private readonly receiptTypeHandlers: IReceiptTypeHandler[];
+	private readonly receiptTypeHandlers: IReceiptTypeHandler<unknown>[];
 
 	constructor({ buttonSaveData, buttonDeleteData, receiptTypeHandlers }: SaveDataManagerConfiguration) {
 		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
@@ -88,7 +88,6 @@ export class SaveDataManager {
 
 			this.handleSaveDataMark();
 		});
-
 
 		window.addEventListener('storage', ({ key }) => {
 			const isRelevant = this.receiptTypeHandlers.some((h) => h.nameStorage === key);

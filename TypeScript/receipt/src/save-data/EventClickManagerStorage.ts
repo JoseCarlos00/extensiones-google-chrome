@@ -1,5 +1,4 @@
-import type { ReceiptType } from "../constants";
-import type { IReceiptTypeHandler, RowData } from "./IReceiptTypeHandler"
+import type { IReceiptTypeHandler, ReceiptData, RowData } from "./IReceiptTypeHandler"
 
 export interface EventClickManagerStorageConfiguration {
 	tbodyTable: HTMLTableSectionElement;
@@ -14,7 +13,7 @@ export class EventClickManagerStorage {
 	private readonly item = 'ListPaneDataGrid_ITEM';
 	private readonly openQty = 'ListPaneDataGrid_OPEN_QTY';
 
-	private readonly receiptTypeHandlers: IReceiptTypeHandler[];
+	private readonly receiptTypeHandlers: IReceiptTypeHandler<unknown>[];
 
 	constructor({ tbodyTable, receiptTypeHandlers }: EventClickManagerStorageConfiguration) {
 		this.tbodyTable = tbodyTable;
@@ -39,10 +38,10 @@ export class EventClickManagerStorage {
 		}
 
 		const dataReceipt = this.extractItems(rows, handler);
-		handler.handleSaveData({ items: dataReceipt });
+		handler.handleSaveData({ items: dataReceipt as unknown[] });
 	}
 
-	private extractItems(rows: HTMLTableRowElement[], handler: IReceiptTypeHandler): Array<unknown> {
+	private extractItems(rows: HTMLTableRowElement[], handler: IReceiptTypeHandler<unknown>): ReceiptData[] {
 		try {
 			const normalize = (el: Element | null | undefined) =>
 				el?.textContent?.normalize('NFKC')?.replace(/\s+/g, ' ')?.trim() ?? '';
@@ -68,7 +67,7 @@ export class EventClickManagerStorage {
 						openQty: normalizeNumber(row.querySelector(`td[aria-describedby=${this.openQty}]`)),
 					};
 
-					return handler.extractReceiptData(rowData);
+					return handler.extractReceiptData(rowData) as ReceiptData | null;
 				})
 				.filter((item): item is NonNullable<typeof item> => item !== null);
 		} catch (error: any) {

@@ -1,14 +1,14 @@
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
-import type { RowData, ReceiptData } from './IReceiptTypeHandler'
+import type { RowData, DataTraslados, Traslados } from './IReceiptTypeHandler'
 
 export interface ReceiptTypeTrasladosConfiguration {
 	nameStorage: string;
 	eventNameStorageChange?: string;
 }
 
-export class ReceiptTypeTraslados extends BaseReceiptTypeHandler {
+export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 	readonly pattern = /^TR_E-/;
 	readonly nameStorage: string;
 
@@ -19,7 +19,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler {
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<string> }) {
+	handleSaveData({ items }: { items: Array<Traslados> }) {
 		try {
 			// Obtener los datos
 			let trailerId = this.getTrailerId();
@@ -51,7 +51,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler {
 			// Crear el arreglo final con grupos
 			const data = groupedContainers.map((group) => {
 				return { trailerId, containers: group };
-			});
+			}) as DataTraslados[];
 
 			console.log('Datos guardados:', data);
 			LocalStorageHelper.save(this.nameStorage, {
@@ -71,13 +71,13 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler {
 		}
 	}
 
-	extractReceiptData(rowData: RowData): ReceiptData {
+	extractReceiptData(rowData: RowData): Traslados | null {
 		if (rowData.status !== 'Check In Pending') return null;
 
-		return rowData.licensePlateId as string;
+		return rowData.licensePlateId;
 	}
 
-	private getTrailerId() {
+	private getTrailerId(): string {
 		try {
 			const advanceCriteriaJson = JSON.parse(sessionStorage.getItem('2779advanceCriteriaJson') || '[]');
 

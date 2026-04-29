@@ -1,14 +1,14 @@
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
-import type { ReceiptData, RowData } from './IReceiptTypeHandler'
+import type { DataDevoluciones, Devoluciones, RowData } from './IReceiptTypeHandler'
 
 export interface ReceiptTypeDevolucionesConfiguration {
 	nameStorage: string;
 	eventNameStorageChange?: string;
 }
 
-export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<[string, string]> {
+export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<Devoluciones> {
 	readonly pattern = /\d+-TR-111-\d+/;
 	readonly nameStorage: string;
 
@@ -19,7 +19,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<[string, str
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<[string, string]> }) {
+	handleSaveData({ items }: { items: Array<Devoluciones> }) {
 		try {
 			if (items.length === 0) {
 				ToastAlert.showAlertFullTop('No hay contenedores para guardar.', 'info');
@@ -36,7 +36,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<[string, str
 			const data = Array.from(groupedMap, ([receiptId, containers]) => ({
 				receiptId,
 				containers: [...containers, 'DONE'],
-			}));
+			})) as DataDevoluciones[];
 
 			LocalStorageHelper.save(this.nameStorage, { receiptType: this.receiptType, dataContainer: data });
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
@@ -47,9 +47,9 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<[string, str
 		}
 	}
 
-	extractReceiptData(rowData: RowData): [string, string] | null {
+	extractReceiptData(rowData: RowData): Devoluciones | null {
 		if (rowData.status !== 'Check In Pending') return null;
 
-		return [rowData.receiptId as string, rowData.licensePlateId as string];
+		return [rowData.receiptId, rowData.licensePlateId];
 	}
 }
