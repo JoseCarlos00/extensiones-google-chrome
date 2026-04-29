@@ -26,7 +26,7 @@ export abstract class BaseReceiptTypeHandler implements IReceiptTypeHandler {
 
 			if (confirmDelete) {
 				LocalStorageHelper.remove(this.nameStorage);
-				ToastAlert.showAlertMinButton('Datos eliminados con éxito', 'success');
+				ToastAlert.showAlertMinBottom('Datos eliminados con éxito', 'success');
 				window.dispatchEvent(new Event(this.eventStorageChange));
 			}
 		} catch (error: any) {

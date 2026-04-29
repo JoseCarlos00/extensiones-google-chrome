@@ -39,7 +39,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler {
 			}));
 
 			LocalStorageHelper.save(this.nameStorage, { receiptType: this.receiptType, dataContainer: data });
-			ToastAlert.showAlertMinButton('Datos guardados con éxito', 'success');
+			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 			window.dispatchEvent(new Event(this.eventStorageChange));
 		} catch (error: any) {
 			console.error('Error al guardar los datos:', error?.message);

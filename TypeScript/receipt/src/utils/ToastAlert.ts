@@ -118,7 +118,7 @@ export class ToastAlert {
 		}
 	}
 
-	static showAlertMinButton(message: string, type: ToastType = 'error') {
+	static showAlertMinBottom(message: string, type: ToastType = 'error') {
 		try {
 			const configuration: ToastConfig = {
 				message: message,
