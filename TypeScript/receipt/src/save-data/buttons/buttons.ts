@@ -15,7 +15,7 @@ const buttonDeleteConfiguration: ButtonElementLIConfiguration= {
 };
 
 
-function getButtonElementLiSaveData() {
+export function getButtonElementLiSaveData() {
 	const buttonSaveData = ButtonCreateElementLI.getButtonElement(buttonSaveConfiguration);
 	const buttonDeleteData = ButtonCreateElementLI.getButtonElement(buttonDeleteConfiguration);
 
