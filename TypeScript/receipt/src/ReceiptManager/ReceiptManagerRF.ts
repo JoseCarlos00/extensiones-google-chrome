@@ -24,15 +24,16 @@ export interface ReceiptManagerRFConfig<T>  {
 }
 
 export abstract class ReceiptManagerRF<T> {
-	private autoComplete: boolean;
-	private confirmOk: boolean;
-	private confirmDelay: number;
+	protected autoComplete: boolean;
+	protected confirmOk: boolean;
+	protected confirmDelay: number;
+	protected dataStorage: StorageData<T> | null;
+	protected dataContainerStorage: T[];
+	protected btnOk: HTMLButtonElement | null = null;
+
 	private initReceipt: boolean;
 	private currentReceiptType: string;
 	private receiptType: string | undefined;
-
-	private dataStorage: StorageData | null;
-	private dataContainerStorage: ContainerItem[];
 
 	private inputLicensePlate: HTMLInputElement | null = null;
 	private btnDone: HTMLButtonElement | null = null;
@@ -77,6 +78,7 @@ export abstract class ReceiptManagerRF<T> {
 	abstract processNextItem(): void;
 	abstract autocompleteForm(): void;
 	abstract submitForm(): void;
+	abstract updateCounter(): void;
 
 	getInitReceiptStorage() {
 		const storage = sessionStorage.getItem('initReceipt');
@@ -249,28 +251,6 @@ export abstract class ReceiptManagerRF<T> {
 		}
 	}
 
-	updateCounter(value: number | string | null = null) {
-		console.log('updateCounter ReceiptManager');
-
-		const counterE = document.querySelector('#countRestante');
-		const containerLength = value ? value : (this.dataContainerStorage?.length ?? '0');
-		const containersLength = this.dataContainerStorage?.[0]?.containers
-			? this.dataContainerStorage[0].containers?.length - 1
-			: '0';
-		console.log({
-			dataContainerStorage: this.dataContainerStorage,
-			containersLength,
-			containerLength,
-			value,
-			dataContainerStorageContainers: this.dataContainerStorage?.[0]?.containers,
-		});
-
-		if (counterE) {
-			counterE.innerHTML = `${containerLength} |  ${containersLength}`;
-		} else {
-			console.warn('No se encontró el elemento #countRestante');
-		}
-	}
 
 	clearExistingTimeout() {
 		if (this.timeoutId) {
