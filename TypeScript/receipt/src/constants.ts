@@ -1,17 +1,17 @@
 export const namesStorages = {
-	traslados: 'dataContainersTraslados',
-	devoluciones: 'dataContainersDevoluciones',
-	tarimas: 'dataContainersTarimas',
+	traslados: 'dataStorageTraslados',
+	devoluciones: 'dataStorageDevoluciones',
+	tarimas: 'dataStorageTarimas',
+	cajas: 'dataStorageCajas',
 
 	values: (): string[] => Object.values(namesStorages).filter(value => typeof value === 'string') as string[],
 } as const;
 
+export const nameStorageEvents = {
+	traslados: 'eventStorageTraslados',
+	devoluciones: 'eventStorageDevoluciones',
+	tarimas: 'eventStorageTarimas',
+	cajas: 'eventStorageCajas',
 
-export type ReceiptType = 'TRASLADOS' | 'DEVOLUCIONES';
-
-// Objeto Para Almacenar los datos de los contenedores
-export interface DataContainer {
-	receiptType: ReceiptType;
-	dataContainer: Array<string>;
-	trailerId?: string;
-};
+	values: (): string[] => Object.values(nameStorageEvents).filter(value => typeof value === 'string') as string[],
+}

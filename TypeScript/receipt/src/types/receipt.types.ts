@@ -1,4 +1,5 @@
-// types/receipt.types.ts
+export type ReceiptType = 'TRASLADOS' | 'DEVOLUCIONES' | 'TARIMAS' | 'CAJAS';
+
 export type Devoluciones = [string, string];
 export type Traslados = string;
 export type Tarimas = { item: string; openQty: number };
