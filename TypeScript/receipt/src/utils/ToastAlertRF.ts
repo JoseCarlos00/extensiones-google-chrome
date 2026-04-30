@@ -1,6 +1,6 @@
 import { type ToastType, ToastConfig } from "./ToastAlert";
 
-class ToastAlertRF {
+export class ToastAlertRF {
 	private readonly message: string;
 	private readonly type: ToastType;
 	private readonly className: string;
