@@ -78,25 +78,27 @@ export class SaveDataManager {
 	}
 
 	setEventListener() {
+		const updateUI = () => {
+			console.log('Actualizando UI de guardado...');
+			this.handleSaveDataMark();
+		};
+
 		this.buttonSaveData.addEventListener('click', () => this.eventClickManager?.handleEvent());
 		this.buttonDeleteData.addEventListener('click', () => this.handleDeleteData());
 
+		// Escuchar cambios internos (misma pestaña) mediante eventos personalizados
 		this.receiptTypeHandlers.forEach((handler) => {
-			window.addEventListener(handler.eventNameStorage, () => {
-				console.log(`Event [${handler.eventNameStorage}] In SaveDataManager`);
-				this.handleSaveDataMark();
-			});
+			window.addEventListener(handler.eventNameStorage, updateUI);
 		});
 
+		// Escuchar cambios externos (otras pestañas) mediante evento storage nativo
 		window.addEventListener('storage', ({ key }) => {
-			const isRelevant = this.receiptTypeHandlers.some((h) => h.nameStorage === key);
-			if (isRelevant) {
-				console.log(`Storage event detected for key: ${key} in SaveDataManager`);
-				this.handleSaveDataMark();
-			}
+			// Si key es null, significa que se hizo clear(). Si no, verificamos si es una de nuestras llaves.
+			const isRelevant = key === null || this.receiptTypeHandlers.some((h) => h.nameStorage === key);
+			if (isRelevant) updateUI();
 		});
 
-		this.handleSaveDataMark();
+		updateUI();
 	}
 
 	handleSaveDataMark() {
@@ -110,7 +112,6 @@ export class SaveDataManager {
 
 	handleDeleteData() {
 		this.receiptTypeHandlers.forEach((handler) => handler.deleteData());
-		this.markSaveData(true);
 	}
 
 	markSaveData(isRemoveMark: boolean = false) {
