@@ -1,12 +1,12 @@
+import type { ReceiptTypeHandler } from '../types/receipt-handler.types'
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
-import { ToastAlert } from '../utils/ToastAlert';
 import { EventClickManagerStorage } from './EventClickManagerStorage'
-import { IReceiptTypeHandler } from './IReceiptTypeHandler'
+
 
 export interface SaveDataManagerConfiguration {
 	buttonSaveData: Element;
 	buttonDeleteData: Element;
-	receiptTypeHandlers: IReceiptTypeHandler[];
+	receiptTypeHandlers: ReceiptTypeHandler[];
 }
 
 
@@ -17,7 +17,7 @@ export class SaveDataManager {
 
 	private eventClickManager: EventClickManagerStorage | undefined;
 	private readonly eventStorageChange: string;
-	private readonly receiptTypeHandlers: IReceiptTypeHandler<unknown>[];
+	private readonly receiptTypeHandlers: ReceiptTypeHandler<unknown>[];
 
 	constructor({ buttonSaveData, buttonDeleteData, receiptTypeHandlers }: SaveDataManagerConfiguration) {
 		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');

@@ -1,8 +1,8 @@
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ToastAlert } from '../../utils/ToastAlert';
-import { IReceiptTypeHandler, RowData } from '../../types/receipt-handler.types';
+import { ReceiptTypeHandler, RowData } from '../../types/receipt-handler.types';
 
-export abstract class BaseReceiptTypeHandler<T = unknown> implements IReceiptTypeHandler<T> {
+export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptTypeHandler<T> {
 	abstract readonly pattern: RegExp;
 	abstract readonly nameStorage: string;
 	protected readonly eventStorageChange: string;

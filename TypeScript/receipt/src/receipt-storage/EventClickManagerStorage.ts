@@ -1,8 +1,9 @@
-import type { IReceiptTypeHandler, ReceiptData, RowData } from "./IReceiptTypeHandler"
+import type { ReceiptTypeHandler, RowData } from "../types/receipt-handler.types";
+import type { ReceiptData } from "../types/receipt.types"
 
 export interface EventClickManagerStorageConfiguration {
 	tbodyTable: HTMLTableSectionElement;
-	receiptTypeHandlers: IReceiptTypeHandler[]
+	receiptTypeHandlers: ReceiptTypeHandler[]
 }
 
 export class EventClickManagerStorage {
@@ -13,7 +14,7 @@ export class EventClickManagerStorage {
 	private readonly item = 'ListPaneDataGrid_ITEM';
 	private readonly openQty = 'ListPaneDataGrid_OPEN_QTY';
 
-	private readonly receiptTypeHandlers: IReceiptTypeHandler<unknown>[];
+	private readonly receiptTypeHandlers: ReceiptTypeHandler<unknown>[];
 
 	constructor({ tbodyTable, receiptTypeHandlers }: EventClickManagerStorageConfiguration) {
 		this.tbodyTable = tbodyTable;
@@ -41,7 +42,7 @@ export class EventClickManagerStorage {
 		handler.handleSaveData({ items: dataReceipt as unknown[] });
 	}
 
-	private extractItems(rows: HTMLTableRowElement[], handler: IReceiptTypeHandler<unknown>): ReceiptData[] {
+	private extractItems(rows: HTMLTableRowElement[], handler: ReceiptTypeHandler<unknown>): ReceiptData[] {
 		try {
 			const normalize = (el: Element | null | undefined) =>
 				el?.textContent?.normalize('NFKC')?.replace(/\s+/g, ' ')?.trim() ?? '';
