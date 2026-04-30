@@ -1,63 +1,41 @@
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
-
-type StorageData<T> = {
-	dataContainer: T[];
-	receiptType: string;
-};
+import { type StorageData } from '../../widget-HTML/base/WidgetHTML'
 
 export interface ReceiptManagerRFConfig {
-	autoComplete: boolean;
-	confirmOk: boolean;
-	confirmDelay: number;
 	receiptType: string;
-	nameDataStorage: string;
-	eventStorageChange?: string;
+	nameStorage: string;
+	eventNameStorage: string;
 }
 
 export abstract class ReceiptManagerRF<T> {
 	// Config
-	protected autoComplete: boolean;
-	protected confirmOk: boolean;
-	protected confirmDelay: number;
+	private confirmDelay: number = 1000;
 	protected initReceipt: boolean;
 	protected currentReceiptType: string;
 	protected receiptType: string | undefined;
 
 	// Storage
 	protected dataStorage: StorageData<T> | null;
-	protected dataContainerStorage: T[];
-	protected readonly nameDataStorage: string;
-	protected readonly eventStorageChange: string;
+	protected readonly nameStorage: string;
+	protected readonly eventNameStorage: string;
 
 	// UI — solo lo universal
 	protected btnOk: HTMLButtonElement | null = null;
 
 	// Interno
 	private timeoutId: number | null = null;
-	private readonly nameStorage = {
-		autoComplete: 'autoCompleteReceipt',
-		confirmOk: 'confirmOkReceipt',
-		confirmDelay: 'confirmDelayReceipt',
-	} as const;
-
+	
 	constructor({
-		autoComplete,
-		confirmOk,
-		confirmDelay,
 		receiptType,
-		nameDataStorage,
-		eventStorageChange = 'eventStorageChange',
+		nameStorage,
+		eventNameStorage,
 	}: ReceiptManagerRFConfig) {
-		this.autoComplete = autoComplete;
-		this.confirmOk = confirmOk;
-		this.confirmDelay = confirmDelay;
 		this.currentReceiptType = receiptType;
-		this.nameDataStorage = nameDataStorage;
-		this.eventStorageChange = eventStorageChange;
+		this.nameStorage = nameStorage;
+		this.eventNameStorage = eventNameStorage;
 
 		this.initReceipt = this.getInitReceiptStorage();
-		this.dataStorage = LocalStorageHelper.get(this.nameDataStorage);
-		this.dataContainerStorage = this.dataStorage?.dataContainer ?? [];
+		this.dataStorage = LocalStorageHelper.get(this.nameStorage);
 		this.receiptType = this.dataStorage?.receiptType;
 	}
 
@@ -74,8 +52,7 @@ export abstract class ReceiptManagerRF<T> {
 	}
 
 	handleGetData(): void {
-		this.dataStorage = LocalStorageHelper.get(this.nameDataStorage);
-		this.dataContainerStorage = this.dataStorage?.dataContainer ?? [];
+		this.dataStorage = LocalStorageHelper.get(this.nameStorage);
 		this.receiptType = this.dataStorage?.receiptType;
 
 		this.availableButtonInitReceipt();
@@ -84,29 +61,12 @@ export abstract class ReceiptManagerRF<T> {
 
 	availableButtonInitReceipt(): void {
 		const btn = document.getElementById('init-receipt');
-		const hasData = this.dataContainerStorage.length > 0;
+		const dataStorageLength = this.dataStorage?.data?.length;
+
+		const hasData = !!dataStorageLength && this.receiptType === this.currentReceiptType;
 
 		btn?.toggleAttribute('disabled', !hasData);
 		btn?.classList.toggle('bounce', hasData);
-	}
-
-	recoverSettingsStorage(): void {
-		const savedAutoComplete = localStorage.getItem(this.nameStorage.autoComplete);
-		const savedConfirmOk = localStorage.getItem(this.nameStorage.confirmOk);
-
-		if (savedConfirmOk !== null) {
-			const { value, timestamp } = JSON.parse(savedConfirmOk);
-			const oneHour = 60 * 60 * 1000;
-
-			if (Date.now() - timestamp > oneHour) {
-				localStorage.removeItem(this.nameStorage.confirmOk);
-				this.confirmOk = false;
-			} else {
-				this.confirmOk = value;
-			}
-		}
-
-		this.autoComplete = savedAutoComplete === null ? this.autoComplete : JSON.parse(savedAutoComplete);
 	}
 
 	clearExistingTimeout(): void {
@@ -130,33 +90,16 @@ export abstract class ReceiptManagerRF<T> {
 	}
 
 	setEventListeners(): void {
-		const form = document.getElementById('form-config');
-		if (!form) {
-			console.error('No se encontró el formulario #form-config.');
-			return;
-		}
-
-		const { confirmToggle, autoCompleteToggle } = form as HTMLFormElement & {
-			confirmToggle: HTMLInputElement;
-			autoCompleteToggle: HTMLInputElement;
-		};
-
-		this.autocompleteForm();
 		this.availableButtonInitReceipt();
 
 		const handleNewRegister = () => {
 			this.initReceipt = true;
-			this.confirmOk = true;
-			this.autoComplete = true;
-
-			confirmToggle.checked = true;
-			autoCompleteToggle.checked = true;
 
 			window.dispatchEvent(new Event('event-form-control'));
 			this.handleGetData();
 		};
 
-		window.addEventListener(this.eventStorageChange, handleNewRegister);
+		window.addEventListener(this.eventNameStorage, handleNewRegister);
 		window.addEventListener('init-receipt-event', handleNewRegister);
 		window.addEventListener('cancel-receipt-event', () => this.handleCancelReceipt());
 	}
