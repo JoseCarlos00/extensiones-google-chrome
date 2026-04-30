@@ -1,4 +1,4 @@
-class Devoluciones extends ReceitManagerRF {
+class Devoluciones extends ReceiptManagerRF {
 	constructor(configurationManager) {
 		try {
 			super(configurationManager);
