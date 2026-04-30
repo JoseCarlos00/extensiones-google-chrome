@@ -6,7 +6,7 @@ import type { DataDevoluciones, Devoluciones } from '../../types/receipt.types'
 
 export interface ReceiptTypeDevolucionesConfiguration {
 	nameStorage: string;
-	eventNameStorageChange?: string;
+	eventNameStorage: string;
 }
 
 export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<Devoluciones> {
@@ -15,8 +15,8 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<Devoluciones
 
 	private readonly receiptType = 'DEVOLUCIONES';
 
-	constructor({ nameStorage, eventNameStorageChange }: ReceiptTypeDevolucionesConfiguration) {
-		super(eventNameStorageChange);
+	constructor({ nameStorage, eventNameStorage }: ReceiptTypeDevolucionesConfiguration) {
+		super(eventNameStorage);
 		this.nameStorage = nameStorage;
 	}
 
@@ -41,7 +41,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<Devoluciones
 
 			LocalStorageHelper.save(this.nameStorage, { receiptType: this.receiptType, dataContainer: data });
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
-			window.dispatchEvent(new Event(this.eventStorageChange));
+			window.dispatchEvent(new Event(this.eventNameStorage));
 		} catch (error: any) {
 			console.error('Error al guardar los datos:', error?.message);
 			ToastAlert.showAlertFullTop('Ha ocurrido un error al guardar los datos');

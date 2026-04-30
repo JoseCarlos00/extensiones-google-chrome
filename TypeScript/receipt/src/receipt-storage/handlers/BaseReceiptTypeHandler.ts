@@ -5,10 +5,11 @@ import { ReceiptTypeHandler, RowData } from '../../types/receipt-handler.types';
 export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptTypeHandler<T> {
 	abstract readonly pattern: RegExp;
 	abstract readonly nameStorage: string;
-	protected readonly eventStorageChange: string;
 
-	constructor(eventStorageChange = 'eventStorageChange') {
-		this.eventStorageChange = eventStorageChange;
+	public readonly eventNameStorage: string;
+
+	constructor(eventNameStorage: string) {
+		this.eventNameStorage = eventNameStorage;
 	}
 
 	abstract extractReceiptData(rowData: RowData): T | null;
@@ -27,7 +28,7 @@ export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptType
 			if (confirmDelete) {
 				LocalStorageHelper.remove(this.nameStorage);
 				ToastAlert.showAlertMinBottom('Datos eliminados con éxito', 'success');
-				window.dispatchEvent(new Event(this.eventStorageChange));
+				window.dispatchEvent(new Event(this.eventNameStorage));
 			}
 		} catch (error: any) {
 			console.error('Error al eliminar los datos guardados:', error?.message);

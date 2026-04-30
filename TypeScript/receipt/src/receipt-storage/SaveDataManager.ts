@@ -16,14 +16,12 @@ export class SaveDataManager {
 	private readonly buttonDeleteData: Element;
 
 	private eventClickManager: EventClickManagerStorage | undefined;
-	private readonly eventStorageChange: string;
 	private readonly receiptTypeHandlers: ReceiptTypeHandler<unknown>[];
 
 	constructor({ buttonSaveData, buttonDeleteData, receiptTypeHandlers }: SaveDataManagerConfiguration) {
 		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
 		this.buttonSaveData = buttonSaveData;
 		this.buttonDeleteData = buttonDeleteData;
-		this.eventStorageChange = 'eventStorageChange';
 		this.receiptTypeHandlers = receiptTypeHandlers;
 	}
 
@@ -83,10 +81,11 @@ export class SaveDataManager {
 		this.buttonSaveData.addEventListener('click', () => this.eventClickManager?.handleEvent());
 		this.buttonDeleteData.addEventListener('click', () => this.handleDeleteData());
 
-		window.addEventListener(this.eventStorageChange, () => {
-			console.log('Event [eventStorageChange] In SaveDataManager');
-
-			this.handleSaveDataMark();
+		this.receiptTypeHandlers.forEach((handler) => {
+			window.addEventListener(handler.eventNameStorage, () => {
+				console.log(`Event [${handler.eventNameStorage}] In SaveDataManager`);
+				this.handleSaveDataMark();
+			});
 		});
 
 		window.addEventListener('storage', ({ key }) => {

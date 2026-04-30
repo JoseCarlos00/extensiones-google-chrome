@@ -6,7 +6,7 @@ import type { Tarimas } from '../../types/receipt.types'
 
 export interface ReceiptTypeTarimasConfiguration {
 	nameStorage: string;
-	eventNameStorageChange?: string;
+	eventNameStorage: string;
 }
 
 export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<Tarimas> {
@@ -15,8 +15,8 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<Tarimas> {
 
 	private readonly receiptType = 'TARIMAS';
 
-	constructor({ nameStorage, eventNameStorageChange }: ReceiptTypeTarimasConfiguration) {
-		super(eventNameStorageChange);
+	constructor({ nameStorage, eventNameStorage }: ReceiptTypeTarimasConfiguration) {
+		super(eventNameStorage);
 		this.nameStorage = nameStorage;
 	}
 
@@ -41,7 +41,7 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<Tarimas> {
 
 			LocalStorageHelper.save(this.nameStorage, { receiptType: this.receiptType, dataContainer: data });
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
-			window.dispatchEvent(new Event(this.eventStorageChange));
+			window.dispatchEvent(new Event(this.eventNameStorage));
 		} catch (error: any) {
 			console.error('Error al guardar los datos:', error?.message);
 			ToastAlert.showAlertFullTop('Ha ocurrido un error al guardar los datos');

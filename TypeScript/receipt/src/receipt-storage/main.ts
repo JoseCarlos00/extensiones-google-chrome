@@ -1,4 +1,4 @@
-import { namesStorages } from '../constants';
+import { namesStorages, nameStorageEvents } from '../constants';
 import { getButtonElementLiSaveData } from './buttons/buttons'
 import { ReceiptTypeDevoluciones } from './handlers/ReceiptTypeDevoluciones';
 import { ReceiptTypeTraslados } from './handlers/ReceiptTypeTraslados';
@@ -11,8 +11,8 @@ const manager = new SaveDataManager({
 	buttonDeleteData,
 
 	receiptTypeHandlers: [
-		new ReceiptTypeTraslados({ nameStorage: namesStorages.traslados }),
-		new ReceiptTypeDevoluciones({ nameStorage: namesStorages.devoluciones }),
+		new ReceiptTypeTraslados({ nameStorage: namesStorages.traslados, eventNameStorage: nameStorageEvents.traslados }),
+		new ReceiptTypeDevoluciones({ nameStorage: namesStorages.devoluciones, eventNameStorage: nameStorageEvents.devoluciones }),
 	],
 });
 

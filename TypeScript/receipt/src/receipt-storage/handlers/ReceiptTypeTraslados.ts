@@ -6,7 +6,7 @@ import type { DataTraslados, Traslados } from '../../types/receipt.types';
 
 export interface ReceiptTypeTrasladosConfiguration {
 	nameStorage: string;
-	eventNameStorageChange?: string;
+	eventNameStorage: string;
 }
 
 export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
@@ -15,8 +15,8 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 
 	private readonly receiptType = 'TRASLADOS';
 
-	constructor({ nameStorage, eventNameStorageChange }: ReceiptTypeTrasladosConfiguration) {
-		super(eventNameStorageChange);
+	constructor({ nameStorage, eventNameStorage }: ReceiptTypeTrasladosConfiguration) {
+		super(eventNameStorage);
 		this.nameStorage = nameStorage;
 	}
 
@@ -64,7 +64,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 
 			// Crear una nueva instancia del evento cada vez que se dispare
-			const eventStorageChange = new Event(this.eventStorageChange);
+			const eventStorageChange = new Event(this.eventNameStorage);
 			window.dispatchEvent(eventStorageChange);
 		} catch (error: any) {
 			console.error('Error al guardar los datos:', error?.message);
