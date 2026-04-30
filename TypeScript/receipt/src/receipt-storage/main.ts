@@ -1,10 +1,10 @@
 import { namesStorages, nameStorageEvents } from '../constants';
-import { getButtonElementLiSaveData } from './buttons/buttons'
+import { getElementButtons } from './getElementButtons'
 import { ReceiptTypeDevoluciones } from './handlers/ReceiptTypeDevoluciones';
 import { ReceiptTypeTraslados } from './handlers/ReceiptTypeTraslados';
 import { SaveDataManager } from './SaveDataManager'
 
-const { buttonDeleteData, buttonSaveData } = getButtonElementLiSaveData();
+const { buttonDeleteData, buttonSaveData } = getElementButtons();
 
 const manager = new SaveDataManager({
 	buttonSaveData,

@@ -15,10 +15,16 @@ export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptType
 	abstract extractReceiptData(rowData: RowData): T | null;
 	abstract handleSaveData(params: { items: Array<T> }): void;
 
-	deleteData(): void {
+	deleteData(silent: boolean = false): void {
 		try {
-			const data = LocalStorageHelper.get(this.nameStorage);
-			if (!data?.dataContainer) {
+			if (silent) {
+				LocalStorageHelper.remove(this.nameStorage);
+				return;
+			}
+
+			const dataStorage = LocalStorageHelper.get(this.nameStorage);
+
+			if (!dataStorage?.data) {
 				ToastAlert.showAlertFullTop('No hay datos para eliminar.', 'info');
 				return;
 			}
@@ -28,7 +34,6 @@ export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptType
 			if (confirmDelete) {
 				LocalStorageHelper.remove(this.nameStorage);
 				ToastAlert.showAlertMinBottom('Datos eliminados con éxito', 'success');
-				window.dispatchEvent(new Event(this.eventNameStorage));
 			}
 		} catch (error: any) {
 			console.error('Error al eliminar los datos guardados:', error?.message);

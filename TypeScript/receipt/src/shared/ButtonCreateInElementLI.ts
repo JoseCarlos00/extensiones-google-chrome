@@ -70,7 +70,6 @@ export class ButtonCreateElementLI {
 	private getIconoElement(): HTMLElement {
 		const icono = document.createElement('i');
 		icono.className = `far ${this.iconButton} navimage`;
-		icono.id = this.buttonId;
 		return icono;
 	}
 

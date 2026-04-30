@@ -1,5 +1,6 @@
 import type { ReceiptTypeHandler, RowData } from "../types/receipt-handler.types";
 import type { ReceiptData } from "../types/receipt.types"
+import { eventBus } from "../utils/EventBus"
 
 export interface EventClickManagerStorageConfiguration {
 	tbodyTable: HTMLTableSectionElement;
@@ -21,7 +22,7 @@ export class EventClickManagerStorage {
 		this.receiptTypeHandlers = receiptTypeHandlers;
 	}
 
-	handleEvent() {
+	public handleEvent() {
 		const rows = Array.from(this.tbodyTable?.rows) || [];
 		if (rows.length === 0) return;
 
@@ -39,7 +40,12 @@ export class EventClickManagerStorage {
 		}
 
 		const dataReceipt = this.extractItems(rows, handler);
-		handler.handleSaveData({ items: dataReceipt as unknown[] });
+		this.handleAndNotify(handler, dataReceipt);
+	}
+
+	private handleAndNotify(handler: ReceiptTypeHandler<unknown>, data: unknown[]) {
+		handler.handleSaveData({ items: data });
+		eventBus.emit('STORAGE_CHANGED', undefined);
 	}
 
 	private extractItems(rows: HTMLTableRowElement[], handler: ReceiptTypeHandler<unknown>): ReceiptData[] {

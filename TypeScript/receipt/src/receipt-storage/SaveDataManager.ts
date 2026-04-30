@@ -1,6 +1,8 @@
 import type { ReceiptTypeHandler } from '../types/receipt-handler.types'
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
+import { ToastAlert } from '../utils/ToastAlert';
 import { EventClickManagerStorage } from './EventClickManagerStorage'
+import { eventBus } from '../utils/EventBus';
 
 
 export interface SaveDataManagerConfiguration {
@@ -17,6 +19,7 @@ export class SaveDataManager {
 
 	private eventClickManager: EventClickManagerStorage | undefined;
 	private readonly receiptTypeHandlers: ReceiptTypeHandler<unknown>[];
+	private updateUITimeout: number | null = null;
 
 	constructor({ buttonSaveData, buttonDeleteData, receiptTypeHandlers }: SaveDataManagerConfiguration) {
 		this.tbodyTable = document.querySelector('#ListPaneDataGrid tbody');
@@ -25,7 +28,7 @@ export class SaveDataManager {
 		this.receiptTypeHandlers = receiptTypeHandlers;
 	}
 
-	async initialize() {
+	public async initialize() {
 		try {
 			if (!this.tbodyTable) {
 				throw new Error('No se encontró el elemento tbody');
@@ -44,7 +47,7 @@ export class SaveDataManager {
 				throw new Error('No se encontró el manejador de eventos de click');
 			}
 
-			await this.insertButtons();
+			this.insertButtons();
 			this.setEventListener();
 		} catch (error: any) {
 			console.error(
@@ -54,67 +57,93 @@ export class SaveDataManager {
 		}
 	}
 
-	async insertButtons() {
-		return new Promise((resolve) => {
-			const ul = document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav');
+	private insertButtons() {
+		const ul = document.querySelector('#topNavigationBar > nav > ul.collapsepane.nav.navbar-nav');
 
-			if (!ul) {
-				throw new Error('No se encontró el elemento ul');
-			}
+		if (!ul) {
+			throw new Error('No se encontró el elemento ul');
+		}
 
-			if (!(this.buttonSaveData instanceof Element)) {
-				throw new Error('El elemento buttonSaveData no es un elemento <li> HTML');
-			}
+		if (!(this.buttonSaveData instanceof Element)) {
+			throw new Error('El elemento buttonSaveData no es un elemento <li> HTML');
+		}
 
-			if (!(this.buttonDeleteData instanceof Element)) {
-				throw new Error('El elemento buttonDeleteData no es un elemento <li> HTML');
-			}
+		if (!(this.buttonDeleteData instanceof Element)) {
+			throw new Error('El elemento buttonDeleteData no es un elemento <li> HTML');
+		}
 
-			ul.insertAdjacentElement('beforeend', this.buttonSaveData);
-			ul.insertAdjacentElement('beforeend', this.buttonDeleteData);
-
-			setTimeout(resolve, 50);
-		});
+		ul.insertAdjacentElement('beforeend', this.buttonSaveData);
+		ul.insertAdjacentElement('beforeend', this.buttonDeleteData);
 	}
 
-	setEventListener() {
-		const updateUI = () => {
-			console.log('Actualizando UI de guardado...');
-			this.handleSaveDataMark();
-		};
+	private setEventListener() {
+		this.buttonSaveData.querySelector('a')?.addEventListener('click', (e) => {
+			if (!(e.currentTarget instanceof HTMLAnchorElement)) return;
 
-		this.buttonSaveData.addEventListener('click', () => this.eventClickManager?.handleEvent());
-		this.buttonDeleteData.addEventListener('click', () => this.handleDeleteData());
+			this.eventClickManager?.handleEvent();
+		});
+
+		this.buttonDeleteData.querySelector('a')?.addEventListener('click', (e) => {
+			if (!(e.currentTarget instanceof HTMLAnchorElement)) return;
+
+			this.handleDeleteData();
+		});
 
 		// Escuchar cambios internos (misma pestaña) mediante eventos personalizados
-		this.receiptTypeHandlers.forEach((handler) => {
-			window.addEventListener(handler.eventNameStorage, updateUI);
-		});
+		eventBus.on('STORAGE_CHANGED', () => this.updateUI());
 
 		// Escuchar cambios externos (otras pestañas) mediante evento storage nativo
 		window.addEventListener('storage', ({ key }) => {
 			// Si key es null, significa que se hizo clear(). Si no, verificamos si es una de nuestras llaves.
 			const isRelevant = key === null || this.receiptTypeHandlers.some((h) => h.nameStorage === key);
-			if (isRelevant) updateUI();
+			if (isRelevant) eventBus.emit('STORAGE_CHANGED', undefined);
 		});
 
-		updateUI();
+		this.updateUI();
 	}
 
-	handleSaveDataMark() {
+	private updateUI() {
+		if (this.updateUITimeout) return;
+
+		this.updateUITimeout = window.setTimeout(() => {
+			this.handleSaveDataMark();
+			this.updateUITimeout = null;
+		}, 0);
+	}
+
+	private handleSaveDataMark() {
 		const hasAnyData = this.receiptTypeHandlers.some((handler) => {
-			const data = LocalStorageHelper.get(handler.nameStorage);
-			return data?.dataContainer?.length > 0;
+			const dataStorage = LocalStorageHelper.get(handler.nameStorage);
+			return dataStorage?.data?.length > 0;
 		});
 
 		this.markSaveData(!hasAnyData);
 	}
 
-	handleDeleteData() {
-		this.receiptTypeHandlers.forEach((handler) => handler.deleteData());
+	private handleDeleteData() {
+		// 1. Verificar si alguno de los handlers tiene datos realmente
+		const handlersWithData = this.receiptTypeHandlers.filter((handler) => {
+			const dataStorage = LocalStorageHelper.get(handler.nameStorage);
+			return dataStorage?.data?.length > 0;
+		});
+
+		if (handlersWithData.length === 0) {
+			ToastAlert.showAlertFullTop('No hay datos guardados para eliminar.', 'info');
+			return;
+		}
+
+		// 2. Pedir confirmación una sola vez
+		if (confirm('¿Estás seguro de eliminar todos los datos guardados?\nEsta acción no se puede deshacer.')) {
+
+			// 3. Ejecutar borrado silencioso en cada uno
+			handlersWithData.forEach((handler) => handler.deleteData(true));
+
+			eventBus.emit('STORAGE_CHANGED', undefined);
+			ToastAlert.showAlertMinBottom('Todos los datos han sido eliminados', 'success');
+		}
 	}
 
-	markSaveData(isRemoveMark: boolean = false) {
+	private markSaveData(isRemoveMark: boolean = false) {
 		if (!this.buttonSaveData) {
 			console.error('No existe el botón de guardar datos.');
 			return;

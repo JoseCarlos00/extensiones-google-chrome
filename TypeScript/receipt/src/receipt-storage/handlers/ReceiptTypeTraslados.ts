@@ -55,17 +55,14 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 			}) as DataTraslados[];
 
 			console.log('Datos guardados:', data);
+			
 			LocalStorageHelper.save(this.nameStorage, {
 				receiptType: this.receiptType,
 				trailerId,
-				dataContainer: data,
+				data,
 			});
 
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
-
-			// Crear una nueva instancia del evento cada vez que se dispare
-			const eventStorageChange = new Event(this.eventNameStorage);
-			window.dispatchEvent(eventStorageChange);
 		} catch (error: any) {
 			console.error('Error al guardar los datos:', error?.message);
 			ToastAlert.showAlertFullTop('Ha ocurrido un error al guardar los datos', 'error');

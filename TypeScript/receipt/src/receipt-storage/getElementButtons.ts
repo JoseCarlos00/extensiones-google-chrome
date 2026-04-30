@@ -1,4 +1,4 @@
-import { ButtonCreateElementLI, type ButtonElementLIConfiguration } from '../../class/ButtonCreateInElementLI';
+import { ButtonCreateElementLI, type ButtonElementLIConfiguration } from '../shared/ButtonCreateInElementLI';
 
 const buttonSaveConfiguration: ButtonElementLIConfiguration = {
 	buttonId: "saveData",
@@ -15,7 +15,7 @@ const buttonDeleteConfiguration: ButtonElementLIConfiguration= {
 };
 
 
-export function getButtonElementLiSaveData() {
+export function getElementButtons() {
 	const buttonSaveData = ButtonCreateElementLI.getButtonElement(buttonSaveConfiguration);
 	const buttonDeleteData = ButtonCreateElementLI.getButtonElement(buttonDeleteConfiguration);
 
