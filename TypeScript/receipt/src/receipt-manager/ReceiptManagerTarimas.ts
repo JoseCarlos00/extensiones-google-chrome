@@ -1,6 +1,27 @@
-class ReceiptManagerTarimas extends ReceiptManagerWithItem<DataTarimas> {
-    processNextItem(): void { ... }  // lógica específica con pendingCount
-    autocompleteForm(): void { ... }
-    submitForm(): void { ... }
-    updateCounter(): void { ... }
+class ReceiptManagerTarimas extends ReceiptManagerWithItem<TarimaData> {
+	// ─── Lógica de negocio ───────────────────────────────
+	processData(): void {
+		this.tarimasCalculadas = this.calcularTarimas();
+		this.saveToStorage();
+		this.refreshWidget();
+	}
+
+	private calcularTarimas(): number {
+		return Math.floor(this.openQty / this.containerQty);
+	}
+
+	// ─── Presentación ────────────────────────────────────
+	protected getInfoHTML(): string {
+		return `
+      <div>Receipt: ${this.inputReceiptId.value}</div>
+      <div>Item: ${this.inputItem.value}</div>
+    `;
+	}
+
+	protected getCountersHTML(): string {
+		return `
+      <div>${this.dataContainerStorage[0]?.items.length ?? 0} items</div>
+      <div>${this.tarimasCalculadas} tarimas</div>
+    `;
+	}
 }

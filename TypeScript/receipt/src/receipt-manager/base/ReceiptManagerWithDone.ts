@@ -1,12 +1,11 @@
-import { DataDevoluciones, DataTraslados } from "../save-data/IReceiptTypeHandler"
-import { ReceiptManagerRF } from "./ReceiptManagerRF"
+import { ReceiptManagerRF } from "../base/ReceiptManagerRF";
 
 // Nivel 2a — Devoluciones + Traslados
-abstract class ReceiptManagerWithDone<T> extends ReceiptManagerRF<T> {
+export abstract class ReceiptManagerWithDone<T> extends ReceiptManagerRF<T> {
 	protected btnDone: HTMLButtonElement | null = null;
 
 	protected onclickButtonDone(): void {
-		if (!this.btnDone || !this.confirmOk) return;
+		if (!this.btnDone) return;
 		setTimeout(() => this.btnDone?.click(), this.confirmDelay);
 	}
 
@@ -14,7 +13,7 @@ abstract class ReceiptManagerWithDone<T> extends ReceiptManagerRF<T> {
 	protected abstract getLicensePlateInput(): HTMLInputElement | null;
 
 	processNextItem(): void {
-		const firstObject = this.dataContainerStorage?.[0] as DataTraslados | DataDevoluciones;
+		const firstObject = this.dataStorage?.data[0];
 		if (!firstObject) return;
 
 		// lógica del shift() compartida

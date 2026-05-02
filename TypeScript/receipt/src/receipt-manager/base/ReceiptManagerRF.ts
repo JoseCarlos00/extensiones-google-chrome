@@ -1,114 +1,143 @@
+import type { ReceiptStatus, StorageData } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
-import { type StorageData } from '../../widget-HTML/base/WidgetHTML'
 
 export interface ReceiptManagerRFConfig {
 	receiptType: string;
 	nameStorage: string;
-	eventNameStorage: string;
 }
 
 export abstract class ReceiptManagerRF<T> {
-	// Config
-	private confirmDelay: number = 1000;
-	protected initReceipt: boolean;
-	protected currentReceiptType: string;
-	protected receiptType: string | undefined;
+	protected container!: HTMLElement;
+	protected confirmDelay: number = 500;
 
-	// Storage
-	protected dataStorage: StorageData<T> | null;
+	protected readonly receiptType: string;
 	protected readonly nameStorage: string;
-	protected readonly eventNameStorage: string;
+	protected dataStorage: StorageData<T> | null;
 
 	// UI — solo lo universal
 	protected btnOk: HTMLButtonElement | null = null;
 
-	// Interno
-	private timeoutId: number | null = null;
-	
-	constructor({
-		receiptType,
-		nameStorage,
-		eventNameStorage,
-	}: ReceiptManagerRFConfig) {
-		this.currentReceiptType = receiptType;
+	private readonly SESSION_KEY = 'receiptManagerStatus';
+
+	constructor({ receiptType, nameStorage }: ReceiptManagerRFConfig) {
 		this.nameStorage = nameStorage;
-		this.eventNameStorage = eventNameStorage;
+		this.receiptType = receiptType;
 
-		this.initReceipt = this.getInitReceiptStorage();
-		this.dataStorage = LocalStorageHelper.get(this.nameStorage);
-		this.receiptType = this.dataStorage?.receiptType;
+		// this.initReceipt = this.getInitReceiptStorage();
+		this.dataStorage = LocalStorageHelper.get(this.nameStorage) ?? null;
 	}
 
-	// Abstractos — cada hijo implementa el suyo
-	abstract processNextItem(): void;
-	abstract autocompleteForm(): void;
-	abstract submitForm(): void;
-	abstract updateCounter(): void;
+	// — Widget —
+	protected insertWidget(): void {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = this.getWidgetHTML();
+		document.body.appendChild(wrapper);
 
-	// Concretos — universales
-	getInitReceiptStorage(): boolean {
-		const storage = sessionStorage.getItem('initReceipt');
-		return storage ? JSON.parse(storage) : false;
+		document.getElementById('init-receipt')?.addEventListener('click', () => {
+			this.setStatus('processing');
+			this.refreshWidget();
+		});
+
+		document.getElementById('cancel-receipt')?.addEventListener('click', () => {
+			window.dispatchEvent(new Event('cancel-receipt-event'));
+		});
 	}
 
-	handleGetData(): void {
-		this.dataStorage = LocalStorageHelper.get(this.nameStorage);
-		this.receiptType = this.dataStorage?.receiptType;
-
-		this.availableButtonInitReceipt();
-		this.autocompleteForm();
+	// — Status —
+	getStatus(): ReceiptStatus {
+		return (sessionStorage.getItem(this.SESSION_KEY) as ReceiptStatus) ?? 'idle';
 	}
 
-	availableButtonInitReceipt(): void {
-		const btn = document.getElementById('init-receipt');
-		const dataStorageLength = this.dataStorage?.data?.length;
-
-		const hasData = !!dataStorageLength && this.receiptType === this.currentReceiptType;
-
-		btn?.toggleAttribute('disabled', !hasData);
-		btn?.classList.toggle('bounce', hasData);
+	setStatus(status: ReceiptStatus): void {
+		sessionStorage.setItem(this.SESSION_KEY, status);
 	}
 
-	clearExistingTimeout(): void {
-		if (this.timeoutId) {
-			clearTimeout(this.timeoutId);
-			this.timeoutId = null;
+	protected getWidgetHTML(): string {
+		return `
+      <nav class="menu-config">
+        ${this.getHeaderHTML()}
+        <div id="receipt-info">${this.getInfoHTML()}</div>
+        <div id="receipt-counters">${this.getCountersHTML()}</div>
+        <div class="receipt-buttons">
+          <button id="init-receipt" disabled>Iniciar</button>
+          <button id="cancel-receipt">Cancelar</button>
+        </div>
+      </nav>
+    `;
+	}
+
+	// — Header —
+	protected getHeaderHTML(): string {
+		const { label, color } = this.getStatusIndicator();
+		return `
+            <div style="display:flex; align-items:center; justify-content:space-between;
+                        margin-bottom:10px; border-bottom:0.5px solid #444; padding-bottom:8px;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <div style="width:7px; height:7px; border-radius:50%; background:${color};"></div>
+                    <span style="font-size:11px; color:#aaa;">${label}</span>
+                </div>
+                <span style="font-size:10px; color:#888;">${this.receiptType}</span>
+            </div>
+        `;
+	}
+
+	private getStatusIndicator(): { label: string; color: string } {
+		switch (this.getStatus()) {
+			case 'idle':
+				return { label: 'Sin datos', color: '#888' };
+			case 'ready':
+				return { label: 'Listo', color: '#3a7bd5' };
+			case 'processing':
+				return { label: 'En proceso', color: '#4ade80' };
+			case 'completed':
+				return { label: 'Completado', color: '#f59e0b' };
 		}
 	}
 
-	setTimeoutSubmitForm(): void {
-		this.clearExistingTimeout();
-		this.timeoutId = window.setTimeout(() => this.submitForm(), 1000);
+	// Subclases definen esto
+	protected abstract getInfoHTML(): string;
+	protected abstract getCountersHTML(): string;
+	protected abstract processData(): void; // orquesta: procesa, guarda, llama refreshWidget()
 
-		window.setTimeout(
-			() => {
-				this.clearExistingTimeout();
-				console.log('Timeout de 10 minutos alcanzado.');
-			},
-			10 * 60 * 1000,
-		);
+	// Actualiza solo las partes dinámicas, no reconstruye todo el DOM
+	// protected refreshWidget(): void {
+	// 	document.getElementById('receipt-info')!.innerHTML = this.getInfoHTML();
+	// 	document.getElementById('receipt-counters')!.innerHTML = this.getCountersHTML();
+	// 	// también actualiza el header si el status cambió
+	// 	this.container.querySelector('.status-area')!.outerHTML = this.getHeaderHTML();
+	// }
+
+	protected refreshWidget(): void {
+		const info = document.getElementById('receipt-info');
+		const counters = document.getElementById('receipt-counters');
+
+		if (info) info.innerHTML = this.getInfoHTML();
+		if (counters) counters.innerHTML = this.getCountersHTML();
+
+		this.updateButtonState((this.dataStorage?.data?.length ?? 0) > 0);
 	}
 
-	setEventListeners(): void {
-		this.availableButtonInitReceipt();
-
-		const handleNewRegister = () => {
-			this.initReceipt = true;
-
-			window.dispatchEvent(new Event('event-form-control'));
-			this.handleGetData();
-		};
-
-		window.addEventListener(this.eventNameStorage, handleNewRegister);
-		window.addEventListener('init-receipt-event', handleNewRegister);
-		window.addEventListener('cancel-receipt-event', () => this.handleCancelReceipt());
+	updateCounter(): void {
+		const el = document.getElementById('receipt-counters');
+		if (el) el.innerHTML = this.getCountersHTML();
 	}
 
-	protected handleCancelReceipt(): void {
-		this.initReceipt = false;
+	protected updateButtonState(hasData: boolean): void {
+		const btn = document.getElementById('init-receipt');
+		btn?.toggleAttribute('disabled', !hasData);
+		btn?.classList.toggle('bounce', hasData);
+
+		if (!hasData) {
+			this.setStatus('idle');
+		} else if (this.getStatus() !== 'processing') {
+			this.setStatus('ready');
+		}
 	}
 
-	init(): void {
-		this.setEventListeners();
+	// Llamado una vez al cargar la página
+	injectWidget(): void {
+		this.container = document.createElement('div');
+		this.container.innerHTML = this.getWidgetHTML();
+		document.body.appendChild(this.container);
 	}
 }
