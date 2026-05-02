@@ -49,7 +49,6 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	protected abstract processData(): void;
 
 	abstract processNextItem(): void;
-	abstract submitForm(): void;
 
 	private setEventListeners(): void {
 		// Storage externo — otro tab guardó datos
@@ -68,7 +67,7 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 		}
 	}
 
-	protected setTimeoutSubmitForm(): void {
+	private setTimeoutSubmitForm(): void {
 		this.clearExistingTimeout();
 		this.timeoutId = window.setTimeout(() => this.submitForm(), 1000);
 
@@ -130,5 +129,13 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 
 	protected getTextByIndex(tag: string, index: number): string {
 		return document.getElementsByTagName(tag)[index]?.textContent?.trim() ?? '';
+	}
+
+	protected submitForm(): void {
+		setTimeout(() => {
+			console.warn('Confirmar button OK');
+			this.btnOk?.click();
+			this.setTimeoutSubmitForm();
+		}, this.confirmDelay);
 	}
 }

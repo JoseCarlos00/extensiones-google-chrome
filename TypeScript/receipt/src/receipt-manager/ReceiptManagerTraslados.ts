@@ -103,13 +103,5 @@ export class ReceiptManagerTraslados extends ReceiptManagerWithDone<DataTraslado
         <div>${this.dataStorage?.data[0]?.containers.length ?? 0} LPs en grupo</div>
     `;
 	}
-
-	submitForm(): void {
-		setTimeout(() => {
-			console.warn('Confirmar button OK');
-			this.btnOk?.click();
-			this.setTimeoutSubmitForm();
-		}, this.confirmDelay);
-	}
 }
 
