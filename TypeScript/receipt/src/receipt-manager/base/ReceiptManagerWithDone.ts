@@ -28,11 +28,10 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 	}
 
 	processNextItem(): void {
-		if (this.dataStorage?.data.length === 0 && this.inputLicensePlate) {
+		if (!this.dataStorage?.data.length) {
 			console.log('No hay datos almacenados en dataStorage.');
 			return;
 		}
-
 		const firstObject = this.dataStorage?.data[0];
 		if (!firstObject) return;
 
@@ -69,13 +68,14 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 			);
 		}
 
-		if (this.dataStorage!.data.length === 0) {
-			this.completeReceipt();
-			return;
-		}
 
 		if (currentLicensePlate === 'DONE') {
 			this.onclickButtonDone();
+			return;
+		}
+
+		if (this.dataStorage!.data.length === 0) {
+			this.completeReceipt();
 			return;
 		}
 

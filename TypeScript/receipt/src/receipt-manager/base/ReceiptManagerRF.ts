@@ -48,7 +48,7 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	public abstract getCountersHTML(): string;
 	protected abstract processData(): void;
 
-	// abstract processNextItem(): void;
+	abstract processNextItem(): void;
 	abstract submitForm(): void;
 
 	private setEventListeners(): void {
@@ -68,7 +68,7 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 		}
 	}
 
-	private setTimeoutSubmitForm(): void {
+	protected setTimeoutSubmitForm(): void {
 		this.clearExistingTimeout();
 		this.timeoutId = window.setTimeout(() => this.submitForm(), 1000);
 
@@ -99,7 +99,6 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 
 	public onInitReceipt(): void {
 		this.processData();
-		this.setTimeoutSubmitForm();
 	}
 
 	// Sincroniza dataStorage con lo que hay en localStorage
