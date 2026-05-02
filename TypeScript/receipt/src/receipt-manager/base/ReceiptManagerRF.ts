@@ -120,6 +120,10 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 		this.refresh();
 	}
 
+	protected refreshCounters(): void {
+		this.widgetManager.refreshCounters();
+	}
+
 	protected getInput(formName: string, inputName: string): HTMLInputElement | null {
 		const form = document.forms.namedItem(formName);
 		return form?.elements.namedItem(inputName) as HTMLInputElement | null;

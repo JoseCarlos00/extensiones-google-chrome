@@ -31,6 +31,11 @@ export class WidgetManager {
 		this.updateButtonState(dataLength > 0);
 	}
 
+	refreshCounters(): void {
+		const counters = this.root?.querySelector('#receipt-counters');
+		if (counters) counters.innerHTML = this.provider.getCountersHTML();
+	}
+
 	private bindEvents(): void {
 		if (this.isBound) return;
 		this.isBound = true;
@@ -90,7 +95,7 @@ export class WidgetManager {
 
 	private updateButtonState(hasData: boolean): void {
 		const btn = this.root?.querySelector('#init-receipt') as HTMLButtonElement | null;
-		
+
 		if (!btn) return;
 
 		// Si no hay datos, forzar idle
