@@ -7,11 +7,20 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 	protected btnDone: HTMLInputElement | null = null;
 	protected inputLicensePlate: HTMLInputElement | null = null;
 
+	protected tittleCurrentPage: string = '';
+	protected messageInvalideLicensePlate: string = '';
+	protected isValideLicensePlate: boolean = false;
+
 	constructor(config: ReceiptManagerRFConfig) {
 		super(config);
 		this.btnDone = document.querySelector<HTMLInputElement>('input[type="button"][value="Done"]');
 		this.inputLicensePlate = this.getInput('Form1', 'CONTID');
+
+		this.tittleCurrentPage = this.getTextByIndex('h3', 0);
+		this.messageInvalideLicensePlate = this.getTextByIndex('h3', 1);
+		this.isValideLicensePlate = this.tittleCurrentPage === 'License plate';
 	}
+	
 
 	protected onclickButtonDone(): void {
 		if (!this.btnDone) return;
@@ -43,7 +52,6 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 		const currentLicensePlate = firstObject.containers.shift() ?? '';
 		console.log(`Procesando placa: ${currentLicensePlate}`);
 
-
 		if (!this.dataStorage) return;
 		LocalStorageHelper.save(this.nameStorage, this.dataStorage);
 
@@ -56,22 +64,22 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 			this.dataStorage.data.shift();
 
 			LocalStorageHelper.save(this.nameStorage, this.dataStorage);
-			console.log('[2] El primer objeto [DataTraslados | DataDevoluciones] fue eliminado porque `containers` quedó vacío.');
+			console.log(
+				'[2] El primer objeto [DataTraslados | DataDevoluciones] fue eliminado porque `containers` quedó vacío.',
+			);
 		}
-
-		
 
 		if (this.dataStorage!.data.length === 0) {
 			this.completeReceipt();
 			return;
 		}
 
-		if(currentLicensePlate === 'DONE') {
+		if (currentLicensePlate === 'DONE') {
 			this.onclickButtonDone();
 			return;
 		}
 
-			// Actualiza el input con el ID del contenedor
+		// Actualiza el input con el ID del contenedor
 		if (this.inputLicensePlate) {
 			this.inputLicensePlate.value = currentLicensePlate;
 		}
