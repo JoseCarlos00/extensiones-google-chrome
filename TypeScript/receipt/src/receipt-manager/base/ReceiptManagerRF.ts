@@ -1,16 +1,20 @@
+import { WidgetDataProvider } from '../../types/receipt-widget.types'
 import type { ReceiptStatus, StorageData } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
+import { WidgetManager } from './WidgetManager'
 
 export interface ReceiptManagerRFConfig {
 	receiptType: string;
 	nameStorage: string;
 }
 
-export abstract class ReceiptManagerRF<T> {
+export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
+	private widgetManager!: WidgetManager;
+
 	protected container!: HTMLElement;
 	protected confirmDelay: number = 500;
 
-	protected readonly receiptType: string;
+	public readonly receiptType: string;
 	protected readonly nameStorage: string;
 	protected dataStorage: StorageData<T> | null;
 
@@ -26,6 +30,12 @@ export abstract class ReceiptManagerRF<T> {
 		// this.initReceipt = this.getInitReceiptStorage();
 		this.dataStorage = LocalStorageHelper.get(this.nameStorage) ?? null;
 	}
+
+	initialize(): void {
+		this.widgetManager = new WidgetManager(this);
+		this.widgetManager.inject();
+	}
+
 
 	// — Widget —
 	protected insertWidget(): void {
@@ -95,8 +105,8 @@ export abstract class ReceiptManagerRF<T> {
 	}
 
 	// Subclases definen esto
-	protected abstract getInfoHTML(): string;
-	protected abstract getCountersHTML(): string;
+	public abstract getInfoHTML(): string;
+	public abstract getCountersHTML(): string;
 	protected abstract processData(): void; // orquesta: procesa, guarda, llama refreshWidget()
 
 	// Actualiza solo las partes dinámicas, no reconstruye todo el DOM
@@ -115,6 +125,7 @@ export abstract class ReceiptManagerRF<T> {
 		if (counters) counters.innerHTML = this.getCountersHTML();
 
 		this.updateButtonState((this.dataStorage?.data?.length ?? 0) > 0);
+		// this.widgetManager.refresh(this.dataStorage?.data?.length ?? 0);
 	}
 
 	updateCounter(): void {
