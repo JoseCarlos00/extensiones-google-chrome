@@ -4,29 +4,27 @@ import { ReceiptManagerWithDone } from "./base/ReceiptManagerWithDone"
 
 type TrasladoPageState =
 	| 'trailer-id' // h3[0] === 'Trailer id'
+	| 'trailer-id-invalid' // h3[1] === 'Invalid Trailer ID'
 	| 'license-plate' // h3[0] === 'License plate' — con o sin mensaje de error
 	| 'license-plate-done' // h3[0] === 'License plate' + btnDone visible
 	| 'unknown';
 
 export class ReceiptManagerTraslados extends ReceiptManagerWithDone<DataTraslados> {
 	private inputTrailerId: HTMLInputElement | null = null;
-
 	private messageInvalideTrailerId: string = '';
-	private isValideTrailerIdTitle: boolean = false;
+
+	private titlePageTrailerId: string = 'Trailer id';
 
 	constructor(config: ReceiptManagerRFConfig) {
 		super(config);
 
-		this.btnDone = document.querySelector<HTMLInputElement>('input[type="button"][value="Done"]');
 		this.inputTrailerId = this.getInput('Form1', 'TRAILERID');
-
-		this.messageInvalideTrailerId = this.getTextByIndex('h3', 0);
-		this.isValideTrailerIdTitle = this.tittleCurrentPage === 'Trailer id';
+		this.messageInvalideTrailerId = this.getTextByIndex('h3', 1);
 	}
 
 	// ─── Lógica de negocio ───────────────────────────────
 	processData(): void {
-		if (this.receiptType !== 'traslados') return;
+		if (this.receiptType !== 'TRASLADOS') return;
 		if (!this.dataStorage?.data.length) return;
 
 		const state = this.detectPageState();
@@ -34,6 +32,10 @@ export class ReceiptManagerTraslados extends ReceiptManagerWithDone<DataTraslado
 		switch (state) {
 			case 'trailer-id':
 				this.setValueTrailerIdInput();
+				break;
+
+			case 'trailer-id-invalid':
+				this.completeReceipt();
 				break;
 
 			case 'license-plate':
@@ -45,26 +47,14 @@ export class ReceiptManagerTraslados extends ReceiptManagerWithDone<DataTraslado
 				console.warn('Estado de página no reconocido');
 				break;
 		}
-
-		if (!this.dataStorage?.data.length) {
-			console.warn('No hay datos para procesar.');
-			return;
-		}
-
-		if (this.isValideTrailerIdTitle && this.inputTrailerId) {
-			this.setValueTrailerIdInput();
-			return;
-		}
-
-		if (this.isValideLicensePlate && this.inputLicensePlate) {
-			this.processNextItem();
-		}
 	}
 
 	private detectPageState(): TrasladoPageState {
-		if (this.tittleCurrentPage === 'Trailer id') return 'trailer-id';
-		if (this.tittleCurrentPage === 'License plate' && !this.btnDone) return 'license-plate';
-		if (this.tittleCurrentPage === 'License plate' && !!this.btnDone) return 'license-plate-done';
+		if (this.tittleCurrentPage === this.titlePageTrailerId && this.messageInvalideTrailerId === 'Invalid Trailer ID.')
+			return 'trailer-id-invalid';
+		if (this.tittleCurrentPage === this.titlePageTrailerId) return 'trailer-id';
+		if (this.tittleCurrentPage === this.titlePageLicensePlate && !this.btnDone) return 'license-plate';
+		if (this.tittleCurrentPage === this.titlePageLicensePlate && !!this.btnDone) return 'license-plate-done';
 		return 'unknown';
 	}
 

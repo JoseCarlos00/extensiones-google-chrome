@@ -1,10 +1,11 @@
 import { WidgetDataProvider } from '../../types/receipt-widget.types'
+import { ReceiptType } from '../../types/receipt.types'
 import type { ReceiptStatus, StorageData } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { WidgetManager } from './WidgetManager'
 
 export interface ReceiptManagerRFConfig {
-	receiptType: string;
+	receiptType: ReceiptType;
 	nameStorage: string;
 }
 
@@ -14,7 +15,7 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	private timeoutId: number | null = null;
 
 	// Config
-	public readonly receiptType: string;
+	public readonly receiptType: ReceiptType;
 	protected readonly SESSION_KEY = 'receiptManagerStatus';
 
 	// Storage

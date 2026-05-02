@@ -11,6 +11,8 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 	protected messageInvalideLicensePlate: string = '';
 	protected isValideLicensePlate: boolean = false;
 
+	protected titlePageLicensePlate: string = 'License plate';
+
 	constructor(config: ReceiptManagerRFConfig) {
 		super(config);
 		this.btnDone = document.querySelector<HTMLInputElement>('input[type="button"][value="Done"]');
@@ -20,7 +22,6 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 		this.messageInvalideLicensePlate = this.getTextByIndex('h3', 1);
 		this.isValideLicensePlate = this.tittleCurrentPage === 'License plate';
 	}
-	
 
 	protected onclickButtonDone(): void {
 		if (!this.btnDone) return;
@@ -67,7 +68,6 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 				'[2] El primer objeto [DataTraslados | DataDevoluciones] fue eliminado porque `containers` quedó vacío.',
 			);
 		}
-
 
 		if (currentLicensePlate === 'DONE') {
 			this.onclickButtonDone();
