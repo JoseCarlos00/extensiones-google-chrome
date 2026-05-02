@@ -37,14 +37,8 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 		this.widgetManager = new WidgetManager(this);
 		this.widgetManager.inject();
 
-		this.widgetManager.refresh(this.dataStorage?.data?.length ?? 0);
-
-		window.addEventListener('storage', ({ key }) => {
-			if (key === this.nameStorage) {
-				this.dataStorage = LocalStorageHelper.get(this.nameStorage) ?? null;
-				this.widgetManager.refresh(this.dataStorage?.data?.length ?? 0);
-			}
-		});
+		this.refresh();
+		this.setEventListeners();
 	}
 
 	// Subclases definen esto
@@ -53,18 +47,28 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	protected abstract processData(): void;
 
 	// abstract processNextItem(): void;
-	// abstract submitForm(): void;
+	abstract submitForm(): void;
 
-	clearExistingTimeout(): void {
+	private setEventListeners(): void {
+		// Storage externo — otro tab guardó datos
+		window.addEventListener('storage', ({ key }) => {
+			if (key === this.nameStorage) {
+				this.syncStorage();
+				this.refresh();
+			}
+		});
+	}
+
+	private clearExistingTimeout(): void {
 		if (this.timeoutId) {
 			clearTimeout(this.timeoutId);
 			this.timeoutId = null;
 		}
 	}
 
-	setTimeoutSubmitForm(): void {
+	private setTimeoutSubmitForm(): void {
 		this.clearExistingTimeout();
-		// this.timeoutId = window.setTimeout(() => this.submitForm(), 1000);
+		this.timeoutId = window.setTimeout(() => this.submitForm(), 1000);
 
 		window.setTimeout(
 			() => {
@@ -75,19 +79,42 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 		);
 	}
 
-	getStatus(): ReceiptStatus {
+	public getStatus(): ReceiptStatus {
 		return (sessionStorage.getItem(this.SESSION_KEY) as ReceiptStatus) ?? 'idle';
 	}
 
-	setStatus(status: ReceiptStatus): void {
+	public setStatus(status: ReceiptStatus): void {
 		sessionStorage.setItem(this.SESSION_KEY, status);
 	}
 
-	onCancel(): void {
+	public onCancel(): void {
 		LocalStorageHelper.remove(this.nameStorage);
 		sessionStorage.removeItem(this.SESSION_KEY);
 		this.dataStorage = null;
 		this.setStatus('idle');
-		this.widgetManager.refresh(0);
+		this.refresh();
+	}
+
+	public onInitReceipt(): void {
+		this.processData();
+		this.setTimeoutSubmitForm();
+	}
+
+	// Sincroniza dataStorage con lo que hay en localStorage
+	protected syncStorage(): void {
+		this.dataStorage = LocalStorageHelper.get(this.nameStorage) ?? null;
+	}
+
+	// Refresca el widget con el estado actual
+	protected refresh(): void {
+		this.widgetManager.refresh(this.dataStorage?.data?.length ?? 0);
+	}
+
+	// Llamado cuando el proceso termina naturalmente
+	protected completeReceipt(): void {
+		LocalStorageHelper.remove(this.nameStorage);
+		this.dataStorage = null;
+		this.setStatus('completed');
+		this.refresh();
 	}
 }

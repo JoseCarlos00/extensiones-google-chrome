@@ -2,8 +2,6 @@ import { WidgetDataProvider } from "../../types/receipt-widget.types"
 import { ReceiptStatus } from "../../types/storage.types"
 
 export class WidgetManager {
-	protected wrapper!: HTMLElement;
-
 	constructor(private readonly provider: WidgetDataProvider) {}
 
 	inject(): void {
@@ -14,18 +12,21 @@ export class WidgetManager {
 	}
 
 	refresh(dataLength: number): void {
+		const header = document.getElementById('receipt-header');
 		const info = document.getElementById('receipt-info');
 		const counters = document.getElementById('receipt-counters');
 
+		if (header) header.innerHTML = this.getHeaderHTML();
 		if (info) info.innerHTML = this.provider.getInfoHTML();
 		if (counters) counters.innerHTML = this.provider.getCountersHTML();
 
-		this.updateButtonState(dataLength > 0); // siempre al final de refresh
+		this.updateButtonState(dataLength > 0);
 	}
 
 	private bindEvents(): void {
 		document.getElementById('init-receipt')?.addEventListener('click', () => {
 			this.provider.setStatus('processing');
+			this.provider.onInitReceipt();
 		});
 
 		document.getElementById('cancel-receipt')?.addEventListener('click', () => {
@@ -36,7 +37,7 @@ export class WidgetManager {
 	private getWidgetHTML(): string {
 		return `
       <div class="menu-config">
-        ${this.getHeaderHTML()}
+				<div id="receipt-header">${this.getHeaderHTML()}</div>
         <div id="receipt-info">${this.provider.getInfoHTML()}</div>
         <div id="receipt-counters">${this.provider.getCountersHTML()}</div>
         <div class="receipt-buttons">

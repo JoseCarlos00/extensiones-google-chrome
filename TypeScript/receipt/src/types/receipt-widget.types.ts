@@ -8,4 +8,5 @@ export interface WidgetDataProvider {
 	getStatus(): ReceiptStatus;
 	setStatus(status: ReceiptStatus): void;
 	onCancel(): void;
+	onInitReceipt(): void;
 }
