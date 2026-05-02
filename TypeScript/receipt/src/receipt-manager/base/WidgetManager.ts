@@ -1,20 +1,28 @@
 import { WidgetDataProvider } from "../../types/receipt-widget.types"
-import { ReceiptStatus } from "../../types/storage.types"
 
 export class WidgetManager {
+	private isBound = false;
+	private root: HTMLElement | null = null;
+
 	constructor(private readonly provider: WidgetDataProvider) {}
 
 	inject(): void {
+		if (document.getElementById('receipt-widget-root')) return;
+
 		const wrapper = document.createElement('div');
+		wrapper.id = 'receipt-widget-root';
 		wrapper.innerHTML = this.getWidgetHTML();
+
 		document.body.appendChild(wrapper);
+
+		this.root = wrapper;
 		this.bindEvents();
 	}
 
 	refresh(dataLength: number): void {
-		const header = document.getElementById('receipt-header');
-		const info = document.getElementById('receipt-info');
-		const counters = document.getElementById('receipt-counters');
+		const header = this.root?.querySelector('#receipt-header');
+		const info = this.root?.querySelector('#receipt-info');
+		const counters = this.root?.querySelector('#receipt-counters');
 
 		if (header) header.innerHTML = this.getHeaderHTML();
 		if (info) info.innerHTML = this.provider.getInfoHTML();
@@ -24,6 +32,9 @@ export class WidgetManager {
 	}
 
 	private bindEvents(): void {
+		if (this.isBound) return;
+		this.isBound = true;
+
 		document.getElementById('init-receipt')?.addEventListener('click', () => {
 			this.provider.setStatus('processing');
 			this.provider.onInitReceipt();
@@ -72,11 +83,14 @@ export class WidgetManager {
 				return { label: 'En proceso', color: '#4ade80' };
 			case 'completed':
 				return { label: 'Completado', color: '#f59e0b' };
+			default:
+				return { label: 'Unknown', color: '#999' };
 		}
 	}
 
 	private updateButtonState(hasData: boolean): void {
-		const btn = document.getElementById('init-receipt') as HTMLButtonElement | null;
+		const btn = this.root?.querySelector('#init-receipt') as HTMLButtonElement | null;
+		
 		if (!btn) return;
 
 		// Si no hay datos, forzar idle

@@ -22,7 +22,7 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	protected readonly nameStorage: string;
 
 	// UI — solo lo universal
-	protected btnOk: HTMLButtonElement | null = null;
+	protected btnOk: HTMLInputElement | null = null;
 
 	protected confirmDelay: number = 500;
 
@@ -34,6 +34,8 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	}
 
 	initialize(): void {
+		this.btnOk = document.querySelector<HTMLInputElement>('input[type="submit"][value="OK"]');
+
 		this.widgetManager = new WidgetManager(this);
 		this.widgetManager.inject();
 
@@ -116,5 +118,14 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 		this.dataStorage = null;
 		this.setStatus('completed');
 		this.refresh();
+	}
+
+	protected getInput(formName: string, inputName: string): HTMLInputElement | null {
+		const form = document.forms.namedItem(formName);
+		return form?.elements.namedItem(inputName) as HTMLInputElement | null;
+	}
+
+	protected getTextByIndex(tag: string, index: number): string {
+		return document.getElementsByTagName(tag)[index]?.textContent?.trim() ?? '';
 	}
 }

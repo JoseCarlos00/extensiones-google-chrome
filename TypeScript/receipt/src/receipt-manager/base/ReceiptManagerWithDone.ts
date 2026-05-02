@@ -1,8 +1,15 @@
-import { ReceiptManagerRF } from "../base/ReceiptManagerRF";
+import { ReceiptManagerRF, ReceiptManagerRFConfig } from "../base/ReceiptManagerRF";
 
 // Nivel 2a — Devoluciones + Traslados
 export abstract class ReceiptManagerWithDone<T> extends ReceiptManagerRF<T> {
-	protected btnDone: HTMLButtonElement | null = null;
+	protected btnDone: HTMLInputElement | null = null;
+	protected inputLicensePlate: HTMLInputElement | null = null;
+
+	constructor(config: ReceiptManagerRFConfig) {
+		super(config);
+		this.btnDone = document.querySelector<HTMLInputElement>('input[type="button"][value="Done"]');
+		this.inputLicensePlate = this.getInput('Form1', 'CONTID');
+	}
 
 	protected onclickButtonDone(): void {
 		if (!this.btnDone) return;
