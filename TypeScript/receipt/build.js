@@ -18,6 +18,8 @@ const staticFiles = [
 	{ from: 'public/manifest.json', to: 'dist/manifest.json' },
 	{ from: 'popup.html', to: 'dist/popup.html' },
 	{ from: 'public/images', to: 'dist/images' },
+	{ from: 'public/CSS', to: 'dist/CSS' },
+	{ from: 'src/workbench/workbench.css', to: 'dist/workbench/workbench.css' },
 ];
 
 function copyFile(from, to) {

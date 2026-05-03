@@ -23,6 +23,21 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 		this.nameStorage = nameStorage;
 	}
 
+	private async validateTrailerId(): Promise<string> {
+		const input = await DialogHelper.requestInput('Ingresa el Trailer ID', 'Ej: 123T');
+
+		if (!input) {
+			throw new Error('No se ingresó el id del trailer');
+		}
+
+		if (!this.patternTrailerId.test(input || '')) {
+			ToastAlert.showAlertFullTop('ID de trailer inválido.', 'error');
+			return await this.validateTrailerId();
+		}
+		
+		return input.toUpperCase();
+	}
+
 	async handleSaveData({ items }: { items: Array<Traslados> }) {
 		try {
 			// Obtener los datos
@@ -35,15 +50,8 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 				return;
 			}
 
-
 			if (!trailerId || trailerId.trim() === 'No encontrado') {
-				const input = await DialogHelper.requestInput('Ingresa el Trailer ID', 'Ej: 123T');
-
-				if (!input) {
-					throw new Error('No se ingresó el id del trailer');
-				}
-
-				trailerId = input.toUpperCase();
+				trailerId = await this.validateTrailerId();
 			}
 
 

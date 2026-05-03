@@ -4,8 +4,10 @@ export class DialogHelper {
 			// Crear overlay
 			const overlay = document.createElement('div');
 			overlay.style.cssText = `
-        position:fixed; inset:0; background:rgba(0,0,0,.5);
-        display:flex; align-items:center; justify-content:center; z-index:9999;
+      position: fixed; right: 50%;left: 50%;top: 50px;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex; align-items: center; justify-content: center; 
+      z-index: 9999;
       `;
 
 			overlay.innerHTML = `
@@ -38,7 +40,7 @@ export class DialogHelper {
 
 			// Confirmar con Enter, cancelar con Escape
 			input.addEventListener('keydown', (e) => {
-				if (e.key === 'Enter') cleanup(input.value.trim() || null);
+				if (e.key === 'Enter' && input.value.trim()) cleanup(input.value.trim() || null);
 				if (e.key === 'Escape') cleanup(null);
 			});
 		});
