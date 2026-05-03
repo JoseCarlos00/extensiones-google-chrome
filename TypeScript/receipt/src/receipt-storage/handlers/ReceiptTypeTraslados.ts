@@ -3,6 +3,7 @@ import { ToastAlert } from '../../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
 import type { RowData } from '../../types/receipt-handler.types';
 import type { DataTraslados, Traslados } from '../../types/receipt.types';
+import { DialogHelper } from '../../utils/DialogHelper'
 
 export interface ReceiptTypeTrasladosConfiguration {
 	nameStorage: string;
@@ -11,6 +12,8 @@ export interface ReceiptTypeTrasladosConfiguration {
 
 export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 	readonly pattern = /^TR_E-/;
+	readonly patternTrailerId = /^\d+T$/;
+	readonly patternContainerId = /^T[A-Za-z0-9]{10}$/;
 	readonly nameStorage: string;
 
 	private readonly receiptType = 'TRASLADOS';
@@ -20,7 +23,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<Traslados> }) {
+	async handleSaveData({ items }: { items: Array<Traslados> }) {
 		try {
 			// Obtener los datos
 			let trailerId = this.getTrailerId();
@@ -32,15 +35,17 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 				return;
 			}
 
-			if (!trailerId || trailerId?.trim() === 'No encontrado') {
-				let trailerName = prompt('Trailer id');
 
-				if (trailerName) {
-					trailerId = trailerName?.trim().toUpperCase();
-				} else {
+			if (!trailerId || trailerId.trim() === 'No encontrado') {
+				const input = await DialogHelper.requestInput('Ingresa el Trailer ID', 'Ej: 123T');
+
+				if (!input) {
 					throw new Error('No se ingresó el id del trailer');
 				}
+
+				trailerId = input.toUpperCase();
 			}
+
 
 			// Dividir la lista de contenedores en grupos de 5
 			const groupedContainers = [];
@@ -55,7 +60,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 			}) as DataTraslados[];
 
 			console.log('Datos guardados:', data);
-			
+
 			LocalStorageHelper.save(this.nameStorage, {
 				receiptType: this.receiptType,
 				trailerId,

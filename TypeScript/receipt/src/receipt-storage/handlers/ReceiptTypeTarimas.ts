@@ -20,7 +20,7 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<Tarimas> {
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<Tarimas> }) {
+	async handleSaveData({ items }: { items: Array<Tarimas> }) {
 		try {
 			if (items.length === 0) {
 				ToastAlert.showAlertFullTop('No hay contenedores para guardar.', 'info');
@@ -29,14 +29,14 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<Tarimas> {
 
 			const groupedMap = new Map<string, string[]>();
 
-			items.forEach(([receiptId, container]) => {
-				if (!groupedMap.has(receiptId)) groupedMap.set(receiptId, []);
-				groupedMap.get(receiptId)!.push(container);
+			items.forEach(([{ item, openQty }]) => {
+				if (!groupedMap.has(item)) groupedMap.set(item, []);
+				groupedMap.get(item)!.push(openQty);
 			});
 
-			const data = Array.from(groupedMap, ([receiptId, containers]) => ({
+			const data = Array.from(groupedMap, ([item, openQtie]) => ({
 				receiptId,
-				containers: [...containers, 'DONE'],
+				items: [...containers, 'DONE'],
 			}));
 
 			LocalStorageHelper.save(this.nameStorage, { receiptType: this.receiptType, dataContainer: data });

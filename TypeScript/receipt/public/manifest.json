@@ -12,17 +12,17 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*", "https://qawms.fantasiasmiguel.com.mx/scale/insights/2779*"],
 			"js": ["receipt-storage.js"],
 			"css": ["CSS/style.css", "CSS/balloon.css"]
 		},
 		{
-			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*", "https://qawms.fantasiasmiguel.com.mx/RF/ReceivingRF.aspx*"],
 			"js": ["receipt-manager.js"],
-			"css": ["CSS/Receipt.css", "CSS/toasAlert.css"]
+			"css": ["CSS/Receipt.css", "CSS/toastAlert.css"]
 		},
 		{
-			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/receiptWorkBench*"],
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/receiptWorkBench*", "https://qawms.fantasiasmiguel.com.mx/scale/trans/receiptWorkBench*"],
 			"css": ["workbench/workbench.css"]
 		}
 	],

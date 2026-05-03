@@ -11,6 +11,6 @@ export interface ReceiptTypeHandler<T = unknown> {
 	eventNameStorage: string;
 	pattern: RegExp; // ej: '-TR-111-' o 'TR_E-'
 	extractReceiptData(rowData: RowData): T | null;
-	handleSaveData(params: { items: Array<T> }): void;
+	handleSaveData(params: { items: Array<T> }): Promise<void>;
 	deleteData(silent: boolean): void;
 }

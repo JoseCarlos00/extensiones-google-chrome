@@ -77,10 +77,10 @@ export class SaveDataManager {
 	}
 
 	private setEventListener() {
-		this.buttonSaveData.querySelector('a')?.addEventListener('click', (e) => {
+		this.buttonSaveData.querySelector('a')?.addEventListener('click', async (e) => {
 			if (!(e.currentTarget instanceof HTMLAnchorElement)) return;
 
-			this.eventClickManager?.handleEvent();
+			await this.eventClickManager?.handleEvent();
 		});
 
 		this.buttonDeleteData.querySelector('a')?.addEventListener('click', (e) => {

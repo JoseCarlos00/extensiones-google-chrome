@@ -22,7 +22,7 @@ export class EventClickManagerStorage {
 		this.receiptTypeHandlers = receiptTypeHandlers;
 	}
 
-	public handleEvent() {
+	public async handleEvent() {
 		const rows = Array.from(this.tbodyTable?.rows) || [];
 		if (rows.length === 0) return;
 
@@ -40,11 +40,11 @@ export class EventClickManagerStorage {
 		}
 
 		const dataReceipt = this.extractItems(rows, handler);
-		this.handleAndNotify(handler, dataReceipt);
+		await this.handleAndNotify(handler, dataReceipt);
 	}
 
-	private handleAndNotify(handler: ReceiptTypeHandler<unknown>, data: unknown[]) {
-		handler.handleSaveData({ items: data });
+ private async handleAndNotify(handler: ReceiptTypeHandler<unknown>, data: unknown[]) {
+		await handler.handleSaveData({ items: data });
 		eventBus.emit('STORAGE_CHANGED', undefined);
 	}
 

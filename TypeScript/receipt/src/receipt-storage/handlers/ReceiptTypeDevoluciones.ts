@@ -20,7 +20,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<Devoluciones
 		this.nameStorage = nameStorage;
 	}
 
-	handleSaveData({ items }: { items: Array<Devoluciones> }) {
+	async handleSaveData({ items }: { items: Array<Devoluciones> }) {
 		try {
 			if (items.length === 0) {
 				ToastAlert.showAlertFullTop('No hay contenedores para guardar.', 'info');
