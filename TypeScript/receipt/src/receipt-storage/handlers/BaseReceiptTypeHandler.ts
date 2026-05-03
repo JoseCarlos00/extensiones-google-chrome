@@ -13,7 +13,7 @@ export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptType
 	}
 
 	abstract extractReceiptData(rowData: RowData): T | null;
-	abstract handleSaveData(params: { items: Array<T> }): void;
+	abstract handleSaveData(params: { items: Array<T> }): Promise<void>;
 
 	deleteData(silent: boolean = false): void {
 		try {

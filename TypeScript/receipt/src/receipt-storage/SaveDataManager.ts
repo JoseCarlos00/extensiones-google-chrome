@@ -3,6 +3,7 @@ import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
 import { EventClickManagerStorage } from './EventClickManagerStorage'
 import { eventBus } from '../utils/EventBus';
+import { DialogHelper } from '../utils/DialogHelper'
 
 
 export interface SaveDataManagerConfiguration {
@@ -83,10 +84,10 @@ export class SaveDataManager {
 			await this.eventClickManager?.handleEvent();
 		});
 
-		this.buttonDeleteData.querySelector('a')?.addEventListener('click', (e) => {
+		this.buttonDeleteData.querySelector('a')?.addEventListener('click', async (e) => {
 			if (!(e.currentTarget instanceof HTMLAnchorElement)) return;
 
-			this.handleDeleteData();
+			await this.handleDeleteData();
 		});
 
 		// Escuchar cambios internos (misma pestaña) mediante eventos personalizados
@@ -114,13 +115,14 @@ export class SaveDataManager {
 	private handleSaveDataMark() {
 		const hasAnyData = this.receiptTypeHandlers.some((handler) => {
 			const dataStorage = LocalStorageHelper.get(handler.nameStorage);
+
 			return dataStorage?.data?.length > 0;
 		});
 
 		this.markSaveData(!hasAnyData);
 	}
 
-	private handleDeleteData() {
+	private async handleDeleteData() {
 		// 1. Verificar si alguno de los handlers tiene datos realmente
 		const handlersWithData = this.receiptTypeHandlers.filter((handler) => {
 			const dataStorage = LocalStorageHelper.get(handler.nameStorage);
@@ -133,14 +135,14 @@ export class SaveDataManager {
 		}
 
 		// 2. Pedir confirmación una sola vez
-		if (confirm('¿Estás seguro de eliminar todos los datos guardados?\nEsta acción no se puede deshacer.')) {
+		const confirmed = await DialogHelper.requestConfirm(`¿Deseas continuar? <br /> Esta acción no se puede deshacer.`);
+		if (!confirmed) return;
 
 			// 3. Ejecutar borrado silencioso en cada uno
 			handlersWithData.forEach((handler) => handler.deleteData(true));
 
 			eventBus.emit('STORAGE_CHANGED', undefined);
 			ToastAlert.showAlertMinBottom('Todos los datos han sido eliminados', 'success');
-		}
 	}
 
 	private markSaveData(isRemoveMark: boolean = false) {
