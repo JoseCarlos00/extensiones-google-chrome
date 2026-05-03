@@ -12,7 +12,7 @@ export interface ReceiptTypeTrasladosConfiguration {
 
 export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 	readonly pattern = /^TR_E-/;
-	readonly patternTrailerId = /^\d+T$/;
+	readonly patternTrailerId = /^\d+T$/i;
 	readonly patternContainerId = /^T[A-Za-z0-9]{10}$/;
 	readonly nameStorage: string;
 
@@ -54,12 +54,14 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 				trailerId = await this.validateTrailerId();
 			}
 
+			// Filtrar solo los IDs de contenedor válidos
+			const validContainers = items.filter(item => this.patternContainerId.test(item));
 
 			// Dividir la lista de contenedores en grupos de 5
 			const groupedContainers = [];
 
-			for (let i = 0; i < items.length; i += 5) {
-				groupedContainers.push([...items.slice(i, i + 5), 'DONE']);
+			for (let i = 0; i < validContainers.length; i += 5) {
+				groupedContainers.push([...validContainers.slice(i, i + 5), 'DONE']);
 			}
 
 			// Crear el arreglo final con grupos
