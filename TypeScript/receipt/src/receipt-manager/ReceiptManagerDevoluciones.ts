@@ -9,7 +9,7 @@ type DevolucionesPageState =
 	| 'license-plate-done' // h3[0] === 'License plate' + btnDone visible
 	| 'unknown';
 
-export class ReceiptManagerDevoluciones extends ReceiptManagerWithDone<DataDevoluciones> {
+export default class ReceiptManagerDevoluciones extends ReceiptManagerWithDone<DataDevoluciones> {
 	private inputReceiptId: HTMLInputElement | null = null;
 	private messageInvalideReceiptId: string = '';
 
