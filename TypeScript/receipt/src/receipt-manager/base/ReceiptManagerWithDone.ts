@@ -12,6 +12,8 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 	protected isValideLicensePlate: boolean = false;
 
 	protected titlePageLicensePlate: string = 'License plate';
+	protected readonly titlePageReceiptId = 'Receipt id';
+	protected readonly titlePageTrailerId = 'Trailer id';
 
 	constructor(config: ReceiptManagerRFConfig) {
 		super(config);

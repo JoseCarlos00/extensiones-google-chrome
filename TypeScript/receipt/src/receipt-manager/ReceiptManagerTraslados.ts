@@ -13,8 +13,6 @@ export class ReceiptManagerTraslados extends ReceiptManagerWithDone<DataTraslado
 	private inputTrailerId: HTMLInputElement | null = null;
 	private messageInvalideTrailerId: string = '';
 
-	private titlePageTrailerId: string = 'Trailer id';
-
 	constructor(config: ReceiptManagerRFConfig) {
 		super(config);
 

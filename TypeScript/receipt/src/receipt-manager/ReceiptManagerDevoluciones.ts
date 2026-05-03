@@ -11,8 +11,6 @@ type DevolucionesPageState =
 
 export class ReceiptManagerDevoluciones extends ReceiptManagerWithDone<DataDevoluciones> {
 	private inputReceiptId: HTMLInputElement | null = null;
-	private titlePageReceiptId: string = 'Receipt id';
-
 	private messageInvalideReceiptId: string = '';
 
 	constructor(config: ReceiptManagerRFConfig) {
