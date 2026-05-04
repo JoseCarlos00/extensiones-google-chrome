@@ -1,89 +1,104 @@
 export class DialogHelper {
 	static requestInput(message: string, placeholder = ''): Promise<string | null> {
 		return new Promise((resolve) => {
-			// Crear overlay
-			const overlay = document.createElement('div');
-			overlay.style.cssText = `
-                position: fixed; right: 50%; left: 50%; top: 50px;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex; align-items: center; justify-content: center;
-                z-index: 9999;
-            `;
+			const dialog = document.createElement('dialog');
+			dialog.classList.add('custom-confirm-dialog');
 
-			overlay.innerHTML = `
-        <div style="background:#fff; padding:24px; border-radius:8px; min-width:300px; display:flex; flex-direction:column; gap:12px;">
+			dialog.innerHTML = `
+        <form method="dialog" class="custom-content-dialog">
           <p style="margin:0; font-weight:600;">${message}</p>
           <input id="dialog-input" type="text" placeholder="${placeholder}"
-            style="padding:8px; border:1px solid #ccc; border-radius:4px; font-size:14px;" />
-          <div style="display:flex; gap:8px; justify-content:flex-end;">
-            <button id="dialog-cancel" style="padding:8px 16px; border:1px solid #ccc; border-radius:4px; cursor:pointer;">Cancelar</button>
-            <button id="dialog-confirm" style="padding:8px 16px; background:#007bff; color:#fff; border:none; border-radius:4px; cursor:pointer;">Confirmar</button>
+            style="padding:8px; border:1px solid #ccc; border-radius:4px;" />
+          
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button value="cancel" class="btn-dialog btn-outline">Cancelar</button>
+            <button id="confirm-btn" value="confirm" class="btn-dialog btn-confirm">Confirmar</button>
           </div>
-        </div>
+        </form>
       `;
 
-			document.body.appendChild(overlay);
+			document.body.appendChild(dialog);
 
-			const input = overlay.querySelector<HTMLInputElement>('#dialog-input')!;
+			const input = dialog.querySelector<HTMLInputElement>('#dialog-input')!;
+			const form = dialog.querySelector('form')!;
+
+			dialog.showModal();
 			input.focus();
 
-			const cleanup = (value: string | null) => {
-				document.body.removeChild(overlay);
-				resolve(value);
-			};
+			// Click fuera = cerrar
+			dialog.addEventListener('click', (e) => {
+				const rect = dialog.getBoundingClientRect();
+				const isInDialog =
+					e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
 
-			overlay.querySelector('#dialog-confirm')!.addEventListener('click', () => {
-				cleanup(input.value.trim() || null);
+				if (!isInDialog) dialog.close('cancel');
 			});
 
-			overlay.querySelector('#dialog-cancel')!.addEventListener('click', () => cleanup(null));
+			dialog.addEventListener('close', () => {
+				const returnValue = dialog.returnValue;
+				const value = input.value.trim();
 
-			// Confirmar con Enter, cancelar con Escape
+				dialog.remove();
+
+				if (returnValue === 'confirm' && value) {
+					resolve(value);
+				} else {
+					resolve(null);
+				}
+			});
+
+			// Enter manual (porque input no siempre envía form correctamente)
 			input.addEventListener('keydown', (e) => {
-				if (e.key === 'Enter' && input.value.trim()) cleanup(input.value.trim() || null);
-				if (e.key === 'Escape') cleanup(null);
+				if (e.key === 'Enter') {
+					e.preventDefault();
+					dialog.close('confirm');
+				}
 			});
 		});
 	}
 
 	static requestConfirm(message: string): Promise<boolean> {
 		return new Promise((resolve) => {
-			const overlay = document.createElement('div');
-			overlay.style.cssText = `
-                position: fixed; right: 50%; left: 50%; top: 50px;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex; align-items: center; justify-content: center;
-                z-index: 9999;
-            `;
+			const dialog = document.createElement('dialog');
+			dialog.classList.add('custom-confirm-dialog');
 
-			overlay.innerHTML = `
-                <div style="background:#fff; padding:24px; border-radius:8px; min-width:300px; display:flex; flex-direction:column; gap:12px;">
-                    <p style="margin:0; font-weight:600;">${message}</p>
-                    <div style="display:flex; gap:8px; justify-content:flex-end;">
-                        <button id="dialog-cancel" style="padding:8px 16px; border:1px solid #ccc; border-radius:4px; cursor:pointer;">Cancelar</button>
-                        <button id="dialog-confirm" style="padding:8px 16px; background:#007bff; color:#fff; border:none; border-radius:4px; cursor:pointer;">Confirmar</button>
-                    </div>
-                </div>
-            `;
+			dialog.innerHTML = `
+        <form method="dialog" class="custom-content-dialog">
+          <p style="margin:0; font-weight:600;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+							<path fill="#888888" d="M11 9h2V7h-2m1 13c-4.41 0-8-3.59-8-8s3.59-8
+								8-8s8 3.59 8 8s-3.59 8-8 8m0-18A10 10 0 0 0 2 12a10 10 0 0 0 10
+								10a10 10 0 0 0 10-10A10 10 0 0 0 12 2m-1 15h2v-6h-2v6Z" />
+						</svg>
 
-			document.body.appendChild(overlay);
+						${message}
+					</p>
+          
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button value="cancel" class="btn-dialog btn-outline">Cancelar</button>
+            <button value="confirm" class="btn-dialog btn-confirm">Confirmar</button>
+          </div>
+        </form>
+      `;
 
-			const cleanup = (value: boolean) => {
-				document.body.removeChild(overlay);
-				resolve(value);
-			};
+			document.body.appendChild(dialog);
 
-			overlay.querySelector('#dialog-confirm')!.addEventListener('click', () => cleanup(true));
-			overlay.querySelector('#dialog-cancel')!.addEventListener('click', () => cleanup(false));
+			dialog.showModal();
 
-			document.addEventListener(
-				'keydown',
-				(e) => {
-					if (e.key === 'Enter') cleanup(true);
-					if (e.key === 'Escape') cleanup(false);
-				},
-				{ once: true },
-			);
+			// Click fuera
+			dialog.addEventListener('click', (e) => {
+				const rect = dialog.getBoundingClientRect();
+				const isInDialog =
+					e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+
+				if (!isInDialog) dialog.close('cancel');
+			});
+
+			dialog.addEventListener('close', () => {
+				const result = dialog.returnValue === 'confirm';
+				dialog.remove();
+				resolve(result);
+			});
 		});
 	}
 }

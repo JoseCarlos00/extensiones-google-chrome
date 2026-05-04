@@ -3,19 +3,19 @@
 	--balloon-bg-color: #487cc9;
 	--ballon-padding: 0.8em;
 
-	[aria-label][data-balloon-pos][data-balloon-pos="right"]:before {
+	[aria-label][data-balloon-pos][data-balloon-pos='right']:before {
 		border-right-color: var(--balloon-color);
 	}
 
-	[aria-label][data-balloon-pos][data-balloon-pos^="down"]:before {
+	[aria-label][data-balloon-pos][data-balloon-pos^='down']:before {
 		border-bottom-color: var(--balloon-color);
 	}
 
-	[aria-label][data-balloon-pos][data-balloon-pos="left"]:before {
+	[aria-label][data-balloon-pos][data-balloon-pos='left']:before {
 		border-left-color: var(--balloon-color);
 	}
 
-	[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
+	[aria-label][data-balloon-pos][data-balloon-pos='up']:before {
 		border-top-color: var(--balloon-color);
 	}
 
@@ -60,26 +60,81 @@
 	}
 
 	&.delete-data-active a {
-		 animation: bounce-personalizado 1.2s cubic-bezier(0.25, 0.8, 0.5, 1) infinite;
+		animation: bounce-personalizado 1.2s cubic-bezier(0.25, 0.8, 0.5, 1) infinite;
+	}
+}
+
+@keyframes bounce-personalizado {
+	0%,
+	100% {
+		transform: translateY(0);
 	}
 
+	40% {
+		transform: translateY(-12%);
+	}
+
+	60% {
+		transform: translateY(0);
+	}
+
+	75% {
+		transform: translateY(-6%);
+	}
 }
 
 
-@keyframes bounce-personalizado {
-  0%, 100% {
-    transform: translateY(0);
-  }
+dialog::backdrop {
+	background: linear-gradient(#000d, #000a);
+}
 
-  40% {
-    transform: translateY(-12%);
-  }
+.custom-confirm-dialog {
+	inset: initial;
+	right: 50%;
+	left: 50%;
+	top: 50px;
+	transform: translateX(-50%);
 
-  60% {
-    transform: translateY(0);
-  }
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	width: max-content;
+	padding: 0;
 
-  75% {
-    transform: translateY(-6%);
-  }
+	border-color: #fff;
+	border-radius: 8px;
+
+	svg {
+		vertical-align: bottom;
+	}
+
+	.custom-content-dialog {
+		padding:24px;
+		background: #fff;
+		border: none;
+		min-width: 300px;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	.btn-dialog {
+		padding: 8px 16px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		cursor: pointer;
+
+		&.btn-confirm {
+			background:#007bff;
+			color: #fff;
+			border: none;
+			border-radius: 4px;
+
+			&:hover {
+				background: #0069d9;
+				border-color: #0062cc;
+			}
+		}
+	}
 }
