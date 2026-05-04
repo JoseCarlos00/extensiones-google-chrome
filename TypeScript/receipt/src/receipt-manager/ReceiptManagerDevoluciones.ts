@@ -16,7 +16,7 @@ export default class ReceiptManagerDevoluciones extends ReceiptManagerWithDone<D
 	constructor(config: ReceiptManagerRFConfig) {
 		super(config);
 
-		this.inputReceiptId = this.getInput('Form1', 'RECEIPTID');
+		this.inputReceiptId = this.getInput('Form1', 'RECID');
 		this.messageInvalideReceiptId = this.getTextByIndex('h3', 1);
 	}
 
