@@ -163,6 +163,26 @@
     50%       { transform: scale(1.04); }
 }
 
+@keyframes bounce-personalizado {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+
+	40% {
+		transform: translateY(-12%);
+	}
+
+	60% {
+		transform: translateY(0);
+	}
+
+	75% {
+		transform: translateY(-6%);
+	}
+}
+
 .bounce {
-    animation: bounce 1.2s ease-in-out infinite;
+    /* animation: bounce 1.2s ease-in-out infinite; */
+    animation: bounce-personalizado 1.2s cubic-bezier(0.25, 0.8, 0.5, 1) infinite;
 }

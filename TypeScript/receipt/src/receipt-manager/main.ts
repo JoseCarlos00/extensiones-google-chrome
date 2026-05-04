@@ -22,16 +22,21 @@ window.addEventListener('load', async () => {
 
     if (currentReceiptType === 'TRASLADOS') {
       const { default: TrasladosManager } = await import('./ReceiptManagerTraslados');
-      new TrasladosManager({
+      const manager = new TrasladosManager({
         receiptType: currentReceiptType as ReceiptType,
         nameStorage: namesStorages.traslados
-      }).initialize();
+      });
+      console.log(manager);
+      manager.initialize();
+      
     } else if (currentReceiptType === 'DEVOLUCIONES') {
       const { default: DevolucionesManager } = await import('./ReceiptManagerDevoluciones');
-      new DevolucionesManager({
+      const manager = new DevolucionesManager({
         receiptType: currentReceiptType as ReceiptType,
         nameStorage: namesStorages.devoluciones
-      }).initialize();
+      });
+      console.log(manager);
+      manager.initialize();
     }
 	} catch (error: any) {
 		console.error('Error al inicializar el gestor de datos: ', error?.message);
