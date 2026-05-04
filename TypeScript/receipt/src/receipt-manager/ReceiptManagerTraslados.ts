@@ -82,19 +82,22 @@ export default class ReceiptManagerTraslados extends ReceiptManagerWithDone<Data
 		return `
         <div class="info-row">
             <span class="info-label">Trailer ID</span>
-            <span class="info-value">${this.dataStorage?.trailerId ?? '—'}</span>
+            <span class="info-value">${this.dataStorage?.data[0]?.trailerId ?? '—'}</span>
         </div>
     `;
 	}
 
 	getCountersHTML(): string {
+		const totalContainersLength = this.dataStorage?.data[0]?.containers.length;
+		const totalContainers = totalContainersLength ? totalContainersLength - 1 : '0';
+
 		return `
         <div class="counter-card">
             <div class="counter-value">${this.dataStorage?.data.length ?? 0}</div>
             <div class="counter-label">grupos</div>
         </div>
         <div class="counter-card">
-            <div class="counter-value">${this.dataStorage?.data[0]?.containers.length ?? 0}</div>
+            <div class="counter-value">${totalContainers}</div>
             <div class="counter-label">LPs en grupo</div>
         </div>
     `;

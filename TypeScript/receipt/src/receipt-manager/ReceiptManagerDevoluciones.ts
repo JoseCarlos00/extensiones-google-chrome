@@ -88,13 +88,16 @@ export default class ReceiptManagerDevoluciones extends ReceiptManagerWithDone<D
 	}
 
 	getCountersHTML() {
+		const totalContainersLength = this.dataStorage?.data[0]?.containers.length;
+		const totalContainers = totalContainersLength ? totalContainersLength - 1 : '0';
+		
 		return `
 				<div class="counter-card">
             <div class="counter-value">${this.dataStorage?.data.length ?? 0}</div>
             <div class="counter-label">Receipt ids</div>
         </div>
         <div class="counter-card">
-            <div class="counter-value">${this.dataStorage?.data[0]?.containers.length ?? 0}</div>
+            <div class="counter-value">${totalContainers}</div>
             <div class="counter-label">Contenedores</div>
         </div>
     `;
