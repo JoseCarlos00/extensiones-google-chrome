@@ -84,35 +84,28 @@
 }
 
 
-dialog::backdrop {
-	background: linear-gradient(#000d, #000a);
-}
-
-.custom-confirm-dialog {
+.custom-dialog-overlay {
+	position: fixed;
 	inset: initial;
 	right: 50%;
 	left: 50%;
 	top: 50px;
 	transform: translateX(-50%);
 
+	background: rgba(0, 0, 0, 0.5);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	z-index: 9999;
-	width: max-content;
-	padding: 0;
-
-	border-color: #fff;
-	border-radius: 8px;
 
 	svg {
 		vertical-align: bottom;
 	}
 
 	.custom-content-dialog {
-		padding:24px;
 		background: #fff;
-		border: none;
+		padding: 20px;
+		border-radius: 8px;
 		min-width: 300px;
 		display: flex;
 		flex-direction: column;
@@ -130,11 +123,6 @@ dialog::backdrop {
 			color: #fff;
 			border: none;
 			border-radius: 4px;
-
-			&:hover {
-				background: #0069d9;
-				border-color: #0062cc;
-			}
 		}
 	}
 }

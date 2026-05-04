@@ -1,17 +1,15 @@
-import type { ReceiptTypeHandler } from '../types/receipt-handler.types'
+import type { ReceiptTypeHandler } from '../types/receipt-handler.types';
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
-import { EventClickManagerStorage } from './EventClickManagerStorage'
+import { EventClickManagerStorage } from './EventClickManagerStorage';
 import { eventBus } from '../utils/EventBus';
-import { DialogHelper } from '../utils/DialogHelper'
-
+import { DialogHelper } from '../utils/DialogHelper';
 
 export interface SaveDataManagerConfiguration {
 	buttonSaveData: Element;
 	buttonDeleteData: Element;
 	receiptTypeHandlers: ReceiptTypeHandler[];
 }
-
 
 export class SaveDataManager {
 	private readonly tbodyTable: HTMLTableSectionElement | null;
@@ -138,11 +136,11 @@ export class SaveDataManager {
 		const confirmed = await DialogHelper.requestConfirm(`¿Deseas continuar? <br /> Esta acción no se puede deshacer.`);
 		if (!confirmed) return;
 
-			// 3. Ejecutar borrado silencioso en cada uno
-			handlersWithData.forEach((handler) => handler.deleteData(true));
+		// 3. Ejecutar borrado silencioso en cada uno
+		handlersWithData.forEach((handler) => handler.deleteData(true));
 
-			eventBus.emit('STORAGE_CHANGED', undefined);
-			ToastAlert.showAlertMinBottom('Todos los datos han sido eliminados', 'success');
+		eventBus.emit('STORAGE_CHANGED', undefined);
+		ToastAlert.showAlertMinBottom('Todos los datos han sido eliminados', 'success');
 	}
 
 	private markSaveData(isRemoveMark: boolean = false) {
