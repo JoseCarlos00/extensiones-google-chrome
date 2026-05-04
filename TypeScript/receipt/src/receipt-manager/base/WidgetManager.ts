@@ -33,8 +33,6 @@ export class WidgetManager {
 	}
 
 	refreshHeader(): void {
-		console.log('Refreshing header...');
-		
 		const header = this.root?.querySelector('#receipt-header');
 		if (header) header.innerHTML = this.getHeaderHTML();
 	}
@@ -101,7 +99,7 @@ export class WidgetManager {
 
 	private updateButtonState(hasData: boolean): void {
 		const btn = this.root?.querySelector('#init-receipt') as HTMLButtonElement | null;
-		console.log('updateButtonState: dataLength > 0:', { hasData, status: this.provider.getStatus() });
+		console.log('Preview Status:', this.provider.getStatus());
 		
 		if (!btn) return;
 
@@ -109,7 +107,6 @@ export class WidgetManager {
 		if (!hasData) {
 			this.provider.setStatus('idle');
 		} else if (this.provider.getStatus() !== 'processing') {
-			// ✅ Avanza a ready desde idle O completed — solo respeta processing
 			this.provider.setStatus('ready');
 		}
 
