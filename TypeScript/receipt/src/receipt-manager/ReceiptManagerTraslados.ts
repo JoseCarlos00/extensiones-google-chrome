@@ -80,15 +80,23 @@ export default class ReceiptManagerTraslados extends ReceiptManagerWithDone<Data
 	// ─── Presentación ────────────────────────────────────
 	getInfoHTML(): string {
 		return `
-        <div>Tipo: TRASLADOS</div>
-        <div>Trailer ID: ${this.dataStorage?.data[0]?.trailerId ?? '—'}</div>
+        <div class="info-row">
+            <span class="info-label">Trailer ID</span>
+            <span class="info-value">${this.dataStorage?.trailerId ?? '—'}</span>
+        </div>
     `;
 	}
 
-	getCountersHTML() {
+	getCountersHTML(): string {
 		return `
-        <div>${this.dataStorage?.data.length} grupos</div>
-        <div>${this.dataStorage?.data[0]?.containers.length ?? 0} LPs en grupo</div>
+        <div class="counter-card">
+            <div class="counter-value">${this.dataStorage?.data.length ?? 0}</div>
+            <div class="counter-label">grupos</div>
+        </div>
+        <div class="counter-card">
+            <div class="counter-value">${this.dataStorage?.data[0]?.containers.length ?? 0}</div>
+            <div class="counter-label">LPs en grupo</div>
+        </div>
     `;
 	}
 }

@@ -20,20 +20,27 @@ export class WidgetManager {
 	}
 
 	refresh(dataLength: number): void {
-		const header = this.root?.querySelector('#receipt-header');
-		const info = this.root?.querySelector('#receipt-info');
-		const counters = this.root?.querySelector('#receipt-counters');
+		this.refreshInfo();
+		this.refreshCounters();
 
-		if (header) header.innerHTML = this.getHeaderHTML();
-		if (info) info.innerHTML = this.provider.getInfoHTML();
-		if (counters) counters.innerHTML = this.provider.getCountersHTML();
-
+		console.log('Refresh:', {dataLength, status: this.provider.getStatus()});
 		this.updateButtonState(dataLength > 0);
 	}
 
 	refreshCounters(): void {
 		const counters = this.root?.querySelector('#receipt-counters');
 		if (counters) counters.innerHTML = this.provider.getCountersHTML();
+	}
+
+	refreshHeader(): void {
+		console.log('Refreshing header...');
+		
+		const header = this.root?.querySelector('#receipt-header');
+		if (header) header.innerHTML = this.getHeaderHTML();
+	}
+	refreshInfo(): void {
+		const info = this.root?.querySelector('#receipt-info');
+		if (info) info.innerHTML = this.provider.getInfoHTML();
 	}
 
 	private bindEvents(): void {
@@ -52,31 +59,30 @@ export class WidgetManager {
 
 	private getWidgetHTML(): string {
 		return `
-      <div class="menu-config">
-				<div id="receipt-header">${this.getHeaderHTML()}</div>
-        <div id="receipt-info">${this.provider.getInfoHTML()}</div>
-        <div id="receipt-counters">${this.provider.getCountersHTML()}</div>
-        <div class="receipt-buttons">
-          <button id="init-receipt" disabled>Iniciar</button>
-          <button id="cancel-receipt">Cancelar</button>
+        <div class="widget-container">
+            <div id="receipt-header">${this.getHeaderHTML()}</div>
+            <div id="receipt-info">${this.provider.getInfoHTML()}</div>
+            <div id="receipt-counters">${this.provider.getCountersHTML()}</div>
+            <div class="receipt-buttons">
+                <button id="init-receipt" disabled>Iniciar</button>
+                <button id="cancel-receipt">Cancelar</button>
+            </div>
         </div>
-      </div>
     `;
 	}
 
 	private getHeaderHTML(): string {
 		const { label, color } = this.getStatusIndicator();
 		return `
-            <div style="display:flex; align-items:center; justify-content:space-between;
-                        margin-bottom:10px; border-bottom:0.5px solid #444; padding-bottom:8px;">
-                <div style="display:flex; align-items:center; gap:6px;">
-                    <div style="width:7px; height:7px; border-radius:50%; background:${color};"></div>
-                    <span style="font-size:11px; color:#aaa;">${label}</span>
-                </div>
-                <span style="font-size:10px; color:#888;">${this.provider.receiptType}</span>
+        <div class="widget-header">
+            <div class="widget-header-status">
+                <div class="status-dot" style="background:${color};"></div>
+                <span class="status-label">${label}</span>
             </div>
-        `;
-	}
+            <span class="receipt-type-label">${this.provider.receiptType}</span>
+        </div>
+    `;
+	}	
 
 	private getStatusIndicator(): { label: string; color: string } {
 		switch (this.provider.getStatus()) {
@@ -95,16 +101,21 @@ export class WidgetManager {
 
 	private updateButtonState(hasData: boolean): void {
 		const btn = this.root?.querySelector('#init-receipt') as HTMLButtonElement | null;
-
+		console.log('updateButtonState: dataLength > 0:', { hasData, status: this.provider.getStatus() });
+		
 		if (!btn) return;
 
 		// Si no hay datos, forzar idle
 		if (!hasData) {
 			this.provider.setStatus('idle');
-		} else if (this.provider.getStatus() === 'idle') {
-			// Solo avanza a ready si estaba idle — respeta processing y completed
+		} else if (this.provider.getStatus() !== 'processing') {
+			// ✅ Avanza a ready desde idle O completed — solo respeta processing
 			this.provider.setStatus('ready');
 		}
+
+		console.log('New Status:', this.provider.getStatus());
+		this.refreshHeader();
+		
 
 		switch (this.provider.getStatus()) {
 			case 'idle':

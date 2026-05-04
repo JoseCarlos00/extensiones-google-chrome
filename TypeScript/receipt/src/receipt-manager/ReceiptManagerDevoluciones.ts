@@ -80,14 +80,23 @@ export default class ReceiptManagerDevoluciones extends ReceiptManagerWithDone<D
 	// ─── Presentación ────────────────────────────────────
 	getInfoHTML(): string {
 		return `
-      <div>Receipt: ${this.inputReceiptId?.value}</div>
+			<div class="info-row">
+            <span class="info-label">Receipt id</span>
+            <span class="info-value">${this.dataStorage?.data[0]?.receiptId ?? '—'}</span>
+        </div>
     `;
 	}
 
 	getCountersHTML() {
 		return `
-        <div>${this.dataStorage?.data.length} receipt IDs</div>
-        <div>${this.dataStorage?.data[0]?.containers.length ?? 0} contenedores</div>
+				<div class="counter-card">
+            <div class="counter-value">${this.dataStorage?.data.length ?? 0}</div>
+            <div class="counter-label">Receipt ids</div>
+        </div>
+        <div class="counter-card">
+            <div class="counter-value">${this.dataStorage?.data[0]?.containers.length ?? 0}</div>
+            <div class="counter-label">Contenedores</div>
+        </div>
     `;
 	}
 }
