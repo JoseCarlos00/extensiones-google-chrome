@@ -54,7 +54,7 @@ export class ReceiptTypeDevoluciones extends BaseReceiptTypeHandler<Devoluciones
 	}
 
 	extractReceiptData(rowData: RowData): Devoluciones | null {
-		if (rowData.status !== 'Check In Pending') return null;
+		if (rowData.status !== 'Check In Pending' || rowData.item !== '') return null;
 
 		return [rowData.receiptId, rowData.licensePlateId];
 	}
