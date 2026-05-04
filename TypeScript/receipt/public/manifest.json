@@ -13,7 +13,12 @@
 	"content_scripts": [
 		{
 			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2779*", "https://qawms.fantasiasmiguel.com.mx/scale/insights/2779*"],
-			"js": ["receipt-storage.js"],
+			"js": ["receipt-storage/receiptStorage.js"],
+			"css": ["CSS/style.css", "CSS/balloon.css"]
+		},
+		{
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2780*", "https://qawms.fantasiasmiguel.com.mx/scale/insights/2780*"],
+			"js": ["receipt-storage/receiptDetail.js"],
 			"css": ["CSS/style.css", "CSS/balloon.css"]
 		},
 		{

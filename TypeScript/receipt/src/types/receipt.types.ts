@@ -2,7 +2,7 @@ export type ReceiptType = 'TRASLADOS' | 'DEVOLUCIONES' | 'TARIMAS' | 'CAJAS';
 
 export type DataTraslados = { licensePlateId: string};
 export type DataDevoluciones = { receiptId: string; licensePlateId: string };
-export type DataTarimas = { item: string; openQty: number };
+export type DataTarimas = { item: string; openQty: string };
 
 
 // Lo que usa la UI

@@ -61,7 +61,11 @@ function copyStatic() {
 const entryPoints = [
 	{
 		in: 'src/receipt-storage/main.ts',
-		out: 'dist/receipt-storage',
+		out: 'dist/receipt-storage/receiptStorage',
+	},
+	{
+		in: 'src/receipt-storage/mainReceiptDetail.ts',
+		out: 'dist/receipt-storage/receiptDetail',
 	},
 	{
 		in: 'src/receipt-manager/main.ts',

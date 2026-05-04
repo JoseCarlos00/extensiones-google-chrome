@@ -2,53 +2,53 @@ import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ToastAlert } from '../../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
 import type { RowData } from '../../types/receipt-handler.types'
-import type { Tarimas } from '../../types/receipt.types'
+import type { DataTarimas } from '../../types/receipt.types'
+import { ReceiptStorageMap, StorageData } from '../../types/storage.types';
 
 export interface ReceiptTypeTarimasConfiguration {
 	nameStorage: string;
 	eventNameStorage: string;
 }
 
-export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<Tarimas> {
+export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implements BaseReceiptTypeHandler<'TARIMAS'>{
 	readonly pattern = /^R/;
 	readonly nameStorage: string;
 
 	private readonly receiptType = 'TARIMAS';
+	readonly type = 'TARIMAS';
 
 	constructor({ nameStorage, eventNameStorage }: ReceiptTypeTarimasConfiguration) {
 		super(eventNameStorage);
 		this.nameStorage = nameStorage;
 	}
 
-	async handleSaveData({ items }: { items: Array<Tarimas> }) {
+	async handleSaveData({ items }: { items: Array<DataTarimas> }) {
 		try {
 			if (items.length === 0) {
 				ToastAlert.showAlertFullTop('No hay contenedores para guardar.', 'info');
 				return;
 			}
 
-			const groupedMap = new Map<string, string[]>();
-
-			items.forEach(([{ item, openQty }]) => {
-				if (!groupedMap.has(item)) groupedMap.set(item, []);
-				groupedMap.get(item)!.push(openQty);
+			const data: ReceiptStorageMap['TARIMAS'][] = items.map(({ item, openQty }) => {
+				return { item, openQty };
 			});
 
-			const data = Array.from(groupedMap, ([item, openQtie]) => ({
-				receiptId,
-				items: [...containers, 'DONE'],
-			}));
+			console.log('Datos guardados:', data);
 
-			LocalStorageHelper.save(this.nameStorage, { receiptType: this.receiptType, dataContainer: data });
+			LocalStorageHelper.save(this.nameStorage, {
+				receiptType: this.receiptType,
+				data,
+			} satisfies StorageData);
+
+			
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
-			window.dispatchEvent(new Event(this.eventNameStorage));
 		} catch (error: any) {
 			console.error('Error al guardar los datos:', error?.message);
 			ToastAlert.showAlertFullTop('Ha ocurrido un error al guardar los datos');
 		}
 	}
 
-	extractReceiptData(rowData: RowData): Tarimas | null {
+	extractReceiptData(rowData: RowData): DataTarimas | null {
 		if (rowData.status !== 'Check In Pending') return null;
 
 		return { item: rowData.item, openQty: rowData.openQty };
