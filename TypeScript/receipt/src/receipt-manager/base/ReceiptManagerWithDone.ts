@@ -27,7 +27,10 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 
 	protected onclickButtonDone(): void {
 		if (!this.btnDone) return;
-		setTimeout(() => this.btnDone?.click(), this.confirmDelay);
+		setTimeout(() => {
+			console.warn('Confirmar button Done');
+			this.btnDone?.click();
+		}, this.confirmDelay);
 	}
 
 	processNextItem(): void {

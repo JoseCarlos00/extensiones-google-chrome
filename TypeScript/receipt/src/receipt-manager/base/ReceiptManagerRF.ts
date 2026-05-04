@@ -42,6 +42,11 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 
 		this.refresh();
 		this.setEventListeners();
+
+		// Si el proceso estaba activo antes de la recarga, retoma automáticamente
+    if (this.getStatus() === 'processing') {
+        this.processData();
+    }
 	}
 
 	// Subclases definen esto
@@ -133,10 +138,11 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	}
 
 	protected submitForm(): void {
+		console.warn('Confirmar button OK');
 		setTimeout(() => {
-			console.warn('Confirmar button OK');
+			// console.warn('Confirmar button OK');
 			this.btnOk?.click();
 			this.setTimeoutSubmitForm();
-		}, this.confirmDelay);
+		}, 5000);
 	}
 }

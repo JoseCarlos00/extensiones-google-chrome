@@ -1,7 +1,6 @@
 import { getInputValue } from '../utils/getInputValue';
 import { namesStorages } from "../constants";
 import { ReceiptType } from '../types/receipt.types';
-import { ReceiptManagerRFConfig } from "./base/ReceiptManagerRF";
 
 const acceptedReceiptPreferences: ReceiptType[] = ['TRASLADOS', 'DEVOLUCIONES'];
 const titleMainSelector = '#proRfWrapper > form > table > tbody > tr.touchscreen-show > td > b';
@@ -26,7 +25,7 @@ window.addEventListener('load', async () => {
         receiptType: currentReceiptType as ReceiptType,
         nameStorage: namesStorages.traslados
       });
-      console.log(manager);
+      
       manager.initialize();
       
     } else if (currentReceiptType === 'DEVOLUCIONES') {
@@ -35,7 +34,7 @@ window.addEventListener('load', async () => {
         receiptType: currentReceiptType as ReceiptType,
         nameStorage: namesStorages.devoluciones
       });
-      console.log(manager);
+      
       manager.initialize();
     }
 	} catch (error: any) {
