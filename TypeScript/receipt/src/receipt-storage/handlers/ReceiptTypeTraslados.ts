@@ -2,19 +2,21 @@ import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ToastAlert } from '../../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
 import type { RowData } from '../../types/receipt-handler.types';
-import type { DataTraslados, Traslados } from '../../types/receipt.types';
+import type { DataTraslados } from '../../types/receipt.types';
 import { DialogHelper } from '../../utils/DialogHelper'
+import { ReceiptStorageMap, StorageData } from '../../types/storage.types'
 
 export interface ReceiptTypeTrasladosConfiguration {
 	nameStorage: string;
 	eventNameStorage: string;
 }
 
-export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
+export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> implements BaseReceiptTypeHandler<'TRASLADOS'> {
 	readonly pattern = /^TR_E-/;
 	readonly patternTrailerId = /^\d+T$/i;
 	readonly patternContainerId = /^T[A-Za-z0-9]{10}$/;
 	readonly nameStorage: string;
+	readonly type = 'TRASLADOS';
 
 	private readonly receiptType = 'TRASLADOS';
 
@@ -34,11 +36,11 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 			ToastAlert.showAlertFullTop('ID de trailer inválido.', 'error');
 			return await this.validateTrailerId();
 		}
-		
+
 		return input.toUpperCase();
 	}
 
-	async handleSaveData({ items }: { items: Array<Traslados> }) {
+	async handleSaveData({ items }: { items: Array<DataTraslados> }) {
 		try {
 			// Obtener los datos
 			let trailerId = this.getTrailerId();
@@ -55,7 +57,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 			}
 
 			// Filtrar solo los IDs de contenedor válidos
-			const validContainers = items.filter(item => this.patternContainerId.test(item));
+			const validContainers = items.filter(({ licensePlateId }) => this.patternContainerId.test(licensePlateId)).map(({ licensePlateId }) => licensePlateId);
 
 			// Dividir la lista de contenedores en grupos de 5
 			const groupedContainers = [];
@@ -65,9 +67,9 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 			}
 
 			// Crear el arreglo final con grupos
-			const data = groupedContainers.map((group) => {
+			const data: ReceiptStorageMap['TRASLADOS'][] = groupedContainers.map((group) => {
 				return { trailerId, containers: group };
-			}) as DataTraslados[];
+			});
 
 			console.log('Datos guardados:', data);
 
@@ -75,7 +77,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 				receiptType: this.receiptType,
 				trailerId,
 				data,
-			});
+			} satisfies StorageData);
 
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 		} catch (error: any) {
@@ -84,10 +86,10 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<Traslados> {
 		}
 	}
 
-	extractReceiptData(rowData: RowData): Traslados | null {
+	extractReceiptData(rowData: RowData): DataTraslados | null {
 		if (rowData.status !== 'Check In Pending') return null;
 
-		return rowData.licensePlateId;
+		return { licensePlateId: rowData.licensePlateId };
 	}
 
 	private getTrailerId(): string {

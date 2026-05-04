@@ -1,4 +1,4 @@
-import type { ReceiptTypeHandler } from '../types/receipt-handler.types';
+import type { AnyReceiptHandler, ReceiptTypeHandler } from '../types/receipt-handler.types';
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
 import { EventClickManagerStorage } from './EventClickManagerStorage';
@@ -8,7 +8,7 @@ import { DialogHelper } from '../utils/DialogHelper';
 export interface SaveDataManagerConfiguration {
 	buttonSaveData: Element;
 	buttonDeleteData: Element;
-	receiptTypeHandlers: ReceiptTypeHandler[];
+	receiptTypeHandlers: AnyReceiptHandler[];
 }
 
 export class SaveDataManager {
@@ -17,7 +17,7 @@ export class SaveDataManager {
 	private readonly buttonDeleteData: Element;
 
 	private eventClickManager: EventClickManagerStorage | undefined;
-	private readonly receiptTypeHandlers: ReceiptTypeHandler<unknown>[];
+	private readonly receiptTypeHandlers: AnyReceiptHandler[];
 	private updateUITimeout: number | null = null;
 
 	constructor({ buttonSaveData, buttonDeleteData, receiptTypeHandlers }: SaveDataManagerConfiguration) {

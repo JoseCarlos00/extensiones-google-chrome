@@ -1,24 +1,36 @@
 export type ReceiptType = 'TRASLADOS' | 'DEVOLUCIONES' | 'TARIMAS' | 'CAJAS';
 
-export type Devoluciones = [string, string];
-export type Traslados = string;
-export type Tarimas = { item: string; openQty: number };
+export type DataTraslados = { licensePlateId: string};
+export type DataDevoluciones = { receiptId: string; licensePlateId: string };
+export type DataTarimas = { item: string; openQty: number };
 
-export type DataTraslados = { trailerId: string; containers: string[] };
-export type DataDevoluciones = { receiptId: string; containers: string[] };
 
-export type ReceiptData = Devoluciones | Traslados | Tarimas | null;
-
-export type DataTarimas = {
+// Lo que usa la UI
+export type DataTarimasStorage = {
 	receiptId: string;
 	licensePlateConfig: string;
 	currentLp: string;
-	items: Tarimas[];
+	items: DataTarimas[];
 	currentItem: {
 		item: string;
 		openQty: number;
-		containerQty: number; // leído de <select>#combobox_id
-		totalTarimas: number; // Math.floor(openQty / containerQty)
+		containerQty: number;
+		totalTarimas: number;
 		processedTarimas: number;
 	} | null;
+};
+
+export type ReceiptData =
+	| {
+			[K in keyof ReceiptInputMap]: {
+				type: K;
+				data: ReceiptInputMap[K];
+			};
+	  }[keyof ReceiptInputMap]
+	| null;
+
+export type ReceiptInputMap = {
+	TRASLADOS: DataTraslados;
+	DEVOLUCIONES: DataDevoluciones;
+	TARIMAS: DataTarimas;
 };

@@ -1,4 +1,4 @@
-import { ReceiptType } from "./receipt.types"
+import { DataTarimas, ReceiptInputMap, ReceiptType } from './receipt.types';
 
 /**
  * 'idle'       → sin datos en storage
@@ -8,8 +8,27 @@ import { ReceiptType } from "./receipt.types"
  */
 export type ReceiptStatus = 'idle' | 'ready' | 'processing' | 'completed';
 
-export type StorageData<T> = {
+export type StorageData2<T> = {
 	receiptType: ReceiptType;
 	trailerId?: string;
 	data: T[];
 };
+
+export type ReceiptStorageMap = {
+	TRASLADOS: {
+		trailerId: string;
+		containers: string[];
+	};
+	DEVOLUCIONES: {
+		receiptId: string;
+		containers: string[];
+	};
+	TARIMAS: DataTarimas; // o lo que necesites realmente guardar
+};
+
+export type StorageData = {
+	[K in keyof ReceiptStorageMap]: {
+		receiptType: K;
+		data: ReceiptStorageMap[K][];
+	} & (K extends 'TRASLADOS' ? { trailerId: string } : {});
+}[keyof ReceiptStorageMap];

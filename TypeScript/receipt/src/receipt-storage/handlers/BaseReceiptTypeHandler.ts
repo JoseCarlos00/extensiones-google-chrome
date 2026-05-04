@@ -1,10 +1,12 @@
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ToastAlert } from '../../utils/ToastAlert';
 import { ReceiptTypeHandler, RowData } from '../../types/receipt-handler.types';
+import { ReceiptInputMap } from '../../types/receipt.types'
 
-export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptTypeHandler<T> {
+export abstract class BaseReceiptTypeHandler<K extends keyof ReceiptInputMap> implements ReceiptTypeHandler<K> {
 	abstract readonly pattern: RegExp;
 	abstract readonly nameStorage: string;
+	abstract readonly type: K;
 
 	public readonly eventNameStorage: string;
 
@@ -12,8 +14,8 @@ export abstract class BaseReceiptTypeHandler<T = unknown> implements ReceiptType
 		this.eventNameStorage = eventNameStorage;
 	}
 
-	abstract extractReceiptData(rowData: RowData): T | null;
-	abstract handleSaveData(params: { items: Array<T> }): Promise<void>;
+	abstract extractReceiptData(rowData: RowData): ReceiptInputMap[K] | null;
+	abstract handleSaveData(params: { items: Array<ReceiptInputMap[K]> }): Promise<void>;
 
 	deleteData(silent: boolean = false): void {
 		try {
