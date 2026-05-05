@@ -1,6 +1,6 @@
 import { WidgetDataProvider } from '../../types/receipt-widget.types'
 import { ReceiptType } from '../../types/receipt.types'
-import type { ReceiptStatus, StorageData } from '../../types/storage.types';
+import type { ReceiptStatus, ReceiptStorageMap } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { WidgetManager } from './WidgetManager'
 
@@ -19,7 +19,7 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	protected readonly SESSION_KEY = 'receiptManagerStatus';
 
 	// Storage
-	protected dataStorage: StorageData<T> | null;
+	protected dataStorage: ReceiptStorageMap[ReceiptType][] | null;
 	protected readonly nameStorage: string;
 
 	// UI — solo lo universal

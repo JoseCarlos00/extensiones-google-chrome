@@ -1,4 +1,4 @@
-import { DataTarimas, ReceiptInputMap, ReceiptType } from './receipt.types';
+import { DataCajas, DataTarimas, ReceiptInputMap, ReceiptType } from './receipt.types';
 
 /**
  * 'idle'       → sin datos en storage
@@ -23,7 +23,8 @@ export type ReceiptStorageMap = {
 		receiptId: string;
 		containers: string[];
 	};
-	TARIMAS: DataTarimas; // o lo que necesites realmente guardar
+	TARIMAS: DataTarimas;
+	CAJAS: DataCajas;
 };
 
 export type StorageData = {
