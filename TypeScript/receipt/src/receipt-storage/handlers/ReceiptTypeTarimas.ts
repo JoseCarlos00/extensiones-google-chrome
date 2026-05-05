@@ -25,12 +25,12 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implem
 	async handleSaveData({ items }: { items: Array<DataTarimas> }) {
 		try {
 			if (items.length === 0) {
-				ToastAlert.showAlertFullTop('No hay contenedores para guardar.', 'info');
+				ToastAlert.showAlertFullTop('No hay datos para guardar.', 'info');
 				return;
 			}
 
-			const data: ReceiptStorageMap['TARIMAS'][] = items.map(({ item, openQty }) => {
-				return { item, openQty };
+			const data: ReceiptStorageMap['TARIMAS'][] = items.map(({ item, openQty, receiptId }) => {
+				return { item, openQty, receiptId };
 			});
 
 			console.log('Datos guardados:', data);
@@ -49,8 +49,6 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implem
 	}
 
 	extractReceiptData(rowData: RowData): DataTarimas | null {
-		if (rowData.status !== 'Check In Pending') return null;
-
-		return { item: rowData.item, openQty: rowData.openQty };
+		return { item: rowData.item, openQty: rowData.openQty, receiptId: rowData.receiptId };
 	}
 }

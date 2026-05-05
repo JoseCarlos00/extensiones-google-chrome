@@ -8,7 +8,7 @@ const { buttonDeleteData, buttonSaveData } = getElementButtons();
 
 window.addEventListener('load', async () => {
   try {
-    console.log('[main] Inicio de Aplicación');
+    console.log('[main ReceiptTypeTarimas] Inicio de Aplicación');
     
     new SaveDataManager({
 			buttonSaveData,

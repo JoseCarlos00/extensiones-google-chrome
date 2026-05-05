@@ -1,6 +1,7 @@
 import type { AnyReceiptHandler, ReceiptTypeHandler, RowData } from '../types/receipt-handler.types';
 import type { ReceiptInputMap } from '../types/receipt.types';
 import { eventBus } from '../utils/EventBus';
+import { ToastAlert } from '../utils/ToastAlert';
 
 export interface EventClickManagerStorageConfiguration {
 	tbodyTable: HTMLTableSectionElement;
@@ -33,16 +34,32 @@ export class EventClickManagerStorage {
 
 		// Dinámico: busca el handler que coincida con el patrón
 		const handler = this.receiptTypeHandlers.find((h) => h.pattern.test(receiptId));
-
+		
 		if (!handler) {
 			console.warn(`No handler found for receiptId: ${receiptId}`);
 			return;
 		}
-
+		
 		switch (handler.type) {
 			case 'DEVOLUCIONES':
 			case 'TRASLADOS':
+				await this.process(handler, rows);
+				break;
 			case 'TARIMAS':
+				// Implementa aquí tu lógica de validación específica
+				console.log('Realizando validación previa para Tarimas...');
+				
+				const allReceiptsIds = rows.map(row => row.querySelector(`td[aria-describedby="${this.receiptId}"]`)?.textContent?.trim() || '').filter(id => id !== '');
+				const uniqueReceiptsIds = new Set(allReceiptsIds);
+
+				if (uniqueReceiptsIds.size > 1) {
+					ToastAlert.showAlertFullTop(
+						`Se detectaron múltiples Receipt IDs.<br />Solo se permite procesar un Receipt ID a la vez.`,
+						'warning',
+					);
+					return;
+				}
+
 				await this.process(handler, rows);
 				break;
 		}
