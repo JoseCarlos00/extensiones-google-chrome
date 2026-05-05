@@ -1,9 +1,10 @@
 import { DataDevoluciones, DataTraslados } from "../../types/receipt.types"
+import { ReceiptStorageMap } from "../../types/storage.types"
 import { LocalStorageHelper } from "../../utils/LocalStorageHelper"
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from "../base/ReceiptManagerRF";
 
 // Nivel 2a — Devoluciones + Traslados
-export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevoluciones> extends ReceiptManagerRF<T> {
+export abstract class ReceiptManagerWithDone<K extends 'TRASLADOS' | 'DEVOLUCIONES'> extends ReceiptManagerRF<K> {
 	protected btnDone: HTMLInputElement | null = null;
 	protected inputLicensePlate: HTMLInputElement | null = null;
 
@@ -33,22 +34,32 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 		}, this.confirmDelay);
 	}
 
+	protected get items(): readonly ReceiptStorageMap[K][] {
+		return this.storage?.data ?? [];
+	}
+
+	protected get mutableItems(): ReceiptStorageMap[K][] | null {
+		return this.storage?.data ?? null;
+	}
+
 	processNextItem(): void {
-		if (!this.dataStorage?.data.length) {
+		const items = this.mutableItems;
+
+		if (!items?.length) {
 			console.log('No hay datos almacenados en dataStorage.');
 			return;
 		}
-		const firstObject = this.dataStorage?.data[0];
+		const firstObject = items[0];
 		if (!firstObject) return;
 
 		// Verifica si el objeto tiene un array `containers` válido
 		// Actualiza e elimina el primer Objeto de dataContainerStorage
 		if (!firstObject.containers?.length) {
 			// Elimina el objeto si su `containers` está vacío
-			if (!this.dataStorage) return;
-			this.dataStorage.data.shift();
+			if (!this.storage) return;
+			items.shift();
 
-			LocalStorageHelper.save(this.nameStorage, this.dataStorage);
+			LocalStorageHelper.save(this.nameStorage, this.storage);
 			console.log('[1] El primer objeto fue eliminado porque `containers` está vacío.');
 			console.warn('No hay datos guardados');
 			return;
@@ -57,8 +68,8 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 		const currentLicensePlate = firstObject.containers.shift() ?? '';
 		console.log(`Procesando placa: ${currentLicensePlate}`);
 
-		if (!this.dataStorage) return;
-		LocalStorageHelper.save(this.nameStorage, this.dataStorage);
+		if (!this.storage) return;
+		LocalStorageHelper.save(this.nameStorage, this.storage);
 
 		/**
 		 * Si después de eliminar el primer elemento de `containers`,
@@ -66,9 +77,9 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 		 *  Actualiza e elimina el primer Objeto de dataContainerStorage
 		 */
 		if (!firstObject.containers?.length) {
-			this.dataStorage.data.shift();
+			items.shift();
 
-			LocalStorageHelper.save(this.nameStorage, this.dataStorage);
+			LocalStorageHelper.save(this.nameStorage, this.storage);
 			console.log(
 				'[2] El primer objeto [DataTraslados | DataDevoluciones] fue eliminado porque `containers` quedó vacío.',
 			);
@@ -79,7 +90,7 @@ export abstract class ReceiptManagerWithDone<T extends DataTraslados | DataDevol
 			return;
 		}
 
-		if (this.dataStorage!.data.length === 0) {
+		if (!items.length) {
 			this.completeReceipt();
 			return;
 		}

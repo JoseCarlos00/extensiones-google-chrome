@@ -1,6 +1,6 @@
 import { WidgetDataProvider } from '../../types/receipt-widget.types'
 import { ReceiptType } from '../../types/receipt.types'
-import type { ReceiptStatus, ReceiptStorageMap } from '../../types/storage.types';
+import type { ReceiptStatus, StorageData, ReceiptStorageMap } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { WidgetManager } from './WidgetManager'
 
@@ -9,7 +9,7 @@ export interface ReceiptManagerRFConfig {
 	nameStorage: string;
 }
 
-export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
+export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implements WidgetDataProvider {
 	// Interno
 	private widgetManager!: WidgetManager;
 	private timeoutId: number | null = null;
@@ -19,7 +19,12 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 	protected readonly SESSION_KEY = 'receiptManagerStatus';
 
 	// Storage
-	protected dataStorage: ReceiptStorageMap[ReceiptType][] | null;
+	protected dataStorage:
+		| ({
+				receiptType: K;
+				data: ReceiptStorageMap[K][];
+		  } & (K extends 'TRASLADOS' ? { trailerId: string } : {}))
+		| null;
 	protected readonly nameStorage: string;
 
 	// UI — solo lo universal
@@ -44,9 +49,9 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 		this.setEventListeners();
 
 		// Si el proceso estaba activo antes de la recarga, retoma automáticamente
-    if (this.getStatus() === 'processing') {
-        this.processData();
-    }
+		if (this.getStatus() === 'processing') {
+			this.processData();
+		}
 	}
 
 	// Subclases definen esto
@@ -144,5 +149,9 @@ export abstract class ReceiptManagerRF<T> implements WidgetDataProvider {
 			this.btnOk?.click();
 			this.setTimeoutSubmitForm();
 		}, 5000);
+	}
+
+	protected get storage() {
+		return this.dataStorage;
 	}
 }

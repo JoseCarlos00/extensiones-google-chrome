@@ -9,7 +9,7 @@ type TrasladoPageState =
 	| 'license-plate-done' // h3[0] === 'License plate' + btnDone visible
 	| 'unknown';
 
-export default class ReceiptManagerTraslados extends ReceiptManagerWithDone<DataTraslados> {
+export default class ReceiptManagerTraslados extends ReceiptManagerWithDone<'TRASLADOS'> {
 	private inputTrailerId: HTMLInputElement | null = null;
 	private messageInvalideTrailerId: string = '';
 
