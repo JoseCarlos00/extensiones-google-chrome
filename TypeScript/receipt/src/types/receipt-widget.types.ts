@@ -1,4 +1,4 @@
-import { ReceiptStatus } from "./storage.types"
+import { ReceiptStatus } from "../receipt-manager/base/ReceiptManagerRF"
 
 export interface WidgetDataProvider {
 	receiptType: string;

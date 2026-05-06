@@ -1,8 +1,16 @@
 import { WidgetDataProvider } from '../../types/receipt-widget.types'
 import { ReceiptType } from '../../types/receipt.types'
-import type { ReceiptStatus, StorageData, ReceiptStorageMap } from '../../types/storage.types';
+import type { ReceiptStorageMap } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { WidgetManager } from './WidgetManager'
+
+/**
+ * 'idle'       → sin datos en storage
+ * 'ready'      → hay datos, botón Iniciar habilitado, aún no se inició
+ * 'processing' → se dio click en Iniciar, proceso activo
+ * 'completed'  → dataContainerStorage queda vacío
+ */
+export type ReceiptStatus = 'idle' | 'ready' | 'processing' | 'completed';
 
 export interface ReceiptManagerRFConfig {
 	receiptType: ReceiptType;
