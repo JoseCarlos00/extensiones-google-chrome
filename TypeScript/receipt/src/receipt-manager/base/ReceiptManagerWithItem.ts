@@ -46,12 +46,6 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		this.tittleCurrentPage = this.getTextByIndex('h3', 0);
 	}
 
-	private getPageSignals() {
-		const title = this.getTextByIndex('h3', 0)?.toLowerCase().trim();
-		const message = this.getTextByIndex('h3', 1)?.toLowerCase().trim();
-
-		return { title, message };
-	}
 
 	// Abstracto — Tarimas y Cajas lo implementan diferente
 	protected abstract fillCheckInForm(): void;
@@ -181,14 +175,14 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 
 		if (!this.inputReceiptId) {
 			console.error(
-				'No se encontró el input para Receipt ID. Asegúrate de que el formulario tenga un input con name="RECEIPTID".',
+				'No se encontró el input para Receipt ID. Asegúrate de que el formulario tenga un input con name="RECID".',
 			);
 			return;
 		}
 
 		this.inputReceiptId.value = receiptId;
 
-		if (this.inputReceiptId && receiptId && this.messageInvalideReceiptId !== 'Invalid Receipt ID.') {
+		if (this.inputReceiptId && receiptId && this.getPageSignals().message !== 'Invalid Receipt ID.') {
 			this.submitForm();
 		}
 	}

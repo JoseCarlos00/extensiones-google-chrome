@@ -148,4 +148,11 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 	protected get storage() {
 		return this.dataStorage;
 	}
+
+	protected getPageSignals() {
+		const title = this.getTextByIndex('h3', 0)?.toLowerCase().trim();
+		const message = this.getTextByIndex('h3', 1)?.toLowerCase().trim();
+
+		return { title, message };
+	}
 }
