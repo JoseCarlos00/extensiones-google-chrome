@@ -16,9 +16,8 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> im
 	readonly patternTrailerId = /^\d+T$/i;
 	readonly patternContainerId = /^T[A-Za-z0-9]{10}$/;
 	readonly nameStorage: string;
-	readonly type = 'TRASLADOS';
 
-	private readonly receiptType = 'TRASLADOS';
+	readonly type = 'TRASLADOS' as const;
 
 	constructor({ nameStorage, eventNameStorage }: ReceiptTypeTrasladosConfiguration) {
 		super(eventNameStorage);
@@ -57,7 +56,9 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> im
 			}
 
 			// Filtrar solo los IDs de contenedor válidos
-			const validContainers = items.filter(({ licensePlateId }) => this.patternContainerId.test(licensePlateId)).map(({ licensePlateId }) => licensePlateId);
+			const validContainers = items
+				.filter(({ licensePlateId }) => this.patternContainerId.test(licensePlateId))
+				.map(({ licensePlateId }) => licensePlateId);
 
 			// Dividir la lista de contenedores en grupos de 5
 			const groupedContainers = [];
@@ -67,17 +68,17 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> im
 			}
 
 			// Crear el arreglo final con grupos
-			const data: ReceiptStorageMap[typeof this.receiptType][] = groupedContainers.map((group) => {
+			const data: ReceiptStorageMap[typeof this.type][] = groupedContainers.map((group) => {
 				return { trailerId, containers: group };
 			});
 
 			console.log('Datos guardados:', data);
 
 			LocalStorageHelper.save(this.nameStorage, {
-				receiptType: this.receiptType,
+				receiptType: this.type,
 				trailerId,
 				data,
-			} satisfies StorageDataByType<typeof this.receiptType>);
+			} satisfies StorageDataByType<typeof this.type>);
 
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 		} catch (error: any) {

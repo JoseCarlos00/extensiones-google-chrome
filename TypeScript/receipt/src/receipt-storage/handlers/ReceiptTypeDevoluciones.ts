@@ -17,8 +17,7 @@ export class ReceiptTypeDevoluciones
 	readonly pattern = /\d+-TR-111-\d+/;
 	readonly nameStorage: string;
 
-	private readonly receiptType = 'DEVOLUCIONES';
-	readonly type = 'DEVOLUCIONES';
+	readonly type = 'DEVOLUCIONES' as const;
 
 	constructor({ nameStorage, eventNameStorage }: ReceiptTypeDevolucionesConfiguration) {
 		super(eventNameStorage);
@@ -39,7 +38,7 @@ export class ReceiptTypeDevoluciones
 				groupedMap.get(receiptId)!.push(licensePlateId);
 			});
 
-			const data: ReceiptStorageMap[typeof this.receiptType][] = Array.from(groupedMap, ([receiptId, containers]) => ({
+			const data: ReceiptStorageMap[typeof this.type][] = Array.from(groupedMap, ([receiptId, containers]) => ({
 				receiptId,
 				containers: [...containers, 'DONE'],
 			}));
@@ -47,9 +46,9 @@ export class ReceiptTypeDevoluciones
 			console.log('Datos guardados:', data);
 
 			LocalStorageHelper.save(this.nameStorage, {
-				receiptType: this.receiptType,
+				receiptType: this.type,
 				data,
-			} satisfies StorageDataByType<typeof this.receiptType>);
+			} satisfies StorageDataByType<typeof this.type>);
 
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 		} catch (error: any) {

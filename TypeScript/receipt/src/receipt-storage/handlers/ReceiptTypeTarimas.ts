@@ -10,12 +10,11 @@ export interface ReceiptTypeTarimasConfiguration {
 	eventNameStorage: string;
 }
 
-export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implements BaseReceiptTypeHandler<'TARIMAS'>{
+export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implements BaseReceiptTypeHandler<'TARIMAS'> {
 	readonly pattern = /^R/;
 	readonly nameStorage: string;
 
-	private readonly receiptType = 'TARIMAS';
-	readonly type = 'TARIMAS';
+	readonly type = 'TARIMAS' as const;
 
 	constructor({ nameStorage, eventNameStorage }: ReceiptTypeTarimasConfiguration) {
 		super(eventNameStorage);
@@ -29,19 +28,18 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implem
 				return;
 			}
 
-			const data: ReceiptStorageMap[typeof this.receiptType][] = items.map(({ item, openQty, receiptId }) => {
+			const data: ReceiptStorageMap[typeof this.type][] = items.map(({ item, openQty, receiptId }) => {
 				return { item, openQty, receiptId };
 			});
 
 			console.log('Datos guardados:', data);
 
 			LocalStorageHelper.save(this.nameStorage, {
-				receiptType: this.receiptType,
+				receiptType: this.type,
 				data,
 				currentItem: null,
-			} satisfies StorageDataByType<typeof this.receiptType>);
+			} satisfies StorageDataByType<typeof this.type>);
 
-			
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 		} catch (error: any) {
 			console.error('Error al guardar los datos:', error?.message);
