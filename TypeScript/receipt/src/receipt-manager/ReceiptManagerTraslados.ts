@@ -1,4 +1,3 @@
-import { DataTraslados } from "../types/receipt.types"
 import { ReceiptManagerRFConfig } from "./base/ReceiptManagerRF"
 import { ReceiptManagerWithDone } from "./base/ReceiptManagerWithDone"
 
