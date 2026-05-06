@@ -1,4 +1,4 @@
-import type { CurrentItemState, WithItem } from '../../types';
+import type { CurrentItemState, ReceiptStorageMap, WithItem } from '../../types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
 
@@ -19,13 +19,6 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 
 	protected tittleCurrentPage: string = '';
 
-	protected readonly titlePageReceiptId = 'Receipt id';
-	private messageInvalideReceiptId: string = '';
-
-	protected readonly titlePageEnterItem = 'Enter item';
-	protected messageInvalideItem: string = '';
-
-	protected readonly titlePageCheckIn = 'Check in';
 
 	protected readonly titlePageLicensePlate = 'License plate';
 	private messageErrorLP: string = 'License plate must be unique';
@@ -33,79 +26,70 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	protected isValideLicensePlate: boolean = false;
 	protected abstract nameStorageLPs: string;
 
+	protected handlers: Record<PageState, () => void> = {
+		'form-receipt-id': () => this.setValueReceiptIdInput(),
+		'form-receipt-id-invalid': () => this.completeReceipt(),
+		'form-item': () => this.processCurrentItem(),
+		'form-item-invalid': () => this.processNextItem(),
+		'form-check-in': () => this.handleCheckIn(),
+		'form-lp': () => this.handleCheckIn(),
+		'lp-error': () => console.warn('LP error'),
+		unknown: () => console.warn('Estado de página no reconocido'),
+	};
+
 	constructor(config: ReceiptManagerRFConfig<K>) {
 		super(config);
-		this.inputReceiptId = this.getInput('Form1', 'RECEIPTID');
+		this.inputReceiptId = this.getInput('Form1', 'RECID');
 		this.inputItem = this.getInput('Form1', 'xRefItem');
 		this.inputHiddenOpenQty = this.getInput('Form1', 'HIDDENQTY');
-		this.inputReceiptId = this.getInput('Form1', 'RECID');
-		this.messageInvalideReceiptId = this.getTextByIndex('h3', 1);
 
 		this.tittleCurrentPage = this.getTextByIndex('h3', 0);
-		this.messageInvalideItem = this.getTextByIndex('h3', 1);
 	}
 
-	// En ReceiptManagerWithItem — lógica común
-	protected handleCheckIn(): void {
-		const current = this.storage?.currentItem;
-		if (!current) return;
+	private getPageSignals() {
+		const title = this.getTextByIndex('h3', 0)?.toLowerCase().trim();
+		const message = this.getTextByIndex('h3', 1)?.toLowerCase().trim();
 
-		// Solo calcula totalUnits la primera vez	
-		if (!current.totalUnits) {
-			const openQty = parseInt(this.inputHiddenOpenQty?.value ?? '0');
-			const containerQty = this.getContainerQty();
-			current.totalUnits = Math.floor(openQty / containerQty);
-		}
-
-		current.processedUnits++;
-		LocalStorageHelper.save(this.nameStorage, this.dataStorage!);
-
-		this.fillCheckInForm();
-		this.submitForm();
+		return { title, message };
 	}
 
 	// Abstracto — Tarimas y Cajas lo implementan diferente
 	protected abstract fillCheckInForm(): void;
 
+	protected get items(): readonly ReceiptStorageMap[K][] {
+		return this.storage?.data ?? [];
+	}
+
+	protected get mutableItems(): ReceiptStorageMap[K][] | null {
+		return this.storage?.data ?? null;
+	}
+
 	processData(): void {
-		if (this.receiptType !== 'TARIMAS') return;
 		if (!this.dataStorage?.data.length) return;
 
 		const state = this.detectPageState();
+		const handler = this.handlers[state];
 
-		switch (state) {
-			case 'form-receipt-id':
-				this.setValueReceiptIdInput();
-				break;
-
-			case 'form-receipt-id-invalid':
-				this.completeReceipt();
-				break;
-
-			case 'form-item':
-				this.processCurrentItem();
-				break;
-
-			case 'form-item-invalid':
-				this.processNextItem();
-				break;
-
-			case 'unknown':
-				console.warn('Estado de página no reconocido');
-				break;
+		if (!handler) {
+			console.warn('Estado no manejado:', state);
+			return;
 		}
+
+		handler();
 	}
 
 	private detectPageState(): PageState {
-		if (this.tittleCurrentPage === this.titlePageReceiptId && this.messageInvalideReceiptId === 'Invalid receipt.')
-			return 'form-receipt-id-invalid';
-		if (this.tittleCurrentPage === this.titlePageReceiptId) return 'form-receipt-id';
+		const { title, message } = this.getPageSignals();
 
-		if (this.tittleCurrentPage === this.titlePageEnterItem && this.messageInvalideItem === 'Invalid item.')
-			return 'form-item-invalid';
-		if (this.tittleCurrentPage === this.titlePageEnterItem) return 'form-item';
+		if (title?.includes('receipt id') && message?.includes('invalid')) return 'form-receipt-id-invalid';
+		if (title?.includes('receipt id')) return 'form-receipt-id';
 
-		if (this.tittleCurrentPage === this.titlePageCheckIn) return 'form-check-in';
+
+		if (title?.includes('enter item') && message?.includes('invalid')) return 'form-item-invalid';
+		if (title?.includes('enter item')) return 'form-item';
+
+
+		if (title?.includes('check in')) return 'form-check-in';
 
 		if (this.tittleCurrentPage === this.titlePageLicensePlate && this.messageErrorLP === 'License plate must be unique')
 			return 'lp-error';
@@ -114,58 +98,56 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		return 'unknown';
 	}
 
-	
+	processNextItem(): void {
+		const items = this.mutableItems;
 
-	// protected get mutableItems(): ExtendedStorageData[K] | null {
-	// 	const storage = this.storage;
-	// 	if (!storage?.data) return null;
+		if (!items?.length) {
+			console.log('No hay datos almacenados en dataStorage.');
+			return;
+		}
 
-	// 	const { receiptType, data } = storage;
+		const nextItem = items.shift();
 
-	// 	if (receiptType === 'TARIMAS' || receiptType === 'CAJAS') {
-	// 		const uiData: DataStorage[] = data.map((item) => ({
-	// 			receiptId: item.receiptId,
-	// 			items: [item],
-	// 			currentItem: null,
-	// 			currentLp: '',
-	// 		}));
+		if (!nextItem?.item) {
+			this.completeReceipt();
+			return;
+		}
 
-	// 		return {
-	// 			receiptType,
-	// 			data,
-	// 			ui: uiData,
-	// 		}
-	// 	}
-	// 	return null;
-	// }
+		const newCurrentItem: CurrentItemState = {
+			item: nextItem.item,
+			processedUnits: 0,
+			totalUnits: 0, // Se calculará en el form-check-in
+			receiptId: nextItem.receiptId,
+			currentLp: this.generateLp(),
+		};
 
-	processNextItem(): void {}
+		if (!this.storage) return;
+
+		this.storage.currentItem = newCurrentItem;
+		LocalStorageHelper.save(this.nameStorage, this.storage);
+
+		// Una vez hidratado el nuevo item, procedemos a procesarlo
+		this.processCurrentItem();
+	}
 
 	protected processCurrentItem(): void {
 		if (!this.inputItem) return;
 
-		let current = this.dataStorage?.currentItem ?? null;
+		let current = this.storage?.currentItem ?? null;
 
 		if (!current) {
-			const nextItem = this.dataStorage?.items[0];
-			if (!nextItem) {
-				this.completeReceipt();
-				return;
-			}
-
-			current = { item: nextItem.item, processedUnits: 0, totalUnits: 0 };
-			this.dataStorage!.currentItem = current;
-			LocalStorageHelper.save(this.nameStorage, this.dataStorage!);
+			this.processNextItem();
+			return;
 		}
 
 		// ¿Ya terminó este item? — totalUnits > 0 significa que ya pasó por check-in
 		if (current.totalUnits > 0 && current.processedUnits >= current.totalUnits) {
-			this.dataStorage!.currentItem = null;
-			this.dataStorage!.items.shift();
-			LocalStorageHelper.save(this.nameStorage, this.dataStorage!);
+			if (this.storage) {
+				this.storage.currentItem = null;
+				LocalStorageHelper.save(this.nameStorage, this.storage);
+			}
 
-			// Siguiente item
-			this.processCurrentItem();
+			this.processNextItem();
 			return;
 		}
 
@@ -173,7 +155,22 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		this.submitForm();
 	}
 
-	protected saveCurrentItem(currentItem: CurrentItemState): void {}
+	protected handleCheckIn(): void {
+		const current = this.storage!.currentItem!;
+
+		// Solo calcula totalUnits la primera vez
+		if (!current.totalUnits) {
+			const openQty = parseInt(this.inputHiddenOpenQty?.value ?? '0');
+			const containerQty = this.getContainerQty();
+			current.totalUnits = Math.floor(openQty / containerQty);
+		}
+
+		current.processedUnits++;
+		LocalStorageHelper.save(this.nameStorage, this.storage);
+
+		this.fillCheckInForm();
+		this.submitForm();
+	}
 
 	protected setValueReceiptIdInput() {
 		const receiptId = this.storage?.data[0]?.receiptId ?? '';
