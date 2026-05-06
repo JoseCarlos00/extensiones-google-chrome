@@ -1,6 +1,6 @@
 import { WidgetDataProvider } from '../../types/receipt-widget.types'
 import { ReceiptType } from '../../types/receipt.types'
-import type { ReceiptStorageMap } from '../../types/storage.types';
+import type { ReceiptStorageMap, StorageDataByType } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { WidgetManager } from './WidgetManager'
 import { WithItem } from "../../types/storage.types";
@@ -29,13 +29,7 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 	protected readonly SESSION_KEY = 'receiptManagerStatus';
 
 	// Storage
-	protected dataStorage:
-		| ({
-				receiptType: K;
-				data: ReceiptStorageMap[K][];
-		  } & (K extends 'TRASLADOS' ? { trailerId: string } : {})) &
-			(K extends WithItem ? { currentItem: CurrentItemState | null } : {})
-		| null;
+	protected dataStorage: StorageDataByType<K> | null;
 	protected readonly nameStorage: string;
 
 	// UI — solo lo universal

@@ -3,7 +3,7 @@ import { ToastAlert } from '../../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
 import type { RowData } from '../../types/receipt-handler.types'
 import type { DataTarimas } from '../../types/receipt.types'
-import { ReceiptStorageMap, StorageData } from '../../types/storage.types';
+import { ReceiptStorageMap, StorageDataByType } from '../../types/storage.types';
 
 export interface ReceiptTypeTarimasConfiguration {
 	nameStorage: string;
@@ -29,7 +29,7 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implem
 				return;
 			}
 
-			const data: ReceiptStorageMap['TARIMAS'][] = items.map(({ item, openQty, receiptId }) => {
+			const data: ReceiptStorageMap[typeof this.receiptType][] = items.map(({ item, openQty, receiptId }) => {
 				return { item, openQty, receiptId };
 			});
 
@@ -38,7 +38,8 @@ export class ReceiptTypeTarimas extends BaseReceiptTypeHandler<'TARIMAS'> implem
 			LocalStorageHelper.save(this.nameStorage, {
 				receiptType: this.receiptType,
 				data,
-			} satisfies StorageData);
+				currentItem: null,
+			} satisfies StorageDataByType<typeof this.receiptType>);
 
 			
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');

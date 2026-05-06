@@ -3,7 +3,7 @@ import { ToastAlert } from '../../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
 import type { RowData } from '../../types/receipt-handler.types'
 import type { DataDevoluciones } from '../../types/receipt.types'
-import { ReceiptStorageMap, StorageData } from '../../types/storage.types'
+import { ReceiptStorageMap, StorageDataByType } from '../../types/storage.types'
 
 export interface ReceiptTypeDevolucionesConfiguration {
 	nameStorage: string;
@@ -39,7 +39,7 @@ export class ReceiptTypeDevoluciones
 				groupedMap.get(receiptId)!.push(licensePlateId);
 			});
 
-			const data: ReceiptStorageMap['DEVOLUCIONES'][] = Array.from(groupedMap, ([receiptId, containers]) => ({
+			const data: ReceiptStorageMap[typeof this.receiptType][] = Array.from(groupedMap, ([receiptId, containers]) => ({
 				receiptId,
 				containers: [...containers, 'DONE'],
 			}));
@@ -49,7 +49,7 @@ export class ReceiptTypeDevoluciones
 			LocalStorageHelper.save(this.nameStorage, {
 				receiptType: this.receiptType,
 				data,
-			} satisfies StorageData);
+			} satisfies StorageDataByType<typeof this.receiptType>);
 
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 		} catch (error: any) {

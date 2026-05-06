@@ -4,7 +4,7 @@ import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
 import type { RowData } from '../../types/receipt-handler.types';
 import type { DataTraslados } from '../../types/receipt.types';
 import { DialogHelper } from '../../utils/DialogHelper'
-import { ReceiptStorageMap, StorageData } from '../../types/storage.types'
+import { ReceiptStorageMap, StorageDataByType } from '../../types/storage.types'
 
 export interface ReceiptTypeTrasladosConfiguration {
 	nameStorage: string;
@@ -67,7 +67,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> im
 			}
 
 			// Crear el arreglo final con grupos
-			const data: ReceiptStorageMap['TRASLADOS'][] = groupedContainers.map((group) => {
+			const data: ReceiptStorageMap[typeof this.receiptType][] = groupedContainers.map((group) => {
 				return { trailerId, containers: group };
 			});
 
@@ -77,7 +77,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> im
 				receiptType: this.receiptType,
 				trailerId,
 				data,
-			} satisfies StorageData);
+			} satisfies StorageDataByType<typeof this.receiptType>);
 
 			ToastAlert.showAlertMinBottom('Datos guardados con éxito', 'success');
 		} catch (error: any) {
