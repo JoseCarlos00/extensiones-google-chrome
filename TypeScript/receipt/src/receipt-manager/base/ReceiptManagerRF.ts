@@ -14,8 +14,8 @@ import { CurrentItemState } from "../../types/receipt.types";
  */
 export type ReceiptStatus = 'idle' | 'ready' | 'processing' | 'completed';
 
-export interface ReceiptManagerRFConfig {
-	receiptType: ReceiptType;
+export interface ReceiptManagerRFConfig<K extends keyof ReceiptStorageMap> {
+	receiptType: K;
 	nameStorage: string;
 }
 
@@ -25,7 +25,7 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 	private timeoutId: number | null = null;
 
 	// Config
-	public readonly receiptType: ReceiptType;
+	public readonly receiptType: K;
 	protected readonly SESSION_KEY = 'receiptManagerStatus';
 
 	// Storage
@@ -37,7 +37,7 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 
 	protected confirmDelay: number = 500;
 
-	constructor({ receiptType, nameStorage }: ReceiptManagerRFConfig) {
+	constructor({ receiptType, nameStorage }: ReceiptManagerRFConfig<K>) {
 		this.nameStorage = nameStorage;
 		this.receiptType = receiptType;
 

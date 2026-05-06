@@ -15,7 +15,7 @@ export abstract class ReceiptManagerWithDone<K extends WithDone> extends Receipt
 	protected readonly titlePageReceiptId = 'Receipt id';
 	protected readonly titlePageTrailerId = 'Trailer id';
 
-	constructor(config: ReceiptManagerRFConfig) {
+	constructor(config: ReceiptManagerRFConfig<K>) {
 		super(config);
 		this.btnDone = document.querySelector<HTMLInputElement>('input[type="button"][value="Done"]');
 		this.inputLicensePlate = this.getInput('Form1', 'CONTID');

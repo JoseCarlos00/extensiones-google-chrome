@@ -12,7 +12,7 @@ export default class ReceiptManagerTraslados extends ReceiptManagerWithDone<'TRA
 	private inputTrailerId: HTMLInputElement | null = null;
 	private messageInvalideTrailerId: string = '';
 
-	constructor(config: ReceiptManagerRFConfig) {
+	constructor(config: ReceiptManagerRFConfig<'TRASLADOS'>) {
 		super(config);
 
 		this.inputTrailerId = this.getInput('Form1', 'TRAILERID');

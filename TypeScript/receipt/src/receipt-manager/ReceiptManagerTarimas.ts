@@ -6,7 +6,7 @@ import { ReceiptManagerWithItem } from "./base/ReceiptManagerWithItem"
 export default class ReceiptManagerTarimas extends ReceiptManagerWithItem<'TARIMAS'> {
 	protected nameStorageLPs = 'tarimasLicensePlates';
 
-	constructor(config: ReceiptManagerRFConfig) {
+	constructor(config: ReceiptManagerRFConfig<'TARIMAS'>) {
 		super(config);
 	}
 

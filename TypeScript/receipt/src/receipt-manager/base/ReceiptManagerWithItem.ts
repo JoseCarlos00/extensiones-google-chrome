@@ -34,7 +34,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	protected isValideLicensePlate: boolean = false;
 	protected abstract nameStorageLPs: string;
 
-	constructor(config: ReceiptManagerRFConfig) {
+	constructor(config: ReceiptManagerRFConfig<K>) {
 		super(config);
 		this.inputReceiptId = this.getInput('Form1', 'RECEIPTID');
 		this.inputItem = this.getInput('Form1', 'xRefItem');

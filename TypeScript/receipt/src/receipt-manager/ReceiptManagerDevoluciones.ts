@@ -12,7 +12,7 @@ export default class ReceiptManagerDevoluciones extends ReceiptManagerWithDone<'
 	private inputReceiptId: HTMLInputElement | null = null;
 	private messageInvalideReceiptId: string = '';
 
-	constructor(config: ReceiptManagerRFConfig) {
+	constructor(config: ReceiptManagerRFConfig<'DEVOLUCIONES'>) {
 		super(config);
 
 		this.inputReceiptId = this.getInput('Form1', 'RECID');
