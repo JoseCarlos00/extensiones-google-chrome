@@ -17,12 +17,6 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	protected inputItem: HTMLInputElement | null = null;
 	protected inputHiddenOpenQty: HTMLInputElement | null = null;
 
-	protected tittleCurrentPage: string = '';
-
-
-	protected readonly titlePageLicensePlate = 'License plate';
-	private messageErrorLP: string = 'License plate must be unique';
-
 	protected isValideLicensePlate: boolean = false;
 	protected abstract nameStorageLPs: string;
 
@@ -42,12 +36,11 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		this.inputReceiptId = this.getInput('Form1', 'RECID');
 		this.inputItem = this.getInput('Form1', 'xRefItem');
 		this.inputHiddenOpenQty = this.getInput('Form1', 'HIDDENQTY');
-
-		this.tittleCurrentPage = this.getTextByIndex('h3', 0);
 	}
 
-
-	// Abstracto — Tarimas y Cajas lo implementan diferente
+	/**
+	 * Se actualizaran los contadores de la UI y se actualizara el status `setStatus()`
+	 */
 	protected abstract fillCheckInForm(): void;
 
 	protected get items(): readonly ReceiptStorageMap[K][] {
@@ -61,33 +54,31 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	processData(): void {
 		if (!this.dataStorage?.data.length) return;
 
-		const state = this.detectPageState();
+		const signals = this.getPageSignals();
+		const state = this.detectPageState(signals);
 		const handler = this.handlers[state];
 
 		if (!handler) {
-			console.warn('Estado no manejado:', state);
+			console.warn('Estado no manejado:', state, signals);
 			return;
 		}
 
 		handler();
 	}
 
-	private detectPageState(): PageState {
-		const { title, message } = this.getPageSignals();
+	private detectPageState(signals: { title?: string; message?: string }): PageState {
+		const { title, message } = signals;
 
 		if (title?.includes('receipt id') && message?.includes('invalid')) return 'form-receipt-id-invalid';
 		if (title?.includes('receipt id')) return 'form-receipt-id';
 
-
 		if (title?.includes('enter item') && message?.includes('invalid')) return 'form-item-invalid';
 		if (title?.includes('enter item')) return 'form-item';
 
-
 		if (title?.includes('check in')) return 'form-check-in';
 
-		if (this.tittleCurrentPage === this.titlePageLicensePlate && this.messageErrorLP === 'License plate must be unique')
-			return 'lp-error';
-		if (this.tittleCurrentPage === this.titlePageLicensePlate) return 'form-lp';
+		if (title?.includes('license plate') && message?.includes('must be unique')) return 'lp-error';
+		if (title?.includes('license plate')) return 'form-lp';
 
 		return 'unknown';
 	}
