@@ -1,6 +1,6 @@
 import { getInputValue } from '../utils/getInputValue';
 import { namesStorages } from "../constants";
-import { ReceiptType } from '../types/receipt.types';
+import type { ReceiptType } from '../types';
 
 const acceptedReceiptPreferences: ReceiptType[] = ['TRASLADOS', 'DEVOLUCIONES'];
 const titleMainSelector = '#proRfWrapper > form > table > tbody > tr.touchscreen-show > td > b';

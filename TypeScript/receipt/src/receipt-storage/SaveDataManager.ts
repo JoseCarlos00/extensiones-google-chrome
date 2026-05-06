@@ -1,4 +1,4 @@
-import type { AnyReceiptHandler, ReceiptTypeHandler } from '../types/receipt-handler.types';
+import type { AnyReceiptHandler } from '../types';
 import { LocalStorageHelper } from '../utils/LocalStorageHelper';
 import { ToastAlert } from '../utils/ToastAlert';
 import { EventClickManagerStorage } from './EventClickManagerStorage';

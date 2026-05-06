@@ -1,4 +1,4 @@
-import { WidgetDataProvider } from "../../types/receipt-widget.types"
+import type { WidgetDataProvider } from "../../types";
 
 export class WidgetManager {
 	private isBound = false;

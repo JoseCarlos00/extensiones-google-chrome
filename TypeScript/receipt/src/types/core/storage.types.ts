@@ -18,14 +18,10 @@ export type WithDone = 'TRASLADOS' | 'DEVOLUCIONES';
 
 
 export type StorageDataByType<K extends keyof ReceiptStorageMap> = {
-	[K2 in keyof ReceiptStorageMap]: K2 extends K
-		? {
-				receiptType: K2;
-				data: ReceiptStorageMap[K2][];
-			} & (K2 extends 'TRASLADOS' ? { trailerId: string } : {}) &
-			(K2 extends WithItem ? { currentItem: CurrentItemState | null } : {})
-		: never;
-}[keyof ReceiptStorageMap];
+	receiptType: K;
+	data: ReceiptStorageMap[K][];
+} & (K extends 'TRASLADOS' ? { trailerId: string } : {}) &
+	(K extends WithItem ? { currentItem: CurrentItemState | null } : {});
 
 /**
  * Analogía rápida

@@ -1,5 +1,4 @@
-import type { AnyReceiptHandler, ReceiptTypeHandler, RowData } from '../types/receipt-handler.types';
-import type { ReceiptInputMap } from '../types/receipt.types';
+import type { AnyReceiptHandler, ReceiptTypeHandler, RowData, ReceiptInputMap } from '../types';
 import { eventBus } from '../utils/EventBus';
 import { ToastAlert } from '../utils/ToastAlert';
 

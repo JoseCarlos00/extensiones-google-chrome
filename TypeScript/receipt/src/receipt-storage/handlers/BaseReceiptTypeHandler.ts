@@ -1,7 +1,6 @@
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ToastAlert } from '../../utils/ToastAlert';
-import { ReceiptTypeHandler, RowData } from '../../types/receipt-handler.types';
-import { ReceiptInputMap } from '../../types/receipt.types'
+import type { ReceiptTypeHandler, RowData, ReceiptInputMap } from '../../types';
 
 export abstract class BaseReceiptTypeHandler<K extends keyof ReceiptInputMap> implements ReceiptTypeHandler<K> {
 	abstract readonly pattern: RegExp;

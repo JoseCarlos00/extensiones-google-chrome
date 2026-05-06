@@ -1,5 +1,5 @@
-import { ReceiptStorageMap, WithDone } from "../../types/storage.types"
-import { LocalStorageHelper } from "../../utils/LocalStorageHelper"
+import type { ReceiptStorageMap, WithDone } from "../../types";
+import { LocalStorageHelper } from "../../utils/LocalStorageHelper";
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from "../base/ReceiptManagerRF";
 
 // Nivel 2a — Devoluciones + Traslados

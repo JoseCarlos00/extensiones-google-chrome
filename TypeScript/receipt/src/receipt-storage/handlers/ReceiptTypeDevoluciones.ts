@@ -1,9 +1,7 @@
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ToastAlert } from '../../utils/ToastAlert';
 import { BaseReceiptTypeHandler } from './BaseReceiptTypeHandler'
-import type { RowData } from '../../types/receipt-handler.types'
-import type { DataDevoluciones } from '../../types/receipt.types'
-import { ReceiptStorageMap, StorageDataByType } from '../../types/storage.types'
+import type { ReceiptStorageMap, StorageDataByType, RowData, DataDevoluciones } from '../../types';
 
 export interface ReceiptTypeDevolucionesConfiguration {
 	nameStorage: string;

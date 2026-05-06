@@ -1,5 +1,4 @@
-import { CurrentItemState } from '../../types/receipt.types';
-import {  WithItem } from '../../types/storage.types'
+import type { CurrentItemState, WithItem } from '../../types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
 
@@ -48,9 +47,10 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 
 	// En ReceiptManagerWithItem — lógica común
 	protected handleCheckIn(): void {
-		const current = this.dataStorage?.currentItem!;
+		const current = this.storage?.currentItem;
+		if (!current) return;
 
-		// Solo calcula totalUnits la primera vez
+		// Solo calcula totalUnits la primera vez	
 		if (!current.totalUnits) {
 			const openQty = parseInt(this.inputHiddenOpenQty?.value ?? '0');
 			const containerQty = this.getContainerQty();
