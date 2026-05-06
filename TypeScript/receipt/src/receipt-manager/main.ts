@@ -45,9 +45,10 @@ window.addEventListener('load', async () => {
 
       console.log(manager);
       manager.initialize()
+    } else {
+       console.error('Tipo de recibo no reconocido:', currentReceiptType);
     }
-    
-    console.error('Tipo de recibo no reconocido:', currentReceiptType);
+   
 	} catch (error: any) {
 		console.error('Error al inicializar el gestor de datos: ', error?.message);
 	}
