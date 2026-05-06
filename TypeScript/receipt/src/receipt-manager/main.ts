@@ -9,7 +9,7 @@ const titleMain = 'Select a receiving preference';
 window.addEventListener('load', async () => {
 	try {
 		console.log('[main] Inicio de Aplicación');
-		const currentReceiptType: ReceiptType | string = getInputValue('Form1', 'HIDDENRECPREF');
+		const currentReceiptType: ReceiptType = getInputValue('Form1', 'HIDDENRECPREF') as ReceiptType;
 		const titileMainValue = document
 			.querySelector(titleMainSelector)
 			?.textContent?.trim();
@@ -22,7 +22,7 @@ window.addEventListener('load', async () => {
     if (currentReceiptType === 'TRASLADOS') {
       const { default: TrasladosManager } = await import('./ReceiptManagerTraslados');
       const manager = new TrasladosManager({
-        receiptType: currentReceiptType as ReceiptType,
+        receiptType: currentReceiptType,
         nameStorage: namesStorages.traslados
       });
       
@@ -31,7 +31,7 @@ window.addEventListener('load', async () => {
     } else if (currentReceiptType === 'DEVOLUCIONES') {
       const { default: DevolucionesManager } = await import('./ReceiptManagerDevoluciones');
       const manager = new DevolucionesManager({
-        receiptType: currentReceiptType as ReceiptType,
+        receiptType: currentReceiptType,
         nameStorage: namesStorages.devoluciones
       });
       
