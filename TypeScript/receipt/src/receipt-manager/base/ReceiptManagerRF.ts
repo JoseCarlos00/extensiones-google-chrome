@@ -3,6 +3,8 @@ import { ReceiptType } from '../../types/receipt.types'
 import type { ReceiptStorageMap } from '../../types/storage.types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { WidgetManager } from './WidgetManager'
+import { WithItem } from "../../types/storage.types";
+import { CurrentItemState } from "../../types/receipt.types";
 
 /**
  * 'idle'       → sin datos en storage
@@ -31,7 +33,8 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 		| ({
 				receiptType: K;
 				data: ReceiptStorageMap[K][];
-		  } & (K extends 'TRASLADOS' ? { trailerId: string } : {}))
+		  } & (K extends 'TRASLADOS' ? { trailerId: string } : {})) &
+			(K extends WithItem ? { currentItem: CurrentItemState | null } : {})
 		| null;
 	protected readonly nameStorage: string;
 

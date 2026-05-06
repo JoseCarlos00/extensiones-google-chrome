@@ -1,4 +1,4 @@
-import { DataCajas, DataTarimas } from './receipt.types';
+import { CurrentItemState, DataCajas, DataTarimas } from './receipt.types';
 
 export type ReceiptStorageMap = {
 	TRASLADOS: {
@@ -13,12 +13,19 @@ export type ReceiptStorageMap = {
 	CAJAS: DataCajas;
 };
 
+export type WithItem = 'TARIMAS' | 'CAJAS';
+export type WithDone = 'TRASLADOS' | 'DEVOLUCIONES';
+
 export type StorageData = {
 	[K in keyof ReceiptStorageMap]: {
 		receiptType: K;
 		data: ReceiptStorageMap[K][];
-	} & (K extends 'TRASLADOS' ? { trailerId: string } : {});
+	} & (K extends 'TRASLADOS' ? { trailerId: string } : {}) & 
+		(K extends WithItem ? { currentItem: CurrentItemState | null } : {});
 }[keyof ReceiptStorageMap];
+
+
+
 
 
 /**

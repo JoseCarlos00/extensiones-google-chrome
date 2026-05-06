@@ -1,10 +1,9 @@
-import { DataDevoluciones, DataTraslados } from "../../types/receipt.types"
-import { ReceiptStorageMap } from "../../types/storage.types"
+import { ReceiptStorageMap, WithDone } from "../../types/storage.types"
 import { LocalStorageHelper } from "../../utils/LocalStorageHelper"
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from "../base/ReceiptManagerRF";
 
 // Nivel 2a — Devoluciones + Traslados
-export abstract class ReceiptManagerWithDone<K extends 'TRASLADOS' | 'DEVOLUCIONES'> extends ReceiptManagerRF<K> {
+export abstract class ReceiptManagerWithDone<K extends WithDone> extends ReceiptManagerRF<K> {
 	protected btnDone: HTMLInputElement | null = null;
 	protected inputLicensePlate: HTMLInputElement | null = null;
 
