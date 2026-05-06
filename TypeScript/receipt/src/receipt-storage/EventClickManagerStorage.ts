@@ -93,7 +93,7 @@ export class EventClickManagerStorage {
 
 				if (!text) return '';
 
-				const cleaned = text.replace(/,/g, ''); // quitar separadores de miles
+				const cleaned = text.replace(/[.,]/g, ''); // quitar separadores de miles
 				const num = Number(cleaned);
 
 				return isNaN(num) ? '' : num.toString();

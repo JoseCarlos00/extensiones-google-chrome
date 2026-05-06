@@ -1,4 +1,4 @@
-import { ReceiptInputMap } from "./receipt.types";
+import { ReceiptInputMap } from "../core/receipt.types";
 
 export interface RowData {
 	receiptId: string;
