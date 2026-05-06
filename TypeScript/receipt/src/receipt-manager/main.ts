@@ -2,7 +2,7 @@ import { getInputValue } from '../utils/getInputValue';
 import { namesStorages } from "../constants";
 import type { ReceiptType } from '../types';
 
-const acceptedReceiptPreferences: ReceiptType[] = ['TRASLADOS', 'DEVOLUCIONES'];
+const acceptedReceiptPreferences: ReceiptType[] = ['TRASLADOS', 'DEVOLUCIONES', 'TARIMAS'];
 const titleMainSelector = '#proRfWrapper > form > table > tbody > tr.touchscreen-show > td > b';
 const titleMain = 'Select a receiving preference';
 
