@@ -36,7 +36,18 @@ window.addEventListener('load', async () => {
       });
       
       manager.initialize();
+    } else if (currentReceiptType === 'TARIMAS') {
+      const { default: TarimasManager } = await import('./ReceiptManagerTarimas');
+      const manager = new TarimasManager({
+        receiptType: currentReceiptType,
+        nameStorage: namesStorages.tarimas
+      })
+
+      console.log(manager);
+      manager.initialize()
     }
+    
+    console.error('Tipo de recibo no reconocido:', currentReceiptType);
 	} catch (error: any) {
 		console.error('Error al inicializar el gestor de datos: ', error?.message);
 	}
