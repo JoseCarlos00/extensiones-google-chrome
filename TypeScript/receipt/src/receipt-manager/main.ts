@@ -45,8 +45,6 @@ window.addEventListener('load', async () => {
 
       console.log(manager);
       manager.initialize()
-    } else {
-       console.error('Tipo de recibo no reconocido:', currentReceiptType);
     }
    
 	} catch (error: any) {

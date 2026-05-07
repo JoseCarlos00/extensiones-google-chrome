@@ -23,7 +23,6 @@ export class WidgetManager {
 		this.refreshInfo();
 		this.refreshCounters();
 
-		console.log('Refresh:', {dataLength, status: this.provider.getStatus()});
 		this.updateButtonState(dataLength > 0);
 	}
 
@@ -99,7 +98,6 @@ export class WidgetManager {
 
 	private updateButtonState(hasData: boolean): void {
 		const btn = this.root?.querySelector('#init-receipt') as HTMLButtonElement | null;
-		console.log('Preview Status:', this.provider.getStatus());
 		
 		if (!btn) return;
 
@@ -110,7 +108,6 @@ export class WidgetManager {
 			this.provider.setStatus('ready');
 		}
 
-		console.log('New Status:', this.provider.getStatus());
 		this.refreshHeader();
 		
 
