@@ -59,6 +59,7 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 		// Storage externo — otro tab guardó datos
 		window.addEventListener('storage', ({ key }) => {
 			if (key === this.nameStorage) {
+				this.setStatus('idle');
 				this.syncStorage();
 				this.refresh();
 			}
@@ -116,7 +117,9 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 	}
 
 	// Llamado cuando el proceso termina naturalmente
-	protected completeReceipt(): void {
+	protected completeReceipt(who?: string): void {
+		who && console.log(`completeReceipt: [${who}]`);
+
 		LocalStorageHelper.remove(this.nameStorage);
 		this.dataStorage = null;
 		this.setStatus('completed');
@@ -137,12 +140,12 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 	}
 
 	protected submitForm(): void {
-		console.warn('Confirmar button OK');
+		// console.warn('Confirmar button OK');
 		setTimeout(() => {
-			// console.warn('Confirmar button OK');
+			console.warn('Confirmar button OK');
 			this.btnOk?.click();
-			this.setTimeoutSubmitForm();
-		}, 5000);
+			// this.setTimeoutSubmitForm();
+		}, this.confirmDelay);
 	}
 
 	protected get storage() {

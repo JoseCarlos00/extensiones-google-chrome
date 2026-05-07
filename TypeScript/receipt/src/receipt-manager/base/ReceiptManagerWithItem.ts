@@ -1,4 +1,4 @@
-import type { CurrentItemState, ReceiptStorageMap, WithItem } from '../../types';
+import type { ReceiptStorageMap, WithItem } from '../../types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { SessionStorageHelper } from '../../utils/SessionStorageHelper'
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
