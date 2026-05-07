@@ -1,35 +1,31 @@
 import type { CurrentItemState, ReceiptStorageMap, WithItem } from '../../types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
+import { SessionStorageHelper } from '../../utils/SessionStorageHelper'
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
 
 type PageState =
-	| 'form-receipt-id' // input receiptId
-	| 'form-receipt-id-invalid' // h3[1] === 'Invalid Receipt ID.'
-	| 'form-item' // input item
-	| 'form-item-invalid' // h3[1] === 'Invalid item.'
-	| 'form-item-success' // message: Receipt containers located successfully.
-	| 'form-check-in' // solo botón OK -> Aquí se Calcula unidades y genera LP
-	| 'form-lp' // input LP
+	| 'form-receipt-id' // → independiente — solo necesita data[0].receiptId
+	| 'form-receipt-id-invalid' // independiente — necesita currentItem (se crea en processNextItem)
+	| 'form-item' // → independiente — solo necesita currentItem.item
+	| 'form-item-success' // → depende de form-lp — incrementa processedUnits |message: Receipt containers located successfully.
+	| 'form-item-invalid'
+	| 'form-check-in' // → independiente — hidrata totalUnits y currentLp
+	| 'form-lp' // → depende de form-check-in — necesita currentLp
 	| 'form-lp-invalid' // "License plate must be unique"
 	| 'unknown';
 
 export abstract class ReceiptManagerWithItem<K extends WithItem> extends ReceiptManagerRF<K> {
-	protected inputReceiptId: HTMLInputElement | null = null;
-	protected inputItem: HTMLInputElement | null = null;
-	protected inputHiddenOpenQty: HTMLInputElement | null = null;
-
-	protected isValideLicensePlate: boolean = false;
 	protected abstract nameStorageLPs: string;
 
 	protected abstract currentLabelCounter: string;
-
+	private readonly SESSION_PAGE_KEY = 'receiptManagerPagePreviewState';
 
 	protected handlers: Record<PageState, () => void> = {
 		'form-receipt-id': () => this.setValueReceiptIdInput(),
 		'form-receipt-id-invalid': () => this.completeReceipt(),
 		'form-item': () => this.processCurrentItem(),
-		'form-item-invalid': () => this.processNextItem(),
-		'form-item-success': () => this.processNextItem(),
+		'form-item-invalid': () => this.processCurrentItem(),
+		'form-item-success': () => this.processStateSuccessful(),
 		'form-check-in': async () => this.handleCheckIn(),
 		'form-lp': () => this.handleLicensePlate(),
 		'form-lp-invalid': () => console.warn('LP error'),
@@ -38,15 +34,21 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 
 	constructor(config: ReceiptManagerRFConfig<K>) {
 		super(config);
-		this.inputReceiptId = this.getInput('Form1', 'RECID');
-		this.inputItem = this.getInput('Form1', 'xRefItem');
-		this.inputHiddenOpenQty = this.getInput('Form1', 'HIDDENQTY');
+		console.log('Estate Init:', this.detectPageState(this.getPageSignals()));
 	}
 
 	/**
 	 * Se actualizaran los contadores de la UI y se actualizara el status `setStatus()`
 	 */
 	protected abstract fillCheckInForm(): void;
+
+	private get previousState(): PageState | null {
+		return SessionStorageHelper.get(this.SESSION_PAGE_KEY) ?? null;
+	}
+
+	private savePreviousState(state: PageState): void {
+		SessionStorageHelper.save(this.SESSION_PAGE_KEY, state);
+	}
 
 	protected get items(): readonly ReceiptStorageMap[K][] {
 		return this.storage?.data ?? [];
@@ -57,7 +59,12 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	}
 
 	processData(): void {
-		if (!this.dataStorage?.data.length && !this.dataStorage?.currentItem) return; // Added check for currentItem
+		const hasData = !!this.mutableItems?.length; // No hay mas items: false
+		const hasCurrentItem = !!this.storage?.currentItem; // existe currentItem: true
+
+		// Continúa si hay currentItem aunque data esté vacío
+		if (!hasData && !hasCurrentItem) return;
+
 		const signals = this.getPageSignals();
 		const state = this.detectPageState(signals);
 		const handler = this.handlers[state];
@@ -68,6 +75,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		}
 
 		handler();
+		this.savePreviousState(state);
 	}
 
 	private detectPageState(signals: { title?: string; message?: string }): PageState {
@@ -88,40 +96,68 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		return 'unknown';
 	}
 
+	private processStateSuccessful(): void {
+		const current = this.storage?.currentItem;
+
+		if (!current) {
+			if (this.previousState === 'form-lp') {
+				// Proceso normal interrumpido — no podemos incrementar sin currentItem
+				// Lo más seguro: no hacer nada, esperar siguiente acción del usuario
+				console.warn('form-item-success: no hay currentItem, previousState era form-lp');
+				return;
+			}
+			// Llegamos aquí sin contexto — processCurrentItem creará currentItem
+			this.processCurrentItem();
+			return;
+		}
+
+		// currentItem existe
+		if (this.previousState === 'form-lp') {
+			current.processedUnits++;
+			LocalStorageHelper.save(this.nameStorage, this.storage!);
+			this.refreshCounters();
+		}
+
+		this.processCurrentItem();
+	}
+
 	processNextItem(): void {
-		const items = this.mutableItems;
-
-		if (!items?.length) {
-			console.log('No hay datos almacenados en dataStorage.');
-			return;
-		}
-
-		const nextItem = items.shift();
-
-		if (!nextItem?.item) {
-			this.completeReceipt();
-			return;
-		}
-
-		const newCurrentItem: CurrentItemState = {
-			item: nextItem.item,
-			processedUnits: 0,
-			totalUnits: 0, // Se calculará en el form-check-in o form-lp
-			receiptId: nextItem.receiptId,
-			currentLp: '',
-		};
-
 		if (!this.storage) return;
 
-		this.storage.currentItem = newCurrentItem;
-		LocalStorageHelper.save(this.nameStorage, this.storage);
+		// Si hay currentItem activo, primero lo termina — quita data[0]
+		if (this.storage.currentItem) {
+			this.storage.data = this.storage.data.slice(1);
+			this.storage.currentItem = null;
+		}
 
-		// Una vez hidratado el nuevo item, procedemos a procesarlo
+		// ¿Quedan items?
+		if (!this.storage.data.length) {
+			LocalStorageHelper.save(this.nameStorage, this.storage);
+			this.completeReceipt('processNextItem 1');
+			return;
+		}
+
+		// Toma el siguiente — data[0] es el nuevo actual
+		const nextItem = this.storage.data[0];
+
+		if (!nextItem?.item) {
+			this.completeReceipt('processNextItem 2');
+			return;
+		}
+
+		LocalStorageHelper.save(this.nameStorage, this.storage);
 		this.processCurrentItem();
 	}
 
 	protected processCurrentItem(): void {
-		if (!this.inputItem) return;
+		const inputItem = this.getInput('Form1', 'xRefItem');
+
+		if (!inputItem) {
+			console.error(
+				'No se encontró el input para Receipt ID. Asegúrate de que el formulario tenga un input con name="xRefItem".',
+			);
+			return;
+		}
 
 		let current = this.storage?.currentItem ?? null;
 
@@ -141,21 +177,33 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 			return;
 		}
 
-		this.inputItem.value = current.item;
+		inputItem.value = current.item;
 		this.submitForm();
 	}
 
 	protected async handleCheckIn(): Promise<void> {
-		const current = this.storage!.currentItem!;
+		if (!this.storage?.currentItem) {
+			console.warn('handleCheckIn: no hay currentItem — ejecutando processNextItem');
+			this.processNextItem();
+			return;
+		}
+
+		const current = this.storage.currentItem;
+		const inputHiddenOpenQtyValue = this.getInput('Form1', 'HIDDENQTY')?.value ?? null;
+
+		console.log('handleCheckIn:', {
+			status: this.detectPageState(this.getPageSignals()),
+			previousState: this.previousState,
+			totalUnit: current.totalUnits,
+			processedUnits: current.processedUnits,
+		});
 
 		// Solo calcula totalUnits la primera vez que se llega a form-check-in/form-lp para este item
-		if (!current.totalUnits) {
-			const openQty = parseInt(this.inputHiddenOpenQty?.value ?? '0');
+		if (!current.totalUnits || this.previousState === 'form-item') {
+			const openQty = parseInt(inputHiddenOpenQtyValue ?? '0');
 			const containerQty = this.getContainerQty();
 			current.totalUnits = Math.floor(openQty / containerQty);
 		}
-
-		current.processedUnits++;
 
 		// 🔥 Generar LP desde backend
 		try {
@@ -167,6 +215,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		}
 
 		LocalStorageHelper.save(this.nameStorage, this.storage);
+		console.log('currentItem Actual:', current);
 
 		/** 
 		 * TODO:
@@ -187,6 +236,11 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	}
 
 	protected handleLicensePlate(): void {
+		if (this.previousState !== 'form-check-in') {
+			console.warn('form-lp inesperado, previousState:', this.previousState);
+			return;
+		}
+
 		const current = this.storage?.currentItem;
 		if (!current?.currentLp) return;
 
@@ -197,28 +251,26 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	}
 
 	protected setValueReceiptIdInput() {
-		const receiptId = this.storage?.data[0]?.receiptId ?? '';
+		const inputReceiptId = this.getInput('Form1', 'RECID');
+		const receiptId = this.storage?.data[0]?.receiptId;
 
 		if (!receiptId) {
 			console.warn('El campo Receipt ID está vacío. No se guardarán datos.');
+			return;
 		}
 
-		if (!this.inputReceiptId) {
+		if (!inputReceiptId) {
 			console.error(
 				'No se encontró el input para Receipt ID. Asegúrate de que el formulario tenga un input con name="RECID".',
 			);
 			return;
 		}
 
-		this.inputReceiptId.value = receiptId;
+		inputReceiptId.value = receiptId;
 
-		if (this.inputReceiptId && receiptId && this.getPageSignals().message !== 'Invalid Receipt ID.') {
+		if (inputReceiptId && receiptId && this.getPageSignals().message !== 'Invalid Receipt ID.') {
 			this.submitForm();
 		}
-	}
-
-	protected calcularUnidades(openQty: number): number {
-		return Math.floor(openQty / this.getContainerQty());
 	}
 
 	protected getContainerQty(): number {
@@ -249,12 +301,26 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		return data.lp;
 	}
 
+	public onCancel(): void {
+		SessionStorageHelper.remove(this.SESSION_PAGE_KEY);
+		super.onCancel();
+	}
+
+	protected completeReceipt(who?: string): void {
+		SessionStorageHelper.remove(this.SESSION_PAGE_KEY);
+		super.completeReceipt(who);
+	}
+
 	// ─── Presentación ────────────────────────────────────
 	getInfoHTML(): string {
 		return `
 			<div class="info-row">
 					<span class="info-label">Receipt id</span>
-					<span class="info-value">${this.storage?.currentItem?.receiptId ?? '—'}</span>
+					<span class="info-value">${this.storage?.data[0]?.receiptId ?? '—'}</span>
+			</div>
+			<div class="info-row">
+					<span class="info-label">Item</span>
+					<span class="info-value">${this.storage?.data[0]?.item ?? '-'}</span>
 			</div>
     `;
 	}
