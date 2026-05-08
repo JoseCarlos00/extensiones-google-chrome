@@ -40,3 +40,12 @@ export type StorageDataByType<K extends keyof ReceiptStorageMap> = {
 		protected dataStorage: Extract<StorageData, { receiptType: K }> | null;
 	}
  */
+
+export type ProcessedLP = {
+	id: string;
+	lp: string;
+	status: 'pending' | 'completed';
+	receiptId: string;
+	item: string;
+	timestamp: number;
+};

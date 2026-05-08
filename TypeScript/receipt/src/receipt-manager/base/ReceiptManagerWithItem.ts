@@ -1,4 +1,4 @@
-import type { ReceiptStorageMap, WithItem } from '../../types';
+import type { ProcessedLP, ReceiptStorageMap, WithItem } from '../../types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { SessionStorageHelper } from '../../utils/SessionStorageHelper';
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
@@ -96,6 +96,25 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		return 'unknown';
 	}
 
+	private saveProcessedLP(): void {
+		const current = this.storage?.currentItem;
+
+		if (!current?.currentLp) return;
+
+		const processed = LocalStorageHelper.get(this.nameStorageLPs) ?? [];
+
+		processed.push({
+			id: crypto.randomUUID(),
+			lp: current.currentLp,
+			item: current.item,
+			receiptId: current.receiptId,
+			timestamp: Date.now(),
+			status: 'pending',
+		} satisfies ProcessedLP);
+
+		LocalStorageHelper.save(this.nameStorageLPs, processed);
+	}
+
 	private processStateSuccessful(): void {
 		const current = this.storage?.currentItem;
 
@@ -126,6 +145,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 				current.status = 'completed';
 			}
 
+			this.saveProcessedLP();
 			LocalStorageHelper.save(this.nameStorage, this.storage!);
 
 			this.refreshCounters();
@@ -342,7 +362,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	}
 
 	protected clickCancelButton(): void {
-		console.log('click en:', document.querySelector<HTMLInputElement>('input[type="button"][value="Cancel"]'));
+		document.querySelector<HTMLInputElement>('input[type="button"][value="Cancel"]')?.click();
 	}
 
 	protected getContainerQty(): number {
