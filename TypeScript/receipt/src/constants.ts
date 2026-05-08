@@ -15,3 +15,11 @@ export const nameStorageEvents = {
 
 	values: (): string[] => Object.values(nameStorageEvents).filter(value => typeof value === 'string') as string[],
 }
+
+
+export const STORAGE_LPS_KEYS = {
+	traslados: 'trasladosLicensePlates',
+	devoluciones: 'devolucionesLicensePlates',
+	tarimas: 'tarimasLicensePlates',
+	cajas: 'cajasLicensePlates',
+};

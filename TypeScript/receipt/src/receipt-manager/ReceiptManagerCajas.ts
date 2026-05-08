@@ -1,10 +1,11 @@
 import { ReceiptManagerRFConfig } from "./base/ReceiptManagerRF"
 import { ReceiptManagerWithItem } from "./base/ReceiptManagerWithItem"
+import { STORAGE_LPS_KEYS } from "../constants";
 
 
 
 export default class ReceiptManagerCajas extends ReceiptManagerWithItem<'CAJAS'> {
-	protected nameStorageLPs = 'tarimasLicensePlates';
+	protected nameStorageLPs = STORAGE_LPS_KEYS.cajas;
 	protected currentLabelCounter = 'Tarimas';
 
 	constructor(config: ReceiptManagerRFConfig<'CAJAS'>) {

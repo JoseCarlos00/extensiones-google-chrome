@@ -44,7 +44,7 @@ export type StorageDataByType<K extends keyof ReceiptStorageMap> = {
 export type ProcessedLP = {
 	id: string;
 	lp: string;
-	status: 'pending' | 'completed';
+	status: 'pending' | 'processing' | 'completed' | 'failed';
 	receiptId: string;
 	item: string;
 	timestamp: number;
