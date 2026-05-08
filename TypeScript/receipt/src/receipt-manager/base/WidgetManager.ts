@@ -35,6 +35,7 @@ export class WidgetManager {
 		const header = this.root?.querySelector('#receipt-header');
 		if (header) header.innerHTML = this.getHeaderHTML();
 	}
+	
 	refreshInfo(): void {
 		const info = this.root?.querySelector('#receipt-info');
 		if (info) info.innerHTML = this.provider.getInfoHTML();

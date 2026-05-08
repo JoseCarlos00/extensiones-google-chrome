@@ -112,7 +112,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		// llegamos a success pero no existe currentItem
 		if (!current) {
 			console.warn('form-item-success sin currentItem. Abortando para evitar duplicados.');
-			alert('form-item-success sin currentItem. Abortando')
+			alert('form-item-success sin currentItem. Abortando');
 			this.completeReceipt('missing-currentItem-on-success');
 
 			return;
@@ -134,6 +134,13 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		this.processCurrentItem();
 	}
 
+	private finalizeCurrentItem(): void {
+		if (!this.storage?.currentItem) return;
+
+		this.storage.data = this.storage.data.slice(1);
+		this.storage.currentItem = null;
+	}
+
 	processNextItem(): void {
 		if (!this.storage) return;
 
@@ -147,10 +154,10 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		);
 
 		const current = this.storage.currentItem;
+		const isFinished = current?.status === 'completed' || current?.status === 'skipped';
 
-		if (current && current.status !== 'pending') {
-			this.storage.data = this.storage.data.slice(1);
-			this.storage.currentItem = null;
+		if (isFinished) {
+			this.finalizeCurrentItem();
 		}
 
 		// ¿Quedan items?
@@ -178,6 +185,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		};
 
 		LocalStorageHelper.save(this.nameStorage, this.storage);
+		this.refreshInfo();
 		this.processCurrentItem();
 	}
 

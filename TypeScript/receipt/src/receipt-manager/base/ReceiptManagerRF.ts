@@ -116,6 +116,14 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 		this.widgetManager.refresh(this.dataStorage?.data?.length ?? 0);
 	}
 
+	protected refreshCounters(): void {
+		this.widgetManager.refreshCounters();
+	}
+
+	protected refreshInfo(): void {
+		this.widgetManager.refreshInfo();
+	}
+
 	// Llamado cuando el proceso termina naturalmente
 	protected completeReceipt(who?: string): void {
 		who && console.log(`completeReceipt: [${who}]`);
@@ -124,10 +132,6 @@ export abstract class ReceiptManagerRF<K extends keyof ReceiptStorageMap> implem
 		this.dataStorage = null;
 		this.setStatus('completed');
 		this.refresh();
-	}
-
-	protected refreshCounters(): void {
-		this.widgetManager.refreshCounters();
 	}
 
 	protected getInput(formName: string, inputName: string): HTMLInputElement | null {
