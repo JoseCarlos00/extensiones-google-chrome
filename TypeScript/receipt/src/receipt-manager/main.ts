@@ -2,7 +2,7 @@ import { getInputValue } from '../utils/getInputValue';
 import { namesStorages } from "../constants";
 import type { ReceiptType } from '../types';
 
-const acceptedReceiptPreferences: ReceiptType[] = ['TRASLADOS', 'DEVOLUCIONES', 'TARIMAS'];
+const acceptedReceiptPreferences: ReceiptType[] = ['TRASLADOS', 'DEVOLUCIONES', 'TARIMAS', 'CAJAS'];
 const titleMainSelector = '#proRfWrapper > form > table > tbody > tr.touchscreen-show > td > b';
 const titleMain = 'Select a receiving preference';
 
@@ -20,32 +20,38 @@ window.addEventListener('load', async () => {
 		}
 
     if (currentReceiptType === 'TRASLADOS') {
-      const { default: TrasladosManager } = await import('./ReceiptManagerTraslados');
-      const manager = new TrasladosManager({
-        receiptType: currentReceiptType,
-        nameStorage: namesStorages.traslados
-      });
-      
-      manager.initialize();
-      
-    } else if (currentReceiptType === 'DEVOLUCIONES') {
-      const { default: DevolucionesManager } = await import('./ReceiptManagerDevoluciones');
-      const manager = new DevolucionesManager({
-        receiptType: currentReceiptType,
-        nameStorage: namesStorages.devoluciones
-      });
-      
-      manager.initialize();
-    } else if (currentReceiptType === 'TARIMAS') {
-      const { default: TarimasManager } = await import('./ReceiptManagerTarimas');
-      const manager = new TarimasManager({
-        receiptType: currentReceiptType,
-        nameStorage: namesStorages.tarimas
-      })
+			const { default: TrasladosManager } = await import('./ReceiptManagerTraslados');
+			const manager = new TrasladosManager({
+				receiptType: currentReceiptType,
+				nameStorage: namesStorages.traslados,
+			});
 
-      console.log(manager);
-      manager.initialize()
-    }
+			manager.initialize();
+		} else if (currentReceiptType === 'DEVOLUCIONES') {
+			const { default: DevolucionesManager } = await import('./ReceiptManagerDevoluciones');
+			const manager = new DevolucionesManager({
+				receiptType: currentReceiptType,
+				nameStorage: namesStorages.devoluciones,
+			});
+
+			manager.initialize();
+		} else if (currentReceiptType === 'TARIMAS') {
+			const { default: TarimasManager } = await import('./ReceiptManagerTarimas');
+			const manager = new TarimasManager({
+				receiptType: currentReceiptType,
+				nameStorage: namesStorages.tarimas,
+			});
+
+			manager.initialize();
+		} else if (currentReceiptType === 'CAJAS') {
+			const { default: CajasManager } = await import('./ReceiptManagerCajas');
+			const manager = new CajasManager({
+				receiptType: currentReceiptType,
+				nameStorage: namesStorages.tarimas,
+			});
+
+			manager.initialize();
+		}
    
 	} catch (error: any) {
 		console.error('Error al inicializar el gestor de datos: ', error?.message);
