@@ -3,15 +3,12 @@ import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { SessionStorageHelper } from '../../utils/SessionStorageHelper';
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
 
-type BasePageState =
+export type BasePageState =
 	| 'form-receipt-id'
 	| 'form-receipt-id-invalid'
 	| 'form-item'
-	| 'form-item-success'
 	| 'form-item-invalid'
 	| 'form-check-in'
-	| 'form-lp'
-	| 'form-lp-invalid'
 	| 'unknown';
 
 export abstract class ReceiptManagerWithItem<
@@ -28,14 +25,9 @@ export abstract class ReceiptManagerWithItem<
 		'form-receipt-id-invalid': () => this.completeReceipt(),
 		'form-item': () => this.processCurrentItem(),
 		'form-item-invalid': () => this.processInvalidItem(),
-		'form-item-success': () => this.processStateSuccessful(),
 		'form-check-in': async () => this.handleCheckIn(),
-		'form-lp': () => this.handleLicensePlate(),
-		'form-lp-invalid': () => console.warn('LP error'),
 		unknown: () => console.warn('Estado de página no reconocido'),
 	};
-
-	private childHandlers: Partial<Record<string, () => void>> = {};
 
 	constructor(config: ReceiptManagerRFConfig<K>) {
 		super(config);
@@ -47,11 +39,17 @@ export abstract class ReceiptManagerWithItem<
 	 */
 	protected abstract fillCheckInForm(): void;
 
-	private get previousState(): S | null {
+	private childHandlers: Partial<Record<string, () => void>> = {};
+
+	protected registerHandlers(handlers: Partial<Record<S, () => void>>): void {
+		this.childHandlers = { ...this.childHandlers, ...handlers };
+	}
+
+	protected get previousState(): S | null {
 		return SessionStorageHelper.get(this.SESSION_PAGE_KEY) ?? null;
 	}
 
-	private savePreviousState(state: S): void {
+	protected savePreviousState(state: S): void {
 		SessionStorageHelper.save(this.SESSION_PAGE_KEY, state);
 	}
 
@@ -104,7 +102,7 @@ export abstract class ReceiptManagerWithItem<
 		return this.childHandlers[state] ?? (this.baseHandlers as Record<string, () => void>)[state];
 	}
 
-	private saveProcessedLP(): void {
+	protected saveProcessedLP(): void {
 		const current = this.storage?.currentItem;
 
 		if (!current?.currentLp) return;
@@ -127,48 +125,10 @@ export abstract class ReceiptManagerWithItem<
 		if (this.storage?.currentItem) {
 			this.storage.currentItem.status = 'skipped';
 		}
-		
-		this.processCurrentItem();
-	}
-
-	private processStateSuccessful(): void {
-		const current = this.storage?.currentItem;
-
-		console.log(
-			'[DEV - processStateSuccessful ]:',
-			{
-				status: this.detectPageState(this.getPageSignals()),
-				previousState: this.previousState,
-			},
-			current,
-		);
-
-		// Estado inconsistente:
-		// llegamos a success pero no existe currentItem
-		if (!current) {
-			console.warn('form-item-success sin currentItem. Abortando para evitar duplicados.');
-			alert('form-item-success sin currentItem. Abortando');
-			this.completeReceipt('missing-currentItem-on-success');
-
-			return;
-		}
-
-		// Solo incrementa cuando realmente venimos de LP
-		if (this.previousState === 'form-lp') {
-			current.processedUnits++;
-
-			if (current.processedUnits >= current.totalUnits) {
-				current.status = 'completed';
-			}
-
-			this.saveProcessedLP();
-			LocalStorageHelper.save(this.nameStorage, this.storage!);
-
-			this.refreshCounters();
-		}
 
 		this.processCurrentItem();
 	}
+
 
 	private finalizeCurrentItem(): void {
 		if (!this.storage?.currentItem) return;
