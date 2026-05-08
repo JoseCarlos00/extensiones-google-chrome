@@ -3,34 +3,39 @@ import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
 import { SessionStorageHelper } from '../../utils/SessionStorageHelper';
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
 
-type PageState =
-	| 'form-receipt-id' // → independiente — solo necesita data[0].receiptId
-	| 'form-receipt-id-invalid' // independiente — necesita currentItem (se crea en processNextItem)
-	| 'form-item' // → independiente — solo necesita currentItem.item
-	| 'form-item-success' // → depende de form-lp — incrementa processedUnits |message: Receipt containers located successfully.
+type BasePageState =
+	| 'form-receipt-id'
+	| 'form-receipt-id-invalid'
+	| 'form-item'
+	| 'form-item-success'
 	| 'form-item-invalid'
-	| 'form-check-in' // → independiente — hidrata totalUnits y currentLp
-	| 'form-lp' // → depende de form-check-in — necesita currentLp
-	| 'form-lp-invalid' // "License plate must be unique"
+	| 'form-check-in'
+	| 'form-lp'
+	| 'form-lp-invalid'
 	| 'unknown';
 
-export abstract class ReceiptManagerWithItem<K extends WithItem> extends ReceiptManagerRF<K> {
+export abstract class ReceiptManagerWithItem<
+	K extends WithItem,
+	S extends string = BasePageState,
+> extends ReceiptManagerRF<K> {
 	protected abstract nameStorageLPs: string;
 
 	protected abstract currentLabelCounter: string;
 	private readonly SESSION_PAGE_KEY = 'receiptManagerPagePreviewState';
 
-	protected handlers: Record<PageState, () => void> = {
+	private readonly baseHandlers: Record<BasePageState, () => void> = {
 		'form-receipt-id': () => this.setValueReceiptIdInput(),
 		'form-receipt-id-invalid': () => this.completeReceipt(),
 		'form-item': () => this.processCurrentItem(),
-		'form-item-invalid': () => this.processCurrentItem(),
+		'form-item-invalid': () => this.processInvalidItem(),
 		'form-item-success': () => this.processStateSuccessful(),
 		'form-check-in': async () => this.handleCheckIn(),
 		'form-lp': () => this.handleLicensePlate(),
 		'form-lp-invalid': () => console.warn('LP error'),
 		unknown: () => console.warn('Estado de página no reconocido'),
 	};
+
+	private childHandlers: Partial<Record<string, () => void>> = {};
 
 	constructor(config: ReceiptManagerRFConfig<K>) {
 		super(config);
@@ -42,11 +47,11 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	 */
 	protected abstract fillCheckInForm(): void;
 
-	private get previousState(): PageState | null {
+	private get previousState(): S | null {
 		return SessionStorageHelper.get(this.SESSION_PAGE_KEY) ?? null;
 	}
 
-	private savePreviousState(state: PageState): void {
+	private savePreviousState(state: S): void {
 		SessionStorageHelper.save(this.SESSION_PAGE_KEY, state);
 	}
 
@@ -59,15 +64,14 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	}
 
 	processData(): void {
-		const hasData = !!this.mutableItems?.length; // No hay mas items: false
-		const hasCurrentItem = !!this.storage?.currentItem; // existe currentItem: true
+		const hasData = !!this.mutableItems?.length;
+		const hasCurrentItem = !!this.storage?.currentItem;
 
-		// Continúa si hay currentItem aunque data esté vacío
 		if (!hasData && !hasCurrentItem) return;
 
 		const signals = this.getPageSignals();
 		const state = this.detectPageState(signals);
-		const handler = this.handlers[state];
+		const handler = this.getHandler(state);
 
 		if (!handler) {
 			console.warn('Estado no manejado:', state, signals);
@@ -78,22 +82,26 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		this.savePreviousState(state);
 	}
 
-	private detectPageState(signals: { title?: string; message?: string }): PageState {
+	protected detectPageState(signals: { title?: string; message?: string }): S {
 		const { title, message } = signals;
 
-		if (title?.includes('receipt id') && message?.includes('invalid')) return 'form-receipt-id-invalid';
-		if (title?.includes('receipt id')) return 'form-receipt-id';
+		if (title?.includes('receipt id') && message?.includes('invalid')) return 'form-receipt-id-invalid' as S;
+		if (title?.includes('receipt id')) return 'form-receipt-id' as S;
 
-		if (title?.includes('enter item') && message?.includes('invalid')) return 'form-item-invalid';
-		if (title?.includes('enter item') && message?.includes('located successfully')) return 'form-item-success';
-		if (title?.includes('enter item')) return 'form-item';
+		if (title?.includes('enter item') && message?.includes('invalid')) return 'form-item-invalid' as S;
+		if (title?.includes('enter item') && message?.includes('located successfully')) return 'form-item-success' as S;
+		if (title?.includes('enter item')) return 'form-item' as S;
 
-		if (title?.includes('check in')) return 'form-check-in';
+		if (title?.includes('check in')) return 'form-check-in' as S;
 
-		if (title?.includes('license plate') && message?.includes('must be unique')) return 'form-lp-invalid';
-		if (title?.includes('license plate')) return 'form-lp';
+		if (title?.includes('license plate') && message?.includes('must be unique')) return 'form-lp-invalid' as S;
+		if (title?.includes('license plate')) return 'form-lp' as S;
 
-		return 'unknown';
+		return 'unknown' as S;
+	}
+
+	private getHandler(state: S): (() => void) | undefined {
+		return this.childHandlers[state] ?? (this.baseHandlers as Record<string, () => void>)[state];
 	}
 
 	private saveProcessedLP(): void {
@@ -113,6 +121,14 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		} satisfies ProcessedLP);
 
 		LocalStorageHelper.save(this.nameStorageLPs, processed);
+	}
+
+	private processInvalidItem(): void {
+		if (this.storage?.currentItem) {
+			this.storage.currentItem.status = 'skipped';
+		}
+		
+		this.processCurrentItem();
 	}
 
 	private processStateSuccessful(): void {
