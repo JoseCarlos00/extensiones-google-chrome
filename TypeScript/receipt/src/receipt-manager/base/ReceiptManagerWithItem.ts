@@ -39,6 +39,8 @@ export abstract class ReceiptManagerWithItem<
 	 */
 	protected abstract fillCheckInForm(): void;
 
+	protected abstract handleLicensePlate(): void;
+
 	private childHandlers: Partial<Record<string, () => void>> = {};
 
 	protected registerHandlers(handlers: Partial<Record<S, () => void>>): void {
@@ -71,6 +73,8 @@ export abstract class ReceiptManagerWithItem<
 		const state = this.detectPageState(signals);
 		const handler = this.getHandler(state);
 
+		console.log('Estate processData:', state, signals);
+
 		if (!handler) {
 			console.warn('Estado no manejado:', state, signals);
 			return;
@@ -87,13 +91,9 @@ export abstract class ReceiptManagerWithItem<
 		if (title?.includes('receipt id')) return 'form-receipt-id' as S;
 
 		if (title?.includes('enter item') && message?.includes('invalid')) return 'form-item-invalid' as S;
-		if (title?.includes('enter item') && message?.includes('located successfully')) return 'form-item-success' as S;
 		if (title?.includes('enter item')) return 'form-item' as S;
 
 		if (title?.includes('check in')) return 'form-check-in' as S;
-
-		if (title?.includes('license plate') && message?.includes('must be unique')) return 'form-lp-invalid' as S;
-		if (title?.includes('license plate')) return 'form-lp' as S;
 
 		return 'unknown' as S;
 	}
@@ -128,7 +128,6 @@ export abstract class ReceiptManagerWithItem<
 
 		this.processCurrentItem();
 	}
-
 
 	private finalizeCurrentItem(): void {
 		if (!this.storage?.currentItem) return;
@@ -252,12 +251,10 @@ export abstract class ReceiptManagerWithItem<
 		}
 
 		// 🔥 Generar LP desde backend
-		try {
-			current.currentLp = await this.fetchNextLp(current.receiptId);
-			console.log('LP generado:', current.currentLp);
-		} catch (err) {
-			console.error('Error generando LP', err);
-			return; // evita submit si falla
+		const success = await this.assignmentCurrentLP();
+
+		if (!success) {
+			return;
 		}
 
 		LocalStorageHelper.save(this.nameStorage, this.storage);
@@ -278,30 +275,6 @@ export abstract class ReceiptManagerWithItem<
 		 */
 
 		this.fillCheckInForm();
-		this.submitForm();
-	}
-
-	protected handleLicensePlate(): void {
-		if (this.previousState !== 'form-check-in') {
-			console.warn('form-lp inesperado, previousState:', this.previousState);
-			return;
-		}
-
-		console.log(
-			'[DEV - handleLicensePlate ]:',
-			{
-				status: this.detectPageState(this.getPageSignals()),
-				previousState: this.previousState,
-			},
-			this.storage?.currentItem,
-		);
-
-		const current = this.storage?.currentItem;
-		if (!current?.currentLp) return;
-
-		const inputLp = this.getInput('Form1', 'CONTID');
-		if (inputLp) inputLp.value = current.currentLp;
-
 		this.submitForm();
 	}
 
@@ -350,7 +323,7 @@ export abstract class ReceiptManagerWithItem<
 		return match ? parseInt(match[2].replace(/[.,]/g, '')) : 0;
 	}
 
-	protected async fetchNextLp(receiptId: string): Promise<string> {
+	private async fetchNextLp(receiptId: string): Promise<string> {
 		const res = await fetch('https://firsulqpoizqyqnlwvpa.supabase.co/functions/v1/next-lp', {
 			method: 'POST',
 			headers: {
@@ -367,6 +340,34 @@ export abstract class ReceiptManagerWithItem<
 
 		const data = await res.json();
 		return data.lp;
+	}
+
+	protected async assignmentCurrentLP(): Promise<boolean> {
+		try {
+			const current = this.storage?.currentItem;
+			if (!current) throw new Error('No hay currentItem');
+			if (!current.receiptId) throw new Error('No hay receiptId');
+
+			current.currentLp = await this.fetchNextLp(current.receiptId);
+			console.log('LP generado:', current.currentLp);
+
+			return true;
+		} catch (err) {
+			console.error('Error generando LP', err);
+			return false; // evita submit si falla
+		}
+	}
+
+	protected async processErrorLP(): Promise<void> {
+		// 🔥 Generar LP desde backend
+		const success = await this.assignmentCurrentLP();
+
+		if (!success) {
+			return;
+		}
+
+		this.handleLicensePlate()
+		this.submitForm();
 	}
 
 	public onCancel(): void {

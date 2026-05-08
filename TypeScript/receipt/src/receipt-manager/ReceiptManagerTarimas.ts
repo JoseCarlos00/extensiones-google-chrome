@@ -15,13 +15,22 @@ export default class ReceiptManagerTarimas extends ReceiptManagerWithItem<'TARIM
 		this.registerHandlers({
 			'form-item-success': () => this.processStateSuccessful(),
 			'form-lp': () => this.handleLicensePlate(),
-			'form-lp-invalid': () => console.warn('LP Tarimas inválido'),
+			'form-lp-invalid': async () => this.processErrorLP(),
 		});
 	}
 
-	// ─── Lógica de negocio ───────────────────────────────
 	// Tarimas — input disabled, solo click OK
 	protected fillCheckInForm(): void {} // no hace nada — el form no es editable
+
+	protected detectPageState(signals: { title?: string; message?: string }): TarimasPageState {
+		const { title, message } = signals;
+
+		if (title?.includes('enter item') && message?.includes('located successfully')) return 'form-item-success';
+		if (title?.includes('license plate') && message?.includes('must be unique')) return 'form-lp-invalid';
+		if (title?.includes('license plate')) return 'form-lp';
+
+		return super.detectPageState(signals);
+	}
 
 	private processStateSuccessful(): void {
 		const current = this.storage?.currentItem;
@@ -46,7 +55,7 @@ export default class ReceiptManagerTarimas extends ReceiptManagerWithItem<'TARIM
 		}
 
 		// Solo incrementa cuando realmente venimos de LP
-		if (this.previousState === 'form-lp') {
+		if (this.previousState === 'form-lp' || this.previousState === 'form-lp-invalid') {
 			current.processedUnits++;
 
 			if (current.processedUnits >= current.totalUnits) {
@@ -60,5 +69,29 @@ export default class ReceiptManagerTarimas extends ReceiptManagerWithItem<'TARIM
 		}
 
 		this.processCurrentItem();
+	}
+
+	protected handleLicensePlate(): void {
+		if (this.previousState !== 'form-check-in') {
+			console.warn('form-lp inesperado, previousState:', this.previousState);
+			return;
+		}
+
+		console.log(
+			'[DEV - handleLicensePlate ]:',
+			{
+				status: this.detectPageState(this.getPageSignals()),
+				previousState: this.previousState,
+			},
+			this.storage?.currentItem,
+		);
+
+		const current = this.storage?.currentItem;
+		if (!current?.currentLp) return;
+
+		const inputLp = this.getInput('Form1', 'CONTID');
+		if (inputLp) inputLp.value = current.currentLp;
+
+		this.submitForm();
 	}
 }
