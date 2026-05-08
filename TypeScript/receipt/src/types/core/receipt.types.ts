@@ -21,10 +21,13 @@ export type ReceiptInputMap = {
 	CAJAS: DataCajas;
 };
 
+type ItemStatus = 'pending' | 'processing' | 'completed' | 'skipped';
+
 export type CurrentItemState = {
 	item: string;
 	processedUnits: number;
 	totalUnits: number;
 	receiptId: string;
 	currentLp: string;
+	status: ItemStatus;
 };

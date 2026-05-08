@@ -1,6 +1,6 @@
 import type { ReceiptStorageMap, WithItem } from '../../types';
 import { LocalStorageHelper } from '../../utils/LocalStorageHelper';
-import { SessionStorageHelper } from '../../utils/SessionStorageHelper'
+import { SessionStorageHelper } from '../../utils/SessionStorageHelper';
 import { ReceiptManagerRF, ReceiptManagerRFConfig } from './ReceiptManagerRF';
 
 type PageState =
@@ -99,22 +99,35 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	private processStateSuccessful(): void {
 		const current = this.storage?.currentItem;
 
+		console.log(
+			'[DEV - processStateSuccessful ]:',
+			{
+				status: this.detectPageState(this.getPageSignals()),
+				previousState: this.previousState,
+			},
+			current,
+		);
+
+		// Estado inconsistente:
+		// llegamos a success pero no existe currentItem
 		if (!current) {
-			if (this.previousState === 'form-lp') {
-				// Proceso normal interrumpido — no podemos incrementar sin currentItem
-				// Lo más seguro: no hacer nada, esperar siguiente acción del usuario
-				console.warn('form-item-success: no hay currentItem, previousState era form-lp');
-				return;
-			}
-			// Llegamos aquí sin contexto — processCurrentItem creará currentItem
-			this.processCurrentItem();
+			console.warn('form-item-success sin currentItem. Abortando para evitar duplicados.');
+			alert('form-item-success sin currentItem. Abortando')
+			this.completeReceipt('missing-currentItem-on-success');
+
 			return;
 		}
 
-		// currentItem existe
+		// Solo incrementa cuando realmente venimos de LP
 		if (this.previousState === 'form-lp') {
 			current.processedUnits++;
+
+			if (current.processedUnits >= current.totalUnits) {
+				current.status = 'completed';
+			}
+
 			LocalStorageHelper.save(this.nameStorage, this.storage!);
+
 			this.refreshCounters();
 		}
 
@@ -124,8 +137,18 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	processNextItem(): void {
 		if (!this.storage) return;
 
-		// Si hay currentItem activo, primero lo termina — quita data[0]
-		if (this.storage.currentItem) {
+		console.log(
+			'[DEV - processNextItem ]:',
+			{
+				status: this.detectPageState(this.getPageSignals()),
+				previousState: this.previousState,
+			},
+			this.storage?.currentItem,
+		);
+
+		const current = this.storage.currentItem;
+
+		if (current && current.status !== 'pending') {
 			this.storage.data = this.storage.data.slice(1);
 			this.storage.currentItem = null;
 		}
@@ -145,12 +168,30 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 			return;
 		}
 
+		this.storage.currentItem = {
+			item: nextItem.item,
+			processedUnits: 0,
+			totalUnits: 0,
+			receiptId: nextItem.receiptId,
+			currentLp: '',
+			status: 'pending',
+		};
+
 		LocalStorageHelper.save(this.nameStorage, this.storage);
 		this.processCurrentItem();
 	}
 
 	protected processCurrentItem(): void {
 		const inputItem = this.getInput('Form1', 'xRefItem');
+
+		console.log(
+			'[DEV - processCurrentItem ]:',
+			{
+				status: this.detectPageState(this.getPageSignals()),
+				previousState: this.previousState,
+			},
+			this.storage?.currentItem,
+		);
 
 		if (!inputItem) {
 			console.error(
@@ -161,18 +202,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 
 		let current = this.storage?.currentItem ?? null;
 
-		if (!current) {
-			this.processNextItem();
-			return;
-		}
-
-		// ¿Ya terminó este item? — totalUnits > 0 significa que ya pasó por check-in/form-lp y se calculó el total
-		if (current.totalUnits > 0 && current.processedUnits >= current.totalUnits) {
-			if (this.storage) {
-				this.storage.currentItem = null;
-				LocalStorageHelper.save(this.nameStorage, this.storage);
-			}
-
+		if (!current || current.status !== 'pending') {
 			this.processNextItem();
 			return;
 		}
@@ -191,18 +221,30 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		const current = this.storage.currentItem;
 		const inputHiddenOpenQtyValue = this.getInput('Form1', 'HIDDENQTY')?.value ?? null;
 
-		console.log('handleCheckIn:', {
-			status: this.detectPageState(this.getPageSignals()),
-			previousState: this.previousState,
-			totalUnit: current.totalUnits,
-			processedUnits: current.processedUnits,
-		});
+		console.log(
+			'[DEV - handleCheckIn ]:',
+			{
+				status: this.detectPageState(this.getPageSignals()),
+				previousState: this.previousState,
+				inputHiddenOpenQtyValue,
+			},
+			this.storage?.currentItem,
+		);
 
 		// Solo calcula totalUnits la primera vez que se llega a form-check-in/form-lp para este item
 		if (!current.totalUnits || this.previousState === 'form-item') {
 			const openQty = parseInt(inputHiddenOpenQtyValue ?? '0');
 			const containerQty = this.getContainerQty();
-			current.totalUnits = Math.floor(openQty / containerQty);
+			const totalUnits = Math.floor(openQty / containerQty);
+			current.totalUnits = totalUnits;
+
+			if (totalUnits <= 0) {
+				current.status = 'skipped';
+				LocalStorageHelper.save(this.nameStorage, this.storage);
+				console.log('currentItem Actual 1:', current);
+				this.clickCancelButton();
+				return; // evita submit si falla
+			}
 		}
 
 		// 🔥 Generar LP desde backend
@@ -215,7 +257,7 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		}
 
 		LocalStorageHelper.save(this.nameStorage, this.storage);
-		console.log('currentItem Actual:', current);
+		console.log('currentItem Actual 2:', current);
 
 		/** 
 		 * TODO:
@@ -241,6 +283,15 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 			return;
 		}
 
+		console.log(
+			'[DEV - handleLicensePlate ]:',
+			{
+				status: this.detectPageState(this.getPageSignals()),
+				previousState: this.previousState,
+			},
+			this.storage?.currentItem,
+		);
+
 		const current = this.storage?.currentItem;
 		if (!current?.currentLp) return;
 
@@ -253,6 +304,15 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	protected setValueReceiptIdInput() {
 		const inputReceiptId = this.getInput('Form1', 'RECID');
 		const receiptId = this.storage?.data[0]?.receiptId;
+
+		console.log(
+			'[DEV - setValueReceiptIdInput ]:',
+			{
+				status: this.detectPageState(this.getPageSignals()),
+				previousState: this.previousState,
+			},
+			this.storage?.currentItem,
+		);
 
 		if (!receiptId) {
 			console.warn('El campo Receipt ID está vacío. No se guardarán datos.');
@@ -271,6 +331,10 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 		if (inputReceiptId && receiptId && this.getPageSignals().message !== 'Invalid Receipt ID.') {
 			this.submitForm();
 		}
+	}
+
+	protected clickCancelButton(): void {
+		console.log('click en:', document.querySelector<HTMLInputElement>('input[type="button"][value="Cancel"]'));
 	}
 
 	protected getContainerQty(): number {
@@ -309,6 +373,11 @@ export abstract class ReceiptManagerWithItem<K extends WithItem> extends Receipt
 	protected completeReceipt(who?: string): void {
 		SessionStorageHelper.remove(this.SESSION_PAGE_KEY);
 		super.completeReceipt(who);
+	}
+
+	protected syncStorage(): void {
+		SessionStorageHelper.remove(this.SESSION_PAGE_KEY);
+		super.syncStorage();
 	}
 
 	// ─── Presentación ────────────────────────────────────
