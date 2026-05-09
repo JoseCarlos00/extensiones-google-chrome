@@ -30,4 +30,6 @@ export type CurrentItemState = {
 	receiptId: string;
 	currentLp: string;
 	status: ItemStatus;
+	lastProcessedQty?: number;
+	suggestedQty?: number;
 };

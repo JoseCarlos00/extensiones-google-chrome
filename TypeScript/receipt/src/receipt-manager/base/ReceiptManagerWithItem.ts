@@ -21,11 +21,11 @@ export abstract class ReceiptManagerWithItem<
 	private readonly SESSION_PAGE_KEY = 'receiptManagerPagePreviewState';
 
 	private readonly baseHandlers: Record<BasePageState, () => void> = {
-		'form-receipt-id': () => this.setValueReceiptIdInput(),
+		'form-receipt-id': () => this.handleReceiptId(),
 		'form-receipt-id-invalid': () => this.completeReceipt(),
 		'form-item': () => this.processCurrentItem(),
 		'form-item-invalid': () => this.processInvalidItem(),
-		'form-check-in': async () => this.handleCheckIn(),
+		'form-check-in': async () => this.handleStateCheckIn(),
 		unknown: () => console.warn('Estado de página no reconocido'),
 	};
 
@@ -37,9 +37,9 @@ export abstract class ReceiptManagerWithItem<
 	/**
 	 * Se actualizaran los contadores de la UI y se actualizara el status `setStatus()`
 	 */
-	protected abstract fillCheckInForm(): void;
-
+	protected abstract handleStateCheckIn(): Promise<void>;
 	protected abstract handleLicensePlate(): void;
+	protected abstract handleReceiptId(): void;
 
 	private childHandlers: Partial<Record<string, () => void>> = {};
 
@@ -181,6 +181,7 @@ export abstract class ReceiptManagerWithItem<
 
 		LocalStorageHelper.save(this.nameStorage, this.storage);
 		this.refreshInfo();
+		this.refreshCounters();
 		this.processCurrentItem();
 	}
 
@@ -214,9 +215,9 @@ export abstract class ReceiptManagerWithItem<
 		this.submitForm();
 	}
 
-	protected async handleCheckIn(): Promise<void> {
+	protected async processCheckIn(): Promise<void> {
 		if (!this.storage?.currentItem) {
-			console.warn('handleCheckIn: no hay currentItem — ejecutando processNextItem');
+			console.warn('processCheckIn: no hay currentItem — ejecutando processNextItem');
 			this.processNextItem();
 			return;
 		}
@@ -225,7 +226,7 @@ export abstract class ReceiptManagerWithItem<
 		const inputHiddenOpenQtyValue = this.getInput('Form1', 'HIDDENQTY')?.value ?? null;
 
 		console.log(
-			'[DEV - handleCheckIn ]:',
+			'[DEV - processCheckIn ]:',
 			{
 				status: this.detectPageState(this.getPageSignals()),
 				previousState: this.previousState,
@@ -235,7 +236,7 @@ export abstract class ReceiptManagerWithItem<
 		);
 
 		// Solo calcula totalUnits la primera vez que se llega a form-check-in/form-lp para este item
-		if (!current.totalUnits || this.previousState === 'form-item') {
+		if (!current.totalUnits) {
 			const openQty = parseInt(inputHiddenOpenQtyValue ?? '0');
 			const containerQty = this.getContainerQty();
 			const totalUnits = Math.floor(openQty / containerQty);
@@ -244,9 +245,7 @@ export abstract class ReceiptManagerWithItem<
 			if (totalUnits <= 0) {
 				current.status = 'skipped';
 				LocalStorageHelper.save(this.nameStorage, this.storage);
-				console.log('currentItem Actual 1:', current);
-				this.clickCancelButton();
-				return; // evita submit si falla
+				return;
 			}
 		}
 
@@ -256,9 +255,6 @@ export abstract class ReceiptManagerWithItem<
 		if (!success) {
 			return;
 		}
-
-		LocalStorageHelper.save(this.nameStorage, this.storage);
-		console.log('currentItem Actual 2:', current);
 
 		/** 
 		 * TODO:
@@ -273,9 +269,6 @@ export abstract class ReceiptManagerWithItem<
 			lock UI (rápido)
 			o idempotency (nivel pro)
 		 */
-
-		this.fillCheckInForm();
-		this.submitForm();
 	}
 
 	protected setValueReceiptIdInput() {
@@ -310,8 +303,10 @@ export abstract class ReceiptManagerWithItem<
 		}
 	}
 
-	protected clickCancelButton(): void {
-		document.querySelector<HTMLInputElement>('input[type="button"][value="Cancel"]')?.click();
+	protected executeCancelUI(): void {
+		setTimeout(() => {
+			document.querySelector<HTMLInputElement>('input[value="Cancel"]')?.click();
+		}, this.confirmDelay);
 	}
 
 	protected getContainerQty(): number {
@@ -348,6 +343,7 @@ export abstract class ReceiptManagerWithItem<
 			if (!current) throw new Error('No hay currentItem');
 			if (!current.receiptId) throw new Error('No hay receiptId');
 
+			
 			current.currentLp = await this.fetchNextLp(current.receiptId);
 			console.log('LP generado:', current.currentLp);
 
@@ -366,7 +362,7 @@ export abstract class ReceiptManagerWithItem<
 			return;
 		}
 
-		this.handleLicensePlate()
+		this.handleLicensePlate();
 		this.submitForm();
 	}
 

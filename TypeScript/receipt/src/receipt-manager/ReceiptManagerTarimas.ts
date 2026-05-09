@@ -19,9 +19,6 @@ export default class ReceiptManagerTarimas extends ReceiptManagerWithItem<'TARIM
 		});
 	}
 
-	// Tarimas — input disabled, solo click OK
-	protected fillCheckInForm(): void {} // no hace nada — el form no es editable
-
 	protected detectPageState(signals: { title?: string; message?: string }): TarimasPageState {
 		const { title, message } = signals;
 
@@ -91,6 +88,26 @@ export default class ReceiptManagerTarimas extends ReceiptManagerWithItem<'TARIM
 
 		const inputLp = this.getInput('Form1', 'CONTID');
 		if (inputLp) inputLp.value = current.currentLp;
+
+		this.submitForm();
+	}
+
+	protected handleReceiptId(): void {
+		this.setValueReceiptIdInput();
+	}
+
+	protected async handleStateCheckIn(): Promise<void> {
+		await this.processCheckIn();
+
+		const current = this.storage?.currentItem;
+
+		if (!current || current.status === 'skipped') {
+			this.executeCancelUI();
+			return;
+		}
+
+		LocalStorageHelper.save(this.nameStorage, this.storage);
+		console.log('handleStateCheckIn:', this.storage?.currentItem);
 
 		this.submitForm();
 	}
