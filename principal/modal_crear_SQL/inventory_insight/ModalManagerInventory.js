@@ -1,9 +1,9 @@
 class ModalManagerInventory extends ModalManager {
-  constructor(configuration) {
-    super(configuration);
+	constructor(configuration) {
+		super(configuration);
 
-    this.containerPrincipal = null;
-    this.mapType = {
+		this.containerPrincipal = null;
+		this.mapType = {
 			itemLoc: (elemento) => {
 				this._toggleClass(elemento, 'item-loc', 'internal-num');
 			},
@@ -12,97 +12,117 @@ class ModalManagerInventory extends ModalManager {
 			},
 			addInternal: (elemento) => {
 				console.log('Cambio de clases');
-        
 			},
 		};
-  }
+	}
 
-  _toggleClass(elemento, addClass, removeClass) {
-    elemento.classList.add(addClass);
-    elemento.classList.remove(removeClass);
-  }
+	_toggleClass(elemento, addClass, removeClass) {
+		elemento.classList.add(addClass);
+		elemento.classList.remove(removeClass);
+	}
 
-  updateModalContent(e) {
-    const elemento = e.target;
+	updateModalContent(e) {
+		const elemento = e.target;
 
-    if (!elemento) {
-      console.error('[updateModalContent] No se encontró el elemento');
-      return;
-    }
+		if (!elemento) {
+			console.error('[updateModalContent] No se encontró el elemento');
+			return;
+		}
 
-    const { type: inputType, dataset } = elemento;
+		const { type: inputType, dataset } = elemento;
 
-    if (!dataset.type) {
-      console.error('[updateModalContent] No se encontró el atributo [data-type].');
-      return;
-    }
+		if (!dataset.type) {
+			console.error('[updateModalContent] No se encontró el atributo [data-type].');
+			return;
+		}
 
-    if (!this.containerPrincipal) {
-      console.error('[updateModalContent] No se encontró el elemento .main-code-container');
-      return;
-    }
+		if (!this.containerPrincipal) {
+			console.error('[updateModalContent] No se encontró el elemento .main-code-container');
+			return;
+		}
 
-    if (inputType === 'checkbox') {
-      this.containerPrincipal.classList.toggle(dataset.type, elemento.checked);
-    } else if (inputType === 'radio' && this.mapType[dataset.type]) {
-      this.mapType[dataset.type](this.containerPrincipal);
-    }
-  }
+		if (inputType === 'checkbox') {
+			this.containerPrincipal.classList.toggle(dataset.type, elemento.checked);
+		} else if (inputType === 'radio' && this.mapType[dataset.type]) {
+			this.mapType[dataset.type](this.containerPrincipal);
+		}
+	}
 
-  _setEventListeners(selector) {
-    const elements = document.querySelectorAll(selector);
+	_setEventListeners(selector, eventType = 'change') {
+		const elements = document.querySelectorAll(selector);
 
-    if (elements.length === 0) {
-      console.error(
-        `[setEventListeners] No se encontraron elementos para el selector: ${selector}`
-      );
-      return;
-    }
+		if (elements.length === 0) {
+			console.error(`[setEventListeners] No se encontraron elementos para el selector: ${selector}`);
+			return;
+		}
 
-    elements.forEach(element => {
-      element.addEventListener('change', e => this.updateModalContent(e));
-    });
-  }
+		elements.forEach((element) => {
+			element.addEventListener(eventType, (e) => this.updateModalContent(e));
+		});
+	}
 
-  async setEventListenerOpction() {
-    this._setEventListeners(
-      `#${this.modalId} .main-code-container .opcs-btn-container input.opc-btn`
-    );
-  }
+	setEventListenerOpction() {
+		const inputOptions = document.querySelectorAll(
+			`#${this.modalId} .main-code-container .opcs-btn-container input.opc-btn`,
+		);
 
-  async setEventListenerOptionType() {
-    this._setEventListeners(
-      `#${this.modalId} .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]`
-    );
-  }
+		let lastClick = 0;
+		let lastInput = null;
 
-  async setEventListeners() {
-    try {
-      super.setEventListeners();
+		inputOptions.forEach((input) => {
+			input.addEventListener('click', (e) => {
+				const now = Date.now();
+				const isDoubleClick = now - lastClick < 300 && lastInput === input;
 
-      // Event to copy
-      const btnCopy = document.querySelector('.btn-copy-code');
-      if (btnCopy) {
-        btnCopy.addEventListener('click', () => this.modalHandler.handleCopyToClipBoar());
-      }
+				if (isDoubleClick) {
+					inputOptions.forEach((i) => (i.checked = false));
 
-      await this.setEventListenerOpction();
-      await this.setEventListenerOptionType();
-    } catch (error) {
-      console.error(
-        'Error:[setEventListeners] Ha ocurrido un error al crear los eventListener',
-        error
-      );
-    }
-  }
+					input.checked = true;
 
-  async modalFunction() {
-    await super.modalFunction();
-    this.containerPrincipal = document.querySelector(`#${this.modalId} .main-code-container`);
-  }
+					this.containerPrincipal.classList.remove('OH', 'AL', 'IT', 'SU');
 
-  closeModal() {
-    super.closeModal();
-    this.modalHandler.resetSelectedRows();
-  }
+					this.containerPrincipal.classList.add(input.dataset.type);
+				} else {
+					this.updateModalContent(e);
+				}
+
+				lastClick = now;
+				lastInput = input;
+			});
+		});
+	}
+
+	setEventListenerOptionType() {
+		this._setEventListeners(
+			`#${this.modalId} .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]`,
+			'change',
+		);
+	}
+
+	setEventListeners() {
+		try {
+			super.setEventListeners();
+
+			// Event to copy
+			const btnCopy = document.querySelector('.btn-copy-code');
+			if (btnCopy) {
+				btnCopy.addEventListener('click', () => this.modalHandler.handleCopyToClipBoar());
+			}
+
+			this.setEventListenerOpction();
+			this.setEventListenerOptionType();
+		} catch (error) {
+			console.error('Error:[setEventListeners] Ha ocurrido un error al crear los eventListener', error);
+		}
+	}
+
+	async modalFunction() {
+		await super.modalFunction();
+		this.containerPrincipal = document.querySelector(`#${this.modalId} .main-code-container`);
+	}
+
+	closeModal() {
+		super.closeModal();
+		this.modalHandler.resetSelectedRows();
+	}
 }

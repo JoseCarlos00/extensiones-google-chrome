@@ -83,8 +83,8 @@ async function getHtmlContent({ sectionContainerClass, modalId }) {
       </div>
 
       <div class="mb-1 mt-2">
-        <span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">=</span><span
-          class="hljs-string">'Mariano'</span>
+        <span class="hljs-keyword">WHERE</span> warehouse <span class="hljs-operator">= </span><span
+          id="input_warehouse" class="hljs-string">'Mariano'</span>
       </div>
 
       <div class="internal-num-code">

@@ -4,12 +4,13 @@ class ModalHandler {
 		this.sectionContainerClass = sectionContainerClass;
 
 		this.modal = null;
-		this.tbodyTable = document.querySelector("#ListPaneDataGrid > tbody");
+		this.tbodyTable = document.querySelector('#ListPaneDataGrid > tbody');
 
 		this.internalDataSelector = {
 			item: "td[aria-describedby='ListPaneDataGrid_ITEM']",
 			location: "td[aria-describedby='ListPaneDataGrid_LOCATION']",
 			internalNumber: "td[aria-describedby='ListPaneDataGrid_INTERNAL_LOCATION_INV']",
+			warehouse: "td[aria-describedby='ListPaneDataGrid_WAREHOUSE']",
 		};
 
 		this.queryElements = {
@@ -20,10 +21,11 @@ class ModalHandler {
 			DIV_INTERNAL_NUM: null,
 			LOCATION: null,
 			ITEM: null,
+			WAREHOUSE: null,
 		};
 
 		this._selectedRows = [];
-		this._statementUpdateSQL = "";
+		this._statementUpdateSQL = '';
 		this._isInitialVariables = true;
 	}
 
@@ -43,6 +45,7 @@ class ModalHandler {
 				DIV_INTERNAL_NUM: document.querySelector(`${prefix} #internal-inventory-numbers`),
 				LOCATION: document.querySelector(`${prefix} #location`),
 				ITEM: document.querySelector(`${prefix} #item`),
+				WAREHOUSE: document.querySelector(`${prefix} #input_warehouse`),
 			};
 
 			const missingOptions = Object.entries(internalElements)
@@ -52,7 +55,7 @@ class ModalHandler {
 			if (missingOptions.length > 0) {
 				this._isInitialVariables = false;
 				throw new Error(
-					`No se encontraron los elementos necesarios para inicializar [ModalHandler]: [${missingOptions.join(", ")}]`
+					`No se encontraron los elementos necesarios para inicializar [ModalHandler]: [${missingOptions.join(', ')}]`,
 				);
 			}
 
@@ -64,7 +67,7 @@ class ModalHandler {
 	}
 
 	async _openModal() {
-		this.modal.style.display = "block";
+		this.modal.style.display = 'block';
 	}
 
 	resetSelectedRows() {
@@ -84,7 +87,7 @@ class ModalHandler {
 
 			if (checkbox) {
 				const { chk } = checkbox.dataset;
-				return chk === "on";
+				return chk === 'on';
 			}
 		});
 
@@ -96,10 +99,12 @@ class ModalHandler {
 		Object.keys(this.queryElements).forEach((key) => {
 			const element = this.queryElements[key];
 
-			if (element && element.tagName === "INPUT") {
-				element.value = "";
-			} else if (element && element.tagName === "DIV") {
-				element.textContent = "";
+			if (element && element.tagName === 'INPUT') {
+				element.value = '';
+			} else if (element && element.tagName === 'DIV') {
+				element.textContent = '';
+			} else if (element && element.tagName === 'SPAN') {
+				element.textContent = `'Mariano'`;
 			}
 		});
 	}
@@ -109,27 +114,30 @@ class ModalHandler {
 			await this._resetValuesQueryElements();
 
 			if (this._selectedRows.length === 0) {
-				ToastAlert.showAlertFullTop("No se encontraron filas selecionadas", "info");
 				return;
 			}
 
-			const { ITEM, LOCATION, DIV_INTERNAL_NUM } = this.queryElements;
+			const { ITEM, LOCATION, DIV_INTERNAL_NUM, WAREHOUSE } = this.queryElements;
 			const [firstRow] = this._selectedRows;
 
 			const {
 				item: itemSelector,
 				location: locationSelector,
 				internalNumber: internalNumSelector,
+				warehouse: warehouseSelector,
 			} = this.internalDataSelector;
 
-			const item = firstRow.querySelector(itemSelector)?.textContent || "";
-			const location = firstRow.querySelector(locationSelector)?.textContent || "";
+			const item = firstRow.querySelector(itemSelector)?.textContent || '';
+			const location = firstRow.querySelector(locationSelector)?.textContent || '';
+			const warehouse = firstRow.querySelector(warehouseSelector)?.textContent ?? 'Mariano';
+
 
 			ITEM.value = item;
 			LOCATION.value = location;
+			WAREHOUSE.textContent = `'${warehouse}'`;
 
 			if (this._selectedRows.length === 1) {
-				const internalNumber = firstRow.querySelector(internalNumSelector)?.textContent || "";
+				const internalNumber = firstRow.querySelector(internalNumSelector)?.textContent || '';
 				DIV_INTERNAL_NUM.textContent = `'${internalNumber}'`;
 			} else {
 				const internalNumbers = this._selectedRows
@@ -138,7 +146,7 @@ class ModalHandler {
 					.map((text) => `'${text}'`);
 
 				if (internalNumbers.length > 0) {
-					DIV_INTERNAL_NUM.textContent = internalNumbers.join(",\n");
+					DIV_INTERNAL_NUM.textContent = internalNumbers.join(',\n');
 				}
 			}
 		} catch (error) {
@@ -148,17 +156,17 @@ class ModalHandler {
 
 	async _getStatementWhere(values) {
 		const typeStatementWhere = document.querySelector(
-			`#${this.modalId} .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]:checked`
+			`#${this.modalId} .main-code-container .radio-container .radio-inputs input[name="type-mode"][type="radio"]:checked`,
 		);
 
 		if (!typeStatementWhere) {
-			console.error("No se encontro el tipo de condicion [WHERE]");
-			ToastAlert.showAlertFullTop("No se encontro el tipo de condicion [WHERE]");
+			console.error('No se encontro el tipo de condicion [WHERE]');
+			ToastAlert.showAlertFullTop('No se encontro el tipo de condicion [WHERE]');
 			return;
 		}
 
 		const { type } = typeStatementWhere.dataset;
-		const { DIV_INTERNAL_NUM, ITEM, LOCATION } = values;
+		const { DIV_INTERNAL_NUM, ITEM, LOCATION, WAREHOUSE } = values;
 		const selectedRowsNum = this._selectedRows.length;
 
 		const typeWhereMap = {
@@ -169,17 +177,17 @@ class ModalHandler {
 			itemLoc: () => `AND location = '${LOCATION}'\nAND item = '${ITEM}'`,
 		};
 
-		return `\nWHERE warehouse = 'Mariano'\n${typeWhereMap[type]()}`;
+		return `\nWHERE warehouse = ${WAREHOUSE}\n${typeWhereMap[type]()}`;
 	}
 
 	async _getStatementSet(values) {
 		const selectedTypesOfSetSentences = Array.from(
-			document.querySelectorAll(`#${this.modalId} .main-code-container .opcs-btn-container input.opc-btn:checked`)
+			document.querySelectorAll(`#${this.modalId} .main-code-container .opcs-btn-container input.opc-btn:checked`),
 		);
 
 		if (selectedTypesOfSetSentences.length === 0) {
-			console.error("No se selecciono ninguna opcion para el tipo de sentencia [SET]");
-			ToastAlert.showAlertFullTop("No se selecciono ninguna opcion para el tipo de sentencia [SET]");
+			console.error('No se selecciono ninguna opcion para el tipo de sentencia [SET]');
+			ToastAlert.showAlertFullTop('No se selecciono ninguna opcion para el tipo de sentencia [SET]');
 			return;
 		}
 
@@ -190,12 +198,12 @@ class ModalHandler {
 			SU: () => `  SUSPENSE_QTY = ${values.SU}`,
 		};
 
-		return selectedTypesOfSetSentences.map((item) => typeSetMap[item.dataset.type]()).join(",\n");
+		return selectedTypesOfSetSentences.map((item) => typeSetMap[item.dataset.type]()).join(',\n');
 	}
 
 	async _getStatementSQL() {
 		try {
-			const { OH, AL, IT, SU, DIV_INTERNAL_NUM, LOCATION, ITEM } = this.queryElements;
+			const { OH, AL, IT, SU, DIV_INTERNAL_NUM, LOCATION, ITEM, WAREHOUSE } = this.queryElements;
 
 			const values = {
 				OH: OH.value.trim(),
@@ -205,18 +213,19 @@ class ModalHandler {
 				DIV_INTERNAL_NUM: DIV_INTERNAL_NUM.textContent.trim(),
 				LOCATION: LOCATION.value.trim(),
 				ITEM: ITEM.value.trim(),
+				WAREHOUSE: WAREHOUSE.textContent.trim(),
 			};
 
 			const statementWhere = await this._getStatementWhere(values);
 			const statementSET = await this._getStatementSet(values);
 
 			if (!statementWhere || !statementSET) {
-				throw new Error("Error al generar las declaraciones SQL.");
+				throw new Error('Error al generar las declaraciones SQL.');
 			}
 
 			return `UPDATE location_inventory\nSET\n${statementSET}\n${statementWhere}`;
 		} catch (error) {
-			console.error("Error: Ha ocurrido un error al  generar las sentencias SQL", error);
+			console.error('Error: Ha ocurrido un error al  generar las sentencias SQL', error);
 			return;
 		}
 	}
@@ -226,46 +235,63 @@ class ModalHandler {
 	}
 
 	async _addClassSelectedRows() {
-		const containerPrincipal = document.querySelector("#myModal .main-code-container");
+		const containerPrincipal = document.querySelector('#myModal .main-code-container');
 
 		if (!containerPrincipal) {
-			console.error("[updateModalContent] No se encontró el elemento .main-code-container");
+			console.error('[updateModalContent] No se encontró el elemento .main-code-container');
 			return;
 		}
 
 		const rowNum = (await this._getSelectedRowsNum()) ?? 0;
 
-		containerPrincipal.classList.toggle("single", rowNum <= 1);
-		containerPrincipal.classList.toggle("multiple", rowNum >= 2);
+		containerPrincipal.classList.toggle('single', rowNum <= 1);
+		containerPrincipal.classList.toggle('multiple', rowNum >= 2);
 	}
 
 	async setModalElement(modal) {
 		try {
 			if (!modal) {
-				throw new Error("No se encontró el modal para abrir");
+				throw new Error('No se encontró el modal para abrir');
 			}
 
 			this.modal = modal;
 			await this._initialVariables();
 
 			if (!this.tbodyTable) {
-				throw new Error("No se encontró el elemento tbody");
+				throw new Error('No se encontró el elemento tbody');
 			}
 		} catch (error) {
 			console.error(`Error en setModalElement: ${error}`);
 		}
 	}
 
+	focusFirstAvailableInput() {
+		const priorityOrder = ['OH', 'AL', 'IT', 'SU'];
+
+		for (const key of priorityOrder) {
+			const element = this.queryElements[key];
+
+			if (
+				element &&
+				element.offsetParent !== null && // visible en UI
+				!element.disabled
+			) {
+				element.focus();
+				return;
+			}
+		}
+	}
+
 	async handleOpenModal() {
 		try {
 			if (!this._isInitialVariables) {
-				throw new Error("No se encontraron los elementos necesarios de la consulta");
+				throw new Error('No se encontraron los elementos necesarios de la consulta');
 			}
 
 			await this._getRowsSelected();
 			await this._setValuesForQueryElements();
 			await this._addClassSelectedRows();
-			setTimeout(() => this.queryElements.OH?.focus(), 50);
+			setTimeout(() => this.focusFirstAvailableInput(), 50);
 		} catch (error) {
 			console.error(`Error en handleOpenModal: ${error}`);
 		} finally {
