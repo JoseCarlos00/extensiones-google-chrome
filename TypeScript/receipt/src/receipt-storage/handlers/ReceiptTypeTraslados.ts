@@ -54,15 +54,13 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> im
 			}
 
 			// Filtrar solo los IDs de contenedor válidos
-			const validContainers = items
-				.filter(({ licensePlateId }) => this.patternContainerId.test(licensePlateId))
-				.map(({ licensePlateId }) => licensePlateId);
+			const valuesContainer = items.map(({ licensePlateId }) => licensePlateId);
 
 			// Dividir la lista de contenedores en grupos de 5
 			const groupedContainers = [];
 
-			for (let i = 0; i < validContainers.length; i += 5) {
-				groupedContainers.push([...validContainers.slice(i, i + 5), 'DONE']);
+			for (let i = 0; i < valuesContainer.length; i += 5) {
+				groupedContainers.push([...valuesContainer.slice(i, i + 5), 'DONE']);
 			}
 
 			// Crear el arreglo final con grupos
@@ -86,7 +84,7 @@ export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> im
 	}
 
 	extractReceiptData(rowData: RowData): DataTraslados | null {
-		if (rowData.status !== 'Check In Pending') return null;
+		if (rowData.status !== 'Check In Pending' || rowData.item !== '') return null;
 
 		return { licensePlateId: rowData.licensePlateId };
 	}

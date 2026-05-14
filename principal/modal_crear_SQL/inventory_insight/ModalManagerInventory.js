@@ -82,6 +82,9 @@ class ModalManagerInventory extends ModalManager {
 					this.containerPrincipal.classList.remove('OH', 'AL', 'IT', 'SU');
 
 					this.containerPrincipal.classList.add(input.dataset.type);
+					setTimeout(() => {
+						this.modalElement.querySelector(`.main-code-container .code-container #input_${input.dataset.type}`)?.focus();
+					}, 100);
 				} else {
 					this.updateModalContent(e);
 				}
@@ -91,6 +94,7 @@ class ModalManagerInventory extends ModalManager {
 			});
 		});
 	}
+
 
 	setEventListenerOptionType() {
 		this._setEventListeners(
