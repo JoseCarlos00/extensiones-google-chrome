@@ -17,7 +17,7 @@
   .toast-top-min-width 
   .toast-bottom-min-width 
  */
-class ToastAlert {
+export default class ToastAlert {
   constructor({ message, type, time, _className }) {
     this.message = message;
     this.type = type;
@@ -68,7 +68,7 @@ class ToastAlert {
 
   hide() {
     if (!this.container) {
-      throw new Error('No se encontro el contenedor de alerta #toast-container');
+      throw new Error('No se encontró el contenedor de alerta #toast-container');
     }
 
     const toastElements = Array.from(this.container.querySelectorAll('.toast'));
@@ -93,7 +93,7 @@ class ToastAlert {
 
   /**
    *
-   * @param {String} message Mensage de alerta
+   * @param {String} message Mensaje de alerta
    * @param {String} type Tipo de alerta: default [error]
    *
    */
@@ -113,7 +113,7 @@ class ToastAlert {
     }
   }
 
-  static showAlertMinBotton(message, type = 'error') {
+  static showAlertMinBottom(message, type = 'error') {
     try {
       const configuration = {
         message: message,

@@ -5,7 +5,5 @@
 		(document.head || document.documentElement).appendChild(script);
 	};
 
-	// Inject ToastAlert.js first, as Confirm.js might depend on it
-	injectScript('ToastAlert.js');
-	injectScript('Confirm.js');
+	injectScript('index.js');
 })();

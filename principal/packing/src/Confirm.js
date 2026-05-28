@@ -1,4 +1,7 @@
-class Confirm {
+import ToastAlert from './ToastAlert';
+
+
+export class Confirm {
 	constructor() {
 		this.idButtonAction = 'insertButtonAction';
 		this.idBUttonInitPacking = 'initPackingButton';
@@ -190,13 +193,3 @@ class Confirm {
 		}
 	}
 }
-
-const handleKey = (e) => {
-	if ((e.key === 'k' && e.ctrlKey) || (e.key === 'K' && e.ctrlKey)) {
-		e.preventDefault();
-		new Confirm();
-		window.removeEventListener('keydown', handleKey);
-	}
-};
-
-window.addEventListener('keydown', handleKey);

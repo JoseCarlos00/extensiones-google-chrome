@@ -1,4 +1,6 @@
-class ContextMenuHandler {
+import ToastAlert from "./ToastAlert";
+
+export class ContextMenuHandler {
   constructor() {
     this.selectedElementForCopy = null;
     this.selectedElementForPaste = null;
@@ -45,7 +47,7 @@ class ContextMenuHandler {
     if (contextMenu) {
       this.contextMenu = contextMenu;
     } else {
-      throw new Error('No se encontro el elemento #context-menu');
+      throw new Error('No se encontró el elemento #context-menu');
     }
   }
 
@@ -100,7 +102,7 @@ class ContextMenuHandler {
       const contentText = this.selectedElementForCopy.textContent;
       this.copyToClipboard(contentText);
     } else {
-      ToastAlert.showAlertMinBotton('No es un area valida para copiar', 'error');
+      ToastAlert.showAlertMinBottom('No es un area valida para copiar', 'error');
     }
 
     this.hideContextMenu();
@@ -126,10 +128,10 @@ class ContextMenuHandler {
       }
 
       await navigator.clipboard.writeText(textoACopiar);
-      ToastAlert.showAlertMinBotton('Contenido copiado al portapapeles', 'success');
+      ToastAlert.showAlertMinBottom('Contenido copiado al portapapeles', 'success');
     } catch (err) {
       console.error('Error al copiar al portapapeles:', err);
-      ToastAlert.showAlertMinBotton('Error al copiar al portapapeles', 'error');
+      ToastAlert.showAlertMinBottom('Error al copiar al portapapeles', 'error');
     }
   }
 
@@ -138,21 +140,21 @@ class ContextMenuHandler {
       const clipboardText = (await navigator.clipboard.readText()) ?? '';
 
       if (!clipboardText) {
-        console.log('Portapapeles Vacio');
+        console.log('Portapapeles Vació');
         return;
       }
 
       const pasteArea1 = this.selectedElementForPaste;
 
       if (!pasteArea1) {
-        ToastAlert.showAlertMinBotton('No se encontró un área valida para pegar 1');
+        ToastAlert.showAlertMinBottom('No se encontró un área valida para pegar 1');
         return;
       }
 
       const pasteArea2 = pasteArea1.parentElement.querySelector('input[type=hidden]');
 
       if (!pasteArea2) {
-        ToastAlert.showAlertMinBotton('No se encontró un área valida para pegar 2');
+        ToastAlert.showAlertMinBottom('No se encontró un área valida para pegar 2');
         return;
       }
 
@@ -164,10 +166,10 @@ class ContextMenuHandler {
         pasteArea1.focus();
       }, 50);
 
-      ToastAlert.showAlertMinBotton('Contenido pegado correctamente', 'info');
+      ToastAlert.showAlertMinBottom('Contenido pegado correctamente', 'info');
     } catch (error) {
       console.error('Error al pegar:', error);
-      ToastAlert.showAlertMinBotton('Error al pegar el contenido', 'error');
+      ToastAlert.showAlertMinBottom('Error al pegar el contenido', 'error');
     }
     this.hideContextMenu();
   }
@@ -178,5 +180,3 @@ class ContextMenuHandler {
     }
   }
 }
-
-window.addEventListener('load', () => new ContextMenuHandler(), { once: true });
