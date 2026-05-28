@@ -1,7 +1,9 @@
 import ToastAlert from './ToastAlert';
-
+import { PACKING_PROMPT_ID } from "./index";
 
 export class Confirm {
+	static elementToInsert = document.querySelector('#navigationActions > ul.nav.navbar-nav.navbar-left.navbarposition');
+
 	constructor() {
 		this.idButtonAction = 'insertButtonAction';
 		this.idBUttonInitPacking = 'initPackingButton';
@@ -13,10 +15,14 @@ export class Confirm {
 		this.inputQTY1 = document.querySelector('#QuantityToPackEditorValue');
 		this.inputQTY2 = this.inputQTY1?.parentElement?.querySelector('input[type=hidden]');
 
-		this.dataToInsert = [..._webUi.detailsScreenBinding.entityInJsonFormat.PackingDetails.DetailsToPack];
+		this.inputContainerId = document.querySelector('#ContainerIdInputEditingInput');
+
+		this.PackingDetails = _webUi.detailsScreenBinding.entityInJsonFormat.PackingDetails;
+		this.DetailsToPack = this.PackingDetails?.DetailsToPack ?? [];
+
+		this.dataToInsert = [...this.DetailsToPack];
 		this.buttonAdd = document.querySelector('#AddQuantity');
 
-		this.initialize();
 	}
 
 	async initialize() {
@@ -30,18 +36,16 @@ export class Confirm {
 	}
 
 	insertButtonAction() {
-		const ul = document.querySelector('#navigationActions > ul.nav.navbar-nav.navbar-left.navbarposition');
-
-		const li = `
+		const liButtons = `
     <li style=" margin-left: 23px; ">
-      <a id="${this.idButtonAction}" href="javascript:;" data-toggle="detailpane" aria-label="Confirmar" data-balloon-pos="right" style="color: #fff;">
+      <a id="${this.idButtonAction}" href="javascript:;" data-toggle="detailpane" aria-label="Insertar un Item" data-balloon-pos="right" style="color: #fff;">
         <i class="far fa-clipboard navimage"></i>
       </a>
     </li>
 
 		<li style=" margin-left: 23px; ">
       <button id="${this.idBUttonInitPacking}" data-toggle="detailpane" style="background-color: #4F93E4; color: #fff; margin-top: 10px; border: none; border-radius: 2px;">
-        Iniciar Packing
+        Iniciar Packing Automatico
       </button>
     </li>
 
@@ -52,11 +56,19 @@ export class Confirm {
     </li>
 		`;
 
-		if (!ul) {
-			throw new Error('No se encontró el elemento <ul> a insertar');
+		if (!Confirm.elementToInsert) {
+			throw new Error('No se encontró el elemento <ul> a insertar para los botones.');
 		}
 
-		ul.insertAdjacentHTML('beforeend', li);
+		const existingPrompt = document.getElementById(PACKING_PROMPT_ID);
+
+		if (existingPrompt) {
+			// Replace the prompt with the buttons
+			existingPrompt.outerHTML = liButtons;
+		} else {
+			// Insert the buttons if no prompt exists (shouldn't happen if index.js runs first)
+			Confirm.elementToInsert.insertAdjacentHTML('beforeend', liButtons);
+		}
 	}
 
 	/**
@@ -90,11 +102,22 @@ export class Confirm {
 			throw new Error('No se encontró el button action element');
 		}
 
-		buttonAction.addEventListener('click', () => this.handleEvent());
+		buttonAction.addEventListener('click', () => {
+			if (!this.verifyExistContainerId()) {
+				return;
+			}
+
+			this.handleEvent();
+		});
 
 		window.addEventListener('keydown', (e) => {
 			if ((e.key === 'k' && e.ctrlKey) || (e.key === 'K' && e.ctrlKey)) {
 				e.preventDefault();
+
+				if (!this.verifyExistContainerId()) {
+					return;
+				}
+				
 				this.handleEvent();
 			}
 		});
@@ -108,13 +131,18 @@ export class Confirm {
 			buttonInitPacking.disabled = true;
 
 			const processNext = async () => { // Make processNext async
+				if (!this.verifyExistContainerId()) {
+					buttonInitPacking.disabled = false;
+					return;
+				}
+
 				if (this.dataToInsert.length > 0) {
-					const initialDataLength = _webUi.detailsScreenBinding.entityInJsonFormat.PackingDetails.DetailsToPack.length;
+					const initialDataLength = this.DetailsToPack.length;
 
 					this.handleEvent(); // Ejecuta el evento con el elemento
 
 					const confirmButton = document
-						.querySelector(
+				.querySelector(
 							'#ScreenGroupPanel13162 > scale-packing > div.row.packcomponent > span > div.row > div.col-md-9.col-lg-9 > div.row.infoPane > div.buttoncolumn.faIconSpacing.faIconRightMargin.pull-left > span:nth-child(1) > span > div'
 						);
 
@@ -128,7 +156,7 @@ export class Confirm {
 					// Esto permite que la interfaz de usuario se actualice y evita bloqueos
 					try {
 						await this.waitForCondition(() => {
-							return _webUi.detailsScreenBinding.entityInJsonFormat.PackingDetails.DetailsToPack.length < initialDataLength;
+							return this.DetailsToPack.length < initialDataLength;
 						}, 15000); // Increased maxTime to 15 seconds for UI processing
 						processNext(); // Call next iteration after condition is met
 					} catch (error) {
@@ -155,17 +183,30 @@ export class Confirm {
 		}
 
 		buttonUpdateInfo.addEventListener('click', () => {
-			this.dataToInsert = [..._webUi.detailsScreenBinding.entityInJsonFormat.PackingDetails.DetailsToPack];
+			this.dataToInsert = [...this.DetailsToPack];
 			
 			if (this.dataToInsert.length > 0) {
 				const buttonAction = document.getElementById(this.idButtonAction);
 				buttonAction.classList.remove('disabled');
+				ToastAlert.showAlertMinBottom('Información actualizada', 'success')
 			}
 
 		})
 	}
 
+	verifyExistContainerId() {
+		if (this.inputContainerId && this.inputContainerId.value.trim() === '') {
+			ToastAlert.showAlertFullTop('Ingrese un Contenedor para continuar', 'error');
+			return false;
+		}
+		return true;
+	}
+
 	handleEvent() {
+		if (this.dataToInsert.length === 0) {
+			return;
+		}
+
 		const firstRow = this.dataToInsert?.shift();
 		console.log('firstRow:', firstRow);
 
