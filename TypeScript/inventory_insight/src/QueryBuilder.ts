@@ -29,7 +29,7 @@ export class QueryBuilder {
 	public buildItemExistQuery(): string {
 		const items = this.getFormattedItems();
 		if (!items) return '';
-		return `SELECT DISTINCT\n item\n\nFROM item_location_assignment\n\nWHERE item\nIN (\n${items}\n  );`;
+		return `SELECT ROW_NUMBER() OVER (ORDER BY item),\n item\n\nFROM item_location_assignment\n\nWHERE item\nIN (\n${items}\n  );`;
 	}
 
 	public buildUpdateCapacityQuery(): string {
