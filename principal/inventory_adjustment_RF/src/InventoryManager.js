@@ -1,4 +1,4 @@
-class IventoryManager {
+class InventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType, currentAdjType }) {
 		this.formularioHTML = formularioHTML;
 		this.nameDataStorage = nameDataStorage;
@@ -9,8 +9,8 @@ class IventoryManager {
 		this.dataStorage = this.objectStorage?.data ?? [];
 
 		this.delaySubmit = 800;
-		this.nameDataStoragePause = nameDataStorage + "_puuse";
-		this.pauseSubmmit = this.getValuePauseSubmit();
+		this.nameDataStoragePause = nameDataStorage + "_pause";
+		this.pauseSubmit = this.getValuePauseSubmit();
 
 		this.form = null;
 		this.textareaForm = null;
@@ -143,8 +143,8 @@ class IventoryManager {
 	}
 
 	handlePauseInsertData() {
-		this.pauseSubmmit = !this.pauseSubmmit;
-		this.saveDataToSessionStorage(this.nameDataStoragePause, this.pauseSubmmit);
+		this.pauseSubmit = !this.pauseSubmit;
+		this.saveDataToSessionStorage(this.nameDataStoragePause, this.pauseSubmit);
 
 		this.setPauseValuenInDOM(pause);
 	}
@@ -174,7 +174,7 @@ class IventoryManager {
 	}
 
 	setPauseValuenInDOM() {
-		const value = this.pauseSubmmit ? "on" : "off";
+		const value = this.pauseSubmit ? "on" : "off";
 		this.actionButton.pause.setAttribute("pause-active", value);
 		this.actionButton.pause.innerHTML = `Pausa: ${value}`;
 	}
@@ -193,7 +193,7 @@ class IventoryManager {
 		if (counterE) {
 			counterE.innerHTML = `${value ?? ""}`;
 		} else {
-			console.warn("No se encontro el elemento #countRestante");
+			console.warn("No se encontró el elemento #countRestante");
 		}
 	}
 
@@ -202,7 +202,7 @@ class IventoryManager {
 		const { dataStorage } = this;
 
 		if (!dataStorage) {
-			console.error("No se encontro el Objeto [datosStorage] en la sesión:");
+			console.error("No se encontró el Objeto [datosStorage] en la sesión:");
 			return;
 		}
 
@@ -211,7 +211,7 @@ class IventoryManager {
 			return;
 		}
 
-		if (this.pauseSubmmit) {
+		if (this.pauseSubmit) {
 			alert("Tiene activado la pausa, por favor desactivarla enviar formulario");
 		}
 
@@ -297,8 +297,8 @@ class IventoryManager {
 	}
 
 	submitFormData() {
-		if (this.pauseSubmmit) {
-			console.warn("El envio de datos se encuentra en pausa");
+		if (this.pauseSubmit) {
+			console.warn("El envío de datos se encuentra en pausa");
 			return;
 		}
 

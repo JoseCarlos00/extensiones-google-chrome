@@ -1,5 +1,5 @@
 // Transferencia Manual
-class InventoryTransfer extends IventoryManager {
+class InventoryTransfer extends InventoryManager {
 	constructor(config) {
 		super(config);
 		console.log('Class InventoryTransfer');
@@ -18,7 +18,7 @@ class InventoryTransfer extends IventoryManager {
 		const qty = Number(match[2]) ?? '';
 		const fromLoc = match[3] ?? '';
 		const toLoc = match[4] ?? '';
-		const LP = match[5] === '-'? '' : match[5] ?? '';
+		const LP = match[5] === '-' ? '' : (match[5] ?? '');
 		const company = match[6] ?? 'FM';
 
 		if (!item || !qty || !fromLoc || !toLoc) return null;

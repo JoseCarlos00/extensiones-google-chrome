@@ -1,8 +1,8 @@
 // Transferencia Manual LP
-class InventoryTransferLP extends IventoryManager {
+class InventoryTransferLP extends InventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType }) {
 		super({ formularioHTML, nameDataStorage, adjType });
-		console.log("Class InventoryTransfer LP");
+		console.log('Class InventoryTransfer LP');
 	}
 
 	registrarDatos({ lineas }) {
@@ -30,7 +30,7 @@ class InventoryTransferLP extends IventoryManager {
 		// Limpiar el campo de texto
 
 		// Insertar datos
-		console.log("datos:", data);
+		console.log('datos:', data);
 		this.insertarDatos({ data });
 	}
 
@@ -42,7 +42,7 @@ class InventoryTransferLP extends IventoryManager {
 			this.updateCounter(rows.length);
 			// Verificar si hay datos para procesar
 			if (rows.length === 0) {
-				console.log("No hay datos para insertar.");
+				console.log('No hay datos para insertar.');
 				return;
 			}
 
@@ -50,7 +50,7 @@ class InventoryTransferLP extends IventoryManager {
 			const firstRow = data[rows[0]];
 
 			if (!form1) {
-				throw new Error("Formulario no encontrado [#form1]");
+				throw new Error('Formulario no encontrado [#form1]');
 			}
 
 			// Asignar valores al formulario
@@ -58,14 +58,14 @@ class InventoryTransferLP extends IventoryManager {
 
 			if (RFLOGISTICSUNIT && firstRow?.LPOrigen) {
 				RFLOGISTICSUNIT.value = firstRow?.LPOrigen;
-				console.log("RFLOGISTICSUNIT", RFLOGISTICSUNIT);
-				console.log("RFLOGISTICSUNIT TO:", firstRow?.LPOrigen);
+				console.log('RFLOGISTICSUNIT', RFLOGISTICSUNIT);
+				console.log('RFLOGISTICSUNIT TO:', firstRow?.LPOrigen);
 			}
 
 			if (toLoc && firstRow?.toLoc) {
 				toLoc.value = firstRow?.toLoc;
-				console.log("toLoc", toLoc);
-				console.log("toLoc TO:", firstRow?.toLoc);
+				console.log('toLoc', toLoc);
+				console.log('toLoc TO:', firstRow?.toLoc);
 			}
 
 			const verifyForm = () => {
@@ -82,7 +82,7 @@ class InventoryTransferLP extends IventoryManager {
 				setTimeout(() => setInterval(() => verifyForm(), 1000), 2000);
 			});
 		} catch (error) {
-			console.error("Error al insertar datos:", error.message);
+			console.error('Error al insertar datos:', error.message);
 		}
 	}
 }
