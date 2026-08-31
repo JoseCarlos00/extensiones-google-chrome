@@ -17,10 +17,9 @@ const shared = {
 
 const staticFiles = [
 	{ from: 'public/manifest.json', to: 'dist/manifest.json' },
-	{ from: 'popup.html', to: 'dist/popup.html' },
+	{ from: 'public/popup.html', to: 'dist/popup.html' },
 	{ from: 'public/images', to: 'dist/images' },
-	{ from: 'public/CSS', to: 'dist/CSS' },
-	{ from: 'src/workbench/workbench.css', to: 'dist/workbench/workbench.css' },
+	{ from: 'public/csc', to: 'dist/csc' },
 ];
 
 function copyFile(from, to) {
@@ -68,19 +67,7 @@ const entryPoints = [
 	{
 		in: 'src/receipt-storage/main.js',
 		out: 'dist/receipt-storage/receiptStorage.js',
-	},
-	{
-		in: 'src/receipt-storage/mainReceiptDetail.js',
-		out: 'dist/receipt-storage/receiptDetail.js',
-	},
-	{
-		in: 'src/receipt-manager/main.js',
-		out: 'dist/receipt-manager.js',
-	},
-	{
-		in: 'src/popup/main.js',
-		out: 'dist/popup.js',
-	},
+	}
 ];
 
 // ─── Build ───────────────────────────────────────────────────────────────────

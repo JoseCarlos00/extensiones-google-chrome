@@ -1,5 +1,7 @@
+import { InventoryManager } from "./InventoryManager";
+
 // Transferencia Manual
-class InventoryTransfer extends InventoryManager {
+export class InventoryTransfer extends InventoryManager {
 	constructor(config) {
 		super(config);
 		console.log('Class InventoryTransfer');

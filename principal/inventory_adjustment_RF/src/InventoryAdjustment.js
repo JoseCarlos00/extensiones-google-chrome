@@ -1,5 +1,7 @@
+import { InventoryManager } from "./InventoryManager";
+
 // Ajuste Positivo
-class InventoryAdjustment extends InventoryManager {
+export class InventoryAdjustment extends InventoryManager {
 	constructor(config) {
 		super(config);
 		console.log('Class InventoryAdjustment');

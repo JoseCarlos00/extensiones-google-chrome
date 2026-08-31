@@ -1,17 +1,20 @@
-window.addEventListener("load", async () => {
-	try {
-		const currentAdjType = form1?.adjType?.value ?? "";
-		console.log({ currentAdjType });
+import { formularioHTMLAdjustment, formularioHTMLTransfer } from "./formHtml";
 
-		const availableTypes = {
-			AJUSTE_POSITIVO: { name: "Ajuste Positivo", storageName: "data_ajuste_positivo" },
-			AJUSTE_NEGATIVO: { name: "Ajuste Negativo", storageName: "data_ajuste_negativo" },
-			TRASFERENCIA_MANUAL: { name: "Transferencia Manual", storageName: "data_trasferencia_manual" },
-		};
+const availableTypes = {
+	AJUSTE_POSITIVO: { name: 'Ajuste Positivo', storageName: 'data_ajuste_positivo' },
+	AJUSTE_NEGATIVO: { name: 'Ajuste Negativo', storageName: 'data_ajuste_negativo' },
+	TRASFERENCIA_MANUAL: { name: 'Transferencia Manual', storageName: 'data_trasferencia_manual' },
+};
+
+window.addEventListener('load', async () => {
+	try {
+		
+		const currentAdjType = form1?.adjType?.value ?? '';
+		console.log({ currentAdjType });
 
 		if (currentAdjType === availableTypes.AJUSTE_POSITIVO.name) {
 			const adjustmentPositive = new InventoryAdjustment({
-				formularioHTML: formularioHTMLAdjustment,
+				formularioHTML: formularioHTMLAdjustment('positivo'),
 				nameDataStorage: availableTypes.AJUSTE_POSITIVO.storageName,
 				adjType: availableTypes.AJUSTE_POSITIVO.name,
 				currentAdjType,
@@ -23,7 +26,7 @@ window.addEventListener("load", async () => {
 
 		if (currentAdjType === availableTypes.AJUSTE_NEGATIVO.name) {
 			const adjustmentPositive = new InventoryAdjustment({
-				formularioHTML: formularioHTMLAdjustment,
+				formularioHTML: formularioHTMLAdjustment(),
 				nameDataStorage: availableTypes.AJUSTE_NEGATIVO.storageName,
 				adjType: availableTypes.AJUSTE_NEGATIVO.name,
 				currentAdjType,
@@ -34,16 +37,16 @@ window.addEventListener("load", async () => {
 		}
 
 		if (currentAdjType === availableTypes.TRASFERENCIA_MANUAL.name) {
-			const tranferenciaManual = new InventoryTransfer({
-				formularioHTML: formularioHTMLTranfer,
+			const trasferenciaManual = new InventoryTransfer({
+				formularioHTML: formularioHTMLTransfer,
 				nameDataStorage: availableTypes.TRASFERENCIA_MANUAL.storageName,
 				adjType: availableTypes.TRASFERENCIA_MANUAL.name,
 				currentAdjType,
 			});
 
-			await tranferenciaManual.render();
+			await trasferenciaManual.render();
 		}
 	} catch (error) {
-		console.error("Error en idex.js:", error.message);
+		console.error('Error en index.js:', error.message);
 	}
 });

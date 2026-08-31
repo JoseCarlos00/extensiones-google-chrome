@@ -1,4 +1,4 @@
-class InventoryManager {
+export class InventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType, currentAdjType }) {
 		this.formularioHTML = formularioHTML;
 		this.nameDataStorage = nameDataStorage;
@@ -9,7 +9,7 @@ class InventoryManager {
 		this.dataStorage = this.objectStorage?.data ?? [];
 
 		this.delaySubmit = 800;
-		this.nameDataStoragePause = nameDataStorage + "_pause";
+		this.nameDataStoragePause = nameDataStorage + '_pause';
 		this.pauseSubmit = this.getValuePauseSubmit();
 
 		this.form = null;
@@ -25,11 +25,11 @@ class InventoryManager {
 
 		if (this.adjType !== this.currentAdjType) {
 			throw new Error(
-				`El adjType actual:[${this.currentAdjType}] es diferente del adjType solicitado: ${this.adjType}`
+				`El adjType actual:[${this.currentAdjType}] es diferente del adjType solicitado: ${this.adjType}`,
 			);
 		}
 
-		console.log("objectStorage:", this.objectStorage);
+		console.log('objectStorage:', this.objectStorage);
 	}
 
 	async render() {
@@ -43,19 +43,19 @@ class InventoryManager {
 
 			this.recoveryDataFromSessionStorage();
 		} catch (error) {
-			console.error("Error al renderizar el formulario:", error.message);
+			console.error('Error al renderizar el formulario:', error.message);
 		}
 	}
 
 	renderForm() {
 		return new Promise((resolve, reject) => {
 			if (!this.formularioHTML) {
-				reject("Formulario no encontrado");
+				reject('Formulario no encontrado');
 				return;
 			}
 
-			document.body.insertAdjacentHTML("afterbegin", this.formularioHTML);
-			document.body.classList.add("change");
+			document.body.insertAdjacentHTML('afterbegin', this.formularioHTML);
+			document.body.classList.add('change');
 
 			setTimeout(resolve, 50);
 		});
@@ -70,17 +70,17 @@ class InventoryManager {
       </div>
       `;
 
-		document.body.insertAdjacentHTML("beforeend", contadores);
+		document.body.insertAdjacentHTML('beforeend', contadores);
 	}
 
 	getValuePauseSubmit() {
-		return sessionStorage.getItem(this.nameDataStoragePause) === "true";
+		return sessionStorage.getItem(this.nameDataStoragePause) === 'true';
 	}
 
 	async initializarElementosTheDOM() {
-		this.form = document.querySelector("#registroForm");
+		this.form = document.querySelector('#registroForm');
 
-		if (!this.form) throw new Error("Formulario no encontrado [#registroForm]");
+		if (!this.form) throw new Error('Formulario no encontrado [#registroForm]');
 
 		const { dataToInsert, pause, cancel, insertData } = this.form;
 
@@ -89,10 +89,10 @@ class InventoryManager {
 		this.actionButton.cancel = cancel;
 		this.actionButton.insertData = insertData;
 
-		if (!this.textareaForm) throw new Error("Textarea element no encontrado");
-		if (!this.actionButton.pause) throw new Error("Boton de pausa no encontrado");
-		if (!this.actionButton.cancel) throw new Error("Boton de cancelar no encontrado");
-		if (!this.actionButton.insertData) throw new Error("Boton de insertar datos no encontrado");
+		if (!this.textareaForm) throw new Error('Textarea element no encontrado');
+		if (!this.actionButton.pause) throw new Error('Boton de pausa no encontrado');
+		if (!this.actionButton.cancel) throw new Error('Boton de cancelar no encontrado');
+		if (!this.actionButton.insertData) throw new Error('Boton de insertar datos no encontrado');
 	}
 
 	async handleSumitEvent(e) {
@@ -113,17 +113,17 @@ class InventoryManager {
 			const lineas =
 				dataToInsert?.value
 					?.trim()
-					?.split("\n")
+					?.split('\n')
 					?.map((i) => i?.trim()?.toUpperCase())
 					?.filter(Boolean) ?? [];
 
 			if (lineas.length === 0) {
-				throw new Error("No hay líneas para insertar");
+				throw new Error('No hay líneas para insertar');
 			}
 
 			this.registrarDatos({ lineas });
 		} catch (error) {
-			console.error("Error al manejar el evento handleSumitEvent", error.message);
+			console.error('Error al manejar el evento handleSumitEvent', error.message);
 		}
 	}
 
@@ -131,14 +131,14 @@ class InventoryManager {
 		try {
 			const { textareaForm, actionButton, form } = this;
 
-			textareaForm.addEventListener("keydown", ({ key }) => key === "Enter" && (textareaForm.value += "\n"));
+			textareaForm.addEventListener('keydown', ({ key }) => key === 'Enter' && (textareaForm.value += '\n'));
 
-			form.addEventListener("submit", (e) => this.handleSumitEvent(e));
+			form.addEventListener('submit', (e) => this.handleSumitEvent(e));
 
-			actionButton.cancel.addEventListener("click", (e) => this.handleCancelInsertData(e));
-			actionButton.pause.addEventListener("click", () => this.handlePauseInsertData());
+			actionButton.cancel.addEventListener('click', (e) => this.handleCancelInsertData(e));
+			actionButton.pause.addEventListener('click', () => this.handlePauseInsertData());
 		} catch (error) {
-			console.error("Error al agregar eventos:", error.message);
+			console.error('Error al agregar eventos:', error.message);
 		}
 	}
 
@@ -169,13 +169,13 @@ class InventoryManager {
 				}, timeDelayReload);
 			}
 		} catch (error) {
-			console.error("Error: al cancelar: ", error.message);
+			console.error('Error: al cancelar: ', error.message);
 		}
 	}
 
 	setPauseValuenInDOM() {
-		const value = this.pauseSubmit ? "on" : "off";
-		this.actionButton.pause.setAttribute("pause-active", value);
+		const value = this.pauseSubmit ? 'on' : 'off';
+		this.actionButton.pause.setAttribute('pause-active', value);
 		this.actionButton.pause.innerHTML = `Pausa: ${value}`;
 	}
 
@@ -188,12 +188,12 @@ class InventoryManager {
 	}
 
 	updateCounter(value) {
-		const counterE = document.querySelector("#countRestante");
+		const counterE = document.querySelector('#countRestante');
 
 		if (counterE) {
-			counterE.innerHTML = `${value ?? ""}`;
+			counterE.innerHTML = `${value ?? ''}`;
 		} else {
-			console.warn("No se encontró el elemento #countRestante");
+			console.warn('No se encontró el elemento #countRestante');
 		}
 	}
 
@@ -202,23 +202,23 @@ class InventoryManager {
 		const { dataStorage } = this;
 
 		if (!dataStorage) {
-			console.error("No se encontró el Objeto [datosStorage] en la sesión:");
+			console.error('No se encontró el Objeto [datosStorage] en la sesión:');
 			return;
 		}
 
 		if (dataStorage?.length === 0) {
-			console.warn("No hay datos guardados en la sesión");
+			console.warn('No hay datos guardados en la sesión');
 			return;
 		}
 
 		if (this.pauseSubmit) {
-			alert("Tiene activado la pausa, por favor desactivarla enviar formulario");
+			alert('Tiene activado la pausa, por favor desactivarla enviar formulario');
 		}
 
-		this.textareaForm.setAttribute("disabled", true);
-		this.actionButton.insertData.setAttribute("disabled", true);
+		this.textareaForm.setAttribute('disabled', true);
+		this.actionButton.insertData.setAttribute('disabled', true);
 
-		console.log("Se encontraron datos guardados:", dataStorage?.length, dataStorage);
+		console.log('Se encontraron datos guardados:', dataStorage?.length, dataStorage);
 
 		this.updateCounter(dataStorage?.length);
 		this.insertarDatos(this.objectStorage);
@@ -231,7 +231,7 @@ class InventoryManager {
 
 		if (data.length === 0) return;
 
-		console.log("datos:", data);
+		console.log('datos:', data);
 		this.updateCounter(data.length);
 		this.insertarDatos({ type: this.adjType, data });
 	}
@@ -240,41 +240,28 @@ class InventoryManager {
 	insertarDatos(dataStorage) {
 		try {
 			if (!dataStorage || !dataStorage.data || dataStorage.data.length === 0) return;
-			console.log("insertarDatos", dataStorage);
+			console.log('insertarDatos', dataStorage);
 
 			// Obtener la primera fila del Array
 			const firstDataToInsert = dataStorage.data.shift() ?? null;
 
 			if (!form1) {
-				throw new Error("Formulario no encontrado [#form1]");
+				throw new Error('Formulario no encontrado [#form1]');
 			}
 
 			if (!firstDataToInsert) {
-				throw new Error("No hay datos para insertar [firstDataToInsert]");
+				throw new Error('No hay datos para insertar [firstDataToInsert]');
 			}
 
 			// Asignar valores al formulario
 			this.assigneateValueInForm({ firstDataToInsert });
 
 			this.saveDataToSessionStorage(this.nameDataStorage, dataStorage);
-			
+
 			this.submitFormData();
 		} catch (error) {
-			console.error("Error al insertar datos:", error.message);
+			console.error('Error al insertar datos:', error.message);
 		}
-	}
-
-	// Métodos abstractos que deben ser implementados en las clases hijas
-	parseLine(linea) {
-		throw new Error("Método parseLine() debe ser implementado en la subclase");
-	}
-
-	verifyFormInsertData() {
-		throw new Error("verifyFormInsertData() no implementado");
-	}
-
-	verifyFormInsertData() {
-		throw new Error("verifyFormInsertData() no implementado");
 	}
 
 	clearExistingTimeout() {
@@ -290,37 +277,49 @@ class InventoryManager {
 		this.timeoutId = setTimeout(() => this.submitFormData, 1000);
 
 		// Limpiar el timeout original después de 10 minutos
-		setTimeout(() => {
-			this.clearExistingTimeout();
-			console.log("Timeout de 10 minutos alcanzado, timeout original limpiado.");
-		}, 10 * 60 * 1000);
+		setTimeout(
+			() => {
+				this.clearExistingTimeout();
+				console.log('Timeout de 10 minutos alcanzado, timeout original limpiado.');
+			},
+			10 * 60 * 1000,
+		);
 	}
 
 	submitFormData() {
 		if (this.pauseSubmit) {
-			console.warn("El envío de datos se encuentra en pausa");
+			console.warn('El envío de datos se encuentra en pausa');
 			return;
 		}
 
 		const dataInsertOk = this.verifyFormInsertData();
 
 		if (!dataInsertOk) {
-			console.warn(" No se pudo insertar los datos [dataInsertOk]");
+			console.warn(' No se pudo insertar los datos [dataInsertOk]');
 			return;
 		}
 
-		const btnSubmit = document.querySelector("#submit1");
+		const btnSubmit = document.querySelector('#submit1');
 
 		if (!btnSubmit) {
-			console.error("No se encontró el botón de submit");
+			console.error('No se encontró el botón de submit');
 			return;
 		}
 
 		setTimeout(() => {
 			btnSubmit.click();
-			console.log("click en OK");
+			console.log('click en OK');
 
 			this.setTimeoutSubmitForm();
 		}, this.delaySubmit);
+	}
+
+	// Métodos abstractos que deben ser implementados en las clases hijas
+	parseLine(linea) {
+		throw new Error('Método parseLine() debe ser implementado en la subclase');
+	}
+
+	verifyFormInsertData() {
+		throw new Error('verifyFormInsertData() no implementado');
 	}
 }
