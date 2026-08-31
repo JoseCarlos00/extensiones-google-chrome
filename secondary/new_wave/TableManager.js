@@ -1,7 +1,11 @@
+const WAVE_EXPRESS = 'Flujo Express';
+const WAVE_NAT = 'Flujo Nacionalizaciones';
+
 class TableManager {
 	regex356 = /^356-C\b/;
 	regexE = /^E-\b/;
 	regexMae = /^4344-\b/;
+	regexNat = /NAT-\d+/;
 
 	constructor() {
 		this.bodyTable = null;
@@ -22,8 +26,8 @@ class TableManager {
 	getShipmentsIdSelected() {
 		const shipmentsIdSelected = Array.from(
 			this.bodyTable.querySelectorAll(
-				"tr > td[aria-describedby='ListPaneDataGrid_SHIPMENT_ID'].ui-iggrid-selectedcell.ui-state-active"
-			)
+				"tr > td[aria-describedby='ListPaneDataGrid_SHIPMENT_ID'].ui-iggrid-selectedcell.ui-state-active",
+			),
 		);
 
 		if (shipmentsIdSelected.length === 0) {
@@ -60,17 +64,33 @@ class TableManager {
 
 		// Verifica si todos son tipo 356-C
 		if (shipmentsIdSelected.every((id) => this.regex356.test(id))) {
-			return shipmentsIdSelected.length > 1 ? 'Marino Clientes' : shipmentsIdSelected[0];
+			return {
+				waveFlow: WAVE_EXPRESS,
+				waveName: shipmentsIdSelected.length > 1 ? 'Marino Clientes' : shipmentsIdSelected[0],
+			};
 		}
 
 		// Verifica si todos son tipo E-
 		if (shipmentsIdSelected.every((id) => this.regexE.test(id))) {
-			return shipmentsIdSelected.length > 1 ? 'Mariano Express' : shipmentsIdSelected[0];
+			return {
+				waveFlow: WAVE_EXPRESS,
+				waveName: shipmentsIdSelected.length > 1 ? 'Mariano Express' : shipmentsIdSelected[0],
+			};
 		}
 
 		// Verifica si todos son tipo Maestros
 		if (shipmentsIdSelected.every((id) => this.regexMae.test(id))) {
-			return shipmentsIdSelected.length > 1 ? 'Maestros' : shipmentsIdSelected[0];
+			return {
+				waveFlow: WAVE_EXPRESS,
+				waveName: shipmentsIdSelected.length > 1 ? 'Maestros' : shipmentsIdSelected[0],
+			};
+		}
+
+		if (shipmentsIdSelected.every((id) => this.regexNat.test(id))) {
+			return {
+				waveFlow: WAVE_NAT,
+				waveName: shipmentsIdSelected.length > 1 ? 'Nacionalizaciones' : shipmentsIdSelected[0],
+			};
 		}
 
 		console.warn('[getWaveName]: Al menos un SHIPMENT_ID no cumple con el formato esperado');

@@ -1,6 +1,7 @@
 // searchFilterName.js
 // Context a nivel de pagina
 const WAVE_DATA_KEY = 'waveData';
+const WAVE_NO_RPLN = 'Mariano STD No Rpln';
 
 (async () => {
 	const ADD_ALL_SHIP_TO_WAVE = document.querySelector('#ListPaneMenuActionAddFilteredShipmentsToWave');
@@ -20,7 +21,7 @@ const WAVE_DATA_KEY = 'waveData';
     if (searchName.toUpperCase().trim() === 'CLIENTES' || searchName.toUpperCase().trim() === 'TIENDAS') {
       
       const data = {
-				waveFlow: 'Mariano STD No Rpln',
+				waveFlow: WAVE_NO_RPLN,
 				waveName: searchName,
 			};
 

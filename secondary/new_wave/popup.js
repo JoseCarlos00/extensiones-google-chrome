@@ -143,10 +143,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const activeTab = await getActiveTabURL();
 	console.log(activeTab);
 	
-	if (!activeTab?.url?.includes("scale/trans/newwave?excludeFromNavTrail=Y")) {
-		document.querySelector('.mensaje-error')?.classList?.remove('.mensaje-error');
-		return;
-	}
+	// if (!activeTab?.url?.includes("scale/trans/newwave?excludeFromNavTrail=Y")) {
+	// 	document.querySelector('.mensaje-error')?.classList?.remove('.mensaje-error');
+	// 	return;
+	// }
 
 	// If the URL is valid, we remove the class to hide the error and show the main content.
 	document.body.classList.remove("not-validate");

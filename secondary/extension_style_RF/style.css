@@ -13,10 +13,6 @@ form[action*="SignonMenuRF.aspx"] table {
 		br {
 			display: none;
 		}
-
-		:is(a[href*="LinkClick(8)"], a[href*="LinkClick(10)"]) {
-			display: none;
-		}
 	}
 }
 

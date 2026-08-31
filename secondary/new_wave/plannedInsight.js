@@ -136,11 +136,11 @@ async function insertMenuNewWave() {
 	addShipmentToWave.addEventListener('click', () => {
 		if (waveNameInput.value.trim() !== '') return;
 
-		const waveName = tableManager.getWaveName();
+		const { waveFlow, waveName } = tableManager.getWaveName();
 		if (!waveName) return;
 
 		const data = {
-			waveFlow: 'Flujo Express',
+			waveFlow,
 			waveName,
 		};
 
