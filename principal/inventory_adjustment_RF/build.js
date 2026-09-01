@@ -19,7 +19,8 @@ const staticFiles = [
 	{ from: 'public/manifest.json', to: 'dist/manifest.json' },
 	{ from: 'public/popup.html', to: 'dist/popup.html' },
 	{ from: 'public/images', to: 'dist/images' },
-	{ from: 'public/csc', to: 'dist/csc' },
+	{ from: 'public/css', to: 'dist/css' },
+	{ from: 'transfer_to_container', to: 'dist/transfer_to_container' },
 ];
 
 function copyFile(from, to) {
@@ -65,8 +66,8 @@ function copyStatic() {
 
 const entryPoints = [
 	{
-		in: 'src/receipt-storage/main.js',
-		out: 'dist/receipt-storage/receiptStorage.js',
+		in: 'src/main.js',
+		out: 'dist/main.js',
 	}
 ];
 

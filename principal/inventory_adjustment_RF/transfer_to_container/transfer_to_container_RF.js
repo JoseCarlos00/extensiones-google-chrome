@@ -1,4 +1,4 @@
-console.log('[Tranfer to Container]');
+console.log('[Transfer to Container]');
 let pauseActive = true;
 
 async function main() {

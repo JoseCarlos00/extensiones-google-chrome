@@ -65,3 +65,5 @@ typings/
 *.rar
 *.zip
 *.ziz
+
+dist/
