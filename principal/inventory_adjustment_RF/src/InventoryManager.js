@@ -5,7 +5,14 @@ const SUBMIT_ERROR_CODES = {
 	MSG_INVVAL01: { field: 'Qty', message: 'Adjustment failure. Inventory does not exist.' },
 	MSG_INVVAL49: { field: 'LP', message: 'Adjustment failure. License plate must be specified.' },
 	MSG_INVVAL10: { field: 'Qty', message: 'Requested quantity exceeds the actual quantity.' },
-	MSG_IMRF03: { field: 'Qty', message: 'Adjustment failure. Quantity is more than the maximum quantity allowed for this adjustment type.' },
+	MSG_IMRF03: {
+		field: 'Qty',
+		message: 'Adjustment failure. Quantity is more than the maximum quantity allowed for this adjustment type.',
+	},
+	MSG_IMRF02: {
+		field: 'Qty',
+		message: 'Adjustment failure. Quantity is less than the minimum quantity allowed for this adjustment type.',
+	},
 };
 
 export class InventoryManager {
@@ -49,7 +56,7 @@ export class InventoryManager {
 	async render() {
 		try {
 			this.processSubmitResult();
-			
+
 			this.renderCounters();
 			await this.delay(50);
 
@@ -61,7 +68,6 @@ export class InventoryManager {
 			this.setPauseValueInDOM();
 
 			const pending = this.recoveryDataFromSessionStorage();
-
 
 			// 2. Si ya no queda nada por insertar, mostrar resumen
 			if (this.dataStorage?.length === 0 && this.errorsStorage.length > 0 && !pending) {
@@ -167,17 +173,36 @@ export class InventoryManager {
 
 	setEventsListener() {
 		try {
-			const { textareaForm, actionButton, form } = this;
+			const { textareaForm, actionButton } = this;
 
-			textareaForm.addEventListener('keydown', ({ key }) => key === 'Enter' && (textareaForm.value += '\n'));
+			textareaForm?.addEventListener('keydown', (e) => {
+				if (e.key !== 'Enter') return;
+				e.preventDefault();
 
-			form.addEventListener('submit', (e) => this.handleSubmitEvent(e));
+				textareaForm.value += '\n';
+				this.scrollTextareaToEnd();
+			});
 
-			actionButton.cancel.addEventListener('click', (e) => this.handleCancelInsertData(e));
-			actionButton.pause.addEventListener('click', () => this.handlePauseInsertData());
+			// Pegar contenido: el valor aún no está actualizado en este evento,
+			// por eso esperamos al siguiente "tick" del navegador.
+			textareaForm?.addEventListener('paste', () => {
+				requestAnimationFrame(() => this.scrollTextareaToEnd());
+			});
+
+			actionButton.cancel?.addEventListener('click', (e) => this.handleCancelInsertData(e));
+			actionButton.pause?.addEventListener('click', () => this.handlePauseInsertData());
 		} catch (error) {
 			console.error('Error al agregar eventos:', error.message);
 		}
+	}
+
+	scrollTextareaToEnd() {
+		const { textareaForm } = this;
+		if (!textareaForm) return;
+
+		textareaForm.scrollTop = textareaForm.scrollHeight;
+		const end = textareaForm.value.length;
+		textareaForm.setSelectionRange(end, end);
 	}
 
 	handlePauseInsertData() {
@@ -288,7 +313,6 @@ export class InventoryManager {
 			}
 
 			if (!firstDataToInsert) {
-
 				throw new Error('No hay datos para insertar [firstDataToInsert]');
 			}
 
@@ -370,18 +394,15 @@ export class InventoryManager {
 				message: result.message,
 			});
 			console.log('Se detectó un error en el envío de datos:', result, pending, this.errorsStorage);
-			
+
 			sessionStorage.setItem(this.nameDataStorageErrors, JSON.stringify(this.errorsStorage));
 		}
 
-		
 		sessionStorage.removeItem(this.nameDataStoragePending);
-		
 
 		if (msgCode) {
 			history.replaceState(null, '', location.pathname);
 		}
-
 	}
 
 	classifySubmitMessage(msgCode) {

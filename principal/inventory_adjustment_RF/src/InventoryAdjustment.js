@@ -21,7 +21,7 @@ export class InventoryAdjustment extends InventoryManager {
 		const LP = match[4] ?? '';
 
 
-		if (!item || !qty || !location) return null;
+		if (!item || !qty || !location || !company) return null;
 		return { item, qty, location, LP, company };
 	}
 
