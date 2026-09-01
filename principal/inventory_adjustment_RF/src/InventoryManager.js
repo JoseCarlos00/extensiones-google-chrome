@@ -1,3 +1,10 @@
+// Se puede definir a nivel de módulo o como propiedad estática de InventoryManager
+const SUBMIT_ERROR_CODES = {
+	MSG_ITEM24: { field: 'item', message: 'The item and company combination does not exist.' },
+	MSG_LOCATION08: { field: 'location', message: 'Location does not exist.' },
+	MSG_INVVAL49: { field: 'LP', message: 'Adjustment failure. License plate must be specified.' },
+};
+
 export class InventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType, currentAdjType }) {
 		this.formularioHTML = formularioHTML;
@@ -329,31 +336,44 @@ export class InventoryManager {
 	// Lee el mensaje del servidor y decide si fue error o éxito
 	processSubmitResult() {
 		const params = new URLSearchParams(location.search);
-		const msg = params.get('msg');
+		const msgCode = params.get('msg');
 
-		if (!msg) return;
+		const result = this.classifySubmitMessage(msgCode);
 
-		const pending = JSON.parse(sessionStorage.getItem(this.nameDataStoragePending)) ?? null;
+		if (result.status === 'error') {
+			const pending = JSON.parse(sessionStorage.getItem(this.nameDataStoragePending)) ?? null;
 
-		const classification = this.classifySubmitMessage(msg); // 'error' | 'success' | 'unknown'
-
-		if (classification === 'error' && pending) {
-			this.errorsStorage.push({ ...pending, msg });
+			this.errorsStorage.push({
+				...pending,
+				code: result.code,
+				field: result.field,
+				message: result.message,
+			});
 			sessionStorage.setItem(this.nameDataStorageErrors, JSON.stringify(this.errorsStorage));
 		}
 
 		sessionStorage.removeItem(this.nameDataStoragePending);
 
-		// Limpiar el query param para no reprocesarlo si el usuario recarga manualmente
-		history.replaceState(null, '', location.pathname);
+		if (msgCode) {
+			history.replaceState(null, '', location.pathname);
+		}
 	}
 
-	// *** Esta es la parte que depende de cómo se ven tus mensajes reales ***
-	classifySubmitMessage(msg) {
-		const errorPatterns = [
-			/* completa con tus patrones reales */
-		];
-		return errorPatterns.some((p) => p.test(msg)) ? 'error' : 'success';
+	classifySubmitMessage(msgCode) {
+		if (!msgCode) {
+			return { status: 'success' };
+		}
+
+		const known = SUBMIT_ERROR_CODES[msgCode];
+
+		if (known) {
+			return { status: 'error', code: msgCode, field: known.field, message: known.message };
+		}
+
+		// Código de error que aún no está mapeado: lo tratamos como error genérico
+		// para no perder el registro silenciosamente.
+		console.warn('Código de error no mapeado:', msgCode);
+		return { status: 'error', code: msgCode, field: null, message: `Error desconocido (${msgCode})` };
 	}
 
 	renderErrorSummary() {

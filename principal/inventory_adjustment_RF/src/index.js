@@ -1,4 +1,6 @@
 import { formularioHTMLAdjustment, formularioHTMLTransfer } from "./formHtml";
+import { InventoryAdjustment } from "./InventoryAdjustment";
+import { InventoryTransfer } from "./InventoryTransfer";
 
 const availableTypes = {
 	AJUSTE_POSITIVO: { name: 'Ajuste Positivo', storageName: 'data_ajuste_positivo' },
