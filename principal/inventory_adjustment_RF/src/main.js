@@ -1,7 +1,7 @@
 import { formularioHTMLAdjustment, formularioHTMLTransfer } from "./formHtml.js";
 import { InventoryAdjustment } from "./InventoryAdjustment.js";
 import { InventoryTransfer } from "./InventoryTransfer.js";
-import { InventoryTransferLP } from "./InventoryTransferLP.js";
+// import { InventoryTransferLP } from "./InventoryTransferLP.js";
 
 const availableTypes = {
 	AJUSTE_POSITIVO: { name: 'Ajuste Positivo', storageName: 'data_ajuste_positivo' },
@@ -14,6 +14,8 @@ window.addEventListener('load', async () => {
 	try {
 		
 		const currentAdjType = form1?.adjType?.value ?? '';
+
+		console.log({currentAdjType});
 
 		if (currentAdjType === availableTypes.AJUSTE_POSITIVO.name) {
 			const adjustmentPositive = new InventoryAdjustment({
@@ -52,19 +54,21 @@ window.addEventListener('load', async () => {
 		}
 
 		if (currentAdjType === availableTypes.TRASFERENCIA_MANUAL_LP.name) {
-			const trasferenciaManualLP = new InventoryTransferLP({
-				formularioHTML: formularioHTMLTransfer(),
-				nameDataStorage: availableTypes.TRASFERENCIA_MANUAL_LP.storageName,
-				adjType: availableTypes.TRASFERENCIA_MANUAL_LP.name,
-				currentAdjType,
-			});
 
-			console.log(trasferenciaManualLP);
+		console.warn('Transferencia Manual LP is not implemented yet.');
+			// const trasferenciaManualLP = new InventoryTransferLP({
+			// 	formularioHTML: formularioHTMLTransfer(),
+			// 	nameDataStorage: availableTypes.TRASFERENCIA_MANUAL_LP.storageName,
+			// 	adjType: availableTypes.TRASFERENCIA_MANUAL_LP.name,
+			// 	currentAdjType,
+			// });
+			
+			// console.log(trasferenciaManualLP);
 			
 
-			await trasferenciaManualLP.render();
+			// await trasferenciaManualLP.render();
 		}
 	} catch (error) {
-		console.error('Error en index.js:', error.message);
+		console.error('Error en main.js:', error.message);
 	}
 });

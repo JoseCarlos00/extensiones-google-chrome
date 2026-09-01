@@ -2,8 +2,9 @@ import { InventoryManager } from "./InventoryManager.js";
 
 // Transferencia Manual LP
 export class InventoryTransferLP extends InventoryManager {
-	constructor({ formularioHTML, nameDataStorage, adjType }) {
-		super({ formularioHTML, nameDataStorage, adjType });
+	constructor(config) {
+		super(config);
 		console.log('Class InventoryTransfer LP');
 	}
+	
 }
