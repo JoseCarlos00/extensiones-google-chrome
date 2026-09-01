@@ -1,14 +1,17 @@
 export const formularioHTMLAdjustment = (type = 'NO DEFINIDO') => {
+	// Creamos el formulario
+	const registroForm = document.createElement('form');
+	registroForm.id = 'registroForm';
+	registroForm.className = 'registroForm adjustment';
 
-  const typeLabel =
+	const typeLabel =
 		type.toLowerCase() === 'NO DEFINIDO'
 			? type.toLowerCase()
 			: type === 'positivo'
 				? 'Ajuste Positivo'
 				: 'Ajuste Negativo';
-  
-	return /*html*/ `
-  <form id="registroForm" class="registroForm adjustment">
+
+	registroForm.innerHTML = /*html*/ `
     <div class="inputGroup">
       <textarea id="dataToInsert" name="dataToInsert" class="textarea input" rows="4" cols="50" required
         placeholder="" value=""></textarea>
@@ -16,30 +19,52 @@ export const formularioHTMLAdjustment = (type = 'NO DEFINIDO') => {
       for="dataToInsert"><span>Item</span><span>Quantity</span><span>Location</span><span>LP(opcional)</span></label>
     </div>
 
-    <div><label>${typeLabel} ⚠️</label></div>
-
     <div>
-      <button id="pause" name="pause" type="button" tabindex="-1" pause-active="off">Pausa: off</button>
-      <button id="insertData" name="insert-data" type="submit">Registrar</button>
-      <button id="cancel" name="cancel" type="button">Cancelar</button>
+      <label style="margin-right: 16px;">${typeLabel} ⚠️</label>
+      ${companySelect}
     </div>
-  </form>`;
+
+    ${actionsButtons}
+    `;
+
+	return registroForm;
 };
 
-export const formularioHTMLTransfer = /*html*/ `
-<form id="registroForm" class="registroForm adjustment">
-<div class="inputGroup">
-    <textarea id="dataToInsert" name="dataToInsert" class="textarea input" rows="4" cols="50" required style="width: 700px"
-      placeholder="" value=""></textarea>
-    <label
-    for="dataToInsert"><span>Item</span><span>Qty</span><span>From Loc</span><span>To loc</span><span>LP(opcional)</span></label>
-</div>
+export const formularioHTMLTransfer = () => {
+	// Creamos el formulario
+	const registroForm = document.createElement('form');
+	registroForm.id = 'registroForm';
+	registroForm.className = 'registroForm transfer';
 
+	registroForm.innerHTML = /*html*/ `
+  <div class="inputGroup">
+      <textarea id="dataToInsert" name="dataToInsert" class="textarea input" rows="4" cols="50" required style="width: 700px"
+        placeholder="" value=""></textarea>
+      <label
+      for="dataToInsert"><span>Item</span><span>Qty</span><span>From Loc</span><span>To loc</span><span>LP(opcional)</span></label>
+  </div>
 
+  <div>
+      ${companySelect}
+  </div>
 
+    ${actionsButtons}
+  `;
+
+  return registroForm;
+};
+
+const companySelect = /*html*/`
+  <select name="company" autocomplete="FM" tabindex="-1">
+    <option selected value="FM">FM</option>
+    <option value="BF">BF</option>
+  </select>
+  `;
+
+const actionsButtons = /*html*/`
   <div>
     <button id="pause" name="pause" type="button"  tabindex="-1" pause-active="off">Pausa: off</button>
     <button id="insertData" name="insert-data" type="submit">Registrar</button>
     <button id="cancel" name="cancel" type="button">Cancelar</button>
-  </div>
-</form>`;
+  </div>`
+
