@@ -16,7 +16,7 @@ export class InventoryAdjustment extends InventoryManager {
 		if (!match) return null;
 
 		const item = match[1] ?? '';
-		const qty = Number(match[2]) ?? '';
+		const qty = parseInt(match[2]) ?? '';
 		const location = match[3] ?? '';
 		const LP = match[4] ?? '';
 

@@ -1,8 +1,11 @@
 // Se puede definir a nivel de módulo o como propiedad estática de InventoryManager
 const SUBMIT_ERROR_CODES = {
-	MSG_ITEM24: { field: 'item', message: 'The item and company combination does not exist.' },
-	MSG_LOCATION08: { field: 'location', message: 'Location does not exist.' },
+	MSG_ITEM24: { field: 'Item', message: 'The item and company combination does not exist.' },
+	MSG_LOCATION08: { field: 'Location', message: 'Location does not exist.' },
+	MSG_INVVAL01: { field: 'Qty', message: 'Adjustment failure. Inventory does not exist.' },
 	MSG_INVVAL49: { field: 'LP', message: 'Adjustment failure. License plate must be specified.' },
+	MSG_INVVAL10: { field: 'Qty', message: 'Requested quantity exceeds the actual quantity.' },
+	MSG_IMRF03: { field: 'Qty', message: 'Adjustment failure. Quantity is more than the maximum quantity allowed for this adjustment type.' },
 };
 
 export class InventoryManager {
@@ -254,8 +257,6 @@ export class InventoryManager {
 		this.textareaForm.setAttribute('disabled', true);
 		this.actionButton.insertData.setAttribute('disabled', true);
 
-		console.log('Se encontraron datos guardados:', dataStorage?.length, dataStorage);
-
 		this.updateCounter(dataStorage?.length);
 		this.insertData(this.objectStorage);
 
@@ -368,10 +369,12 @@ export class InventoryManager {
 				field: result.field,
 				message: result.message,
 			});
+			console.log('Se detectó un error en el envío de datos:', result, pending, this.errorsStorage);
 			
 			sessionStorage.setItem(this.nameDataStorageErrors, JSON.stringify(this.errorsStorage));
 		}
 
+		
 		sessionStorage.removeItem(this.nameDataStoragePending);
 		
 

@@ -17,7 +17,7 @@ export class InventoryTransfer extends InventoryManager {
 		console.log(match);
 
 		const item = match[1] ?? '';
-		const qty = Number(match[2]) ?? '';
+		const qty = parseInt(match[2]) ?? '';
 		const fromLoc = match[3] ?? '';
 		const toLoc = match[4] ?? '';
 		const LP = match[5] === '-' ? '' : (match[5] ?? '');
