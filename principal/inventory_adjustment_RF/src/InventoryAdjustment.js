@@ -1,15 +1,17 @@
-import { InventoryManager } from "./InventoryManager";
+import { InventoryManager } from "./InventoryManager.js";
 
 // Ajuste Positivo
 export class InventoryAdjustment extends InventoryManager {
 	constructor(config) {
 		super(config);
+		this.regexLinePattern = /^(\d+-\d+-\d+)[\s,]+(-?\d+)[\s,]+([^,\s]+)(?:[\s,]+([^\W_]+))?/;
+
 		console.log('Class InventoryAdjustment');
 	}
 
-	parseLine(linea) {
+	parseLine(linea, company) {
 		// const match = linea.match(/^(\d+-\d+-\d+)\s+(\S+)\s+(\S+)(?:\s+([^\W_]+))?/);
-		const match = linea.match(/^(\d+-\d+-\d+)[\s,]+(\d+)[\s,]+([^,\s]+)(?:[\s,]+([^\W_]+))?/);
+		const match = linea.match(this.regexLinePattern);
 
 		if (!match) return null;
 
@@ -17,7 +19,7 @@ export class InventoryAdjustment extends InventoryManager {
 		const qty = Number(match[2]) ?? '';
 		const location = match[3] ?? '';
 		const LP = match[4] ?? '';
-		const company = match[5] ?? 'FM';
+
 
 		if (!item || !qty || !location) return null;
 		return { item, qty, location, LP, company };
