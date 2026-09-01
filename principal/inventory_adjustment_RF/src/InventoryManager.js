@@ -380,10 +380,10 @@ export class InventoryManager {
 		}
 
 		setTimeout(() => {
-			// btnSubmit.click();
+			btnSubmit.click();
 			console.log('click en OK');
 
-			// this.setTimeoutSubmitForm();
+			this.setTimeoutSubmitForm();
 		}, this.delaySubmit);
 	}
 
