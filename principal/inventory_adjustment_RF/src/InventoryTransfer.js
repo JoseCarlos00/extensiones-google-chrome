@@ -28,7 +28,7 @@ export class InventoryTransfer extends InventoryManager {
 	}
 
 	// Asignar valores al formulario
-	assigneateValueInForm({ firstDataToInsert }) {
+	valuesIntoForm({ firstDataToInsert }) {
 		const { item, company, quantity, RFLOGISTICSUNIT, fromLoc, toLoc } = form1;
 
 		item.value = firstDataToInsert?.item;

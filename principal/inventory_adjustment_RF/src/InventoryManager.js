@@ -23,6 +23,10 @@ export class InventoryManager {
 
 		this.timeoutId = null;
 
+		this.nameDataStoragePending = nameDataStorage + '_pending';
+		this.nameDataStorageErrors = nameDataStorage + '_errors';
+		this.errorsStorage = JSON.parse(sessionStorage.getItem(this.nameDataStorageErrors)) ?? [];
+
 		if (this.adjType !== this.currentAdjType) {
 			throw new Error(
 				`El adjType actual:[${this.currentAdjType}] es diferente del adjType solicitado: ${this.adjType}`,
@@ -32,36 +36,43 @@ export class InventoryManager {
 		console.log('objectStorage:', this.objectStorage);
 	}
 
+	delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 	async render() {
 		try {
-			await this.renderCounters();
-			await this.renderForm();
+			this.processSubmitResult();
 
-			await this.initializarElementosTheDOM();
-			await this.setEventsListener();
-			this.setPauseValuenInDOM();
+			this.renderCounters();
+			await this.delay(50);
+
+			this.renderForm();
+			await this.delay(50);
+
+			this.initializeElementsDOM();
+			this.setEventsListener();
+			this.setPauseValueInDOM();
 
 			this.recoveryDataFromSessionStorage();
+
+			// 2. Si ya no queda nada por insertar, mostrar resumen
+			if (this.dataStorage?.length === 0 && this.errorsStorage.length > 0) {
+				this.renderErrorSummary();
+			}
 		} catch (error) {
 			console.error('Error al renderizar el formulario:', error.message);
 		}
 	}
 
 	renderForm() {
-		return new Promise((resolve, reject) => {
-			if (!this.formularioHTML) {
-				reject('Formulario no encontrado');
-				return;
-			}
+		if (!this.formularioHTML) {
+			throw new Error('Formulario no encontrado');
+		}
 
-			document.body.insertAdjacentHTML('afterbegin', this.formularioHTML);
-			document.body.classList.add('change');
-
-			setTimeout(resolve, 50);
-		});
+		document.body.insertAdjacentHTML('afterbegin', this.formularioHTML);
+		document.body.classList.add('change');
 	}
 
-	async renderCounters() {
+	renderCounters() {
 		const contadores = `
       <div class="contadores-container">
         <p>
@@ -77,7 +88,7 @@ export class InventoryManager {
 		return sessionStorage.getItem(this.nameDataStoragePause) === 'true';
 	}
 
-	async initializarElementosTheDOM() {
+	initializeElementsDOM() {
 		this.form = document.querySelector('#registroForm');
 
 		if (!this.form) throw new Error('Formulario no encontrado [#registroForm]');
@@ -90,12 +101,12 @@ export class InventoryManager {
 		this.actionButton.insertData = insertData;
 
 		if (!this.textareaForm) throw new Error('Textarea element no encontrado');
-		if (!this.actionButton.pause) throw new Error('Boton de pausa no encontrado');
-		if (!this.actionButton.cancel) throw new Error('Boton de cancelar no encontrado');
-		if (!this.actionButton.insertData) throw new Error('Boton de insertar datos no encontrado');
+		if (!this.actionButton.pause) throw new Error('Button de pausa no encontrado');
+		if (!this.actionButton.cancel) throw new Error('Button de cancelar no encontrado');
+		if (!this.actionButton.insertData) throw new Error('Button de insertar datos no encontrado');
 	}
 
-	async handleSumitEvent(e) {
+	async handleSubmitEvent(e) {
 		try {
 			e.preventDefault();
 
@@ -121,19 +132,19 @@ export class InventoryManager {
 				throw new Error('No hay líneas para insertar');
 			}
 
-			this.registrarDatos({ lineas });
+			this.registerData({ lineas });
 		} catch (error) {
-			console.error('Error al manejar el evento handleSumitEvent', error.message);
+			console.error('Error al manejar el evento handleSubmitEvent', error.message);
 		}
 	}
 
-	async setEventsListener() {
+	setEventsListener() {
 		try {
 			const { textareaForm, actionButton, form } = this;
 
 			textareaForm.addEventListener('keydown', ({ key }) => key === 'Enter' && (textareaForm.value += '\n'));
 
-			form.addEventListener('submit', (e) => this.handleSumitEvent(e));
+			form.addEventListener('submit', (e) => this.handleSubmitEvent(e));
 
 			actionButton.cancel.addEventListener('click', (e) => this.handleCancelInsertData(e));
 			actionButton.pause.addEventListener('click', () => this.handlePauseInsertData());
@@ -146,7 +157,7 @@ export class InventoryManager {
 		this.pauseSubmit = !this.pauseSubmit;
 		this.saveDataToSessionStorage(this.nameDataStoragePause, this.pauseSubmit);
 
-		this.setPauseValuenInDOM(pause);
+		this.setPauseValueInDOM(pause);
 	}
 
 	handleCancelInsertData() {
@@ -157,10 +168,10 @@ export class InventoryManager {
 		}
 
 		// Mostrar una alerta que permita al usuario cancelar la ejecución de la función
-		const confirmacion = confirm(`¿Quieres cancelar?\nSe borraran los datos ingresados`);
+		const confirmation = confirm(`¿Quieres cancelar?\nSe borraran los datos ingresados`);
 
 		try {
-			if (confirmacion) {
+			if (confirmation) {
 				// Si el usuario confirma, cancelar la ejecución de la función
 				sessionStorage.removeItem(this.nameDataStorage);
 
@@ -173,7 +184,7 @@ export class InventoryManager {
 		}
 	}
 
-	setPauseValuenInDOM() {
+	setPauseValueInDOM() {
 		const value = this.pauseSubmit ? 'on' : 'off';
 		this.actionButton.pause.setAttribute('pause-active', value);
 		this.actionButton.pause.innerHTML = `Pausa: ${value}`;
@@ -221,10 +232,10 @@ export class InventoryManager {
 		console.log('Se encontraron datos guardados:', dataStorage?.length, dataStorage);
 
 		this.updateCounter(dataStorage?.length);
-		this.insertarDatos(this.objectStorage);
+		this.insertData(this.objectStorage);
 	}
 
-	registrarDatos({ lineas }) {
+	registerData({ lineas }) {
 		if (!Array.isArray(lineas) || lineas.length === 0) return;
 
 		const data = lineas.map((linea) => this.parseLine(linea)).filter((entry) => entry !== null);
@@ -233,11 +244,11 @@ export class InventoryManager {
 
 		console.log('datos:', data);
 		this.updateCounter(data.length);
-		this.insertarDatos({ type: this.adjType, data });
+		this.insertData({ type: this.adjType, data });
 	}
 
 	// Insertar datos en el Formulario
-	insertarDatos(dataStorage) {
+	insertData(dataStorage) {
 		try {
 			if (!dataStorage || !dataStorage.data || dataStorage.data.length === 0) return;
 			console.log('insertarDatos', dataStorage);
@@ -254,9 +265,10 @@ export class InventoryManager {
 			}
 
 			// Asignar valores al formulario
-			this.assigneateValueInForm({ firstDataToInsert });
-
+			this.valuesIntoForm({ firstDataToInsert });
 			this.saveDataToSessionStorage(this.nameDataStorage, dataStorage);
+
+			sessionStorage.setItem(this.nameDataStoragePending, JSON.stringify(firstDataToInsert));
 
 			this.submitFormData();
 		} catch (error) {
@@ -314,8 +326,49 @@ export class InventoryManager {
 		}, this.delaySubmit);
 	}
 
-	// Métodos abstractos que deben ser implementados en las clases hijas
-	parseLine(linea) {
+	// Lee el mensaje del servidor y decide si fue error o éxito
+	processSubmitResult() {
+		const params = new URLSearchParams(location.search);
+		const msg = params.get('msg');
+
+		if (!msg) return;
+
+		const pending = JSON.parse(sessionStorage.getItem(this.nameDataStoragePending)) ?? null;
+
+		const classification = this.classifySubmitMessage(msg); // 'error' | 'success' | 'unknown'
+
+		if (classification === 'error' && pending) {
+			this.errorsStorage.push({ ...pending, msg });
+			sessionStorage.setItem(this.nameDataStorageErrors, JSON.stringify(this.errorsStorage));
+		}
+
+		sessionStorage.removeItem(this.nameDataStoragePending);
+
+		// Limpiar el query param para no reprocesarlo si el usuario recarga manualmente
+		history.replaceState(null, '', location.pathname);
+	}
+
+	// *** Esta es la parte que depende de cómo se ven tus mensajes reales ***
+	classifySubmitMessage(msg) {
+		const errorPatterns = [
+			/* completa con tus patrones reales */
+		];
+		return errorPatterns.some((p) => p.test(msg)) ? 'error' : 'success';
+	}
+
+	renderErrorSummary() {
+		const list = this.errorsStorage.map((e) => `<li>${e.item ?? ''} — ${e.msg}</li>`).join('');
+
+		document.body.insertAdjacentHTML(
+			'beforeend',
+			`<div class="resumen-errores"><h3>Registros con error (${this.errorsStorage.length})</h3><ul>${list}</ul></div>`,
+		);
+
+		sessionStorage.removeItem(this.nameDataStorageErrors);
+	}
+
+	/* Métodos abstractos que deben ser implementados en las clases hijas */
+	parseLine(_line) {
 		throw new Error('Método parseLine() debe ser implementado en la subclase');
 	}
 
