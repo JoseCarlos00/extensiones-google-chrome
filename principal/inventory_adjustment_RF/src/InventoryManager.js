@@ -69,6 +69,13 @@ export class InventoryManager {
 
 			const pending = this.recoveryDataFromSessionStorage();
 
+			console.log('[Debug - Render]', {
+				pending,
+				dataStorage: this.dataStorage,
+				errorsStorage: this.errorsStorage,
+				objectStorage: this.objectStorage,
+			})
+
 			// 2. Si ya no queda nada por insertar, mostrar resumen
 			if (this.dataStorage?.length === 0 && this.errorsStorage.length > 0 && !pending) {
 				this.renderErrorSummary();
@@ -173,7 +180,9 @@ export class InventoryManager {
 
 	setEventsListener() {
 		try {
-			const { textareaForm, actionButton } = this;
+			const { textareaForm, actionButton, form } = this;
+
+			form.addEventListener('submit', (e) => this.handleSubmitEvent(e));
 
 			textareaForm?.addEventListener('keydown', (e) => {
 				if (e.key !== 'Enter') return;

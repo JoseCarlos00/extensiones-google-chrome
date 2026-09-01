@@ -1,11 +1,13 @@
 import { formularioHTMLAdjustment, formularioHTMLTransfer } from "./formHtml.js";
 import { InventoryAdjustment } from "./InventoryAdjustment.js";
 import { InventoryTransfer } from "./InventoryTransfer.js";
+import { InventoryTransferLP } from "./InventoryTransferLP.js";
 
 const availableTypes = {
 	AJUSTE_POSITIVO: { name: 'Ajuste Positivo', storageName: 'data_ajuste_positivo' },
 	AJUSTE_NEGATIVO: { name: 'Ajuste Negativo', storageName: 'data_ajuste_negativo' },
 	TRASFERENCIA_MANUAL: { name: 'Transferencia Manual', storageName: 'data_trasferencia_manual' },
+	TRASFERENCIA_MANUAL_LP: { name: 'Transferencia Manual LP', storageName: 'data_trasferencia_manual_lp' },
 };
 
 window.addEventListener('load', async () => {
@@ -26,14 +28,14 @@ window.addEventListener('load', async () => {
 		}
 
 		if (currentAdjType === availableTypes.AJUSTE_NEGATIVO.name) {
-			const adjustmentPositive = new InventoryAdjustment({
+			const adjustmentNegative = new InventoryAdjustment({
 				formularioHTML: formularioHTMLAdjustment('negativo'),
 				nameDataStorage: availableTypes.AJUSTE_NEGATIVO.storageName,
 				adjType: availableTypes.AJUSTE_NEGATIVO.name,
 				currentAdjType,
 			});
 
-			await adjustmentPositive.render();
+			await adjustmentNegative.render();
 			return;
 		}
 
@@ -46,6 +48,21 @@ window.addEventListener('load', async () => {
 			});
 
 			await trasferenciaManual.render();
+			return;
+		}
+
+		if (currentAdjType === availableTypes.TRASFERENCIA_MANUAL_LP.name) {
+			const trasferenciaManualLP = new InventoryTransferLP({
+				formularioHTML: formularioHTMLTransfer(),
+				nameDataStorage: availableTypes.TRASFERENCIA_MANUAL_LP.storageName,
+				adjType: availableTypes.TRASFERENCIA_MANUAL_LP.name,
+				currentAdjType,
+			});
+
+			console.log(trasferenciaManualLP);
+			
+
+			await trasferenciaManualLP.render();
 		}
 	} catch (error) {
 		console.error('Error en index.js:', error.message);

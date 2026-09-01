@@ -6,6 +6,4 @@ export class InventoryTransferLP extends InventoryManager {
 		super({ formularioHTML, nameDataStorage, adjType });
 		console.log('Class InventoryTransfer LP');
 	}
-
-
 }
