@@ -7,7 +7,7 @@ const SUBMIT_ERROR_CODES = {
 
 export class InventoryManager {
 	constructor({ formularioHTML, nameDataStorage, adjType, currentAdjType }) {
-		this.formularioHTML = formularioHTML;
+		this.registroForm = formularioHTML;
 		this.nameDataStorage = nameDataStorage;
 		this.adjType = adjType;
 		this.currentAdjType = currentAdjType;
@@ -39,8 +39,6 @@ export class InventoryManager {
 				`El adjType actual:[${this.currentAdjType}] es diferente del adjType solicitado: ${this.adjType}`,
 			);
 		}
-
-		console.log('objectStorage:', this.objectStorage);
 	}
 
 	delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -48,7 +46,7 @@ export class InventoryManager {
 	async render() {
 		try {
 			this.processSubmitResult();
-
+			
 			this.renderCounters();
 			await this.delay(50);
 
@@ -59,10 +57,11 @@ export class InventoryManager {
 			this.setEventsListener();
 			this.setPauseValueInDOM();
 
-			this.recoveryDataFromSessionStorage();
+			const pending = this.recoveryDataFromSessionStorage();
+
 
 			// 2. Si ya no queda nada por insertar, mostrar resumen
-			if (this.dataStorage?.length === 0 && this.errorsStorage.length > 0) {
+			if (this.dataStorage?.length === 0 && this.errorsStorage.length > 0 && !pending) {
 				this.renderErrorSummary();
 			}
 		} catch (error) {
@@ -71,16 +70,27 @@ export class InventoryManager {
 	}
 
 	renderForm() {
-		if (!this.formularioHTML) {
+		if (!this.registroForm || !(this.registroForm instanceof HTMLElement)) {
 			throw new Error('Formulario no encontrado');
 		}
 
-		document.body.insertAdjacentHTML('afterbegin', this.formularioHTML);
-		document.body.classList.add('change');
+		const center = document.querySelector('body > center');
+		const inventory = document.getElementById('inventoryManagementRfWrapper');
+
+		// Creamos nuestro contenedor
+		const layout = document.createElement('div');
+		layout.id = 'customInventoryLayout';
+
+		// Movemos el inventory al nuevo layout
+		layout.appendChild(this.registroForm);
+		layout.appendChild(inventory);
+
+		// Reemplazamos el <center> original
+		center.parentNode.replaceChild(layout, center);
 	}
 
 	renderCounters() {
-		const contadores = `
+		const contadores = /*html*/ `
       <div class="contadores-container">
         <p>
         	Restantes:<spam id="countRestante">${this.dataStorage?.length}</spam>
@@ -117,13 +127,20 @@ export class InventoryManager {
 		try {
 			e.preventDefault();
 
-			const { dataToInsert } = this.form;
+			const { dataToInsert, company } = this.form;
 
 			if (!dataToInsert) {
 				throw new Error("No se encontró el campo de texto [name='dataToInsert']");
 			}
 
 			if (!dataToInsert?.value?.trim()) {
+				return;
+			}
+
+			const companyValue = company?.value?.trim()?.toUpperCase() ?? 'FM';
+
+			if (companyValue !== 'FM' && companyValue !== 'BF') {
+				alert('El valor de la compañía debe ser FM o BF');
 				return;
 			}
 
@@ -139,7 +156,7 @@ export class InventoryManager {
 				throw new Error('No hay líneas para insertar');
 			}
 
-			this.registerData({ lineas });
+			this.registerData({ lineas, company: companyValue });
 		} catch (error) {
 			console.error('Error al manejar el evento handleSubmitEvent', error.message);
 		}
@@ -221,16 +238,17 @@ export class InventoryManager {
 
 		if (!dataStorage) {
 			console.error('No se encontró el Objeto [datosStorage] en la sesión:');
-			return;
+			return false;
 		}
 
 		if (dataStorage?.length === 0) {
 			console.warn('No hay datos guardados en la sesión');
-			return;
+			sessionStorage.removeItem(this.nameDataStorage);
+			return false;
 		}
 
 		if (this.pauseSubmit) {
-			alert('Tiene activado la pausa, por favor desactivarla enviar formulario');
+			alert('Tiene activado la pausa, por favor desactivarla para enviar formulario');
 		}
 
 		this.textareaForm.setAttribute('disabled', true);
@@ -240,16 +258,17 @@ export class InventoryManager {
 
 		this.updateCounter(dataStorage?.length);
 		this.insertData(this.objectStorage);
+
+		return true;
 	}
 
-	registerData({ lineas }) {
+	registerData({ lineas, company }) {
 		if (!Array.isArray(lineas) || lineas.length === 0) return;
 
-		const data = lineas.map((linea) => this.parseLine(linea)).filter((entry) => entry !== null);
+		const data = lineas.map((linea) => this.parseLine(linea, company)).filter((entry) => entry !== null);
 
 		if (data.length === 0) return;
 
-		console.log('datos:', data);
 		this.updateCounter(data.length);
 		this.insertData({ type: this.adjType, data });
 	}
@@ -268,6 +287,7 @@ export class InventoryManager {
 			}
 
 			if (!firstDataToInsert) {
+
 				throw new Error('No hay datos para insertar [firstDataToInsert]');
 			}
 
@@ -326,37 +346,39 @@ export class InventoryManager {
 		}
 
 		setTimeout(() => {
-			btnSubmit.click();
+			// btnSubmit.click();
 			console.log('click en OK');
 
-			this.setTimeoutSubmitForm();
+			// this.setTimeoutSubmitForm();
 		}, this.delaySubmit);
 	}
 
 	// Lee el mensaje del servidor y decide si fue error o éxito
 	processSubmitResult() {
+		const pending = JSON.parse(sessionStorage.getItem(this.nameDataStoragePending)) ?? null;
 		const params = new URLSearchParams(location.search);
 		const msgCode = params.get('msg');
 
 		const result = this.classifySubmitMessage(msgCode);
 
-		if (result.status === 'error') {
-			const pending = JSON.parse(sessionStorage.getItem(this.nameDataStoragePending)) ?? null;
-
+		if (result.status === 'error' && pending) {
 			this.errorsStorage.push({
 				...pending,
 				code: result.code,
 				field: result.field,
 				message: result.message,
 			});
+			
 			sessionStorage.setItem(this.nameDataStorageErrors, JSON.stringify(this.errorsStorage));
 		}
 
 		sessionStorage.removeItem(this.nameDataStoragePending);
+		
 
 		if (msgCode) {
 			history.replaceState(null, '', location.pathname);
 		}
+
 	}
 
 	classifySubmitMessage(msgCode) {
@@ -377,13 +399,14 @@ export class InventoryManager {
 	}
 
 	renderErrorSummary() {
-		const list = this.errorsStorage.map((e) => `<li>${e.item ?? ''} — ${e.msg}</li>`).join('');
+		const list = this.errorsStorage.map((e) => `<li>${e.item ?? ''} — ${e.message}</li>`).join('');
 
 		document.body.insertAdjacentHTML(
 			'beforeend',
 			`<div class="resumen-errores"><h3>Registros con error (${this.errorsStorage.length})</h3><ul>${list}</ul></div>`,
 		);
 
+		console.log('Se eliminó el resumen de errores', this.errorsStorage);
 		sessionStorage.removeItem(this.nameDataStorageErrors);
 	}
 
@@ -394,5 +417,9 @@ export class InventoryManager {
 
 	verifyFormInsertData() {
 		throw new Error('verifyFormInsertData() no implementado');
+	}
+
+	valuesIntoForm({ _firstDataToInsert }) {
+		throw new Error('valuesIntoForm() no implementado');
 	}
 }
