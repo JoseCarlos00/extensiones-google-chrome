@@ -1,6 +1,6 @@
-import { formularioHTMLAdjustment, formularioHTMLTransfer } from "./formHtml";
-import { InventoryAdjustment } from "./InventoryAdjustment";
-import { InventoryTransfer } from "./InventoryTransfer";
+import { formularioHTMLAdjustment, formularioHTMLTransfer } from "./formHtml.js";
+import { InventoryAdjustment } from "./InventoryAdjustment.js";
+import { InventoryTransfer } from "./InventoryTransfer.js";
 
 const availableTypes = {
 	AJUSTE_POSITIVO: { name: 'Ajuste Positivo', storageName: 'data_ajuste_positivo' },
@@ -12,7 +12,6 @@ window.addEventListener('load', async () => {
 	try {
 		
 		const currentAdjType = form1?.adjType?.value ?? '';
-		console.log({ currentAdjType });
 
 		if (currentAdjType === availableTypes.AJUSTE_POSITIVO.name) {
 			const adjustmentPositive = new InventoryAdjustment({
@@ -28,7 +27,7 @@ window.addEventListener('load', async () => {
 
 		if (currentAdjType === availableTypes.AJUSTE_NEGATIVO.name) {
 			const adjustmentPositive = new InventoryAdjustment({
-				formularioHTML: formularioHTMLAdjustment(),
+				formularioHTML: formularioHTMLAdjustment('negativo'),
 				nameDataStorage: availableTypes.AJUSTE_NEGATIVO.storageName,
 				adjType: availableTypes.AJUSTE_NEGATIVO.name,
 				currentAdjType,
@@ -40,7 +39,7 @@ window.addEventListener('load', async () => {
 
 		if (currentAdjType === availableTypes.TRASFERENCIA_MANUAL.name) {
 			const trasferenciaManual = new InventoryTransfer({
-				formularioHTML: formularioHTMLTransfer,
+				formularioHTML: formularioHTMLTransfer(),
 				nameDataStorage: availableTypes.TRASFERENCIA_MANUAL.storageName,
 				adjType: availableTypes.TRASFERENCIA_MANUAL.name,
 				currentAdjType,

@@ -1,4 +1,4 @@
-import { InventoryManager } from "./InventoryManager";
+import { InventoryManager } from "./InventoryManager.js";
 
 // Transferencia Manual
 export class InventoryTransfer extends InventoryManager {
