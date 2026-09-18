@@ -12,7 +12,7 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["https://urc.cdmx.gob.mx/*","https://www.plataforma.unrc.edu.mx/*", "https://unrc.secihti.mx/plataforma/*"],
+			"matches": ["https://unrc.secihti.mx/LAD_2026-2/*"],
 			"css": ["style.css"],
 			"js": ["content.js"]
 		}

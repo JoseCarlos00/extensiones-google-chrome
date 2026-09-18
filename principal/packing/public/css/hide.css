@@ -1,0 +1,84 @@
+#hide-elements {
+  position: absolute;
+  top: 0;
+  left: 3px;
+
+  .ui-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .ui-icon:before {
+    transform: scale(1.5);
+  }
+}
+
+#ListPaneDataGrid_popover {
+  display: block;
+  max-width: 1257px;
+  left: -78.2px;
+  top: 25px;
+
+  .ui-widget-content {
+    position: relative;
+    max-width: 1257px;
+    min-width: 60px;
+    width: auto;
+    height: auto;
+    top: 11px;
+  }
+
+  .ul-container {
+    width: 180px;
+    border: none;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  .li-item {
+    position: relative;
+    display: block;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    overflow: hidden;
+    line-height: 1.2em;
+    font-size: 16.5px;
+    height: auto;
+    padding: 10px 5px;
+
+    .ui-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .ui-icon:before {
+      transform: scale(1.35);
+    }
+
+    .ui-iggrid-icon-hide,
+    .ui-iggrid-icon-hide + .value {
+      opacity: 0.8;
+    }
+  }
+
+  .li-item:hover {
+    background-color: #d5d5d5;
+  }
+
+  .ui-iggrid-featurechooser-separator {
+    background-color: #bbb;
+    border-right: 1px solid #333;
+    float: left;
+    font-size: 1%;
+
+    height: 1px;
+    width: 100%;
+    opacity: 0.2;
+  }
+}
+
+.hidden {
+  display: none !important;
+}

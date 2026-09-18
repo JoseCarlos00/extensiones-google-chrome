@@ -1,6 +1,7 @@
 
 import { Confirm } from "./Confirm";
 import { ContextMenuHandler } from "./ContextMenuHandler";
+import { insertModalInsertItem } from "./Modal/Moda_Insert_Item/main";
 import ToastAlert from "./ToastAlert";
 
 export const PACKING_PROMPT_ID = 'packing-ctrl-k-prompt';
@@ -18,9 +19,14 @@ function insertPackingPrompt() {
 		}
 }
 
-window.addEventListener('load', () => {
-	new ContextMenuHandler();
-	insertPackingPrompt();
+window.addEventListener('load', async () => {
+	try {
+		new ContextMenuHandler();
+		insertPackingPrompt();
+	} catch (error) {
+		console.error('Error: al inicializar PACKING ', error);
+	}
+
 }, { once: true });
 
 const handleKey = (e) => {
@@ -34,6 +40,13 @@ const handleKey = (e) => {
 		}
 
 		new Confirm().initialize();
+		setTimeout(async ()=>{
+			try {
+			await insertModalInsertItem();
+		} catch (error) {
+			console.error('Error: al inicializar el modal ', error);
+		}
+		}, 50)
 		window.removeEventListener('keydown', handleKey);
 	}
 };

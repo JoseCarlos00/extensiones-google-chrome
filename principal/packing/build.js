@@ -18,7 +18,7 @@ const staticFiles = [
 	{ from: 'public/images', to: 'dist/images' },
 	{ from: 'public/manifest.json', to: 'dist/manifest.json' },
 	{ from: 'public/popup.html', to: 'dist/popup.html' },
-	{ from: 'public/style.css', to: 'dist/style.css' },
+	{ from: 'public/css', to: 'dist/css' },
 	{from: 'src/loader.js', to: 'dist/loader.js'}
 ];
 

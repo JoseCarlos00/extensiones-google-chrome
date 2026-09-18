@@ -1,6 +1,10 @@
 import ToastAlert from './ToastAlert';
 import { PACKING_PROMPT_ID } from "./index";
 
+const nameStorageItemsForPacking = 'ListOFItemsForPacking';
+const eventItemsForPacking = 'packing-items-updated';
+
+
 export class Confirm {
 	static elementToInsert = document.querySelector('#navigationActions > ul.nav.navbar-nav.navbar-left.navbarposition');
 
@@ -8,6 +12,7 @@ export class Confirm {
 		this.idButtonAction = 'insertButtonAction';
 		this.idBUttonInitPacking = 'initPackingButton';
 		this.idButtonUpdateInfo = 'updateInfoButton';
+		this.idButtonInsertList = 'insetListButtonAction';
 
 		this.inputItem1 = document.querySelector('#ItemInputEditingInput');
 		this.inputItem2 = this.inputItem1?.parentElement?.querySelector('input[type=hidden]');
@@ -23,6 +28,7 @@ export class Confirm {
 		this.dataToInsert = [...this.DetailsToPack];
 		this.buttonAdd = document.querySelector('#AddQuantity');
 
+		this.data = [];
 	}
 
 	async initialize() {
@@ -37,6 +43,12 @@ export class Confirm {
 
 	insertButtonAction() {
 		const liButtons = `
+		 <li style=" margin-left: 23px; ">
+      <a id="${this.idButtonInsertList}" href="javascript:;" data-toggle="detailpane" aria-label="Insertar un Item" data-balloon-pos="right" style="color: #fff;">
+        <i class="far fa-plus-circle navimage"></i>
+      </a>
+    </li>
+
     <li style=" margin-left: 23px; ">
       <a id="${this.idButtonAction}" href="javascript:;" data-toggle="detailpane" aria-label="Insertar un Item" data-balloon-pos="right" style="color: #fff;">
         <i class="far fa-clipboard navimage"></i>
@@ -117,64 +129,22 @@ export class Confirm {
 				if (!this.verifyExistContainerId()) {
 					return;
 				}
-				
+
 				this.handleEvent();
 			}
+		});
+
+		window.addEventListener(eventItemsForPacking, () => {
+			this.handleStorageItems();
 		});
 
 		if (!buttonInitPacking) {
 			throw new Error('No se encontró el button init packing element');
 		}
 
-		buttonInitPacking.addEventListener('click', async () => { // Make the event listener async
-			// Deshabilitar el botón para evitar clics múltiples mientras se procesa
-			buttonInitPacking.disabled = true;
-
-			const processNext = async () => { // Make processNext async
-				if (!this.verifyExistContainerId()) {
-					buttonInitPacking.disabled = false;
-					return;
-				}
-
-				if (this.dataToInsert.length > 0) {
-					const initialDataLength = this.DetailsToPack.length;
-
-					this.handleEvent(); // Ejecuta el evento con el elemento
-
-					const confirmButton = document
-				.querySelector(
-							'#ScreenGroupPanel13162 > scale-packing > div.row.packcomponent > span > div.row > div.col-md-9.col-lg-9 > div.row.infoPane > div.buttoncolumn.faIconSpacing.faIconRightMargin.pull-left > span:nth-child(1) > span > div'
-						);
-
-					this.inputQTY1?.focus();
-					
-					setTimeout(() => {
-						confirmButton?.click(); // Simula el clic en el botón Confirmar después de un pequeño retraso
-					}, 200);  // Delay to ensure UI is ready
-					
-
-					// Esto permite que la interfaz de usuario se actualice y evita bloqueos
-					try {
-						await this.waitForCondition(() => {
-							return this.DetailsToPack.length < initialDataLength;
-						}, 15000); // Increased maxTime to 15 seconds for UI processing
-						processNext(); // Call next iteration after condition is met
-					} catch (error) {
-						console.error('Error al esperar la actualización de datos de la UI:', error.message);
-						ToastAlert.showAlertFullTop('Error al procesar el packing. Intente de nuevo.', 'error');
-						buttonInitPacking.disabled = false; // Re-enable button on error
-					}
-				} else {
-					// Cuando dataToInsert está vacío, habilita el botón nuevamente
-					buttonInitPacking.disabled = false;
-					console.log('Todos los elementos han sido procesados.');
-					buttonInitPacking.remove(); // Opcional: eliminar el botón después de completar
-				}
-			}
-
-			await processNext(); // Start the async processing
+		buttonInitPacking.addEventListener('click', async () => {
+			await this.startAutomaticPacking();
 		});
-
 
 		const buttonUpdateInfo = document.getElementById(this.idButtonUpdateInfo);
 
@@ -184,14 +154,123 @@ export class Confirm {
 
 		buttonUpdateInfo.addEventListener('click', () => {
 			this.dataToInsert = [...this.DetailsToPack];
-			
+
 			if (this.dataToInsert.length > 0) {
 				const buttonAction = document.getElementById(this.idButtonAction);
 				buttonAction.classList.remove('disabled');
-				ToastAlert.showAlertMinBottom('Información actualizada', 'success')
+				ToastAlert.showAlertMinBottom('Información actualizada', 'success');
+			}
+		});
+	}
+
+	handleStorageItems() {
+		const storedData = window.sessionStorage.getItem(nameStorageItemsForPacking);
+
+		if (!storedData) {
+			return;
+		}
+
+		try {
+			const items = JSON.parse(storedData);
+
+			if (!Array.isArray(items) || items.length === 0) {
+				return;
 			}
 
-		})
+			console.log('Items del modal:', items);
+
+			this.dataToInsert = items.map(({ sku, qty }) => ({
+				ITEM: sku,
+				AVAIL_QTY: Number(qty),
+			}));
+
+			this.startAutomaticPacking();
+		} catch (error) {
+			console.error('Error leyendo los items:', error);
+		}
+	}
+
+	async startAutomaticPacking() {
+		const buttonInitPacking = document.getElementById(this.idBUttonInitPacking);
+
+		if (!buttonInitPacking) {
+			console.error('No se encontró el botón de init packing');
+			return;
+		}
+
+		buttonInitPacking.disabled = true;
+
+		const processNext = async () => {
+			if (!this.verifyExistContainerId()) {
+				buttonInitPacking.disabled = false;
+				return;
+			}
+
+			if (this.dataToInsert.length > 0) {
+				const initialDataLength = this.DetailsToPack.length;
+
+				this.handleEvent();
+
+				const confirmButton = document.querySelector(
+					'#ScreenGroupPanel13162 > scale-packing > div.row.packcomponent > span > div.row > div.col-md-9.col-lg-9 > div.row.infoPane > div.buttoncolumn.faIconSpacing.faIconRightMargin.pull-left > span:nth-child(1) > span > div',
+				);
+
+				this.inputQTY1?.focus();
+
+				setTimeout(() => {
+					confirmButton?.click();
+				}, 200);
+
+				try {
+					await this.waitForCondition(() => {
+						return this.DetailsToPack.length < initialDataLength;
+					}, 15000);
+
+					await processNext();
+				} catch (error) {
+					console.error('Error al esperar la actualización de datos de la UI:', error.message);
+
+					ToastAlert.showAlertFullTop('Error al procesar el packing. Intente de nuevo.', 'error');
+
+					buttonInitPacking.disabled = false;
+				}
+			} else {
+				buttonInitPacking.disabled = false;
+
+				console.log('Todos los elementos han sido procesados.');
+
+				// buttonInitPacking.remove();
+			}
+		};
+
+		await processNext();
+	}
+
+	handleStorageItems() {
+		const storedData = window.sessionStorage.getItem(nameStorageItemsForPacking);
+
+		if (!storedData) {
+			return;
+		}
+
+		try {
+			const items = JSON.parse(storedData);
+
+			if (!Array.isArray(items) || items.length === 0) {
+				return;
+			}
+
+			console.log('Items recibidos desde sessionStorage:', items);
+
+			this.dataToInsert = items.map(({ sku, qty }) => ({
+				ITEM: sku,
+				AVAIL_QTY: Number(qty),
+			}));
+
+			this.startAutomaticPacking();
+		} catch (error) {
+			console.error('Error al leer ListOFItemsForPacking:', error);
+		}
 	}
 
 	verifyExistContainerId() {
@@ -207,18 +286,19 @@ export class Confirm {
 			return;
 		}
 
-		const firstRow = this.dataToInsert?.shift();
+		const firstRow = this.dataToInsert.shift();
+
 		console.log('firstRow:', firstRow);
 
 		if (!firstRow) {
 			const buttonAction = document.getElementById(this.idButtonAction);
-			buttonAction.classList.add('disabled');
+			buttonAction?.classList.add('disabled');
 			return;
 		}
 
 		const { ITEM, AVAIL_QTY } = firstRow;
 
-		if (!ITEM || !AVAIL_QTY) {
+		if (!ITEM || AVAIL_QTY == null) {
 			return;
 		}
 
@@ -227,8 +307,10 @@ export class Confirm {
 
 		this.inputItem1.focus();
 
+		const quantity = typeof AVAIL_QTY === 'function' ? AVAIL_QTY() : Number(AVAIL_QTY);
+
 		if (this.buttonAdd) {
-			for (let i = 1; i < AVAIL_QTY(); i++) {
+			for (let i = 1; i < quantity; i++) {
 				this.buttonAdd.click();
 			}
 		}

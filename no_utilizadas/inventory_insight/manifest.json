@@ -44,8 +44,8 @@
       "css": [
         "style.css",
         "balloon.css",
-        "modal/inventory_insight/hide.css",
-        "modal/inventory_insight/tooltip.css"
+        "hide.css",
+        "tooltip.css"
       ]
     }
   ],

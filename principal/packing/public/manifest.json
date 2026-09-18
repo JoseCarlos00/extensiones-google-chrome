@@ -12,10 +12,10 @@
   "host_permissions": ["https://wms.fantasiasmiguel.com.mx/*"],
   "content_scripts": [
     {
-      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/packing*"],
-      "js": ["loader.js"],
-      "css": ["style.css"]
-    }
+			"matches": ["https://wms.fantasiasmiguel.com.mx/scale/trans/packing*"],
+			"js": ["loader.js"],
+			"css": ["css/style.css", "css/balloon.css", "css/hide.css", "css/tooltip.css"]
+		}
   ],
   "web_accessible_resources": [
     {
