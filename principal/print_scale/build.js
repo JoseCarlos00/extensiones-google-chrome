@@ -18,9 +18,9 @@ const shared = {
 const staticFiles = [
 	{ from: 'public/manifest.json', to: 'dist/manifest.json' },
 	{ from: 'public/popup.html', to: 'dist/popup.html' },
+	{ from: 'public/background.js', to: 'dist/background.js' },
 	{ from: 'public/images', to: 'dist/images' },
 	{ from: 'public/css', to: 'dist/css' },
-	{ from: 'transfer_to_container', to: 'dist/transfer_to_container' },
 ];
 
 function copyFile(from, to) {
@@ -66,9 +66,21 @@ function copyStatic() {
 
 const entryPoints = [
 	{
-		in: 'src/main.js',
-		out: 'dist/main.js',
-	}
+		in: 'src/inventory_insight/main.js',
+		out: 'dist/inventory_insight',
+	},
+	{
+		in: 'src/shipment_detail/main.js',
+		out: 'dist/shipment_detail',
+	},
+	{
+		in: 'src/shipping_container/main.js',
+		out: 'dist/shipping_container',
+	},
+	{
+		in: 'src/work_insight/main.js',
+		out: 'dist/work_insight',
+	},
 ];
 
 // ─── Build ───────────────────────────────────────────────────────────────────

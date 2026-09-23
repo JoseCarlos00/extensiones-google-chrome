@@ -1,3 +1,5 @@
+import { PrintInjector } from '../PrintInjector';
+
 const BUTTON_PRINT_SELECT_DOCS = `
 <li class="navdetailpane visible-sm visible-md visible-lg">
         <a id="ListPaneMenuActionPrintContainerDocs" class="navimageanchor visiblepane" data-resourcekey="PRINTDEFAULTDOCS" data-resourcevalue="Print default docs" href="javascript:;  " data-securitycheckpoint="21">
@@ -9,7 +11,7 @@ class PrintInjectorShippingContainer extends PrintInjector {
 	constructor(parameters) {
 		super(parameters);
 
-			this.liButtonHTML = /*html*/ `
+		this.liButtonHTML = /*html*/ `
       <li class="navdetailpane visible-sm visible-md visible-lg">
         <a id='printButton' href="#" data-toggle="detailpane" aria-label="Imprimir Tabla" data-balloon-pos="right" class="navimageanchor visiblepane">
           <i class="far fa-print navimage"></i>

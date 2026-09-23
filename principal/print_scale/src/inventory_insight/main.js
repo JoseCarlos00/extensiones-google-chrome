@@ -1,3 +1,5 @@
+import { PrintInjector } from "../PrintInjector";
+
 // Se ejecuta cuando la página ha cargado completamente.
 window.addEventListener('load', () => {
 	// Configuración específica para esta página

@@ -2,7 +2,7 @@
  * Clase para inyectar un botón de impresión en una barra de navegación
  * y enviar los datos de una tabla a un script de fondo para imprimir.
  */
-class PrintInjector {
+export class PrintInjector {
 	/**
 	 * @param {string} ulSelector El selector CSS para el elemento <ul> donde se insertará el botón.
 	 * @param {string} urlPrefix El prefijo de URL para la nueva pestaña que se abrirá.
