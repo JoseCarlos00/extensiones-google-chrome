@@ -1,136 +1,145 @@
 export class PrintManager {
-  constructor() {
-    this.table = document.getElementById('content');
+	constructor() {
+		this.table = document.getElementById('content');
+		this.tbodyStringContent;
+		this.theadStringContent;
 
-    this.columnIndex = {
-      status1: -1,
-    };
+		this.tbodyElementContent;
+		this.theadElementContent;
 
-    this.mapIndex = [{ key: 'status1', values: ['status 1'] }];
+		this.columnIndex = {
+			status1: -1,
+		};
 
-    this.init();
-  }
+		this.mapIndex = [{ key: 'status1', values: ['status 1'] }];
 
-  async init() {
-    try {
-      const response = await this.getTableFromParams();
-      await this.insertTableInDOM(response);
-      await this.cleanThead();
-      await this.setColumnIndex();
-      await this.createCheckBox();
+		this.init();
+	}
 
-      setTimeout(() => window.print(), 500);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+	delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  getTableFromParams() {
-    return new Promise((resolve, reject) => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const thead = urlParams.get('thead');
-      const tbody = urlParams.get('tbody');
+	async init() {
+		try {
+			this.setTableDataFromParams();
+			await this.delay(50);
 
-      if (!thead) {
-        reject('thead is empty');
-        return;
-      }
+			this.insertTableInDOM();
+			await this.delay(50);
 
-      if (!tbody) {
-        reject('tbody is empty');
-        return;
-      }
+			this.cleanThead();
 
-      resolve({ thead, tbody });
-    });
-  }
+			await this.setColumnIndex();
+			await this.createCheckBox();
 
-  async insertTableInDOM({ thead, tbody }) {
-    const { table } = this;
+			this.filteredRow();
 
-    if (!table) {
-      console.error('No se encontró la <table> a insertar');
-      return;
-    }
+			setTimeout(() => window.print(), 500);
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
-    const theadElement = document.createElement('thead');
-    const tbodyElement = document.createElement('tbody');
+	filteredRow() {}
 
-    theadElement.innerHTML = thead;
-    tbodyElement.innerHTML = decodeURIComponent(tbody);
+	setTableDataFromParams() {
+		const urlParams = new URLSearchParams(window.location.search);
+		const thead = urlParams.get('thead');
+		const tbody = urlParams.get('tbody');
 
-    table.insertAdjacentElement('beforeend', theadElement);
-    table.insertAdjacentElement('beforeend', tbodyElement);
-  }
+		if (!thead) {
+			throw new Error('thead is empty');
+		}
 
-  cleanThead() {
-    return new Promise(resolve => {
-      // Seleccionar el <thead> original y las filas <tr> dentro de él
-      const originalThead = document.querySelector('#content > thead');
-      const headers = originalThead.querySelectorAll('tr th');
+		if (!tbody) {
+			throw new Error('tbody is empty');
+		}
 
-      const rowOld = originalThead.querySelector('tr');
+		this.tbodyStringContent = tbody;
+		this.theadStringContent = thead;
+	}
 
-      if (!originalThead) {
-        console.error('No se encontró el <thead> en la <table>');
-        return;
-      }
+	insertTableInDOM() {
+		const { table } = this;
 
-      if (headers.length === 0) {
-        console.warn('No hay filas en el <tr>');
-        resolve();
-        return;
-      }
+		if (!table) {
+			throw new Error('No se encontró la <table> a insertar');
+		}
 
-      // Crear un nuevo elemento <tr>
-      const rowNew = document.createElement('tr');
+		const theadElement = document.createElement('thead');
+		const tbodyElement = document.createElement('tbody');
 
-      headers.forEach(th => {
-        const thNew = document.createElement('th');
-        const thText = th.textContent.trim();
+		theadElement.innerHTML = this.theadStringContent;
+		tbodyElement.innerHTML = decodeURIComponent(this.tbodyStringContent);
 
-        thNew.textContent = thText;
+		this.theadElementContent = theadElement;
+		this.tbodyElementContent = tbodyElement;
 
-        rowNew.appendChild(thNew);
-      });
+		table.insertAdjacentElement('beforeend', theadElement);
+		table.insertAdjacentElement('beforeend', tbodyElement);
+	}
 
-      // Reemplazar el <tr> antiguo con el nuevo
-      originalThead.replaceChild(rowNew, rowOld);
-      resolve();
-    });
-  }
+	cleanThead() {
+		// Seleccionar el <thead> original y las filas <tr> dentro de él
+		const originalThead = document.querySelector('#content > thead');
+		const headers = originalThead.querySelectorAll('tr th');
 
-  async createCheckBox() {}
+		const rowOld = originalThead.querySelector('tr');
 
-  async setColumnIndex() {
-    const { table } = this;
+		if (!originalThead) {
+			console.error('No se encontró el <thead> en la <table>');
+			return;
+		}
 
-    if (!table) {
-      console.error('No se encontró el elemento <table>');
-      return;
-    }
+		if (headers.length === 0) {
+			console.warn('No hay filas en el <tr>');
+			return;
+		}
 
-    const headerRow = table.rows[0] ? Array.from(table.rows[0].cells) : [];
+		// Crear un nuevo elemento <tr>
+		const rowNew = document.createElement('tr');
 
-    if (headerRow.length === 0) {
-      console.error('No hay filas en Header Row');
-      return;
-    }
+		headers.forEach((th) => {
+			const thNew = document.createElement('th');
+			const thText = th.textContent.trim();
 
-    // Reiniciar índices de columnas a -1
-    Object.keys(this.columnIndex).forEach(key => {
-      this.columnIndex[key] = -1;
-    });
+			thNew.textContent = thText;
 
-    // Buscar los índices de las columnas
-    headerRow.forEach((th, index) => {
-      const text = th.textContent.trim().toLowerCase();
+			rowNew.appendChild(thNew);
+		});
 
-      this.mapIndex.forEach(({ key, values }) => {
-        if (values.includes(text)) {
-          this.columnIndex[key] = index;
-        }
-      });
-    });
-  }
+		// Reemplazar el <tr> antiguo con el nuevo
+		originalThead.replaceChild(rowNew, rowOld);
+	}
+
+	async createCheckBox() {}
+
+	async setColumnIndex() {
+		const { table } = this;
+
+		if (!table) {
+			throw new Error('No se encontró el elemento <table>');
+		}
+
+		const headerRow = table.rows[0] ? Array.from(table.rows[0].cells) : [];
+
+		if (headerRow.length === 0) {
+			throw new Error('No hay filas en Header Row');
+		}
+
+		// Reiniciar índices de columnas a -1
+		Object.keys(this.columnIndex).forEach((key) => {
+			this.columnIndex[key] = -1;
+		});
+
+		// Buscar los índices de las columnas
+		headerRow.forEach((th, index) => {
+			const text = th.textContent.trim().toLowerCase();
+
+			this.mapIndex.forEach(({ key, values }) => {
+				if (values.includes(text)) {
+					this.columnIndex[key] = index;
+				}
+			});
+		});
+	}
 }
