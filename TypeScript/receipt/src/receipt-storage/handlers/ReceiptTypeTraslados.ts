@@ -10,7 +10,7 @@ export interface ReceiptTypeTrasladosConfiguration {
 }
 
 export class ReceiptTypeTraslados extends BaseReceiptTypeHandler<'TRASLADOS'> implements BaseReceiptTypeHandler<'TRASLADOS'> {
-	readonly pattern = /^TR_E-/;
+	readonly pattern = /^TR_(E-|TO_)/;
 	readonly patternTrailerId = /^\d+T$/i;
 	readonly patternContainerId = /^T[A-Za-z0-9]{10}$/;
 	readonly nameStorage: string;

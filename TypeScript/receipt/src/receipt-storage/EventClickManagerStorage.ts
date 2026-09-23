@@ -33,22 +33,29 @@ export class EventClickManagerStorage {
 
 		// Dinámico: busca el handler que coincida con el patrón
 		const handler = this.receiptTypeHandlers.find((h) => h.pattern.test(receiptId));
-		
+
 		if (!handler) {
 			console.warn(`No handler found for receiptId: ${receiptId}`);
 			return;
 		}
-		
+
 		switch (handler.type) {
 			case 'DEVOLUCIONES':
 			case 'TRASLADOS':
+				if (!this.validateReceiptType(rows, handler)) {
+					return;
+				}
+
 				await this.process(handler, rows);
 				break;
+
 			case 'TARIMAS':
-				// Implementa aquí tu lógica de validación específica
 				console.log('Realizando validación previa para Tarimas...');
-				
-				const allReceiptsIds = rows.map(row => row.querySelector(`td[aria-describedby="${this.receiptId}"]`)?.textContent?.trim() || '').filter(id => id !== '');
+
+				const allReceiptsIds = rows
+					.map((row) => row.querySelector(`td[aria-describedby="${this.receiptId}"]`)?.textContent?.trim() || '')
+					.filter((id) => id !== '');
+
 				const uniqueReceiptsIds = new Set(allReceiptsIds);
 
 				if (uniqueReceiptsIds.size > 1) {
@@ -62,6 +69,30 @@ export class EventClickManagerStorage {
 				await this.process(handler, rows);
 				break;
 		}
+	}
+
+	private matchesReceiptType(pattern: RegExp, receiptId: string): boolean {
+		pattern.lastIndex = 0;
+		return pattern.test(receiptId);
+	}
+
+	private validateReceiptType(rows: HTMLTableRowElement[], handler: AnyReceiptHandler): boolean {
+		const receiptIds = rows.map(
+			(row) => row.querySelector(`td[aria-describedby="${this.receiptId}"]`)?.textContent?.trim() ?? '',
+		);
+
+		const hasInvalidReceipt = receiptIds.some((id) => !id || !this.matchesReceiptType(handler.pattern, id));
+
+		if (hasInvalidReceipt) {
+			ToastAlert.showAlertFullTop(
+				`Se detectaron Receipt IDs de un tipo diferente.<br />` + `No se pueden mezclar devoluciones y traslados.`,
+				'warning',
+			);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	private async process<K extends keyof ReceiptInputMap>(handler: ReceiptTypeHandler<K>, rows: HTMLTableRowElement[]) {
