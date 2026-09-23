@@ -1,0 +1,15 @@
+{
+	"name": "inventory_adjustment_rf",
+	"version": "1.0.0",
+	"description": "",
+	"main": "main.js",
+	"scripts": {
+		"build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && node build.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"esbuild": "^0.28.0"
+	}
+}

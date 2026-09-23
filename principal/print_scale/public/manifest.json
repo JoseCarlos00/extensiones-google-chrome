@@ -37,6 +37,11 @@
       "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2723*"],
       "js": ["class/PrintInjector.js","inventory_insight/main.js"],
       "css": ["style.css", "balloon.css"]
+    },
+    {
+      "matches": ["https://wms.fantasiasmiguel.com.mx/scale/insights/2757*"],
+      "js": ["class/PrintInjector.js","work_insight/main.js"],
+      "css": ["style.css", "balloon.css"]
     }
   ],
   "content_security_policy": {

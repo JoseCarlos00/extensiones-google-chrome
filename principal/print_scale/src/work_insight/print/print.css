@@ -1,0 +1,10 @@
+table tr td,
+table tr th:not(.show-header) {
+  display: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.show-column {
+  display: table-cell !important;
+}
