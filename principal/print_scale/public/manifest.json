@@ -43,9 +43,5 @@
       "js": ["work_insight/main.js"],
       "css": ["css/style.css", "css/balloon.css"]
     }
-  ],
-  "content_security_policy": {
-    "script-src": ["'self'", "'unsafe-inline'"],
-    "object-src": "'self'"
-  }
+  ]
 }

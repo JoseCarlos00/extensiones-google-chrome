@@ -1,19 +1,29 @@
 console.log('[background.js]');
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('[Print Container]');
+chrome.runtime.onMessage.addListener((message, sender) => {
+	if (message.command !== 'openNewTab') {
+		return;
+	}
 
-  if (message.command === 'openNewTab') {
-    // Crea una nueva pestaña con la URL específica justo al lado de la pestaña actual
-    chrome.tabs.create({
-      url:
-        message.urlPrefix +
-        'print/print.html?thead=' +
-        encodeURIComponent(message.theadToPrint) +
-        '&tbody=' +
-        encodeURIComponent(message.tbodyToPrint),
-      index: sender.tab.index + 1, // Abre la nueva pestaña al lado de la pestaña actual
-      active: true, // Haz que la nueva pestaña sea la activa
-    });
-  }
+	if (!sender.tab) {
+		console.error('[Print Container] sender.tab no existe');
+		return;
+	}
+
+	const printUrl = chrome.runtime.getURL(`${message.urlPrefix}print/print.html`);
+
+	const url =
+		printUrl +
+		'?thead=' +
+		encodeURIComponent(message.theadToPrint) +
+		'&tbody=' +
+		encodeURIComponent(message.tbodyToPrint);
+
+	console.log('[Print Container] Abriendo:', url.slice(0, 100));
+
+	chrome.tabs.create({
+		url,
+		index: sender.tab.index + 1,
+		active: true,
+	});
 });

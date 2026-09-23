@@ -16,16 +16,102 @@ const shared = {
 // ─── Archivos estáticos ─────────────────────────────────────────────────────
 
 const staticFiles = [
+	// Extensión
 	{ from: 'public/manifest.json', to: 'dist/manifest.json' },
 	{ from: 'public/popup.html', to: 'dist/popup.html' },
 	{ from: 'public/background.js', to: 'dist/background.js' },
+
+	// Recursos
 	{ from: 'public/images', to: 'dist/images' },
 	{ from: 'public/css', to: 'dist/css' },
+
+	// Inventory Insight
+	{
+		from: 'src/inventory_insight/print/print.html',
+		to: 'dist/inventory_insight/print/print.html',
+	},
+	{
+		from: 'src/inventory_insight/print/print.css',
+		to: 'dist/inventory_insight/print/print.css',
+	},
+
+	// Shipment Detail
+	{
+		from: 'src/shipment_detail/print/print.html',
+		to: 'dist/shipment_detail/print/print.html',
+	},
+	{
+		from: 'src/shipment_detail/print/print.css',
+		to: 'dist/shipment_detail/print/print.css',
+	},
+
+	// Shipping Container
+	{
+		from: 'src/shipping_container/print/print.html',
+		to: 'dist/shipping_container/print/print.html',
+	},
+	{
+		from: 'src/shipping_container/print/print.css',
+		to: 'dist/shipping_container/print/print.css',
+	},
+
+	// Work Insight
+	{
+		from: 'src/work_insight/print/print.html',
+		to: 'dist/work_insight/print/print.html',
+	},
+	{
+		from: 'src/work_insight/print/print.css',
+		to: 'dist/work_insight/print/print.css',
+	},
 ];
+
+// ─── Entry points ────────────────────────────────────────────────────────────
+
+const entryPoints = [
+	{
+		in: 'src/inventory_insight/main.js',
+		out: 'dist/inventory_insight/main.js',
+	},
+	{
+		in: 'src/inventory_insight/print/print.js',
+		out: 'dist/inventory_insight/print/print.js',
+	},
+
+	{
+		in: 'src/shipment_detail/main.js',
+		out: 'dist/shipment_detail/main.js',
+	},
+	{
+		in: 'src/shipment_detail/print/print.js',
+		out: 'dist/shipment_detail/print/print.js',
+	},
+
+	{
+		in: 'src/shipping_container/main.js',
+		out: 'dist/shipping_container/main.js',
+	},
+	{
+		in: 'src/shipping_container/print/print.js',
+		out: 'dist/shipping_container/print/print.js',
+	},
+
+	{
+		in: 'src/work_insight/main.js',
+		out: 'dist/work_insight/main.js',
+	},
+	{
+		in: 'src/work_insight/print/print.js',
+		out: 'dist/work_insight/print/print.js',
+	},
+];
+
+// ─── Copy ────────────────────────────────────────────────────────────────────
 
 function copyFile(from, to) {
 	fs.mkdirSync(path.dirname(to), { recursive: true });
 	fs.copyFileSync(from, to);
+
 	console.log(`Copiado: ${from} → ${to}`);
 }
 
@@ -48,40 +134,20 @@ function copyDir(from, to) {
 
 function copyStatic() {
 	for (const { from, to } of staticFiles) {
-		if (fs.existsSync(from)) {
-			const stat = fs.statSync(from);
-
-			if (stat.isDirectory()) {
-				copyDir(from, to);
-			} else {
-				copyFile(from, to);
-			}
-		} else {
+		if (!fs.existsSync(from)) {
 			console.warn(`No encontrado, omitiendo: ${from}`);
+			continue;
+		}
+
+		const stat = fs.statSync(from);
+
+		if (stat.isDirectory()) {
+			copyDir(from, to);
+		} else {
+			copyFile(from, to);
 		}
 	}
 }
-
-// ─── Entry points ────────────────────────────────────────────────────────────
-
-const entryPoints = [
-	{
-		in: 'src/inventory_insight/main.js',
-		out: 'dist/inventory_insight',
-	},
-	{
-		in: 'src/shipment_detail/main.js',
-		out: 'dist/shipment_detail',
-	},
-	{
-		in: 'src/shipping_container/main.js',
-		out: 'dist/shipping_container',
-	},
-	{
-		in: 'src/work_insight/main.js',
-		out: 'dist/work_insight',
-	},
-];
 
 // ─── Build ───────────────────────────────────────────────────────────────────
 
@@ -102,19 +168,20 @@ async function build() {
 		await Promise.all(contexts.map((ctx) => ctx.watch()));
 
 		console.log('Watching for changes...');
-	} else {
-		await Promise.all(
-			entryPoints.map(({ in: entryPoint, out }) =>
-				esbuild.build({
-					...shared,
-					entryPoints: [entryPoint],
-					outfile: out,
-				}),
-			),
-		);
-
-		console.log('Build completo ✓');
+		return;
 	}
+
+	await Promise.all(
+		entryPoints.map(({ in: entryPoint, out }) =>
+			esbuild.build({
+				...shared,
+				entryPoints: [entryPoint],
+				outfile: out,
+			}),
+		),
+	);
+
+	console.log('Build completo ✓');
 }
 
 build().catch((err) => {
