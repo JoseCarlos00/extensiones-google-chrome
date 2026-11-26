@@ -1,0 +1,29 @@
+{
+	"manifest_version": 3,
+	"name": "Capture LiveWorksheets",
+	"version": "1.0",
+	"description": "Obtener una captura en png de worksheet",
+	"permissions": [],
+	"icons": {
+		"16": "icon/icon16.png",
+		"32": "icon/icon32.png",
+		"48": "icon/icon48.png",
+		"128": "icon/icon128.png"
+	},
+	"host_permissions": ["https://www.liveworksheets.com/worksheet/*"],
+	"content_scripts": [
+		{
+			"matches": ["https://www.liveworksheets.com/worksheet/*"],
+			"js": ["content.js"]
+		}
+	],
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "icon/icon16.png",
+			"32": "icon/icon32.png",
+			"48": "icon/icon48.png",
+			"128": "icon/icon128.png"
+		}
+	}
+}
