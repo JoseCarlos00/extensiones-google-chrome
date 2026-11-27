@@ -21,7 +21,9 @@ async function handleCapture() {
 		console.error('[Capture] Error:', error);
 		captureButton.showError(error.message || 'No se pudo generar la captura.');
 	} finally {
-		captureButton.setBusy(false);
+		setTimeout(()=> {
+			captureButton.setBusy(false);
+		}, 500)
 	}
 }
 
@@ -29,11 +31,12 @@ async function handleCapture() {
 function mountButton() {
 	if (document.getElementById(BUTTON_HOST_ID)) return true;
 
-	const div = document.querySelector(SELECTORS.nativeDownloadButton)?.parentElement;
-	if (!anchor) return false;
+	const nativeDownloadButton = document.querySelector(SELECTORS.nativeDownloadButton);
+	if (!nativeDownloadButton) return false;
 
 	captureButton = createCaptureButton({ onClick: handleCapture });
-	div.prepend(captureButton.host);
+	
+	nativeDownloadButton?.parentElement?.insertBefore(captureButton.host, nativeDownloadButton);
 
 	return true;
 }

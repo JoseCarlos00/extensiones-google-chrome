@@ -2,6 +2,7 @@ import { BUTTON_HOST_ID } from './selectors.js';
 
 const LABEL = 'Crear Captura';
 const TITLE = 'Capturar la hoja como imagen (extensión no oficial)';
+const BUSY_LABEL = 'Creando captura…';
 
 const STYLES = /*css*/ `
 	:host { display: inline-block; }
@@ -21,6 +22,34 @@ const STYLES = /*css*/ `
 		font: 600 14px/1 system-ui, sans-serif;
 		cursor: pointer;
 		transition: opacity 0.15s;
+		position: relative;
+		overflow: hidden;
+	}
+
+	/* Barra de progreso indeterminada, pegada al borde inferior del botón */
+	.bar {
+		display: none;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 40%;
+		height: 3px;
+		background: #fff;
+		opacity: 0.9;
+	}
+
+	button[aria-disabled='true'] .bar {
+		display: block;
+		animation: slide 1.1s ease-in-out infinite;
+	}
+
+	@keyframes slide {
+		from { transform: translateX(-100%); }
+		to { transform: translateX(250%); }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		button[aria-disabled='true'] .bar { animation: none; width: 100%; opacity: 0.5; }
 	}
 
 	button:hover { opacity: 0.85; }
@@ -59,6 +88,7 @@ export function createCaptureButton({ onClick }) {
 		<button type="button" title="${TITLE}" aria-label="${LABEL}">
 			${CAMERA_ICON}
 			<span class="label">${LABEL}</span>
+			<span class="bar" aria-hidden="true"></span>
 		</button>
 	`;
 
@@ -90,8 +120,14 @@ export function createCaptureButton({ onClick }) {
 			busy = value;
 			button.setAttribute('aria-disabled', String(value));
 
+			button.setAttribute('aria-busy', String(value));
+
 			if (value) {
 				clearTimeout(errorTimer);
+				reset();
+				label.textContent = BUSY_LABEL;
+				button.title = BUSY_LABEL;
+			} else if (button.dataset.state !== 'error') {
 				reset();
 			}
 		},
