@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
-	"name": "Capture LiveWorksheets",
+	"name": "Capture Of LiveWorksheets",
 	"version": "1.0",
-	"description": "Obtener una captura en png de worksheet",
+	"description": "Crea PNG de hojas de Liveworksheets con respuestas y calificación visibles; personaliza ancho, nombre y modo limpio.",
 	"permissions": ["storage"],
 	"icons": {
 		"16": "icon/icon16.png",
