@@ -14,7 +14,8 @@
 	"content_scripts": [
 		{
 			"matches": ["https://www.liveworksheets.com/worksheet/*"],
-			"js": ["content.js"]
+			"js": ["content.js"],
+			"css": ["style.css"]
 		}
 	],
 	"action": {
