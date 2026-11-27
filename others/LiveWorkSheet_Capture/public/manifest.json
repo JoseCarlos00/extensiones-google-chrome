@@ -4,10 +4,6 @@
 	"version": "1.0",
 	"description": "Obtener una captura en png de worksheet",
 	"permissions": ["storage"],
-	"scripts": {
-		"build": "esbuild src/main.js --bundle --outfile=public/content.js",
-		"watch": "esbuild src/main.js --bundle --outfile=public/content.js --watch"
-	},
 	"icons": {
 		"16": "icon/icon16.png",
 		"32": "icon/icon32.png",

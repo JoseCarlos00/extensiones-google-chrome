@@ -1,18 +1,18 @@
 {
-  "name": "liveworksheet_capture",
-  "version": "1.0.0",
-  "description": "",
-  "main": "content.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "esbuild": "^0.28.2"
-  },
-  "dependencies": {
-    "html2canvas": "^1.4.1"
-  }
+	"name": "liveworksheet_capture",
+	"version": "1.0.0",
+	"description": "",
+	"main": "content.js",
+	"scripts": {
+		"build": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\" && node build.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"esbuild": "^0.28.2"
+	},
+	"dependencies": {
+		"html2canvas": "^1.4.1"
+	}
 }
