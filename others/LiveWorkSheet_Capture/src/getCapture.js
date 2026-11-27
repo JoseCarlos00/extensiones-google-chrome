@@ -1,260 +1,189 @@
-let html2canvasPromise = null;
+import html2canvas from 'html2canvas';
+import { SELECTORS, FALLBACK_SVG_HEIGHT } from './selectors.js';
 
-async function loadHtml2Canvas() {
-	if (window.html2canvas) return;
+/**
+ * @param {import('./config.js').DEFAULTS} settings  Opciones del usuario (vienen de main.js)
+ * Lanza un Error si algo falla; main.js lo muestra en el botón.
+ */
+export async function getCapture(settings) {
+	const OUTPUT_WIDTH = settings.outputWidth;
+	const transparent = settings.background === 'transparent';
 
-	if (!html2canvasPromise) {
-		html2canvasPromise = new Promise((resolve, reject) => {
-			const script = document.createElement('script');
+	const target = document.querySelector(SELECTORS.preview);
 
-			script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-
-			script.onload = resolve;
-			script.onerror = () => {
-				html2canvasPromise = null;
-				reject(new Error('No se pudo cargar html2canvas.'));
-			};
-
-			document.head.appendChild(script);
-		});
+	if (!target) {
+		throw new Error('No se encontró el worksheet. ¿Cambió el sitio?');
 	}
 
-	await html2canvasPromise;
-}
+	// 1. ESPERAR IMÁGENES
+	const images = [...target.querySelectorAll('img')];
 
-async function getCapture() {
-	const SELECTOR = '#worksheet-preview';
-	const OUTPUT_NAME = 'ejercicio-completo.png';
-	const OUTPUT_WIDTH = 1000;
+	await Promise.all(
+		images.map(async (img) => {
+			try {
+				await img.decode();
+			} catch {
+				console.warn('No se pudo decodificar una imagen:', img.src);
+			}
+		}),
+	);
 
-	try {
-		const target = document.querySelector(SELECTOR);
+	// 2. DETERMINAR DIMENSIONES
+	const previewWidth = OUTPUT_WIDTH;
 
-		if (!target) {
-			throw new Error(`No se encontró el elemento ${SELECTOR}.`);
-		}
+	const svg = target.querySelector(SELECTORS.svg);
+	const svgHeight = svg ? parseFloat(svg.getAttribute('height')) || FALLBACK_SVG_HEIGHT : FALLBACK_SVG_HEIGHT;
 
-		// =====================================================
-		// 1. CARGAR HTML2CANVAS
-		// =====================================================
+	await document.fonts.ready;
+	await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-		await loadHtml2Canvas();
+	// 3. CAPTURAR EJERCICIO
+	const canvas = await html2canvas(target, {
+		scale: 1,
+		width: previewWidth,
+		height: svgHeight,
 
-		// =====================================================
-		// 2. ESPERAR IMÁGENES
-		// =====================================================
+		backgroundColor: transparent ? null : '#ffffff',
 
-		const images = [...target.querySelectorAll('img')];
+		useCORS: true,
+		allowTaint: false,
+		logging: false,
 
-		await Promise.all(
-			images.map(async (img) => {
-				try {
-					await img.decode();
-				} catch {
-					console.warn('No se pudo decodificar una imagen:', img.src);
-				}
-			}),
-		);
+		onclone: (clonedDoc) => {
+			const clonedTarget = clonedDoc.querySelector(SELECTORS.preview);
 
-		// =====================================================
-		// 3. DETERMINAR DIMENSIONES
-		// =====================================================
+			if (!clonedTarget) return;
 
-		const previewWidth = OUTPUT_WIDTH;
+			clonedTarget.style.setProperty('transform', 'none', 'important');
+			clonedTarget.style.setProperty('transform-origin', 'top left', 'important');
+			clonedTarget.style.setProperty('width', `${previewWidth}px`, 'important');
+			clonedTarget.style.setProperty('height', `${svgHeight}px`, 'important');
+			clonedTarget.style.setProperty('overflow', 'visible', 'important');
 
-		const svg = target.querySelector('#worksheet-final-svg, #worksheet-svg');
+			// RESPUESTAS
+			const elements = clonedTarget.querySelector(SELECTORS.previewElements);
 
-		const svgHeight = svg ? parseFloat(svg.getAttribute('height')) || 2828 : 2828;
+			if (elements) {
+				elements.style.setProperty('visibility', 'visible', 'important');
+				elements.style.setProperty('display', 'block', 'important');
 
-		// Esperar fuentes
-		await document.fonts.ready;
-
-		// Esperar renderizado
-		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-		// =====================================================
-		// 4. CAPTURAR EJERCICIO
-		// =====================================================
-
-		const canvas = await html2canvas(target, {
-			scale: 1,
-			width: previewWidth,
-			height: svgHeight,
-
-			backgroundColor: '#ffffff',
-
-			useCORS: true,
-			allowTaint: false,
-
-			logging: false,
-
-			onclone: (clonedDoc) => {
-				const clonedTarget = clonedDoc.querySelector(SELECTOR);
-
-				if (!clonedTarget) return;
-
-				// Dimensiones y transformación
-				clonedTarget.style.setProperty('transform', 'none', 'important');
-
-				clonedTarget.style.setProperty('transform-origin', 'top left', 'important');
-
-				clonedTarget.style.setProperty('width', `${previewWidth}px`, 'important');
-
-				clonedTarget.style.setProperty('height', `${svgHeight}px`, 'important');
-
-				clonedTarget.style.setProperty('overflow', 'visible', 'important');
-
-				// ---------------------------------------------
-				// RESPUESTAS
-				// ---------------------------------------------
-
-				const elements = clonedTarget.querySelector('#worksheet-preview-elements');
-
-				if (elements) {
-					elements.style.setProperty('visibility', 'visible', 'important');
-
-					elements.style.setProperty('display', 'block', 'important');
-
-					elements.querySelectorAll('.worksheet-textfield').forEach((field) => {
-						const text = clonedDoc.createElement('span');
-
-						text.textContent = field.textContent;
-
-						text.style.setProperty('display', 'inline-block');
-
-						text.style.setProperty('position', 'relative');
-
-						text.style.setProperty('top', '-9px');
-
-						text.style.setProperty('font', 'inherit');
-
-						text.style.setProperty('color', 'inherit');
-
-						field.replaceChildren(text);
-					});
-				}
-
-				// ---------------------------------------------
-				// CALIFICACIÓN
-				// ---------------------------------------------
-
-				const rate = clonedTarget.querySelector('#worksheet-rate');
-
-				const originalRate = target.querySelector('#worksheet-rate');
-
-				if (rate && originalRate) {
-					const originalStyle = getComputedStyle(originalRate);
-
-					rate.style.setProperty('display', originalStyle.display, 'important');
-
-					rate.style.setProperty('visibility', originalStyle.visibility, 'important');
-
-					// Estilos personalizados
-					rate.style.setProperty('font-size', '36px', 'important');
-
-					rate.style.setProperty('font-weight', 'bold', 'important');
-
-					rate.style.setProperty('backdrop-filter', 'blur(4px)', 'important');
-
-					rate.style.setProperty('color', '#DC2626', 'important');
-
-					rate.style.setProperty('padding', '4.8px', 'important');
-
-					rate.style.setProperty('border-radius', '8px', 'important');
-
-					rate.style.setProperty('border', '1px solid #cccccc', 'important');
-
-					rate.style.setProperty('top', '20.8px', 'important');
-
-					rate.style.setProperty('left', '12.8px', 'important');
-
-					// Texto independiente
+				elements.querySelectorAll(SELECTORS.textField).forEach((field) => {
 					const text = clonedDoc.createElement('span');
 
-					text.textContent = rate.textContent;
-
+					text.textContent = field.textContent;
 					text.style.setProperty('display', 'inline-block');
-
 					text.style.setProperty('position', 'relative');
-
-					text.style.setProperty('top', '-15px');
-
+					text.style.setProperty('top', '-9px');
 					text.style.setProperty('font', 'inherit');
-
 					text.style.setProperty('color', 'inherit');
 
-					rate.replaceChildren(text);
-				}
-
-				// ---------------------------------------------
-				// SVG
-				// ---------------------------------------------
-
-				clonedTarget.querySelectorAll('svg').forEach((node) => {
-					node.style.overflow = 'visible';
+					field.replaceChildren(text);
 				});
-			},
-		});
+			}
 
-		// =====================================================
-		// 5. AJUSTAR ANCHO
-		// =====================================================
+			// CALIFICACIÓN
+			const rate = clonedTarget.querySelector(SELECTORS.rate);
+			const originalRate = target.querySelector(SELECTORS.rate);
 
-		let finalCanvas = canvas;
+			if (rate && !settings.includeRate) {
+				rate.remove();
+			} else if (rate && originalRate) {
+				const originalStyle = getComputedStyle(originalRate);
 
-		if (canvas.width !== OUTPUT_WIDTH) {
-			const resized = document.createElement('canvas');
+				rate.style.setProperty('display', originalStyle.display, 'important');
+				rate.style.setProperty('visibility', originalStyle.visibility, 'important');
 
-			resized.width = OUTPUT_WIDTH;
+				rate.style.setProperty('font-size', '36px', 'important');
+				rate.style.setProperty('font-weight', 'bold', 'important');
+				rate.style.setProperty('backdrop-filter', 'blur(4px)', 'important');
+				rate.style.setProperty('color', '#DC2626', 'important');
+				rate.style.setProperty('padding', '0.3rem', 'important');
+				rate.style.setProperty('border-radius', '8px', 'important');
+				rate.style.setProperty('border', '1px solid #cccccc', 'important');
+				rate.style.setProperty('top', '1.3rem', 'important');
+				rate.style.setProperty('left', '0.8rem', 'important');
 
-			resized.height = Math.round((canvas.height * OUTPUT_WIDTH) / canvas.width);
+				const text = clonedDoc.createElement('span');
 
-			const ctx = resized.getContext('2d');
+				text.textContent = rate.textContent;
+				text.style.setProperty('display', 'inline-block');
+				text.style.setProperty('position', 'relative');
+				text.style.setProperty('top', '-15px');
+				text.style.setProperty('font', 'inherit');
+				text.style.setProperty('color', 'inherit');
 
+				rate.replaceChildren(text);
+			}
+
+			// ---------------------------------------------
+			// SVG
+			// ---------------------------------------------
+
+			clonedTarget.querySelectorAll('svg').forEach((node) => {
+				node.style.overflow = 'visible';
+			});
+		},
+	});
+
+	// =====================================================
+	// 4. AJUSTAR ANCHO
+	// =====================================================
+
+	let finalCanvas = canvas;
+
+	if (canvas.width !== OUTPUT_WIDTH) {
+		const resized = document.createElement('canvas');
+
+		resized.width = OUTPUT_WIDTH;
+		resized.height = Math.round((canvas.height * OUTPUT_WIDTH) / canvas.width);
+
+		const ctx = resized.getContext('2d');
+
+		if (!transparent) {
 			ctx.fillStyle = '#ffffff';
-
 			ctx.fillRect(0, 0, resized.width, resized.height);
-
-			ctx.drawImage(canvas, 0, 0, resized.width, resized.height);
-
-			finalCanvas = resized;
 		}
 
-		// =====================================================
-		// 6. GENERAR Y DESCARGAR PNG
-		// =====================================================
+		ctx.drawImage(canvas, 0, 0, resized.width, resized.height);
 
-		const blob = await new Promise((resolve, reject) => {
-			finalCanvas.toBlob((result) => {
-				if (result) {
-					resolve(result);
-				} else {
-					reject(new Error('No se pudo generar el PNG.'));
-				}
-			}, 'image/png');
-		});
-
-		const url = URL.createObjectURL(blob);
-
-		const link = document.createElement('a');
-
-		link.href = url;
-		link.download = OUTPUT_NAME;
-
-		document.body.appendChild(link);
-		link.click();
-		link.remove();
-
-		setTimeout(() => URL.revokeObjectURL(url), 1500);
-
-		console.log('Captura generada correctamente.');
-		console.log('Ancho:', finalCanvas.width, 'px');
-		console.log('Alto:', finalCanvas.height, 'px');
-		console.log('Archivo:', OUTPUT_NAME);
-
-		return true;
-	} catch (error) {
-		console.error('Error al generar la captura:', error);
-		return false;
+		finalCanvas = resized;
 	}
+
+	// 5. GENERAR Y DESCARGAR PNG
+	const blob = await new Promise((resolve, reject) => {
+		finalCanvas.toBlob((result) => {
+			if (result) {
+				resolve(result);
+			} else {
+				reject(new Error('No se pudo generar el PNG.'));
+			}
+		}, 'image/png');
+	});
+
+	const fileName = buildFileName(settings.fileNameTemplate);
+	const url = URL.createObjectURL(blob);
+
+	const link = document.createElement('a');
+
+	link.href = url;
+	link.download = fileName;
+
+	document.body.appendChild(link);
+	link.click();
+	link.remove();
+
+	setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+	console.log(`[Capture] ${fileName} (${finalCanvas.width}x${finalCanvas.height}px)`);
+}
+
+function buildFileName(template) {
+	const title = (document.title.split('|')[0] || 'worksheet')
+		.trim()
+		.replace(/[\\/:*?"<>|]+/g, '')
+		.slice(0, 60);
+
+	const date = new Date().toISOString().slice(0, 10);
+
+	return template.replace('{titulo}', title).replace('{fecha}', date) + '.png';
 }
