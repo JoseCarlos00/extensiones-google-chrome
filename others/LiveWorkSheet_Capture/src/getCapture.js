@@ -20,10 +20,15 @@ export async function getCapture(settings) {
 
 	await Promise.all(
 		images.map(async (img) => {
-			try {
-				await img.decode();
-			} catch {
-				console.warn('No se pudo decodificar una imagen:', img.src);
+			if (!img.complete) {
+				await new Promise((resolve) => {
+					img.addEventListener('load', resolve, { once: true });
+					img.addEventListener('error', resolve, { once: true });
+				});
+			}
+
+			if (img.naturalWidth === 0) {
+				console.warn('No se pudo cargar una imagen:', img.src);
 			}
 		}),
 	);
@@ -115,20 +120,14 @@ export async function getCapture(settings) {
 				rate.replaceChildren(text);
 			}
 
-			// ---------------------------------------------
 			// SVG
-			// ---------------------------------------------
-
 			clonedTarget.querySelectorAll('svg').forEach((node) => {
 				node.style.overflow = 'visible';
 			});
 		},
 	});
 
-	// =====================================================
 	// 4. AJUSTAR ANCHO
-	// =====================================================
-
 	let finalCanvas = canvas;
 
 	if (canvas.width !== OUTPUT_WIDTH) {
