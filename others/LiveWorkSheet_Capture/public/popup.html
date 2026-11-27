@@ -1,17 +1,135 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hola</title>
+    <title>Opciones</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            width: 300px;
+            margin: 0;
+            padding: 14px;
             background-color: rgb(36, 35, 35);
             color: rgb(201, 203, 205);
+            font: 14px/1.4 system-ui, sans-serif;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 16px;
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        .hint {
+            margin: 2px 0 0;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        input[type='text'],
+        input[type='number'],
+        select {
+            width: 100%;
+            margin-top: 4px;
+            padding: 6px 8px;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: #1b1b1b;
+            color: inherit;
+            font: inherit;
+        }
+
+        input[type='checkbox'] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 7px;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2f2f2f;
+        }
+
+        footer {
+            margin-top: 12px;
+            font-size: 11px;
+            opacity: 0.6;
         }
     </style>
 </head>
+
 <body>
-    <h4>Mi extensión</h4>
+    <h1>Opciones</h1>
+
+    <div class="field row">
+        <div>
+            <label for="clean-mode">Modo limpio</label>
+            <p class="hint">Oculta cabecera, pie y anuncios.</p>
+        </div>
+        <input type="checkbox" id="clean-mode" data-key="cleanMode">
+    </div>
+
+    <div class="field row">
+        <div>
+            <label for="include-rate">Incluir calificación</label>
+            <p class="hint">Aparece en la esquina de la imagen.</p>
+        </div>
+        <input type="checkbox" id="include-rate" data-key="includeRate">
+    </div>
+
+    <div class="field">
+        <label for="output-width">Ancho de la imagen (px)</label>
+        <input type="number" id="output-width" data-key="outputWidth" min="400" max="4000" step="50">
+    </div>
+
+    <div class="field">
+        <label for="background">Fondo</label>
+        <select id="background" data-key="background">
+            <option value="white">Blanco</option>
+            <option value="transparent">Transparente</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label for="file-name">Nombre del archivo</label>
+        <input type="text" id="file-name" data-key="fileNameTemplate" maxlength="120">
+        <p class="hint">Variables: {titulo} {fecha}</p>
+    </div>
+
+    <button type="button" id="reset">Restablecer valores</button>
+
+    <footer>Extensión no oficial. No está afiliada a Liveworksheets.</footer>
+
+    <script src="popup.js"></script>
 </body>
+
 </html>
