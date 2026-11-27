@@ -37,6 +37,7 @@
 
         label {
             font-weight: 600;
+            cursor: pointer;
         }
 
         .hint {
@@ -62,6 +63,7 @@
             width: 18px;
             height: 18px;
             accent-color: #2563eb;
+            cursor: pointer;
         }
 
         button {
@@ -84,6 +86,10 @@
             font-size: 11px;
             opacity: 0.6;
         }
+
+        .fade {
+         display: none !important;
+        }
     </style>
 </head>
 
@@ -98,12 +104,12 @@
         <input type="checkbox" id="clean-mode" data-key="cleanMode">
     </div>
 
-    <div class="field row">
+    <div class="field row fade">
         <div>
             <label for="include-rate">Incluir calificación</label>
             <p class="hint">Aparece en la esquina de la imagen.</p>
         </div>
-        <input type="checkbox" id="include-rate" data-key="includeRate">
+        <input type="checkbox" id="include-rate" data-key="includeRate" disabled>
     </div>
 
     <div class="field">
@@ -111,7 +117,7 @@
         <input type="number" id="output-width" data-key="outputWidth" min="400" max="4000" step="50">
     </div>
 
-    <div class="field">
+    <div class="field fade">
         <label for="background">Fondo</label>
         <select id="background" data-key="background">
             <option value="white">Blanco</option>
