@@ -35,16 +35,27 @@ function mountButton() {
 	if (!nativeDownloadButton) return false;
 
 	captureButton = createCaptureButton({ onClick: handleCapture });
-	
+
 	nativeDownloadButton?.parentElement?.insertBefore(captureButton.host, nativeDownloadButton);
 
 	return true;
 }
 
+function updateCaptureButtonAvailability() {
+	if (!captureButton) return;
+
+	const worksheetFinishButton = document.querySelector(SELECTORS.worksheetFinishButton);
+	captureButton.setDisabled(worksheetFinishButton !== null);
+}
+
 function watchForButton() {
 	mountButton();
+	updateCaptureButtonAvailability();
 
-	const observer = new MutationObserver(() => mountButton());
+	const observer = new MutationObserver(() => {
+		mountButton();
+		updateCaptureButtonAvailability();
+	});
 	observer.observe(document.body, { childList: true, subtree: true });
 }
 

@@ -7,6 +7,7 @@ export const SELECTORS = Object.freeze({
 	svg: '#worksheet-final-svg, #worksheet-svg',
 	textField: '.worksheet-textfield',
 	rate: '#worksheet-rate',
+	worksheetFinishButton: '#worksheet-buttons .worksheet-finish-button',
 	nativeDownloadButton: '.download_btn',
 });
 

@@ -38,7 +38,7 @@ const STYLES = /*css*/ `
 		opacity: 0.9;
 	}
 
-	button[aria-disabled='true'] .bar {
+	button[aria-busy='true'] .bar {
 		display: block;
 		animation: slide 1.1s ease-in-out infinite;
 	}
@@ -49,12 +49,13 @@ const STYLES = /*css*/ `
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		button[aria-disabled='true'] .bar { animation: none; width: 100%; opacity: 0.5; }
+		button[aria-busy='true'] .bar { animation: none; width: 100%; opacity: 0.5; }
 	}
 
 	button:hover { opacity: 0.85; }
 	button:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
-	button[aria-disabled='true'] { opacity: 0.6; cursor: progress; }
+	button:disabled:not([aria-busy='true']) { opacity: 0.6; cursor: not-allowed; }
+	button[aria-busy='true'] { opacity: 0.6; cursor: progress; }
 	button[data-state='error'] { background: #b91c1c; }
 
 	svg { width: 18px; height: 18px; flex: none; }
@@ -75,7 +76,7 @@ const CAMERA_ICON = /*html*/ `
 
 /**
  * Crea el botón dentro de un Shadow DOM (los estilos del sitio no lo afectan).
- * @returns {{ host: HTMLElement, setBusy(b: boolean): void, showError(msg: string): void }}
+ * @returns {{ host: HTMLElement, setBusy(b: boolean): void, setDisabled(b: boolean): void, showError(msg: string): void }}
  */
 export function createCaptureButton({ onClick }) {
 	const host = document.createElement('div');
@@ -96,7 +97,14 @@ export function createCaptureButton({ onClick }) {
 	const label = shadow.querySelector('.label');
 
 	let busy = false;
+	let disabled = false;
 	let errorTimer;
+
+	function updateDisabled() {
+		const isDisabled = disabled || busy;
+		button.disabled = isDisabled;
+		button.setAttribute('aria-disabled', String(isDisabled));
+	}
 
 	function reset() {
 		button.dataset.state = '';
@@ -118,9 +126,8 @@ export function createCaptureButton({ onClick }) {
 
 		setBusy(value) {
 			busy = value;
-			button.setAttribute('aria-disabled', String(value));
-
 			button.setAttribute('aria-busy', String(value));
+			updateDisabled();
 
 			if (value) {
 				clearTimeout(errorTimer);
@@ -130,6 +137,11 @@ export function createCaptureButton({ onClick }) {
 			} else if (button.dataset.state !== 'error') {
 				reset();
 			}
+		},
+
+		setDisabled(value) {
+			disabled = value;
+			updateDisabled();
 		},
 
 		showError(message) {
