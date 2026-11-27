@@ -1,6 +1,3 @@
-// Opciones del USUARIO: valores por defecto + validación.
-// Para agregar una opción nueva, solo se añade una entrada en SCHEMA.
-
 export const STORAGE_KEY = 'settings';
 
 const isBool = (v) => typeof v === 'boolean';

@@ -1,38 +1,40 @@
-.dialog-off-canvas-main-canvas {
-	header,
-	footer,
-	.subheader,
-	div.mx-auto.font-inter.container.lg\:pt-\[30px\].pt-\[26px\] {
-		display: none !important;
-	}
-}
-
-main {
-	#block-lively-content
-		div.hidden.lg\:flex.items-center.gap-\[43px\].px-\[30px\].py-\[35px\].bg-\[\#F9FAFB\].mt-\[30px\].mb-\[76px\].rounded-2xl,
-	#block-lively-content > div > article > section.md\:py-\[68px\].py-\[58px\],
-	#sticky-ad-wrapper {
-		display: none !important;
+html.lwc-clean {
+	.dialog-off-canvas-main-canvas {
+		header,
+		footer,
+		.subheader,
+		div.mx-auto.font-inter.container.lg\:pt-\[30px\].pt-\[26px\] {
+			display: none !important;
+		}
 	}
 
-	#block-lively-content > div > article > div.node-content .lg\:pt-\[30px\].pt-\[26px\] {
-		padding: 0 !important;
-	}
+	main {
+		#block-lively-content
+			div.hidden.lg\:flex.items-center.gap-\[43px\].px-\[30px\].py-\[35px\].bg-\[\#F9FAFB\].mt-\[30px\].mb-\[76px\].rounded-2xl,
+		#block-lively-content > div > article > section.md\:py-\[68px\].py-\[58px\],
+		#sticky-ad-wrapper {
+			display: none !important;
+		}
 
-	#block-lively-content > div > article > div.node-content {
-		margin: 0 !important;
-		align-items: center !important;
-	}
+		#block-lively-content > div > article > div.node-content .lg\:pt-\[30px\].pt-\[26px\] {
+			padding: 0 !important;
+		}
 
-	#block-lively-content div.flex.items-start.gap-\[42px\] > div.w-full.lg\:w-\[76\.2\%\] {
-		width: 100% !important;
-	}
+		#block-lively-content > div > article > div.node-content {
+			margin: 0 !important;
+			align-items: center !important;
+		}
 
-	#worksheet-rate {
-		font-size: 36px !important;
-		padding: 0.3rem !important;
-		font-weight: bold !important;
-		top: 1.3rem !important;
-    left: .8rem !important;
+		#block-lively-content div.flex.items-start.gap-\[42px\] > div.w-full.lg\:w-\[76\.2\%\] {
+			width: 100% !important;
+		}
+
+		#worksheet-rate {
+			font-size: 36px !important;
+			padding: 0.3rem !important;
+			font-weight: bold !important;
+			top: 1.3rem !important;
+			left: 0.8rem !important;
+		}
 	}
 }
